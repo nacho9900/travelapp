@@ -9,6 +9,8 @@
 
   <properties>
     <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
+    <servlet-api.version>2.5</servlet-api.version>
+    <jstl.version>1.2</jstl.version>
   </properties>
 
   <dependencyManagement>
@@ -20,6 +22,20 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${servlet-api.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>${jstl.version}</version>
+    </dependency>
+  </dependencies>
 
   <modules>
     <module>webapp</module>
