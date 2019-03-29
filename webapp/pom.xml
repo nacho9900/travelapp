@@ -29,6 +29,17 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+     <groupId>ar.edu.itba.paw</groupId>
+     <artifactId>interfaces</artifactId>
+     <version>${parent.version}</version>
+    </dependency>
+    <dependency>
+     <groupId>ar.edu.itba.paw</groupId>
+     <artifactId>service</artifactId>
+     <version>${parent.version}</version>
+     <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
     </dependency>

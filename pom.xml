@@ -10,8 +10,19 @@
   <properties>
     <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
     <servlet-api.version>2.5</servlet-api.version>
+    <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
     <jstl.version>1.2</jstl.version>
   </properties>
+
+  <build>
+   <plugins>
+    <plugin>
+     <groupId>org.apache.maven.plugins</groupId>
+     <artifactId>maven-eclipse-plugin</artifactId>
+     <version>${maven-eclipse-plugin.version}</version>
+    </plugin>
+   </plugins>
+  </build>  
 
   <dependencyManagement>
     <dependencies>
