@@ -16,11 +16,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findByid(long id) {
-        return Optional.empty();
+        return userDao.findById(id);
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
-        return Optional.empty();
+    public Optional<User> findByUsername(String email) {
+        return userDao.findByUsername(email);
     }
+
+    @Override
+    public User create(String firstname, String lastname, String email, String password) {
+        return userDao.create(firstname, lastname, email, password);
+    }
+
+
 }

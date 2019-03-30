@@ -1,12 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
 
 @Controller
 public class MainController {
@@ -30,10 +33,18 @@ public class MainController {
     public ModelAndView validateSignIn(@RequestParam String username,
                                        @RequestParam String password) {
         ModelAndView mav = new ModelAndView("home");
-        if(username.equals("paw") && password.equals("password")) {
-            mav.addObject("username", username);
-            return mav;
-        }
+
+            //User user = us.findByUsername(username).orElseThrow(UserNotFoundException::new);
+            Optional<User> user = us.findByUsername(username);
+            if(user.isPresent())
+                if(user.get().getPassword().equals(password)) {
+                    return mav;
+            }
+            //wrong password
+
+        //catch(UserNotFoundException e) {
+            //wrong username and maybe password too
+        //}
         mav.setViewName("signin");
         return mav;
     }
@@ -44,6 +55,8 @@ public class MainController {
                                        @RequestParam String email,
                                        @RequestParam String password,
                                        @RequestParam String psw_repeat ) {
+
+
         ModelAndView mav = new ModelAndView("index");
         return mav;
     }
