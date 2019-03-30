@@ -12,6 +12,7 @@
     <servlet-api.version>2.5</servlet-api.version>
     <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
     <jstl.version>1.2</jstl.version>
+    <org.postgresql.version>9.3-1102-jdbc41</org.postgresql.version>
   </properties>
 
   <build>
@@ -35,6 +36,16 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
         <version>${org.springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${org.postgresql.version}</version>
       </dependency>
     </dependencies>
 
