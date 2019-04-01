@@ -18,6 +18,8 @@ public class User {
         this.id = id;
     }
 
+    public long getId() { return id; }
+
     public String getFirstname() {
         return firstname;
     }
