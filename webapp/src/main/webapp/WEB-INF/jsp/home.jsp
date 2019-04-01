@@ -5,6 +5,6 @@
 	<title>Home Page</title>
 </head>
 <body>
-    <h3>Welcome ${username}! </h3>
+    <h3>Welcome ${user.firstname} ! </h3>
 </body>
 </html>

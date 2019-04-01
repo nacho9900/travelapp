@@ -34,17 +34,14 @@ public class MainController {
                                        @RequestParam String password) {
         ModelAndView mav = new ModelAndView("home");
 
-            //User user = us.findByUsername(username).orElseThrow(UserNotFoundException::new);
-            Optional<User> user = us.findByUsername(username);
+        //User user = us.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        Optional<User> user = us.findByUsername(username);
             if(user.isPresent())
                 if(user.get().getPassword().equals(password)) {
+                    mav.addObject("user",user.get());
                     return mav;
             }
-            //wrong password
 
-        //catch(UserNotFoundException e) {
-            //wrong username and maybe password too
-        //}
         mav.setViewName("signin");
         return mav;
     }
@@ -54,10 +51,10 @@ public class MainController {
                                        @RequestParam String last_name,
                                        @RequestParam String email,
                                        @RequestParam String password,
-                                       @RequestParam String psw_repeat ) {
+                                       @RequestParam String psw_repeat) {
 
-
-        ModelAndView mav = new ModelAndView("index");
+        ModelAndView mav = new ModelAndView("signin");
+        User user = us.create(first_name,last_name,email,password);
         return mav;
     }
 
