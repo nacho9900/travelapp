@@ -12,20 +12,25 @@
         <p>Please fill in this form to create an account.</p>
         <hr>
 
-        <label for="first_name"><b>First Name</b></label>
+        <label>First Name:</br>
         <input type="text" placeholder="Enter First Name" name="first_name" required>
+        </label></br>
 
-        <label for="last_name"><b>Last Name</b></label>
+        <label>Last Name:</br>
         <input type="text" placeholder="Enter Last Name" name="last_name" required>
+        </label></br>
 
-        <label for="email"><b>Email</b></label>
+        <label>Email</br>
         <input type="text" placeholder="Enter Email" name="email" required>
+        </label></br>
 
-        <label for="password"><b>Password</b></label>
+        <label>Password</br>
         <input type="password" placeholder="Enter Password" name="password" required>
+        </label></br>
 
-        <label for="psw_repeat"><b>Repeat Password</b></label>
+        <label>Repeat Password</br>
         <input type="password" placeholder="Repeat Password" name="psw_repeat" required>
+        </label></br>
         <hr>
 
         <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>

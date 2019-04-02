@@ -32,16 +32,16 @@ public class MainController {
     @RequestMapping(value = "/signin", method = {RequestMethod.POST})
     public ModelAndView validateSignIn(@RequestParam String username,
                                        @RequestParam String password) {
-        ModelAndView mav = new ModelAndView("home");
-
+        ModelAndView mav = new ModelAndView("redirect:/home");
         //User user = us.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Optional<User> user = us.findByUsername(username);
-            if(user.isPresent())
-                if(user.get().getPassword().equals(password)) {
-                    mav.addObject("user",user.get());
-                    return mav;
-            }
 
+        if(user.isPresent()) {
+            if (user.get().getPassword().equals(password)) {
+                mav.addObject("user", user.get());
+                return mav;
+            }
+        }
         mav.setViewName("signin");
         return mav;
     }

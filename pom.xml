@@ -13,6 +13,7 @@
     <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
     <jstl.version>1.2</jstl.version>
     <org.postgresql.version>9.3-1102-jdbc41</org.postgresql.version>
+    <org.hsqldb.version>2.3.1</org.hsqldb.version>
   </properties>
 
   <build>
@@ -27,6 +28,18 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${org.springframework.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>${org.hsqldb.version}</version>
+        <scope>test</scope>
+      </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-webmvc</artifactId>

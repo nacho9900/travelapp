@@ -18,6 +18,7 @@ import java.util.Optional;
 public class UserJdbcDao implements UserDao {
 
     private final SimpleJdbcInsert jdbcInsert;
+
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
