@@ -29,5 +29,8 @@ public class UserServiceImpl implements UserService {
         return userDao.create(firstname, lastname, email, password);
     }
 
-
+/*
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }*/
 }

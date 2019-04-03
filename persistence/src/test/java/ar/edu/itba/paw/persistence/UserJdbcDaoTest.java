@@ -10,20 +10,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
+
+
 import javax.sql.DataSource;
 import java.util.Optional;
 
-
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-
-
+import static junit.framework.TestCase.*;
 
 @Sql("classpath:schema.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class UserJdbcDaoTest {
-    private static final String PASSWORD = "Password";
+    private static final String PASSWORD = "password";
     private static final String EMAIL = "test@mail.com";
     private static final String LASTNAME = "lastname";
     private static final String FIRSTNAME = "firstname";
@@ -53,19 +51,19 @@ public class UserJdbcDaoTest {
         assertEquals(LASTNAME, user.getLastname());
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
     }
-
 /*
+
     @Test
     public void TestfindById() {
+        final User u = userDao.create(FIRSTNAME, LASTNAME, EMAIL, PASSWORD);
         Optional<User> user = userDao.findById(ID);
-        assertNotNull(user.get());
+        assertTrue(user.isPresent());
         assertEquals(EMAIL, user.get().getEmail());
-        assertEquals(PASSWORD, user.get().getPassword());
-        assertEquals(FIRSTNAME, user.get().getFirstname());
-        assertEquals(LASTNAME, user.get().getLastname());
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
 
-    }*/
+    }
+*/
+
 /*
 
     @Test
@@ -80,6 +78,5 @@ public class UserJdbcDaoTest {
 
     }
 */
-
 
 }

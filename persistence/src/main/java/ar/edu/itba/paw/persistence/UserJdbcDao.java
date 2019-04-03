@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,8 +35,7 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public Optional<User> findById(final long id) {
-        final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE userid = ?",ROW_MAPPER, id);
-        return list.stream().findAny();
+        return jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, id).stream().findFirst();
     }
 
 
@@ -54,7 +52,6 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public Optional<User> findByUsername(String email) {
-        final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE email = ?",ROW_MAPPER, email);
-        return list.stream().findAny();
+        return jdbcTemplate.query("SELECT * FROM users WHERE email = ?",ROW_MAPPER,email).stream().findFirst();
     }
 }
