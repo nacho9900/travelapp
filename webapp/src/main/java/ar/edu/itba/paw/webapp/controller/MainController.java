@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
+
 
 import java.util.Optional;
 
@@ -37,10 +37,9 @@ public class MainController {
     public ModelAndView signin() { return new ModelAndView("signin"); }
 
     @RequestMapping(value = "/signin", method = {RequestMethod.POST})
-    public ModelAndView validateSignIn(@RequestParam String username,
-                                       @RequestParam String password,
-                                       RedirectAttributes redir) {
+    public ModelAndView validateSignIn(@RequestParam String username, @RequestParam String password, RedirectAttributes redir) {
 
+        //TODO: validate user input correctly
         ModelAndView mav = new ModelAndView("redirect:home");
         //User user = us.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Optional<User> user = us.findByUsername(username);
@@ -61,17 +60,13 @@ public class MainController {
                                        @RequestParam String password,
                                        @RequestParam String pswrepeat) {
 
+        //TODO: validate user input
+
         ModelAndView mav = new ModelAndView("signin");
         User user = us.create(firstname,lastname,email,password);
         return mav;
     }
 
-    @RequestMapping("/test")
-    public ModelAndView test() {
-        User user = us.findByUsername("123").get();
-        ModelAndView mav =  new ModelAndView("test");
-        mav.addObject("test","hellow testing");
-        mav.addObject("test2",user);
-        return mav;
-    }
+
+
 }
