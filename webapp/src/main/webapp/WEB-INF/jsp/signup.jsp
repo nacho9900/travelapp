@@ -13,11 +13,11 @@
         <hr>
 
         <label>First Name:</br>
-        <input type="text" placeholder="Enter First Name" name="first_name" required>
+        <input type="text" placeholder="Enter First Name" name="firstname" required>
         </label></br>
 
         <label>Last Name:</br>
-        <input type="text" placeholder="Enter Last Name" name="last_name" required>
+        <input type="text" placeholder="Enter Last Name" name="lastname" required>
         </label></br>
 
         <label>Email</br>
@@ -29,7 +29,7 @@
         </label></br>
 
         <label>Repeat Password</br>
-        <input type="password" placeholder="Repeat Password" name="psw_repeat" required>
+        <input type="password" placeholder="Repeat Password" name="pswrepeat" required>
         </label></br>
         <hr>
 

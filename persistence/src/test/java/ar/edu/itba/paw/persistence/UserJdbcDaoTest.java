@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.User;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import javax.sql.DataSource;
 import java.util.Optional;
 
-import static junit.framework.TestCase.*;
 
 @Sql("classpath:schema.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,25 +44,26 @@ public class UserJdbcDaoTest {
     @Test
     public void testCreate() {
         final User user = userDao.create(FIRSTNAME, LASTNAME, EMAIL, PASSWORD);
-        assertNotNull(user);
-        assertEquals(EMAIL, user.getEmail());
-        assertEquals(PASSWORD, user.getPassword());
-        assertEquals(FIRSTNAME, user.getFirstname());
-        assertEquals(LASTNAME, user.getLastname());
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
+        Assert.assertNotNull(user);
+        Assert.assertEquals(EMAIL, user.getEmail());
+        Assert.assertEquals(PASSWORD, user.getPassword());
+        Assert.assertEquals(FIRSTNAME, user.getFirstname());
+        Assert.assertEquals(LASTNAME, user.getLastname());
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
     }
-/*
+
 
     @Test
     public void TestfindById() {
-        final User u = userDao.create(FIRSTNAME, LASTNAME, EMAIL, PASSWORD);
+        userDao.create(FIRSTNAME, LASTNAME, EMAIL, PASSWORD);
         Optional<User> user = userDao.findById(ID);
-        assertTrue(user.isPresent());
-        assertEquals(EMAIL, user.get().getEmail());
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
+        Assert.assertTrue(user.isPresent());
+        Assert.assertEquals(EMAIL, user.get().getEmail());
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
 
     }
-*/
+
+
 
 /*
 
@@ -78,5 +79,6 @@ public class UserJdbcDaoTest {
 
     }
 */
+
 
 }
