@@ -14,7 +14,7 @@ public class UserCreateForm {
     @Size(min = 2, max = 100)
     private String lastname;
 
-    @Pattern(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$")
+    /*@Pattern(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$")*/
     @Size(min = 6, max = 100)
     private String email;
 
