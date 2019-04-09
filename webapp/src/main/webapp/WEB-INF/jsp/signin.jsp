@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/resources/css/signin.css">
+    <link rel="shortcut icon" href="<c:url value="/resources/icons/globe.ico"/>" type="image/x-icon"/>
 </head>
 <body>
 <div class="container">
@@ -40,13 +41,13 @@
                     </div>
                 </form>
             </div>
-            <div class="card-footer">
+            <div class="card-footer" >
                 <div class="d-flex justify-content-center links">
                     Don't have an account?<a href="/signup">Sign Up</a>
                 </div>
-                <div class="d-flex justify-content-center">
+                <%--<div class="d-flex justify-content-center">
                     <a href="#">Forgot your password?</a>
-                </div>
+                </div>--%>
             </div>
         </div>
     </div>

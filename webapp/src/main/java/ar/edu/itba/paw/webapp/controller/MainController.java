@@ -2,8 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
@@ -31,7 +34,9 @@ public class MainController {
     }
 
     @RequestMapping("/signup")
-    public ModelAndView signup() { return new ModelAndView("signup"); }
+    public ModelAndView signup(@ModelAttribute("signupForm") final UserCreateForm form) {
+        return new ModelAndView("signup");
+    }
 
     @RequestMapping("/signin")
     public ModelAndView signin() { return new ModelAndView("signin"); }
@@ -58,12 +63,18 @@ public class MainController {
                                        @RequestParam String lastname,
                                        @RequestParam String email,
                                        @RequestParam String password,
-                                       @RequestParam String pswrepeat) {
+                                       @RequestParam String pswrepeat,
+                                       @Valid @ModelAttribute("signupForm") final UserCreateForm form,
+                                       final BindingResult errors) {
 
-        //TODO: validate user input
+        ModelAndView mav = new ModelAndView("signup");
 
-        ModelAndView mav = new ModelAndView("signin");
+        if(errors.hasErrors()) {
+            return mav;
+        }
+
         User user = us.create(firstname,lastname,email,password);
+        mav.setViewName("redirect:signin");
         return mav;
     }
 

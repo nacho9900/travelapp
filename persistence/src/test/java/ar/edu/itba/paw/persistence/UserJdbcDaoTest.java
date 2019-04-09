@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.User;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +52,7 @@ public class UserJdbcDaoTest {
         Assert.assertNotNull(user);
         Assert.assertEquals(ID2, user.getId());
         Assert.assertEquals(LASTNAME, user.getLastname());
+        JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"users","firstname = " + "'" + FIRSTNAME + "'");
     }
 
     @Test
