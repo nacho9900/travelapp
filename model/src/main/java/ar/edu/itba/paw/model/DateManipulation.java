@@ -14,7 +14,7 @@ public class DateManipulation {
 
     public static Calendar stringToCalendar(String string) {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
         try {
             Date date = sdf.parse(string);
             cal.setTime(date);
