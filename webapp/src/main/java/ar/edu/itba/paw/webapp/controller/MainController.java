@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,8 @@ public class MainController {
             return mav;
         }
 
-        User user = us.create(firstname,lastname,email,password);
+        User user = us.create(firstname,lastname,email,password,DateManipulation.stringToCalendar(form.getBirthday()),
+                form.getNationality());
         mav.setViewName("redirect:signin");
         return mav;
     }

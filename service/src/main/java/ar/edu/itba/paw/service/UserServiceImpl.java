@@ -6,6 +6,7 @@ import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Optional;
 
 @Service
@@ -25,12 +26,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(String firstname, String lastname, String email, String password) {
-        return userDao.create(firstname, lastname, email, password);
+    public User create(String firstname, String lastname, String email, String password, Calendar birthday, String nationality) {
+        return userDao.create(firstname, lastname, email, password, birthday, nationality);
     }
 
-/*
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
-    }*/
+    }
+
 }

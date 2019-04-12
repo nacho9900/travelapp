@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.sql.DataSource;
+import java.util.Calendar;
 import java.util.Optional;
 
 @Transactional
@@ -29,9 +30,18 @@ public class UserJdbcDaoTest {
 
     private static final String EMAIL = "test@mail.com";
     private static final String EMAIL2 = "test@mail.com2";
+    private static final String NATIONALITY = "Argentina";
+    private final Calendar birthday = initiateDate();
+
 
     private static final long ID = 1;
     private static final long ID2 = 2;
+
+    public Calendar initiateDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(19997,6,16);
+        return calendar;
+    }
 
     @Autowired
     private DataSource ds;
@@ -48,7 +58,7 @@ public class UserJdbcDaoTest {
 
     @Test
     public void testCreate() {
-        final User user = userDao.create(FIRSTNAME, LASTNAME, EMAIL2, PASSWORD);
+        final User user = userDao.create(FIRSTNAME, LASTNAME, EMAIL2, PASSWORD,birthday, NATIONALITY);
         Assert.assertNotNull(user);
         Assert.assertEquals(ID2, user.getId());
         Assert.assertEquals(LASTNAME, user.getLastname());
