@@ -1,14 +1,14 @@
 CREATE TABLE IF NOT EXISTS places (
-                                      id SERIAL PRIMARY KEY,
-                                      name varchar(100) NOT NULL,
-                                      latitude float NOT NULL,
-                                      longitude float NOT NULL,
-                                      country varchar(100) NOT NULL,
-                                      area1 varchar(100) NOT NULL,
-                                      area2 varchar(100) NOT NULL,
-                                      locality varchar(100) NOT NULL,
-                                      street varchar(100) NOT NULL,
-                                      street_num integer NOT NULL
+                id SERIAL PRIMARY KEY,
+                name varchar(100) NOT NULL,
+                latitude float NOT NULL,
+                longitude float NOT NULL,
+                country varchar(100) NOT NULL,
+                area1 varchar(100) NOT NULL,
+                area2 varchar(100) NOT NULL,
+                locality varchar(100) NOT NULL,
+                street varchar(100) NOT NULL,
+                street_num integer NOT NULL
 );
 
 
@@ -31,14 +31,14 @@ CREATE TABLE IF NOT EXISTS trips (
                 description varchar(500),
                 start_date DATE,
                 end_date DATE,
-                start_place INTEGER NOT NULL,
-                FOREIGN KEY (start_place) REFERENCES places ON DELETE CASCADE
+                startplaceId INTEGER NOT NULL,
+                FOREIGN KEY (startplaceId) REFERENCES places ON DELETE CASCADE
 );
 
 
 CREATE TABLE IF NOT EXISTS activity_categories (
-                                                   id SERIAL PRIMARY KEY,
-                                                   name varchar(100) NOT NULL
+                id SERIAL PRIMARY KEY,
+                name varchar(100) NOT NULL
 );
 
 
@@ -84,9 +84,9 @@ CREATE TABLE IF NOT EXISTS trip_activities (
 
 
 CREATE TABLE IF NOT EXISTS user_roles (
-                                          id SERIAL PRIMARY KEY,
-                                          name varchar(100) NOT NULL,
-                                          level INTEGER NOT NULL
+                id SERIAL PRIMARY KEY,
+                name varchar(100) NOT NULL,
+                level INTEGER NOT NULL
 
 );
 
