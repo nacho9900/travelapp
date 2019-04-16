@@ -6,6 +6,7 @@ import java.util.Date;
 
 public class UserCreateForm {
 
+    //TODO AGREGAR PATTERN A BIRTHDAY
 
     @Pattern(regexp = "[a-zA-Z]+")
     @Size(min = 2, max = 100)

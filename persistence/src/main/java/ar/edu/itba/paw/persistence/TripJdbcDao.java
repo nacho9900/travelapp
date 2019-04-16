@@ -49,9 +49,13 @@ public class TripJdbcDao implements TripDao {
         return jdbcTemplate.query("SELECT * FROM trips WHERE id = ?", ROW_MAPPER, id).stream().findFirst();
     }
 
+
+    //
     @Override
     public List<Trip> findUserTrips(long userid) {
-        return null;
+        return jdbcTemplate.query("SELECT trips.id, name, description , start_date, end_date, startplace_id" +
+                " FROM trips, trip_users " +
+                "WHERE user_id = ? AND trip_id = trips.id", ROW_MAPPER, userid);
     }
 
 

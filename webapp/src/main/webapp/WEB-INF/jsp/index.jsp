@@ -5,7 +5,6 @@
 	<title>Meet and Travel</title>
 	<link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="<c:url value="/resources/icons/globe.ico"/>" type="image/x-icon"/>
-	<link rel="stylesheet" href="/resources/css/index.css">
 </head>
 <body>
 	<ul class="nav justify-content-end">

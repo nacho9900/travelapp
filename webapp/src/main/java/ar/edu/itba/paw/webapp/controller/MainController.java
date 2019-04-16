@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -43,7 +44,8 @@ public class MainController {
     public ModelAndView signin() { return new ModelAndView("signin"); }
 
     @RequestMapping(value = "/signin", method = {RequestMethod.POST})
-    public ModelAndView validateSignIn(@RequestParam String username, @RequestParam String password, RedirectAttributes redir) {
+    public ModelAndView validateSignIn(@RequestParam String username, @RequestParam String password,
+                                       RedirectAttributes redir, HttpServletRequest request) {
 
         //TODO: validate user input correctly
         ModelAndView mav = new ModelAndView("redirect:home");
@@ -51,6 +53,7 @@ public class MainController {
         Optional<User> user = us.findByUsername(username);
         if(user.isPresent()) {
             if (user.get().getPassword().equals(password)) {
+                request.getSession().setAttribute("user", user.get());
                 redir.addFlashAttribute("userObj", user.get());
                 return mav;
             }
@@ -79,7 +82,5 @@ public class MainController {
         mav.setViewName("redirect:signin");
         return mav;
     }
-
-
 
 }

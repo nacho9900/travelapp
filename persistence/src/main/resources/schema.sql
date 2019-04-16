@@ -12,8 +12,6 @@ CREATE TABLE IF NOT EXISTS places (
 );
 
 
-
-
 CREATE TABLE IF NOT EXISTS users (
 				id SERIAL PRIMARY KEY,
 				firstname varchar(100) NOT NULL,
@@ -31,8 +29,8 @@ CREATE TABLE IF NOT EXISTS trips (
                 description varchar(500),
                 start_date DATE,
                 end_date DATE,
-                startplaceId INTEGER NOT NULL,
-                FOREIGN KEY (startplaceId) REFERENCES places ON DELETE CASCADE
+                startplace_id INTEGER NOT NULL,
+                FOREIGN KEY (startplace_id) REFERENCES places ON DELETE CASCADE
 );
 
 
@@ -47,9 +45,7 @@ CREATE TABLE IF NOT EXISTS activities (
                 name varchar(100) NOT NULL,
                 category_id integer NOT NULL,
                 FOREIGN KEY (category_id) REFERENCES activity_categories ON DELETE CASCADE
-
 );
-
 
 
 CREATE TABLE IF NOT EXISTS activity_places (
@@ -58,7 +54,6 @@ CREATE TABLE IF NOT EXISTS activity_places (
                 place_id INTEGER NOT NULL,
                 FOREIGN KEY (activity_id) REFERENCES activities ON DELETE CASCADE,
                 FOREIGN KEY (place_id) REFERENCES places ON DELETE CASCADE
-
 );
 
 
@@ -68,7 +63,6 @@ CREATE TABLE IF NOT EXISTS trip_places (
                 place_id INTEGER NOT NULL,
                 FOREIGN KEY (trip_id) REFERENCES trips ON DELETE CASCADE,
                 FOREIGN KEY (place_id) REFERENCES places ON DELETE CASCADE
-
 );
 
 
@@ -87,7 +81,6 @@ CREATE TABLE IF NOT EXISTS user_roles (
                 id SERIAL PRIMARY KEY,
                 name varchar(100) NOT NULL,
                 level INTEGER NOT NULL
-
 );
 
 CREATE TABLE IF NOT EXISTS trip_users (
@@ -98,7 +91,6 @@ CREATE TABLE IF NOT EXISTS trip_users (
                 FOREIGN KEY (trip_id) REFERENCES trips ON DELETE CASCADE,
                 FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE,
                 FOREIGN KEY (user_role_id) REFERENCES user_roles ON DELETE CASCADE
-
 );
 
 
