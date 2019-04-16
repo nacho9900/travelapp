@@ -14,8 +14,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -44,12 +47,10 @@ public class MainController {
     @RequestMapping("/")
     public ModelAndView index() { return new ModelAndView("index"); }
 
-    //@ModelAttribute("userObj") final Object userMapping
-    @RequestMapping("/home")
-    public ModelAndView home(User user) {
 
+    @RequestMapping("/home")
+    public ModelAndView home() {
         ModelAndView mav = new ModelAndView("home");
-        mav.addObject("user", user);
         return mav;
     }
 
@@ -58,27 +59,25 @@ public class MainController {
         return new ModelAndView("signup");
     }
 
-    @RequestMapping("/signin")
+    @RequestMapping(value ="/signin", method = {RequestMethod.GET})
     public ModelAndView signin() { return new ModelAndView("signin"); }
 
-    /*
+
     @RequestMapping(value = "/signin", method = {RequestMethod.POST})
     public ModelAndView validateSignIn(@RequestParam String username, @RequestParam String password,
-                                       RedirectAttributes redir, HttpServletRequest request) {
+                                       HttpServletRequest request) {
 
         ModelAndView mav = new ModelAndView("redirect:home");
-        //User user = us.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Optional<User> user = us.findByUsername(username);
         if(user.isPresent()) {
             if (user.get().getPassword().equals(password)) {
-                //request.getSession().setAttribute("user", user.get());
-                //redir.addFlashAttribute("userObj", user.get());
+                request.getSession().setAttribute("user", user.get());
                 return mav;
             }
         }
         mav.setViewName("signin");
         return mav;
-    }*/
+    }
 
     @RequestMapping(value = "/signup", method = {RequestMethod.POST})
     public ModelAndView validateSignUp(@Valid @ModelAttribute("signupForm") final UserCreateForm form,
@@ -89,9 +88,7 @@ public class MainController {
             return mav;
         }
         String encodedPassword =  passwordEncoder.encode(form.getPassword());
-        System.out.println(passwordEncoder.matches("gax100gax100",encodedPassword));
-        System.out.println(encodedPassword);
-        System.out.println(passwordEncoder.encode("gax100gax100"));
+
         User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), encodedPassword,
                 DateManipulation.stringToCalendar(form.getBirthday()), form.getNationality());
         mav.setViewName("redirect:signin");

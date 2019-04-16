@@ -32,18 +32,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public PasswordEncoder passwordEncoder;
 
-    @Bean
-    public DaoAuthenticationProvider getDaoAuth() {
-        DaoAuthenticationProvider ap = new DaoAuthenticationProvider();
-        ap.setUserDetailsService(userDetailsService);
-        ap.setPasswordEncoder(passwordEncoder);
-        return ap;
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(getDaoAuth());
-    }
 
     @Autowired
     private TravelUserDetailsService userDetailsService;
@@ -53,18 +41,21 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http.userDetailsService(userDetailsService)
                 .sessionManagement()
                 .invalidSessionUrl("/signin")
+
                 .and().authorizeRequests()
-                .antMatchers("/signin", "/signup").anonymous()
+                .antMatchers("/signin", "/signup").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/**").authenticated()
+
                 .and().formLogin()
+                .loginPage("/signin")
+                .defaultSuccessUrl("/home", true)
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/home", true)
-                .loginPage("/signin")
+                .failureUrl("/signin?error=true")
                 .and().rememberMe()
                 .rememberMeParameter("rememberme")
-                .userDetailsService(userDetailsService)
+                /*.userDetailsService(userDetailsService)*/
                 .key(getRememberMeKey())
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(27))
                 .and().logout()
@@ -90,9 +81,23 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return writer.toString();
     }
 
+    @Bean
+    public DaoAuthenticationProvider getDaoAuth() {
+        DaoAuthenticationProvider ap = new DaoAuthenticationProvider();
+        ap.setUserDetailsService(userDetailsService);
+        ap.setPasswordEncoder(passwordEncoder);
+        return ap;
+    }
+
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(getDaoAuth());
+    }
+
     @Override
     public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico", "/403");
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico");
     }
 
 }

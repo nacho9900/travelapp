@@ -18,7 +18,7 @@ public class TripController {
     @Autowired
     TripDao td;
 
-    @RequestMapping
+    @RequestMapping("/home/create-trip")
     public ModelAndView createTripGet() {
         return new ModelAndView("createTrip");
     }

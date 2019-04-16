@@ -12,9 +12,9 @@
 </head>
 <body>
     <a href="/" class="btn btn-primary">
+        <%--TODO: agregar una nav bar en vez de este boton--%>
         <span class="glyphicon glyphicon-chevron-left"></span> Back
     </a>
-    <%--<a class="" href="/">Back</a>--%>
     <div class="container">
         <div class="d-flex justify-content-center h-100">
             <div class="card">
