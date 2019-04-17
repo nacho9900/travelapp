@@ -12,4 +12,5 @@ public interface UserDao {
     public User create(final String firstname, final String lastname, final String email, final String password,
                        Calendar birthday, final String nationality);
 
+
 }
