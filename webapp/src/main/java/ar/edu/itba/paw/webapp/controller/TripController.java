@@ -6,6 +6,7 @@ import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
-public class TripController {
+public class TripController extends MainController{
 
     @Autowired
     TripDao td;
@@ -24,11 +25,9 @@ public class TripController {
     }
 
     @RequestMapping("/home/trips")
-    public ModelAndView getUserTrips(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        List<Trip> userTrips = td.findUserTrips(user.getId());
+    public ModelAndView getUserTrips(@ModelAttribute("user") User user) {
         ModelAndView mav = new ModelAndView("userTrips");
-        mav.addObject("user",user);
+        List<Trip> userTrips = td.findUserTrips(user.getId());
         mav.addObject("userTrips",userTrips);
         return mav;
     }

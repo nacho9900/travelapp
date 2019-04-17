@@ -44,9 +44,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .invalidSessionUrl("/signin")
                 .and().authorizeRequests()
-                .antMatchers("/signin", "/signup").permitAll()
+                .antMatchers("/signin", "/signup","/").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/**").authenticated()
+                .antMatchers("/home/**").authenticated()
                 .and().formLogin()
                 .loginPage("/signin")
                 .defaultSuccessUrl("/home", true)
@@ -95,7 +95,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico");
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico","/icons/**");
     }
 
     /*@Bean(name = BeanIds.AUTHENTICATION_MANAGER)
