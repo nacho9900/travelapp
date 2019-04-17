@@ -5,10 +5,13 @@ import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,6 +27,11 @@ import java.util.Optional;
 
 @Controller
 public class MainController {
+
+/*
+    @Autowired
+    private AuthenticationManager authenticationManager;
+*/
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -63,7 +71,7 @@ public class MainController {
     public ModelAndView signin() { return new ModelAndView("signin"); }
 
 
-    @RequestMapping(value = "/signin", method = {RequestMethod.POST})
+    /*@RequestMapping(value = "/signin", method = {RequestMethod.POST})
     public ModelAndView validateSignIn(@RequestParam String username, @RequestParam String password,
                                        HttpServletRequest request) {
 
@@ -78,10 +86,10 @@ public class MainController {
         mav.setViewName("signin");
         return mav;
     }
-
+*/
     @RequestMapping(value = "/signup", method = {RequestMethod.POST})
     public ModelAndView validateSignUp(@Valid @ModelAttribute("signupForm") final UserCreateForm form,
-                                       final BindingResult errors) {
+                                       final BindingResult errors, HttpServletRequest request) {
 
         ModelAndView mav = new ModelAndView("signup");
         if(errors.hasErrors()) {
@@ -91,6 +99,12 @@ public class MainController {
 
         User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), encodedPassword,
                 DateManipulation.stringToCalendar(form.getBirthday()), form.getNationality());
+/*
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getEmail(),
+                user.getPassword());*/
+        /*authToken.setDetails(new WebAuthenticationDetails(request));
+        Authentication authentication = authenticationManager.authenticate(authToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);*/
         mav.setViewName("redirect:signin");
         return mav;
     }
