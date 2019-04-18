@@ -42,9 +42,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.userDetailsService(userDetailsService)
                 .sessionManagement()
-                .invalidSessionUrl("/signin")
+                //.invalidSessionUrl("/")
                 .and().authorizeRequests()
-                .antMatchers("/signin", "/signup","/").permitAll()
+                .antMatchers("/","/signin", "/signup").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/home/**").authenticated()
                 .and().formLogin()
