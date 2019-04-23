@@ -7,12 +7,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -22,7 +25,7 @@ import org.springframework.web.servlet.view.JstlView;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 
-
+@EnableTransactionManagement
 @EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.webapp.controller","ar.edu.itba.paw.persistence","ar.edu.itba.paw.service"})
 @Configuration
@@ -36,6 +39,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -63,7 +67,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
-
         final DataSourceInitializer dsi = new DataSourceInitializer();
         dsi.setDataSource(ds);
         dsi.setDatabasePopulator(databasePopulator());
@@ -83,5 +86,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);
         return dbp;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(final DataSource ds) {
+        return new DataSourceTransactionManager(ds);
     }
 }

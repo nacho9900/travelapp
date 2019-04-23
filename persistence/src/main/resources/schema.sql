@@ -92,5 +92,8 @@ CREATE TABLE IF NOT EXISTS trip_users (
                 FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE,
                 FOREIGN KEY (user_role_id) REFERENCES user_roles ON DELETE CASCADE
 );
+/*
+CREATE INDEX IF NOT EXISTS email_idx ON users (email);
 
 
+*/

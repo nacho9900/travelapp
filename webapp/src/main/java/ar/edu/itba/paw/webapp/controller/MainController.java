@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +17,8 @@ import java.util.Optional;
 @Controller
 public class MainController  {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
+
 
     @Autowired
     private UserService us;
@@ -22,13 +26,13 @@ public class MainController  {
     @ModelAttribute("user")
     public User loggedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth == null) {
+        if(auth == null || auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ANONYMOUS"))) {
+            LOGGER.debug("No user currently logged");
             return null;
         }
-        if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ANONYMOUS"))) {
-            return null;
-        }
+
         final Optional<User> user = us.findByUsername(auth.getName());
+        LOGGER.debug("Current logged user is {}",user.get());
         return user.get();
     }
 }

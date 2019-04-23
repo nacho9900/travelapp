@@ -34,7 +34,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public PasswordEncoder passwordEncoder;
 
-
     @Autowired
     private TravelUserDetailsService userDetailsService;
 
@@ -91,8 +90,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder); OTRA FORMA
         auth.authenticationProvider(getDaoAuth());
     }
+
     @Override
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico","/icons/**");
