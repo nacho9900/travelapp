@@ -3,8 +3,12 @@
 
 <html>
 <head>
-    <link rel="shortcut icon" href="<c:url value="/resources/icons/globe.ico"/>" type="image/x-icon"/>
-    <link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <c:url value="webjars/bootstrap/4.1.3/css/bootstrap.min.css" var="bs-css"/>
+    <c:url value="/webjars/jquery/3.2.1/jquery.min.js" var="jquery" />
+    <c:url value="/webjars/bootstrap/4.1.3/js/bootstrap.min.js" var="bs-js"/>
+    <c:url value="/resources/icons/globe.ico" var="iconURL"/>
+    <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
+    <link href="${bs-css}" rel="stylesheet">
     <title>My Trips</title>
 </head>
 <body>
@@ -14,7 +18,7 @@
         <a href="#">${trip.name}</a> <br>
         <p>${trip.description}</p> <br>
     </c:forEach>
-    <script src="webjars/jquery/3.2.1/jquery.min.js"></script>
-    <script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="${jquery}" type="text/javascript"></script>
+    <script src="${bs-js}" type="text/javascript"></script>
 </body>
 </html>

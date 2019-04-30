@@ -4,14 +4,20 @@
 
 <html>
 <head>
-    <link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/signup.css"/>" >
-    <link rel="shortcut icon" href="<c:url value="/resources/icons/globe.ico"/>" type="image/x-icon"/>
-	<title>Create Account</title>
+      <c:url value="webjars/bootstrap/4.1.3/css/bootstrap.min.css" var="bs-css"/>
+      <c:url value="/webjars/jquery/3.2.1/jquery.min.js" var="jquery" />
+      <c:url value="/webjars/bootstrap/4.1.3/js/bootstrap.min.js" var="bs-js"/>
+      <c:url value="/signin" var="signinURL" />
+      <c:url value="/resources/css/signup.css" var="signupCSS"/>
+      <c:url value="/resources/icons/globe.ico" var="iconURL"/>
+      <c:url value="/signup" var="signupURL"/>
+      <link href="${bs-css}" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="${signupCSS}" >
+      <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
+	  <title>Create Account</title>
 </head>
 <body>
-    <c:url value="/signup" var="post_path"/>
-    <form:form action="${post_path}" method="post" modelAttribute="signupForm">
+    <form:form action="${signupURL}" method="post" modelAttribute="signupForm">
       <div class="container">
         <h1>Register</h1>
         <p>Please fill in this form to create an account.</p>
@@ -292,11 +298,11 @@
         <button type="submit" class="registerbtn">Register</button>
       </div>
       <div class="container signin">
-        <p>Already have an account? <a href="/signin">Sign in</a>.</p>
+        <p>Already have an account? <a href="${signinURL}">Sign in</a>.</p>
       </div>
     </form:form>
-    <script src="webjars/jquery/3.2.1/jquery.min.js"></script>
-    <script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="${jquery}" type="text/javascript"></script>
+    <script src="${bs-js}" type="text/javascript"></script>
 </body>
 </html>
 
