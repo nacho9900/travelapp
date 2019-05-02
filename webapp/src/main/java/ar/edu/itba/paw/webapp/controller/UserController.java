@@ -83,5 +83,10 @@ public class UserController extends MainController{
         mav.setViewName("redirect:signin");
         return mav;
     }
+    @RequestMapping("/home/profile")
+    public ModelAndView profile() { return new ModelAndView("profile"); }
+
+    @RequestMapping("/about")
+    public ModelAndView aboutUs() { return new ModelAndView("about"); }
 
 }

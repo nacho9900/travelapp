@@ -10,6 +10,7 @@
 	<c:url value="/signup" var="signupURL"/>
 	<c:url value="/" var="index"/>
 	<c:url value="/home" var="home"/>
+	<c:url value="/about" var="about"/>
 	<c:url value="/resources/css/index.css" var="indexcss"/>
 	<link href="${bootcss}" rel="stylesheet">
 	<link href="${indexcss}" rel="stylesheet">
@@ -32,7 +33,7 @@
 			<li class="nav-item">
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#">About us</a>
+				<a class="nav-link" href="${about}">About us</a>
 			</li>
 		</ul>
 		<form class="form-inline my-2 my-lg-0">
