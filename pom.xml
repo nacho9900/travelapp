@@ -23,6 +23,7 @@
     <logback.version>1.1.2</logback.version>
     <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
     <maven-war-plugin.version>2.6</maven-war-plugin.version>
+    <google-places-api-java-version>2.1.7</google-places-api-java-version>
   </properties>
 
   <build>
@@ -36,15 +37,20 @@
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-war-plugin</artifactId>
       <version>${maven-war-plugin.version}</version>
-      <configuration>
+      <!--<configuration>
       <packagingExcludes>**/logback-test.xml</packagingExcludes>
-      </configuration>
+      </configuration>-->
     </plugin>
    </plugins>
   </build>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>se.walkercrou</groupId>
+        <artifactId>google-places-api-java</artifactId>
+        <version>${google-places-api-java-version}</version>
+      </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>

@@ -36,11 +36,11 @@
 				<a class="nav-link" href="${about}">About us</a>
 			</li>
 		</ul>
-		<form class="form-inline my-2 my-lg-0">
+		<%--<form class="form-inline my-2 my-lg-0">
 			<input class="form-control mr-sm-2" type="search" placeholder="Search for trips" aria-label="Search">
 			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-		</form>
-		<a id="signinButton" class="btn btn-outline-success my-2 my-sm-0" href="${signinURL}">Signin</a>
+		</form>--%>
+		<a id="signinButton" class="btn btn-outline-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
 	</div>
 </nav>
 	<%--<a class="btn btn-primary" href="${signinURL}">Sign in</a>--%>
