@@ -4,28 +4,29 @@ import java.util.Calendar;
 
 public class Trip {
 
-    private long startplaceId;
+
     private final long id;
+    private long startPlaceId;
     private String name;
     private String description;
     private Calendar startDate;
     private Calendar endDate;
 
-    public Trip(long startplaceId, long id, String name, String description, Calendar startDate, Calendar endDate) {
-        this.startplaceId = startplaceId;
+    public Trip(long id, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
         this.id = id;
+        this.startPlaceId = startPlaceId;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public long getStartplaceId() {
-        return startplaceId;
+    public long getStartPlaceId() {
+        return startPlaceId;
     }
 
-    public void setStartplaceId(long startplaceId) {
-        this.startplaceId = startplaceId;
+    public void setStartPlaceId(long startPlaceId) {
+        this.startPlaceId = startPlaceId;
     }
 
     public long getId() {

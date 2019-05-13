@@ -19,10 +19,11 @@ public class TripJdbcDao implements TripDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    private final static RowMapper<Trip> ROW_MAPPER = (rs, rowNum) -> new Trip(rs.getLong("startplace_id"),
-            rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-            DateManipulation.dateToCalendar(rs.getDate("start_date")), DateManipulation.dateToCalendar(
-                    rs.getDate("end_date")));
+    private final static RowMapper<Trip> ROW_MAPPER = (rs, rowNum) -> new Trip(rs.getLong("id"),
+            rs.getLong("startplace_id"),
+            rs.getString("name"), rs.getString("description"),
+            DateManipulation.dateToCalendar(rs.getDate("start_date")), DateManipulation
+            .dateToCalendar(rs.getDate("end_date")));
 
     @Autowired
     public TripJdbcDao(final DataSource ds) {
@@ -33,15 +34,15 @@ public class TripJdbcDao implements TripDao {
     }
 
     @Override
-    public Trip create(long startplaceId, long id, String name, String description, Calendar startDate, Calendar endDate) {
+    public Trip create(long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
         final Map<String, Object> args = new HashMap<>();
-        args.put("startplace_id", startplaceId);
+        args.put("startplace_id", startPlaceId);
         args.put("name", name);
         args.put("description",description);
-        args.put("start_date",startDate);
-        args.put("end_date", endDate);
+        args.put("start_date",startDate.getTime());
+        args.put("end_date", endDate.getTime());
         final Number tripid = jdbcInsert.executeAndReturnKey(args);
-        return new Trip(startplaceId, tripid.longValue(), name, description, startDate, endDate);
+        return new Trip(tripid.longValue(), startPlaceId, name, description, startDate, endDate);
     }
 
     @Override
@@ -50,10 +51,9 @@ public class TripJdbcDao implements TripDao {
     }
 
 
-    //
     @Override
     public List<Trip> findUserTrips(long userid) {
-        return jdbcTemplate.query("SELECT trips.id, name, description , start_date, end_date, startplace_id" +
+        return jdbcTemplate.query("SELECT trips.*" +
                 " FROM trips, trip_users " +
                 "WHERE user_id = ? AND trip_id = trips.id", ROW_MAPPER, userid);
     }

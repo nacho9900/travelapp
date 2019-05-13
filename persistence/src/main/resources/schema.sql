@@ -1,14 +1,10 @@
 CREATE TABLE IF NOT EXISTS places (
                 id SERIAL PRIMARY KEY,
+                google_id varchar(150) NOT NULL,
                 name varchar(100) NOT NULL,
-                latitude float NOT NULL,
-                longitude float NOT NULL,
-                country varchar(100) NOT NULL,
-                area1 varchar(100) NOT NULL,
-                area2 varchar(100) NOT NULL,
-                locality varchar(100) NOT NULL,
-                street varchar(100) NOT NULL,
-                street_num integer NOT NULL
+                latitude double precision NOT NULL,
+                longitude double precision NOT NULL,
+                address varchar(500) NOT NULL
 );
 
 
@@ -92,8 +88,3 @@ CREATE TABLE IF NOT EXISTS trip_users (
                 FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE,
                 FOREIGN KEY (user_role_id) REFERENCES user_roles ON DELETE CASCADE
 );
-/*
-CREATE INDEX IF NOT EXISTS email_idx ON users (email);
-
-
-*/

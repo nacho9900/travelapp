@@ -17,42 +17,50 @@ a.lat
     <c:url value="/resources/icons/globe.ico" var="iconURL"/>
     <c:url value="/resources/css/createTrip.css" var="createTripcss"/>
     <c:url value="/resources/js/createTrip.js" var="createTripjs"/>
+    <c:url value="/home/create-trip" var="createTripURL" />
     <link rel="stylesheet" href="${bootcss}" >
     <link rel="stylesheet" href="${createTripcss}">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <title>Create Trip</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-
 </head>
 <body>
 <h3 class="display-4 center-pill">Create Trip</h3>
 <div class="container">
-    <form>
+    <form:form action="${createTripURL}" method="post" modelAttribute="createTripForm">
         <hr>
         <div>
-            <input class="form-control" type="text" name="trip_name" placeholder="Enter trip name"/>
-            <input class="form-control" type="text" name="trip_desc" placeholder="Enter trip description"/>
-            <input class="form-control" type="date" name="start_date" />
-            <input class="form-control" type="date" name="end_date" />
+            <form:errors path="placeInput" cssClass = "alert alert-warning" element="p"/>
+
+            <form:errors path="name" cssClass = "alert alert-warning" element="p"/>
+            <form:input class="form-control" type="text" path="name"   name="trip_name" placeholder="Enter trip name"/>
+
+            <form:errors path="description" cssClass = "alert alert-warning" element="p"/>
+            <form:input class="form-control" type="text" path="description" name="trip_desc" placeholder="Enter trip description"/>
+
+            <form:errors path="startDate" cssClass = "alert alert-warning" element="p"/>
+            <form:label path="startDate" for="start_date">Start date:</form:label>
+            <form:input class="form-control" type="date" path="startDate"  name="start_date" />
+
+            <form:errors path="endDate" cssClass = "alert alert-warning" element="p"/>
+            <form:label path="endDate" for="start_date">End date:</form:label>
+            <form:input class="form-control" type="date" path="endDate" name="end_date" />
         </div>
-
-<div class="pac-card" id="pac-card">
-    <div id="pac-container">
-        <input id="pac-input" type="text"
-               placeholder="Enter a location">
-    </div>
-</div>
-<div class="container" id="map"></div>
-<div id="infowindow-content">
-    <img src="" width="16" height="16" id="place-icon">
-    <span id="place-name"  class="title"></span><br>
-    <span id="place-address"></span>
-</div>
+        <div class="pac-card" id="pac-card">
+            <div id="pac-container">
+                <form:input id="pac-input" type="text" path="placeInput" placeholder="Enter a location"/>
+            </div>
+        </div>
+        <div class="container" id="map"></div>
+        <div id="infowindow-content">
+            <img src="" width="16" height="16" id="place-icon">
+            <span id="place-name"  class="title"></span><br>
+            <span id="place-address"></span>
+        </div>
         <button type="submit" class="btn-primary" >Create</button>
-    </form>
+    </form:form>
 </div>
-
 <script src="${createTripjs}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap"
         async defer></script>

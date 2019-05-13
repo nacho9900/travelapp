@@ -28,20 +28,6 @@ import java.util.Optional;
 @Controller
 public class UserController extends MainController{
 
-/*
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-
-
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getEmail(),
-                user.getPassword());
-        /*authToken.setDetails(new WebAuthenticationDetails(request));
-        Authentication authentication = authenticationManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-*/
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
