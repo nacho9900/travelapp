@@ -25,13 +25,11 @@ public class UserJdbcDao implements UserDao {
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
                 .usingGeneratedKeyColumns("id");
-
     }
 
     private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getLong("id"), rs.getString("firstname"),
             rs.getString("lastname"), rs.getString("email"), rs.getString("password"),
             DateManipulation.dateToCalendar(rs.getDate("birthday")), rs.getString("nationality"));
-
 
 
     @Override

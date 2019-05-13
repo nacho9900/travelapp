@@ -6,6 +6,8 @@ import java.util.Date;
 
 public class DateManipulation {
 
+    //Static methods so they can be called from ROWMAPPER lambdas which is static.
+
     public static Calendar dateToCalendar(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -20,7 +22,6 @@ public class DateManipulation {
             cal.setTime(date);
         }
         catch(Exception e) {
-            //TODO
         }
         return cal;
     }

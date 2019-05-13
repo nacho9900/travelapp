@@ -1,17 +1,17 @@
 package ar.edu.itba.paw.model;
 
-public class TripUsers {
+public class TripUser {
 
     private final long id;
     private final long tripId;
     private final long userId;
-    private final long userRoleId;
+    private final UserRole userRole;
 
-    public TripUsers(long id, long tripId, long userId, long userRoleId) {
+    public TripUser(long id, long tripId, long userId, UserRole userRole) {
         this.id = id;
         this.tripId = tripId;
         this.userId = userId;
-        this.userRoleId = userRoleId;
+        this.userRole = userRole;
     }
 
     public long getId() {
@@ -26,7 +26,7 @@ public class TripUsers {
         return userId;
     }
 
-    public long getUserRoleId() {
-        return userRoleId;
+    public UserRole getUserRole() {
+        return userRole;
     }
 }

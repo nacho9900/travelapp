@@ -49,8 +49,13 @@ public class TripController extends MainController{
         return mav;
     }
 
-
-    //TODO: checkear que no se creen nuevos places con google ids repetidos y crear trip-places user-roles etc
+    /*
+    TODO:
+    - fijarse que no exista un place con el mismo googleplace id
+    - crear trip place
+    - crear trip user
+    - fijarse que no exista un trip que pertenece a ese usuario con el mismo nombre
+    */
     @RequestMapping(value = "/home/create-trip", method = {RequestMethod.POST})
     public ModelAndView createTripPost(@ModelAttribute("user") User user,
                                        @Valid @ModelAttribute("createTripForm") final TripCreateForm form,
@@ -73,8 +78,8 @@ public class TripController extends MainController{
         ar.edu.itba.paw.model.Place modelPlace = ps.create(place.getPlaceId(), place.getName(), place.getLatitude(),
                 place.getLongitude(), place.getAddress());
 
-        Trip trip = ts.create(modelPlace.getId(), form.getName(), form.getDescription(), DateManipulation
-                        .stringToCalendar(form.getStartDate()),
+        Trip trip = ts.create(modelPlace.getId(), form.getName(), form.getDescription(),
+                DateManipulation.stringToCalendar(form.getStartDate()),
                 DateManipulation.stringToCalendar(form.getEndDate()));
 
         mav.setViewName("userTrips");

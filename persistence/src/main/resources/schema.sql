@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS places (
                 address varchar(500) NOT NULL
 );
 
-
 CREATE TABLE IF NOT EXISTS users (
 				id SERIAL PRIMARY KEY,
 				firstname varchar(100) NOT NULL,
@@ -17,7 +16,6 @@ CREATE TABLE IF NOT EXISTS users (
 				nationality varchar(100) NOT NULL,
 				birthday DATE NOT NULL
 );
-
 
 CREATE TABLE IF NOT EXISTS trips (
                 id SERIAL PRIMARY KEY,
@@ -29,12 +27,10 @@ CREATE TABLE IF NOT EXISTS trips (
                 FOREIGN KEY (startplace_id) REFERENCES places ON DELETE CASCADE
 );
 
-
 CREATE TABLE IF NOT EXISTS activity_categories (
                 id SERIAL PRIMARY KEY,
                 name varchar(100) NOT NULL
 );
-
 
 CREATE TABLE IF NOT EXISTS activities (
                 id SERIAL PRIMARY KEY,
@@ -52,7 +48,6 @@ CREATE TABLE IF NOT EXISTS activity_places (
                 FOREIGN KEY (place_id) REFERENCES places ON DELETE CASCADE
 );
 
-
 CREATE TABLE IF NOT EXISTS trip_places (
                 id SERIAL PRIMARY KEY,
                 trip_id INTEGER NOT NULL,
@@ -60,7 +55,6 @@ CREATE TABLE IF NOT EXISTS trip_places (
                 FOREIGN KEY (trip_id) REFERENCES trips ON DELETE CASCADE,
                 FOREIGN KEY (place_id) REFERENCES places ON DELETE CASCADE
 );
-
 
 CREATE TABLE IF NOT EXISTS trip_activities (
                 id SERIAL PRIMARY KEY,
@@ -72,19 +66,17 @@ CREATE TABLE IF NOT EXISTS trip_activities (
                 FOREIGN KEY (activity_id) REFERENCES activities ON DELETE CASCADE
 );
 
-
-CREATE TABLE IF NOT EXISTS user_roles (
+/*CREATE TABLE IF NOT EXISTS user_roles (
                 id SERIAL PRIMARY KEY,
                 name varchar(100) NOT NULL,
                 level INTEGER NOT NULL
-);
+);*/
 
 CREATE TABLE IF NOT EXISTS trip_users (
                 id SERIAL PRIMARY KEY,
                 trip_id INTEGER NOT NULL,
                 user_id INTEGER NOT NULL,
-                user_role_id INTEGER NOT NULL,
+                user_role varchar(10) NOT NULL,
                 FOREIGN KEY (trip_id) REFERENCES trips ON DELETE CASCADE,
-                FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE,
-                FOREIGN KEY (user_role_id) REFERENCES user_roles ON DELETE CASCADE
+                FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
 );

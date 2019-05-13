@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.model.DateManipulation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Value("classpath:schema.sql")
     private Resource schemaSql;
+
+    @Bean
+    public DateManipulation dateManipulation() {
+        return new DateManipulation();
+    }
 
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
@@ -72,6 +78,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         dsi.setDatabasePopulator(databasePopulator());
         return dsi;
     }
+
 
     @Bean
     public MessageSource messageSource() {

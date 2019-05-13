@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.model;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 public class User {
@@ -11,6 +12,7 @@ public class User {
     private String password;
     private final Calendar birthday;
     private final String nationality;
+
 
     public User(long id, String firstname, String lastname, String email, String password, Calendar birthday, String nationality) {
         this.id = id;
