@@ -53,9 +53,7 @@ public class TripJdbcDao implements TripDao {
 
     @Override
     public List<Trip> findUserTrips(long userid) {
-        return jdbcTemplate.query("SELECT trips.*" +
-                " FROM trips, trip_users " +
-                "WHERE user_id = ? AND trip_id = trips.id", ROW_MAPPER, userid);
+        return jdbcTemplate.query("SELECT trips.* FROM trips, trip_users WHERE user_id = ? AND trip_id = trips.id", ROW_MAPPER, userid);
     }
 
 

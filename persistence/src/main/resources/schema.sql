@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS places (
                 id SERIAL PRIMARY KEY,
-                google_id varchar(150) NOT NULL,
+                google_id varchar(150) UNIQUE NOT NULL,
                 name varchar(100) NOT NULL,
                 latitude double precision NOT NULL,
                 longitude double precision NOT NULL,
@@ -66,11 +66,6 @@ CREATE TABLE IF NOT EXISTS trip_activities (
                 FOREIGN KEY (activity_id) REFERENCES activities ON DELETE CASCADE
 );
 
-/*CREATE TABLE IF NOT EXISTS user_roles (
-                id SERIAL PRIMARY KEY,
-                name varchar(100) NOT NULL,
-                level INTEGER NOT NULL
-);*/
 
 CREATE TABLE IF NOT EXISTS trip_users (
                 id SERIAL PRIMARY KEY,

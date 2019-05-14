@@ -51,11 +51,9 @@ public class PlaceJdbcDao implements PlaceDao {
         return jdbcTemplate.query("SELECT * FROM places WHERE id = ?", ROW_MAPPER, id).stream().findFirst();
     }
 
-
-    //CHECK IF '' ARE NEEDED FOR STRING
     @Override
     public Optional<Place> findByGoogleId(String googleId) {
-        return jdbcTemplate.query("SELECT * FROM places WHERE google_id = '?'", ROW_MAPPER, googleId).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM places WHERE google_id = ?", ROW_MAPPER, googleId).stream().findFirst();
     }
 
 

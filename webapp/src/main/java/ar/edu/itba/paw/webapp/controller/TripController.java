@@ -22,8 +22,8 @@ import se.walkercrou.places.exception.GooglePlacesException;
 
 import javax.swing.text.html.Option;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class TripController extends MainController{
@@ -53,7 +53,17 @@ public class TripController extends MainController{
     public ModelAndView getUserTrips(@ModelAttribute("user") User user) {
         ModelAndView mav = new ModelAndView("userTrips");
         List<Trip> userTrips = ts.findUserTrips(user.getId());
-        mav.addObject("userTrips",userTrips);
+        List<DataPair<Trip, ar.edu.itba.paw.model.Place>> dataPairList = new LinkedList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        for (Trip trip: userTrips) {
+            long placeId = trip.getStartPlaceId();
+            ar.edu.itba.paw.model.Place place = ps.findById(placeId).get();
+            dataPairList.add(new DataPair<>(trip, place));
+
+        }
+
+        mav.addObject("userTripsList",dataPairList);
+        mav.addObject("dateFormat",dateFormat);
         return mav;
     }
 
