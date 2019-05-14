@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
-import ar.edu.itba.paw.interfaces.PlaceService;
-import ar.edu.itba.paw.interfaces.TripPlacesService;
-import ar.edu.itba.paw.interfaces.TripService;
-import ar.edu.itba.paw.interfaces.TripUsersService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import org.slf4j.Logger;
@@ -13,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,7 +18,6 @@ import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
 
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -33,14 +30,15 @@ public class TripController extends MainController{
     GooglePlaces client = new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
 
     @Autowired
+    ActivityService as;
+    @Autowired
     TripService ts;
-
+    @Autowired
+    UserService us;
     @Autowired
     PlaceService ps;
-
     @Autowired
     TripUsersService tus;
-
     @Autowired
     TripPlacesService tps;
 
@@ -104,4 +102,28 @@ public class TripController extends MainController{
         mav.setViewName("userTrips");
         return mav;
     }
+
+    /*
+    * VOY A NECESITAR :
+    * - PLACES DEL TRIP
+    * - USUARIOS DEL TRIP
+    * - ACTIVITIES DEL TRIP
+    * - ROLES DE LOS USUARIOS
+    * - LUGARES DE LAS ACTIVIDADES
+    */
+
+    @RequestMapping("/home/trip/${tripId}")
+    public ModelAndView trip(@ModelAttribute("user") User user, @PathVariable long tripId) {
+        ModelAndView mav = new ModelAndView("trip");
+        Optional<Trip> maybeTrip = ts.findById(tripId);
+        Trip trip = maybeTrip.get();
+        List<ar.edu.itba.paw.model.Place> tripPlaces = ps.getTripPlaces(trip.getId());
+        List<DataPair<User, UserRole>> tripUsersAndRoles = us.getTripUsersAndRoles(tripId);
+        List<DataPair<Activity, List<String>>> tripActivitiesAndCategories = as.getTripActivitiesAndCategories(trip.getId());
+
+        //TODO
+
+        return mav;
+    }
+
 }

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.model.Place;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,5 +28,10 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public Optional<Place> findByGoogleId(String googleId) {
         return pd.findByGoogleId(googleId);
+    }
+
+    @Override
+    public List<Place> getTripPlaces(long tripId) {
+        return pd.getTripPlaces(tripId);
     }
 }

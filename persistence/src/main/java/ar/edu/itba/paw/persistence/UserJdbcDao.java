@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,6 +32,8 @@ public class UserJdbcDao implements UserDao {
             rs.getString("lastname"), rs.getString("email"), rs.getString("password"),
             DateManipulation.dateToCalendar(rs.getDate("birthday")), rs.getString("nationality"));
 
+    private final static RowMapper<UserRole> ROW_MAPPER_UR = (rs, rowNum) -> UserRole.valueOf(rs.getString("user_role"));
+
 
     @Override
     public Optional<User> findByUsername(String email) {
@@ -48,6 +51,16 @@ public class UserJdbcDao implements UserDao {
         args.put("nationality", nationality);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
         return new User(userId.longValue(),firstname,lastname,email,password,birthday,nationality);
+    }
+
+    @Override
+    public List<User> getTripUsers(long tripId) {
+        return jdbcTemplate.query("SELECT users.* FROM users, trip_users WHERE trip_id = ? AND users.id = user_id", ROW_MAPPER, tripId);
+    }
+
+    @Override
+    public Optional<UserRole> getUserRole(long userId, long tripId) {
+        return jdbcTemplate.query("SELECT user_role FROM users, trip_users WHERE users.id = ? AND users.id = user_id AND trip_id = ? ", ROW_MAPPER_UR, userId, tripId).stream().findFirst();
     }
 
     @Override

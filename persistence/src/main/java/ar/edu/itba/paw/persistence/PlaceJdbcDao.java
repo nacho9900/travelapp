@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -54,6 +55,11 @@ public class PlaceJdbcDao implements PlaceDao {
     @Override
     public Optional<Place> findByGoogleId(String googleId) {
         return jdbcTemplate.query("SELECT * FROM places WHERE google_id = ?", ROW_MAPPER, googleId).stream().findFirst();
+    }
+
+    @Override
+    public List<Place> getTripPlaces(long tripId) {
+        return jdbcTemplate.query("SELECT places.* FROM places, trip_places  WHERE trip_id = ? AND places.id = place_id ", ROW_MAPPER, tripId);
     }
 
 
