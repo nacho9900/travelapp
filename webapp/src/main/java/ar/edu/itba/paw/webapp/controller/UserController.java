@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
@@ -71,7 +72,12 @@ public class UserController extends MainController{
         return mav;
     }
     @RequestMapping("/home/profile")
-    public ModelAndView profile() { return new ModelAndView("profile"); }
+    public ModelAndView profile() {
+        ModelAndView mav = new ModelAndView("profile");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        mav.addObject("dateFormat",dateFormat);
+        return mav;
+    }
 
     @RequestMapping("/about")
     public ModelAndView aboutUs() { return new ModelAndView("about"); }

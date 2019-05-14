@@ -48,6 +48,7 @@
         </div>
     </nav>
     <h3 class="display-4">Welcome ${user.firstname} ${user.lastname}! </h3>
+    <a href="/home/profile">My profile</a>
     <script src="${bootjs}" type="text/javascript"></script>
     <script src="${jquery}" type="text/javascript"></script>
 </body>

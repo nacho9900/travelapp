@@ -11,12 +11,13 @@
     <c:url value="/home/create-trip" var="createTrip"/>
     <c:url value="/home/trips" var="trips"/>
     <c:url value="/home" var="home"/>
-    <c:url value="/resources/css/index.css" var="indexcss"/>
     <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
+    <c:url value="/resources/icons/birthday-cake.png" var="birthdayIMG"/>
+    <c:url value="/resources/icons/defaultPP.png" var="defaultPP"/>
+
     <link href="${bootcss}" rel="stylesheet">
-    <link href="${indexcss}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
-    <title>Meet and Travel</title>
+    <title>My profile</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -49,11 +50,30 @@
             </form>
         </div>
     </nav>
-    <h1 class="display-4">Profile</h1>
-    <p>${user.firstname}</p>
-    <p>${user.lastname}</p>
-    <p>${user.email}</p>
-    <p>Bio:</p>
+    <div class="container text-center">
+        <div class= "jumbotron jumbotron-fluid">
+            <h1>My profile</h1>
+            <img class="img-fluid" src="${defaultPP}" width="410" height="430" style="margin: 20px">
+            <div class="card car mx-auto" style="width: 18rem;">
+                <div class="card-header">
+                    <h5 class="card-title">${user.firstname} ${user.lastname}    ${user.nationality}</h5>
+                </div>
+               <%-- <div class="card-img">
+
+                </div>--%>
+                <div class="card-body">
+                    <p class="card-text">${user.email}</p>
+                    <p class="card-text">${dateFormat.format(user.birthday.getTime())}</p>
+                    <p class="card-text">This is a standard biography of the mother fucking user just for testing purposes
+                        there is no one working in this fucking project aside from me</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary btn-success">Edit profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="${bootjs}" type="text/javascript"></script>
 <script src="${jquery}" type="text/javascript"></script>
 </body>
