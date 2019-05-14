@@ -7,8 +7,14 @@
     <c:url value="/webjars/jquery/3.2.1/jquery.min.js" var="jquery" />
     <c:url value="/webjars/bootstrap/4.1.3/js/bootstrap.min.js" var="bootjs"/>
     <c:url value="/resources/icons/globe.ico" var="iconURL"/>
+    <c:url value="/" var="index"/>
+    <c:url value="/home" var="home"/>
+    <c:url value="/home/trips" var="trips"/>
+    <c:url value="/home/create-trip" var="createTrip"/>
+    <c:url value="/about" var="about"/>
+    <c:url value="/resources/css/about.css" var="aboutCss"/>
     <link href="${bootcss}" rel="stylesheet">
-    <link href="${indexcss}" rel="stylesheet">
+    <link href="${aboutCss}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <title>About us</title>
 </head>
@@ -42,10 +48,10 @@
             </form>
         </div>
     </nav>
-    <div class="container">
-        <h3 class="display-4">PAW 2019A Grupo 4</h3>
+    <div id="myContainer" class="container align-items-center">
+        <h3 id="myHeader" class="display-4">PAW 2019A Grupo 4</h3>
         <ul class="list-group" >
-            <li class="list-group-item">Felipe Gorostiaga 57200</li>
+            <li class="list-group-item">Felipe Gorostiaga - 57200</li>
             <li class="list-group-item">Ignacio Negro</li>
             <li class="list-group-item">Ximena Zuberbuhler</li>
             <li class="list-group-item">Florencia Monti</li>

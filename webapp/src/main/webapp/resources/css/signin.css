@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Numans');
 
 html,body{
-    background-image: url(/resources/icons/mountainbg.jpg);
+    background-image: url(/resources/icons/aurora-borealis.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     height: 100%;
@@ -24,7 +24,8 @@ html,body{
 .social_icon span{
     font-size: 60px;
     margin-left: 10px;
-    color: #FFC312;
+    color: #069d00;
+    /*color: #FFC312;*/
 }
 
 .social_icon span:hover{
@@ -44,7 +45,8 @@ html,body{
 
 .input-group-prepend span{
     width: 50px;
-    background-color: #FFC312;
+    background-color: #069d00;
+    /*background-color: #FFC312;*/
     color: black;
     border:0 !important;
 }
@@ -71,7 +73,8 @@ input:focus{
 
 .login_btn{
     color: black;
-    background-color: #FFC312;
+    background-color:   #069d00;
+   /* background-color: #FFC312;*/
     width: 100px;
 }
 
@@ -86,5 +89,13 @@ input:focus{
 
 .links a{
     margin-left: 4px;
+}
+
+a:hover {
+    color: #069d00;
+}
+
+.myClass {
+    color: forestgreen;
 }
 

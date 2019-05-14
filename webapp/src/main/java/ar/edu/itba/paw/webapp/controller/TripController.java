@@ -2,10 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.interfaces.PlaceService;
+import ar.edu.itba.paw.interfaces.TripPlacesService;
 import ar.edu.itba.paw.interfaces.TripService;
-import ar.edu.itba.paw.model.DateManipulation;
-import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.interfaces.TripUsersService;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +20,10 @@ import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class TripController extends MainController{
@@ -36,6 +38,12 @@ public class TripController extends MainController{
     @Autowired
     PlaceService ps;
 
+    @Autowired
+    TripUsersService tus;
+
+    @Autowired
+    TripPlacesService tps;
+
     @RequestMapping("/home/create-trip")
     public ModelAndView createTripGet(@ModelAttribute("createTripForm") final TripCreateForm form) {
         return new ModelAndView("createTrip");
@@ -49,22 +57,15 @@ public class TripController extends MainController{
         return mav;
     }
 
-    /*
-    TODO:
-    - fijarse que no exista un place con el mismo googleplace id
-    - crear trip place
-    - crear trip user
-    - fijarse que no exista un trip que pertenece a ese usuario con el mismo nombre
-    */
     @RequestMapping(value = "/home/create-trip", method = {RequestMethod.POST})
     public ModelAndView createTripPost(@ModelAttribute("user") User user,
                                        @Valid @ModelAttribute("createTripForm") final TripCreateForm form,
                                        final BindingResult errors) {
-
+        List<Place> places;
+        ar.edu.itba.paw.model.Place modelPlace;
         ModelAndView mav = new ModelAndView("createTrip");
         if(errors.hasErrors()) return mav;
         LOGGER.debug("NO ERRORS IN CREATE TRIP FORM");
-        List<Place> places;
         try {
             places = client.getPlacesByQuery(form.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
         }
@@ -72,16 +73,24 @@ public class TripController extends MainController{
             LOGGER.debug("INVALID GOOGLE PLACES QUERY LOCATION");
             return mav;
         }
-
         Place place = places.get(0);
         LOGGER.debug("Google Place name is {}", place.getName());
-        ar.edu.itba.paw.model.Place modelPlace = ps.create(place.getPlaceId(), place.getName(), place.getLatitude(),
-                place.getLongitude(), place.getAddress());
+
+        Optional<ar.edu.itba.paw.model.Place> maybePlace = ps.findByGoogleId(place.getPlaceId());
+
+        if(!maybePlace.isPresent()) {
+            modelPlace = ps.create(place.getPlaceId(), place.getName(), place.getLatitude(),
+                    place.getLongitude(), place.getAddress());
+        }
+        else {
+            modelPlace = maybePlace.get();
+        }
 
         Trip trip = ts.create(modelPlace.getId(), form.getName(), form.getDescription(),
                 DateManipulation.stringToCalendar(form.getStartDate()),
                 DateManipulation.stringToCalendar(form.getEndDate()));
-
+        TripUser tripUser = tus.create(trip.getId(), user.getId(), UserRole.ADMIN);
+        TripPlace tripPlace = tps.create(trip.getId(), modelPlace.getId());
         mav.setViewName("userTrips");
         return mav;
     }

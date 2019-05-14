@@ -4,20 +4,42 @@
 
 <html>
 <head>
-      <c:url value="webjars/bootstrap/4.1.3/css/bootstrap.min.css" var="bs-css"/>
+      <c:url value="webjars/bootstrap/4.1.3/css/bootstrap.min.css" var="bootCss"/>
       <c:url value="/webjars/jquery/3.2.1/jquery.min.js" var="jquery" />
-      <c:url value="/webjars/bootstrap/4.1.3/js/bootstrap.min.js" var="bs-js"/>
+      <c:url value="/webjars/bootstrap/4.1.3/js/bootstrap.min.js" var="bootJs"/>
       <c:url value="/signin" var="signinURL" />
       <c:url value="/resources/css/signup.css" var="signupCSS"/>
       <c:url value="/resources/icons/globe.ico" var="iconURL"/>
       <c:url value="/signup" var="signupURL"/>
-      <link href="${bs-css}" rel="stylesheet">
-      <link rel="stylesheet" type="text/css" href="${signupCSS}" >
+      <c:url value="/" var="index"/>
+      <c:url value="/home" var="home"/>
+      <c:url value="/about" var="about"/>
+      <link href="${bootCss}" rel="stylesheet"/>
+      <link rel="stylesheet" type="text/css" href="${signupCSS}"/>
       <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
 	  <title>Create Account</title>
 </head>
 <body>
-    <form:form action="${signupURL}" method="post" modelAttribute="signupForm">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="${index}"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                              <a class="nav-link" href="${home}">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
+                              <a class="nav-link" href="${about}">About us</a>
+                        </li>
+                  </ul>
+                  <a id="signinButton" class="btn btn-outline-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
+            </div>
+      </nav>
+      <form:form action="${signupURL}" method="post" modelAttribute="signupForm">
       <div class="container">
         <h1>Register</h1>
         <p>Please fill in this form to create an account.</p>
@@ -62,8 +84,8 @@
               <option value="BEN">Benin</option>
               <option value="BMU">Bermuda</option>
               <option value="BTN">Bhutan</option>
-              <option value="BOL">Bolivia, Plurinational State of</option>
-              <option value="BES">Bonaire, Sint Eustatius and Saba</option>
+              <option value="BOL">Bolivia</option>
+              <option value="BES">Bonaire</option>
               <option value="BIH">Bosnia and Herzegovina</option>
               <option value="BWA">Botswana</option>
               <option value="BVT">Bouvet Island</option>
@@ -83,11 +105,11 @@
               <option value="CHL">Chile</option>
               <option value="CHN">China</option>
               <option value="CXR">Christmas Island</option>
-              <option value="CCK">Cocos (Keeling) Islands</option>
+              <option value="CCK">Cocos Islands</option>
               <option value="COL">Colombia</option>
               <option value="COM">Comoros</option>
               <option value="COG">Congo</option>
-              <option value="COD">Congo, the Democratic Republic of the</option>
+              <option value="COD">Congo</option>
               <option value="COK">Cook Islands</option>
               <option value="CRI">Costa Rica</option>
               <option value="CIV">Côte d'Ivoire</option>
@@ -132,15 +154,15 @@
               <option value="GNB">Guinea-Bissau</option>
               <option value="GUY">Guyana</option>
               <option value="HTI">Haiti</option>
-              <option value="HMD">Heard Island and McDonald Islands</option>
-              <option value="VAT">Holy See (Vatican City State)</option>
+              <option value="HMD">Heard Island</option>
+              <option value="VAT">Vatican</option>
               <option value="HND">Honduras</option>
               <option value="HKG">Hong Kong</option>
               <option value="HUN">Hungary</option>
               <option value="ISL">Iceland</option>
               <option value="IND">India</option>
               <option value="IDN">Indonesia</option>
-              <option value="IRN">Iran, Islamic Republic of</option>
+              <option value="IRN">Iran</option>
               <option value="IRQ">Iraq</option>
               <option value="IRL">Ireland</option>
               <option value="IMN">Isle of Man</option>
@@ -153,8 +175,8 @@
               <option value="KAZ">Kazakhstan</option>
               <option value="KEN">Kenya</option>
               <option value="KIR">Kiribati</option>
-              <option value="PRK">Korea, Democratic People's Republic of</option>
-              <option value="KOR">Korea, Republic of</option>
+              <option value="PRK">North Korea</option>
+              <option value="KOR">South Korea</option>
               <option value="KWT">Kuwait</option>
               <option value="KGZ">Kyrgyzstan</option>
               <option value="LAO">Lao People's Democratic Republic</option>
@@ -167,7 +189,7 @@
               <option value="LTU">Lithuania</option>
               <option value="LUX">Luxembourg</option>
               <option value="MAC">Macao</option>
-              <option value="MKD">Macedonia, the former Yugoslav Republic of</option>
+              <option value="MKD">Macedonia</option>
               <option value="MDG">Madagascar</option>
               <option value="MWI">Malawi</option>
               <option value="MYS">Malaysia</option>
@@ -180,8 +202,8 @@
               <option value="MUS">Mauritius</option>
               <option value="MYT">Mayotte</option>
               <option value="MEX">Mexico</option>
-              <option value="FSM">Micronesia, Federated States of</option>
-              <option value="MDA">Moldova, Republic of</option>
+              <option value="FSM">Micronesia</option>
+              <option value="MDA">Moldova</option>
               <option value="MCO">Monaco</option>
               <option value="MNG">Mongolia</option>
               <option value="MNE">Montenegro</option>
@@ -205,7 +227,7 @@
               <option value="OMN">Oman</option>
               <option value="PAK">Pakistan</option>
               <option value="PLW">Palau</option>
-              <option value="PSE">Palestinian Territory, Occupied</option>
+              <option value="PSE">Palestine</option>
               <option value="PAN">Panama</option>
               <option value="PNG">Papua New Guinea</option>
               <option value="PRY">Paraguay</option>
@@ -221,7 +243,7 @@
               <option value="RUS">Russian Federation</option>
               <option value="RWA">Rwanda</option>
               <option value="BLM">Saint Barthélemy</option>
-              <option value="SHN">Saint Helena, Ascension and Tristan da Cunha</option>
+              <option value="SHN">Saint Helena</option>
               <option value="KNA">Saint Kitts and Nevis</option>
               <option value="LCA">Saint Lucia</option>
               <option value="MAF">Saint Martin (French part)</option>
@@ -253,9 +275,9 @@
               <option value="SWE">Sweden</option>
               <option value="CHE">Switzerland</option>
               <option value="SYR">Syrian Arab Republic</option>
-              <option value="TWN">Taiwan, Province of China</option>
+              <option value="TWN">Taiwan</option>
               <option value="TJK">Tajikistan</option>
-              <option value="TZA">Tanzania, United Republic of</option>
+              <option value="TZA">Tanzania</option>
               <option value="THA">Thailand</option>
               <option value="TLS">Timor-Leste</option>
               <option value="TGO">Togo</option>
@@ -276,7 +298,7 @@
               <option value="URY">Uruguay</option>
               <option value="UZB">Uzbekistan</option>
               <option value="VUT">Vanuatu</option>
-              <option value="VEN">Venezuela, Bolivarian Republic of</option>
+              <option value="VEN">Venezuela</option>
               <option value="VNM">Viet Nam</option>
               <option value="VGB">Virgin Islands, British</option>
               <option value="VIR">Virgin Islands, U.S.</option>
@@ -300,9 +322,9 @@
       <div class="container signin">
         <p>Already have an account? <a href="${signinURL}">Sign in</a>.</p>
       </div>
-    </form:form>
-    <script src="${jquery}" type="text/javascript"></script>
-    <script src="${bs-js}" type="text/javascript"></script>
+      </form:form>
+      <script src="${jquery}" type="text/javascript"></script>
+      <script src="${bootJs}" type="text/javascript"></script>
 </body>
 </html>
 
