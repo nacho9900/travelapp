@@ -4,13 +4,15 @@ public class Activity {
 
     private final long id;
     private final String name;
-    private final long categoryId;
+    private final String category;
+    private final long placeId;
 
 
-    public Activity(long id, String name, long categoryId) {
+    public Activity(long id, String name, String category, long placeId) {
         this.id = id;
         this.name = name;
-        this.categoryId = categoryId;
+        this.category = category;
+        this.placeId = placeId;
     }
 
     public long getId() {
@@ -21,7 +23,11 @@ public class Activity {
         return name;
     }
 
-    public long getCategoryId() {
-        return categoryId;
+    public String getCategory() {
+        return category;
+    }
+
+    public long getPlaceId() {
+        return placeId;
     }
 }

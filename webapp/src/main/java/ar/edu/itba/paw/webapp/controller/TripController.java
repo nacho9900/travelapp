@@ -87,13 +87,8 @@ public class TripController extends MainController{
 
         Optional<ar.edu.itba.paw.model.Place> maybePlace = ps.findByGoogleId(place.getPlaceId());
 
-        if(!maybePlace.isPresent()) {
-            modelPlace = ps.create(place.getPlaceId(), place.getName(), place.getLatitude(),
-                    place.getLongitude(), place.getAddress());
-        }
-        else {
-            modelPlace = maybePlace.get();
-        }
+        modelPlace = maybePlace.orElseGet(() -> ps.create(place.getPlaceId(), place.getName(), place.getLatitude(),
+                place.getLongitude(), place.getAddress()));
 
         Trip trip = ts.create(modelPlace.getId(), form.getName(), form.getDescription(),
                 DateManipulation.stringToCalendar(form.getStartDate()),
@@ -104,29 +99,22 @@ public class TripController extends MainController{
         return mav;
     }
 
-    /*
-    * VOY A NECESITAR :
-    * - PLACES DEL TRIP
-    * - USUARIOS DEL TRIP
-    * - ACTIVITIES DEL TRIP
-    * - ROLES DE LOS USUARIOS
-    * - LUGARES DE LAS ACTIVIDADES
-    */
-
-    @RequestMapping("/home/trip/${tripId}")
+    @RequestMapping("/home/trip/{tripId}")
     public ModelAndView trip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ModelAndView mav = new ModelAndView("trip");
         Optional<Trip> maybeTrip = ts.findById(tripId);
         Trip trip = maybeTrip.get();
+        String startDate = dateFormat.format(trip.getStartDate().getTime());
+        String endDate = dateFormat.format(trip.getEndDate().getTime());
         List<ar.edu.itba.paw.model.Place> tripPlaces = ps.getTripPlaces(trip.getId());
         List<DataPair<User, UserRole>> tripUsersAndRoles = us.getTripUsersAndRoles(tripId);
-        List<DataPair<Activity, DataPair<List<String>, List<String>>>> tripActCategAndPlaces = as
-                .getTripActivitiesAndCategories(trip.getId());
+        List<DataPair<Activity, ar.edu.itba.paw.model.Place>> tripActAndPlace = as.getTripActivitiesDetails(tripId);
         mav.addObject("places", tripPlaces);
-        mav.addObject("UsersAndRoles", tripUsersAndRoles);
-        mav.addObject("ActCategAndPlaces", tripActCategAndPlaces);
+        mav.addObject("usersAndRoles", tripUsersAndRoles);
+        mav.addObject("actAndPlaces", tripActAndPlace);
         mav.addObject("trip", trip);
-        mav.addObject("dateFormat", dateFormat);
+        mav.addObject("startDate", startDate);
+        mav.addObject("endDate", endDate);
         return mav;
     }
 

@@ -43,8 +43,7 @@ public class UserController extends MainController{
 
     @RequestMapping("/home")
     public ModelAndView home() {
-        ModelAndView mav = new ModelAndView("home");
-        return mav;
+        return new ModelAndView("home");
     }
 
     @RequestMapping("/signup")
@@ -58,7 +57,7 @@ public class UserController extends MainController{
 
     @RequestMapping(value = "/signup", method = {RequestMethod.POST})
     public ModelAndView validateSignUp(@Valid @ModelAttribute("signupForm") final UserCreateForm form,
-                                       final BindingResult errors, HttpServletRequest request) {
+                                       final BindingResult errors) {
 
         ModelAndView mav = new ModelAndView("signup");
         if(errors.hasErrors()) {

@@ -5,10 +5,11 @@ import ar.edu.itba.paw.interfaces.ActivityDao;
 import ar.edu.itba.paw.interfaces.ActivityService;
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.model.DataPair;
+import ar.edu.itba.paw.model.Place;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +30,8 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Activity create(String name, long categoryId) {
-        return ad.create(name, categoryId);
+    public Activity create(String name, String category, long placeId) {
+        return ad.create(name, category, placeId);
     }
 
     @Override
@@ -38,15 +39,21 @@ public class ActivityServiceImpl implements ActivityService {
         return ad.getTripActivities(tripId);
     }
 
-
-    public List<DataPair<Activity, DataPair<List<String>, List<String>>>> getTripActivitiesAndCategories(long tripId) {
-
-        List<DataPair<Activity, DataPair<List<String>, List<String>>>> listDataPair = new LinkedList<>();
+    @Override
+    public List<DataPair<Activity, Place>> getTripActivitiesDetails(long tripId) {
         List<Activity> activities = ad.getTripActivities(tripId);
+        List<DataPair<Activity, Place>> dataPairList = new ArrayList<>();
         for(Activity activity : activities) {
-            long aId = activity.getId();
-            listDataPair.add(new DataPair<>(activity, new DataPair<>(ad.getActivityPlaces(aId), ad.getActivityCategories(aId))));
+            Optional<Place> optionalPlace = ad.getActivityPlace(activity.getId());
+            optionalPlace.ifPresent(place -> dataPairList.add(new DataPair<>(activity, place)));
+
         }
-        return listDataPair;
+        return dataPairList;
     }
+
+    @Override
+    public Optional<Activity> findByCategory(String category) {
+        return ad.findByCategory(category);
+    }
+
 }

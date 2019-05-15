@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class UserCreateForm {
 
-    //TODO AGREGAR PATTERN A BIRTHDAY
+    //TODO AGREGAR PATTERN A BIRTHDAY Y PSW REPEAT CHECKING
 
     @Pattern(regexp = "[a-zA-Z]+")
     @Size(min = 2, max = 100)
@@ -28,6 +28,7 @@ public class UserCreateForm {
 
     private String birthday;
 
+    @Size(min = 2, max = 5)
     private String nationality;
 
     public String getBirthday() {

@@ -49,39 +49,31 @@
 </nav>
 
 <div class="container">
-    <div class="container text-md-left">
-        <h1>${trip.name}</h1>
+    <div>
+        <h1 class="display-4">${trip.name}</h1>
         <p>${trip.description}</p>
-        <p>[${dateFormat.format(trip.startDate.getTime())} - ${dateFormat.format(trip.endDate.getTime())}]</p>
+        <p>[${startDate} - ${endDate}]</p>
     </div>
-
     <h3>Places</h3>
     <div class="list-group">
     <c:forEach items="${places}" var="place">
         <button type="button" class="list-group-item list-group-item-action">${place.address}</button>
     </c:forEach>
     </div>
-
     <h3>Members</h3>
     <div class="list-group">
-        <c:forEach items="${UsersAndRoles}" var="ur">
-            <button type="button" class="list-group-item list-group-item-action">${ur.key} ${ur.value.toString()}</button>
+        <c:forEach items="${usersAndRoles}" var="ur">
+            <button type="button" class="list-group-item list-group-item-action">${ur.key.firstname} ${ur.key.lastname}
+                    ${ur.value}</button>
         </c:forEach>
     </div>
-
-    <h3>Members</h3>
+    <h3>Activities</h3>
     <ul class="list-group">
-        <c:forEach items="${ActCategAndPlaces}" var="acp">
-            <li class="list-group-item">${acp.key.name} -
-                <c:forEach items="${acp.value.key}" var="places">
-                    <p>${places}</p>
-                </c:forEach>
-                <c:forEach items="${acp.value.value}" var="categories">
-                    <p>${categories}</p>
-                </c:forEach>
-            </li>
+        <c:forEach items="${actAndPlaces}" var="activity_places">
+            <li class="list-group-item">${activity_places.key.name} ${activity_places.key.category} ${activity_places.value.address}</li>
         </c:forEach>
     </ul>
+    <a class="btn btn-primary btn-lg" href="/home/trip/${trip.id}/create-activity" role="button">Add activity</a>
 </div>
 
 <script src="${jquery}" type="text/javascript"></script>

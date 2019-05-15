@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ActivityDao;
 import ar.edu.itba.paw.model.Activity;
+import ar.edu.itba.paw.model.Place;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,9 +32,12 @@ public class ActivityJdbcDao implements ActivityDao {
     }
 
     private final static RowMapper<Activity> ROW_MAPPER = (rs, rowNum) -> new Activity(rs.getLong("id"), rs.getString("name"),
-            rs.getLong("category_id"));
+            rs.getString("category"), rs.getLong("place_id"));
 
     private final static RowMapper<String> ROW_MAPPER_CAT = (rs, rowNum) -> rs.getString("name");
+
+    private final static RowMapper<Place> ROW_MAPPER_PL = (rs, rowNum) -> new Place(rs.getLong("id"),rs.getString("google_id"),
+            rs.getString("name"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getString("address"));
 
     @Override
     public Optional<Activity> findById(long id) {
@@ -46,12 +50,13 @@ public class ActivityJdbcDao implements ActivityDao {
     }
 
     @Override
-    public Activity create(String name, long categoryId) {
+    public Activity create(String name, String category, long placeId) {
         final Map<String, Object> args = new HashMap<>();
         args.put("name", name);
-        args.put("category_id", categoryId);
+        args.put("category", category);
+        args.put("place_id", placeId);
         final Number activityId = jdbcInsert.executeAndReturnKey(args);
-        return new Activity(activityId.longValue(), name, categoryId);
+        return new Activity(activityId.longValue(), name, category, placeId);
     }
 
     @Override
@@ -60,12 +65,14 @@ public class ActivityJdbcDao implements ActivityDao {
     }
 
     @Override
-    public List<String> getActivityPlaces(long id) {
-        return jdbcTemplate.query("SELECT places.name FROM activities,activity_places,places WHERE  activities.id = ? AND activity_id = activities.id AND place_id = places.id ", ROW_MAPPER_CAT, id);
+    public Optional<Place> getActivityPlace(long id) {
+        return jdbcTemplate.query("SELECT places.* FROM activities,places WHERE  activities.id = ? place_id = places.id ", ROW_MAPPER_PL, id).stream().findFirst();
     }
 
     @Override
-    public List<String> getActivityCategories(long id) {
-        return jdbcTemplate.query("SELECT name FROM activity_categories, activities WHERE activities.id = ? AND category_id = activity_categories.id", ROW_MAPPER_CAT, id);
+    public Optional<Activity> findByCategory(String category) {
+        return jdbcTemplate.query("SELECT * FROM activities WHERE category = ?", ROW_MAPPER, category).stream().findFirst();
     }
+
+
 }

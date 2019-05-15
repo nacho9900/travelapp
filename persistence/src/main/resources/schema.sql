@@ -27,11 +27,6 @@ CREATE TABLE IF NOT EXISTS trips (
                 FOREIGN KEY (startplace_id) REFERENCES places ON DELETE CASCADE
 );
 
-/*CREATE TABLE IF NOT EXISTS activity_categories (
-                id SERIAL PRIMARY KEY,
-                name varchar(100) NOT NULL
-);
-*/
 CREATE TABLE IF NOT EXISTS activities (
                 id SERIAL PRIMARY KEY,
                 name varchar(40) NOT NULL,
@@ -40,15 +35,6 @@ CREATE TABLE IF NOT EXISTS activities (
                 FOREIGN KEY (place_id) REFERENCES places ON DELETE CASCADE
 );
 
-/*
-CREATE TABLE IF NOT EXISTS activity_places (
-                id SERIAL PRIMARY KEY,
-                activity_id INTEGER NOT NULL,
-                place_id INTEGER NOT NULL,
-                FOREIGN KEY (activity_id) REFERENCES activities ON DELETE CASCADE,
-                FOREIGN KEY (place_id) REFERENCES places ON DELETE CASCADE
-);
-*/
 CREATE TABLE IF NOT EXISTS trip_places (
                 id SERIAL PRIMARY KEY,
                 trip_id INTEGER NOT NULL,
