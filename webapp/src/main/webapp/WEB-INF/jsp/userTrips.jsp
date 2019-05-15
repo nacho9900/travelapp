@@ -47,6 +47,7 @@
             </form>
         </div>
     </nav>
+    <%--TODO: change method call to model object--%>
     <h3 id="header" class="display-4 context-menu">My Trips</h3>
     <div class="list-group">
         <c:forEach items="${userTripsList}" var="dataPair">

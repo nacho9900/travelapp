@@ -8,7 +8,7 @@ import ar.edu.itba.paw.model.DataPair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,12 +38,14 @@ public class ActivityServiceImpl implements ActivityService {
         return ad.getTripActivities(tripId);
     }
 
-    @Override
-    public List<DataPair<Activity, List<String>>> getTripActivitiesAndCategories(long tripId) {
-        List<DataPair<Activity, List<String>>> listDataPair = new ArrayList<>();
+
+    public List<DataPair<Activity, DataPair<List<String>, List<String>>>> getTripActivitiesAndCategories(long tripId) {
+
+        List<DataPair<Activity, DataPair<List<String>, List<String>>>> listDataPair = new LinkedList<>();
         List<Activity> activities = ad.getTripActivities(tripId);
         for(Activity activity : activities) {
-            listDataPair.add(new DataPair<>(activity, ad.getActivityCategories(activity.getId())));
+            long aId = activity.getId();
+            listDataPair.add(new DataPair<>(activity, new DataPair<>(ad.getActivityPlaces(aId), ad.getActivityCategories(aId))));
         }
         return listDataPair;
     }

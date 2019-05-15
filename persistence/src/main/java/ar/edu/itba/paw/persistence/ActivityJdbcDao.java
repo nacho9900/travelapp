@@ -60,6 +60,11 @@ public class ActivityJdbcDao implements ActivityDao {
     }
 
     @Override
+    public List<String> getActivityPlaces(long id) {
+        return jdbcTemplate.query("SELECT places.name FROM activities,activity_places,places WHERE  activities.id = ? AND activity_id = activities.id AND place_id = places.id ", ROW_MAPPER_CAT, id);
+    }
+
+    @Override
     public List<String> getActivityCategories(long id) {
         return jdbcTemplate.query("SELECT name FROM activity_categories, activities WHERE activities.id = ? AND category_id = activity_categories.id", ROW_MAPPER_CAT, id);
     }

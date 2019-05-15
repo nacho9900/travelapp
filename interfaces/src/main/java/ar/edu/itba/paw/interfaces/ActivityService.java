@@ -12,5 +12,5 @@ public interface ActivityService {
     public Optional<Activity> findByName(String name);
     public Activity create(String name, long categoryId);
     public List<Activity> getTripActivities(long tripId);
-    public List<DataPair<Activity, List<String>>> getTripActivitiesAndCategories(long tripId);
+    public List<DataPair<Activity, DataPair<List<String>, List<String>>>> getTripActivitiesAndCategories(long tripId);
 }

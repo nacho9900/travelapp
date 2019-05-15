@@ -12,5 +12,5 @@ public interface ActivityDao {
     public Activity create(String name, long categoryId);
     public List<Activity> getTripActivities(long tripId);
     public List<String> getActivityCategories(long id);
-
+    public List<String> getActivityPlaces(long id);
 }

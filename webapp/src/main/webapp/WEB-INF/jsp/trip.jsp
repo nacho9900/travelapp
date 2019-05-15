@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <html>
 <head>
@@ -22,7 +22,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="${index}">
-        <img src="${globeIMG}" height="42" width="42"/>
+        <img src="${globeIMG}" height="42" width="42" alt=""/>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -47,12 +47,42 @@
         </form>
     </div>
 </nav>
-<div class="container text-md-left">
-    <h1>${trip.name}</h1>
-    <p>${trip.description}</p>
-    <p>[ ${trip.starDate} - ${trip.endDate} ]</p>
-</div>
 
+<div class="container">
+    <div class="container text-md-left">
+        <h1>${trip.name}</h1>
+        <p>${trip.description}</p>
+        <p>[${dateFormat.format(trip.startDate.getTime())} - ${dateFormat.format(trip.endDate.getTime())}]</p>
+    </div>
+
+    <h3>Places</h3>
+    <div class="list-group">
+    <c:forEach items="${places}" var="place">
+        <button type="button" class="list-group-item list-group-item-action">${place.address}</button>
+    </c:forEach>
+    </div>
+
+    <h3>Members</h3>
+    <div class="list-group">
+        <c:forEach items="${UsersAndRoles}" var="ur">
+            <button type="button" class="list-group-item list-group-item-action">${ur.key} ${ur.value.toString()}</button>
+        </c:forEach>
+    </div>
+
+    <h3>Members</h3>
+    <ul class="list-group">
+        <c:forEach items="${ActCategAndPlaces}" var="acp">
+            <li class="list-group-item">${acp.key.name} -
+                <c:forEach items="${acp.value.key}" var="places">
+                    <p>${places}</p>
+                </c:forEach>
+                <c:forEach items="${acp.value.value}" var="categories">
+                    <p>${categories}</p>
+                </c:forEach>
+            </li>
+        </c:forEach>
+    </ul>
+</div>
 
 <script src="${jquery}" type="text/javascript"></script>
 <script src="${bootjs}" type="text/javascript"></script>

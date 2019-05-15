@@ -27,7 +27,9 @@ public class TripController extends MainController{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
-    GooglePlaces client = new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
+    private GooglePlaces client = new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @Autowired
     ActivityService as;
@@ -52,14 +54,13 @@ public class TripController extends MainController{
         ModelAndView mav = new ModelAndView("userTrips");
         List<Trip> userTrips = ts.findUserTrips(user.getId());
         List<DataPair<Trip, ar.edu.itba.paw.model.Place>> dataPairList = new LinkedList<>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
         for (Trip trip: userTrips) {
             long placeId = trip.getStartPlaceId();
             ar.edu.itba.paw.model.Place place = ps.findById(placeId).get();
             dataPairList.add(new DataPair<>(trip, place));
 
         }
-
         mav.addObject("userTripsList",dataPairList);
         mav.addObject("dateFormat",dateFormat);
         return mav;
@@ -113,16 +114,19 @@ public class TripController extends MainController{
     */
 
     @RequestMapping("/home/trip/${tripId}")
-    public ModelAndView trip(@ModelAttribute("user") User user, @PathVariable long tripId) {
+    public ModelAndView trip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ModelAndView mav = new ModelAndView("trip");
         Optional<Trip> maybeTrip = ts.findById(tripId);
         Trip trip = maybeTrip.get();
         List<ar.edu.itba.paw.model.Place> tripPlaces = ps.getTripPlaces(trip.getId());
         List<DataPair<User, UserRole>> tripUsersAndRoles = us.getTripUsersAndRoles(tripId);
-        List<DataPair<Activity, List<String>>> tripActivitiesAndCategories = as.getTripActivitiesAndCategories(trip.getId());
-
-        //TODO
-
+        List<DataPair<Activity, DataPair<List<String>, List<String>>>> tripActCategAndPlaces = as
+                .getTripActivitiesAndCategories(trip.getId());
+        mav.addObject("places", tripPlaces);
+        mav.addObject("UsersAndRoles", tripUsersAndRoles);
+        mav.addObject("ActCategAndPlaces", tripActCategAndPlaces);
+        mav.addObject("trip", trip);
+        mav.addObject("dateFormat", dateFormat);
         return mav;
     }
 
