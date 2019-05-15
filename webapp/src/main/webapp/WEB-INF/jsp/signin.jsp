@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <%--TODO: FIX URLS--%>
     <c:url value="/resources/css/signin.css" var="signinCSS"/>
     <c:url value="/resources/icons/globe.ico" var="iconURL"/>
     <c:url value="/webjars/bootstrap/4.1.3/css/bootstrap.min.css" var="bootcss"/>

@@ -63,6 +63,7 @@ public class UserController extends MainController{
         if(errors.hasErrors()) {
             return mav;
         }
+        //TODO CHECK IF USER EXISTS WITH SAME EMAIL.
         String encodedPassword =  passwordEncoder.encode(form.getPassword());
         User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), encodedPassword,
                 DateManipulation.stringToCalendar(form.getBirthday()), form.getNationality());

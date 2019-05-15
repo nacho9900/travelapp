@@ -66,7 +66,7 @@ public class ActivityJdbcDao implements ActivityDao {
 
     @Override
     public Optional<Place> getActivityPlace(long id) {
-        return jdbcTemplate.query("SELECT places.* FROM activities,places WHERE  activities.id = ? place_id = places.id ", ROW_MAPPER_PL, id).stream().findFirst();
+        return jdbcTemplate.query("SELECT places.* FROM activities,places WHERE  activities.id = ? AND place_id = places.id ", ROW_MAPPER_PL, id).stream().findFirst();
     }
 
     @Override

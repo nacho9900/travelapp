@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.model.User;
 import org.junit.Test;
 
+//TODO set mockito dependencies and make tests
 public class UserServiceImplTest {
 
 
@@ -17,7 +18,7 @@ public class UserServiceImplTest {
     @Mock
     private UserDao mockDao;*/
 
- /* TODO: set mockito dependencies & complete method
+ /*
     @Test
     public void testCreate() {
 

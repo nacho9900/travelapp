@@ -1,10 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.ActivityService;
-import ar.edu.itba.paw.interfaces.PlaceService;
-import ar.edu.itba.paw.interfaces.TripService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.Activity;
-import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripActivity;
+import ar.edu.itba.paw.model.TripPlace;
 import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +35,12 @@ public class ActivityController extends MainController {
     @Autowired
     TripService ts;
 
+    @Autowired
+    TripPlacesService tps;
+
+    @Autowired
+    TripActivitiesService tas;
+
     @RequestMapping(value = "/home/trip/{tripId}/create-activity", method = {RequestMethod.GET})
     public ModelAndView createActivityGet(@PathVariable(value = "tripId") long tripId,
                                           @ModelAttribute("activityForm") final ActivityCreateForm form) {
@@ -66,7 +71,8 @@ public class ActivityController extends MainController {
                 googlePlace.getLongitude(), googlePlace.getAddress()));
 
         Activity activity = as.create(form.getName(), form.getCategory(), modelPlace.getId());
-        Optional<Trip> trip = ts.findById(tripId);
+        TripActivity tripActivity = tas.create(tripId, modelPlace.getId(), activity.getId());
+        TripPlace tripPlace = tps.create(tripId, modelPlace.getId());
         String redirectURL = String.format("redirect:/home/trip/%d", tripId);
         mav.setViewName(redirectURL);
         return mav;

@@ -1,9 +1,19 @@
 package ar.edu.itba.paw.webapp.form;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 public class ActivityCreateForm {
 
+    @Pattern(regexp = "[a-zA-Z]+")
+    @Size(min = 3, max = 40)
     private String name;
+
+    @Pattern(regexp = "[a-zA-Z]+")
+    @Size(min = 3, max = 40)
     private String category;
+
+    @Size(min = 3, max = 100)
     private String placeInput;
 
     public String getName() {
