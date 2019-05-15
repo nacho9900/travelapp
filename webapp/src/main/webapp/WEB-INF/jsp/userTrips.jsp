@@ -14,6 +14,9 @@
     <c:url value="/home/create-trip" var="createTrip"/>
     <c:url value="/resources/css/userTrips.css" var="customCSS"/>
     <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
+    <c:url value="/resources/icons/uu.png" var="userIMG"/>
+    <c:url value="/signin" var="signinURL"/>
+    <c:url value="/home/profile" var="profile"/>
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <link href="${bootcss}" rel="stylesheet">
     <link href="${customCSS}" rel="stylesheet">
@@ -29,6 +32,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="${home}">Home <span class="sr-only">(current)</span></a>
+                </li>
                 <li class="nav-item">
                 </li>
                 <li class="nav-item">
@@ -43,9 +49,19 @@
             </ul>
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search for trips" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>
+        <c:choose>
+            <c:when test="${user == null}">
+                <a id="signinButton" class="btn btn-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
+            </c:when>
+            <c:otherwise>
+                <a href="${profile}">
+                    <img alt="" style="margin-left: 10px" src="${userIMG}" height="32" width="32"/>
+                </a>
+            </c:otherwise>
+        </c:choose>
     </nav>
     <%--TODO: change method call to model object--%>
     <h3 id="header" class="display-4 context-menu">My Trips</h3>

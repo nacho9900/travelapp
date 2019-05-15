@@ -69,7 +69,6 @@ public class ActivityController extends MainController {
         Optional<ar.edu.itba.paw.model.Place> maybePlace = ps.findByGoogleId(googlePlace.getPlaceId());
         modelPlace = maybePlace.orElseGet(() -> ps.create(googlePlace.getPlaceId(), googlePlace.getName(), googlePlace.getLatitude(),
                 googlePlace.getLongitude(), googlePlace.getAddress()));
-
         Activity activity = as.create(form.getName(), form.getCategory(), modelPlace.getId());
         TripActivity tripActivity = tas.create(tripId, modelPlace.getId(), activity.getId());
         TripPlace tripPlace = tps.create(tripId, modelPlace.getId());

@@ -39,7 +39,7 @@
                               <a class="nav-link" href="${about}">About us</a>
                         </li>
                   </ul>
-                  <a id="signinButton" class="btn btn-outline-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
+                  <a id="signinButton" class="btn btn-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
             </div>
       </nav>
       <form:form action="${signupURL}" method="post" modelAttribute="signupForm">

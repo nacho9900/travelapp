@@ -10,9 +10,12 @@
 	<c:url value="/signup" var="signupURL"/>
 	<c:url value="/" var="index"/>
 	<c:url value="/home" var="home"/>
+	<c:url value="/home/profile" var="profile"/>
 	<c:url value="/about" var="about"/>
 	<c:url value="/resources/css/index.css" var="indexcss"/>
 	<c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
+	<c:url value="/resources/icons/uu.png" var="userIMG"/>
+
 	<link href="${bootcss}" rel="stylesheet">
 	<link href="${indexcss}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
@@ -37,7 +40,17 @@
 					<a class="nav-link" href="${about}">About us</a>
 				</li>
 			</ul>
-			<a id="signinButton" class="btn btn-outline-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
+			<c:choose>
+				<c:when test="${user == null}">
+					<a id="signinButton" class="btn btn-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
+				</c:when>
+				<c:otherwise>
+					<a href="${profile}">
+						<img alt="" style="margin-left: 10px" src="${userIMG}" height="32" width="32"/>
+					</a>
+				</c:otherwise>
+			</c:choose>
+
 		</div>
 	</nav>
 	<div class="container">

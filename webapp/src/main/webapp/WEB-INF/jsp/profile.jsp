@@ -14,7 +14,9 @@
     <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
     <c:url value="/resources/icons/birthday-cake.png" var="birthdayIMG"/>
     <c:url value="/resources/icons/defaultPP.png" var="defaultPP"/>
-
+    <c:url value="/resources/icons/uu.png" var="userIMG"/>
+    <c:url value="/signin" var="signinURL"/>
+    <c:url value="/home/profile" var="profile"/>
     <link href="${bootcss}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <title>My profile</title>
@@ -46,26 +48,33 @@
             </ul>
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search for trips" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
             </form>
+            <c:choose>
+                <c:when test="${user == null}">
+                    <a id="signinButton" class="btn btn-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="${profile}">
+                        <img alt="" style="margin-left: 10px" src="${userIMG}" height="32" width="32"/>
+                    </a>
+                </c:otherwise>
+            </c:choose>
         </div>
     </nav>
     <div class="container text-center">
         <div class= "jumbotron jumbotron-fluid">
             <h1>My profile</h1>
+            <%--TODO PROFILE PIC--%>
             <img class="img-fluid" src="${defaultPP}" width="410" height="430" style="margin: 20px">
             <div class="card car mx-auto" style="width: 18rem;">
                 <div class="card-header">
                     <h5 class="card-title">${user.firstname} ${user.lastname}    ${user.nationality}</h5>
                 </div>
-               <%-- <div class="card-img">
-
-                </div>--%>
                 <div class="card-body">
                     <p class="card-text">${user.email}</p>
                     <p class="card-text">${dateFormat.format(user.birthday.getTime())}</p>
-                    <p class="card-text">This is a standard biography of the mother fucking user just for testing purposes
-                        there is no one working in this fucking project aside from me</p>
+                    <p class="card-text"><%--TODO BIO--%></p>
                     <div class="card-footer">
                         <a href="#" class="btn btn-primary btn-success">Edit profile</a>
                     </div>

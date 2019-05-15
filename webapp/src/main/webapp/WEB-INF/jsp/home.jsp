@@ -12,6 +12,9 @@
     <c:url value="/home/trips" var="trips"/>
     <c:url value="/home/create-trip" var="createTrip"/>
     <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
+    <c:url value="/resources/icons/uu.png" var="userIMG"/>
+    <c:url value="/signin" var="signinURL"/>
+    <c:url value="/home/profile" var="profile"/>
     <link href="${bootcss}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
 	<title>Home</title>
@@ -43,12 +46,21 @@
             </ul>
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search for trips" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
             </form>
+            <c:choose>
+                <c:when test="${user == null}">
+                    <a id="signinButton" class="btn btn-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="${profile}">
+                        <img alt="" style="margin-left: 10px" src="${userIMG}" height="32" width="32"/>
+                    </a>
+                </c:otherwise>
+            </c:choose>
         </div>
     </nav>
     <h3 class="display-4">Welcome ${user.firstname} ${user.lastname}! </h3>
-    <a href="/home/profile">My profile</a>
     <script src="${bootjs}" type="text/javascript"></script>
     <script src="${jquery}" type="text/javascript"></script>
 </body>
