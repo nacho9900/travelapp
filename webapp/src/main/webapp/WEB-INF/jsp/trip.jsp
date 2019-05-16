@@ -12,17 +12,16 @@
     <c:url value="/home/trips" var="trips"/>
     <c:url value="/" var="index"/>
     <c:url value="/home/create-trip" var="createTrip"/>
-    <c:url value="/resources/css/userTrips.css" var="customCSS"/>
     <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
     <c:url value="/resources/icons/uu.png" var="userIMG"/>
     <c:url value="/signin" var="signinURL"/>
     <c:url value="/home/profile/${user.id}" var="profile"/>
     <c:url value="/home/trip/${trip.id}/create-activity" var="createActivityURL"/>
     <c:url value="/home/trip/${trip.id}/join" var="joinTripURL"/>
-
+    <c:url value="/resources/css/trip.css" var="tripCSS"/>
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <link href="${bootcss}" rel="stylesheet">
-    <link href="${customCSS}" rel="stylesheet">
+    <link href="${tripCSS}" rel="stylesheet">
     <title>${trip.name}</title>
 </head>
 <body>
@@ -66,19 +65,19 @@
         </c:choose>
     </div>
 </nav>
-<div class="container">
+<div class="container" style="margin-top: 30px">
     <div>
         <h1 class="display-4">${trip.name}</h1>
         <p>${trip.description}</p>
         <p>[${startDate} - ${endDate}]</p>
     </div>
-    <h3>Places</h3>
+    <h3 class="marginClass">Places</h3>
     <div class="list-group">
     <c:forEach items="${places}" var="place">
         <button type="button" class="list-group-item list-group-item-action">${place.address}</button>
     </c:forEach>
     </div>
-    <h3>Members</h3>
+    <h3 class="marginClass">Members</h3>
     <div class="list-group">
         <c:forEach items="${usersAndRoles}" var="ur">
             <a href="<c:url value='/home/profile/${ur.key.id}'/>" class="list-group-item list-group-item-action flex-column align-items-start">
@@ -89,7 +88,12 @@
             </a>
         </c:forEach>
     </div>
-    <h3>Activities</h3>
+
+    <%--TODO: SHOW PLACE ACTIVITY IN MAP WHEN CLICKED--%>
+    <h3 class="marginClass">Activities</h3>
+    <c:if test="${actAndPlaces.size() == 0}">
+        <div class="alert alert-primary" role="alert">This trip has no activities yet</div>
+    </c:if>
     <ul class="list-group">
         <c:forEach items="${actAndPlaces}" var="activity_places">
             <li class="list-group-item">${activity_places.key.name} ${activity_places.key.category} ${activity_places.value.address}</li>
