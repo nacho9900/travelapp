@@ -16,7 +16,7 @@
     <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
     <c:url value="/resources/icons/uu.png" var="userIMG"/>
     <c:url value="/signin" var="signinURL"/>
-    <c:url value="/home/profile" var="profile"/>
+    <c:url value="/home/profile/${user.id}" var="profile"/>
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <link href="${bootcss}" rel="stylesheet">
     <link href="${customCSS}" rel="stylesheet">
@@ -65,6 +65,9 @@
     </nav>
     <%--TODO: change method call to model object--%>
     <h3 id="header" class="display-4 context-menu">My Trips</h3>
+    <c:if test="${userTripsList.size() == 0}">
+        <p class="alert alert-warning">You are participating in any trips, try joining one!</p>
+    </c:if>
     <div class="list-group">
         <c:forEach items="${userTripsList}" var="dataPair">
             <a href="/home/trip/${dataPair.key.id}" class="list-group-item list-group-item-action flex-column align-items-start">

@@ -14,10 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -71,11 +68,19 @@ public class UserController extends MainController{
         mav.setViewName("redirect:signin");
         return mav;
     }
-    @RequestMapping("/home/profile")
-    public ModelAndView profile() {
+
+    @RequestMapping("/home/profile/{userId}")
+    public ModelAndView profile( @PathVariable(value = "userId") long userProfileId) {
         ModelAndView mav = new ModelAndView("profile");
+        Optional<User> profileUser = us.findByid(userProfileId);
+        if(!profileUser.isPresent()) {
+            mav.setViewName("404");
+            return mav;
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        mav.addObject("dateFormat",dateFormat);
+        String birthday = dateFormat.format(profileUser.get().getBirthday().getTime());
+        mav.addObject("birthday", birthday);
+        mav.addObject("userProfile", profileUser.get());
         return mav;
     }
 

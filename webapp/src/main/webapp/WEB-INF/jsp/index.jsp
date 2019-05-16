@@ -10,7 +10,7 @@
 	<c:url value="/signup" var="signupURL"/>
 	<c:url value="/" var="index"/>
 	<c:url value="/home" var="home"/>
-	<c:url value="/home/profile" var="profile"/>
+	<c:url value="/home/profile/${user.id}" var="profile"/>
 	<c:url value="/about" var="about"/>
 	<c:url value="/resources/css/index.css" var="indexcss"/>
 	<c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>

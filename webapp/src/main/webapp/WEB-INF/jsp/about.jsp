@@ -16,7 +16,7 @@
     <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
     <c:url value="/resources/icons/uu.png" var="userIMG"/>
     <c:url value="/signin" var="signinURL"/>
-    <c:url value="/home/profile" var="profile"/>
+    <c:url value="/home/profile/${user.id}" var="profile"/>
     <link href="${bootcss}" rel="stylesheet">
     <link href="${aboutCss}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
@@ -54,7 +54,7 @@
             </form>
             <c:choose>
                 <c:when test="${user == null}">
-                    <a id="signinButton" class="btn btn-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
+                    <a id="signinButton" style="margin-left: 15px" class="btn btn-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
                 </c:when>
                 <c:otherwise>
                     <a href="${profile}">

@@ -16,10 +16,10 @@
     <c:url value="/resources/icons/defaultPP.png" var="defaultPP"/>
     <c:url value="/resources/icons/uu.png" var="userIMG"/>
     <c:url value="/signin" var="signinURL"/>
-    <c:url value="/home/profile" var="profile"/>
+    <c:url value="/home/profile/${user.id}" var="profile"/>
     <link href="${bootcss}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
-    <title>My profile</title>
+    <title>${user.firstname}´s profile</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -64,20 +64,21 @@
     </nav>
     <div class="container text-center">
         <div class= "jumbotron jumbotron-fluid">
-            <h1>My profile</h1>
             <%--TODO PROFILE PIC--%>
             <img class="img-fluid" src="${defaultPP}" width="410" height="430" style="margin: 20px">
             <div class="card car mx-auto" style="width: 18rem;">
                 <div class="card-header">
-                    <h5 class="card-title">${user.firstname} ${user.lastname}    ${user.nationality}</h5>
+                    <h5 class="card-title">${userProfile.firstname} ${userProfile.lastname}    ${userProfile.nationality}</h5>
                 </div>
                 <div class="card-body">
-                    <p class="card-text">${user.email}</p>
-                    <p class="card-text">${dateFormat.format(user.birthday.getTime())}</p>
+                    <p class="card-text">${userProfile.email}</p>
+                    <p class="card-text">${birthday}</p>
                     <p class="card-text"><%--TODO BIO--%></p>
-                    <div class="card-footer">
-                        <a href="#" class="btn btn-primary btn-success">Edit profile</a>
-                    </div>
+                    <c:if test="${user.id == userProfile.id}">
+                        <div class="card-footer">
+                            <a href="#" class="btn btn-primary btn-success">Edit profile</a>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>

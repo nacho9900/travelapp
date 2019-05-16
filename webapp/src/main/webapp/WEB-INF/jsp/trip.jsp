@@ -16,7 +16,7 @@
     <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
     <c:url value="/resources/icons/uu.png" var="userIMG"/>
     <c:url value="/signin" var="signinURL"/>
-    <c:url value="/home/profile" var="profile"/>
+    <c:url value="/home/profile/${user.id}" var="profile"/>
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <link href="${bootcss}" rel="stylesheet">
     <link href="${customCSS}" rel="stylesheet">
@@ -63,7 +63,6 @@
         </c:choose>
     </div>
 </nav>
-
 <div class="container">
     <div>
         <h1 class="display-4">${trip.name}</h1>
@@ -91,7 +90,6 @@
     </ul>
     <a class="btn btn-primary btn-lg" href="/home/trip/${trip.id}/create-activity" role="button">Add activity</a>
 </div>
-
 <script src="${jquery}" type="text/javascript"></script>
 <script src="${bootjs}" type="text/javascript"></script>
 </body>

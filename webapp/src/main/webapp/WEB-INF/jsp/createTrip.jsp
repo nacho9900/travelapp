@@ -21,7 +21,7 @@
     <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
     <c:url value="/resources/icons/uu.png" var="userIMG"/>
     <c:url value="/signin" var="signinURL"/>
-    <c:url value="/home/profile" var="profile"/>
+    <c:url value="/home/profile/${user.id}" var="profile"/>
     <link rel="stylesheet" href="${bootcss}" >
     <link rel="stylesheet" href="${createTripcss}">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
