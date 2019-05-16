@@ -4,45 +4,16 @@
 
 <html>
 <head>
-      <c:url value="webjars/bootstrap/4.1.3/css/bootstrap.min.css" var="bootCss"/>
-      <c:url value="/webjars/jquery/3.2.1/jquery.min.js" var="jquery" />
-      <c:url value="/webjars/bootstrap/4.1.3/js/bootstrap.min.js" var="bootJs"/>
-      <c:url value="/signin" var="signinURL" />
-      <c:url value="/resources/css/signup.css" var="signupCSS"/>
-      <c:url value="/resources/icons/globe.ico" var="iconURL"/>
-      <c:url value="/signup" var="signupURL"/>
-      <c:url value="/" var="index"/>
-      <c:url value="/home" var="home"/>
-      <c:url value="/about" var="about"/>
-      <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
-      <link href="${bootCss}" rel="stylesheet"/>
-      <link rel="stylesheet" type="text/css" href="${signupCSS}"/>
-      <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
+      <%@include file="head.jsp"%>
+      <c:url value="/signup" var="signUpUrl"/>
+      <c:url value="/signin" var="signInURL"/>
+      <c:url value="/resources/css/signup.css" var="signUpCss"/>
+      <link rel="stylesheet" type="text/css" href="${signUpCss}"/>
 	  <title>Create Account</title>
 </head>
 <body>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="${index}">
-                  <img src="${globeIMG}" height="42" width="42"/>
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                              <a class="nav-link" href="${home}">Home <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                        </li>
-                        <li class="nav-item">
-                              <a class="nav-link" href="${about}">About us</a>
-                        </li>
-                  </ul>
-                  <a id="signinButton" class="btn btn-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
-            </div>
-      </nav>
-      <form:form action="${signupURL}" method="post" modelAttribute="signupForm">
+      <jsp:include page="headerEmpty.jsp"/>
+      <form:form action="${signUpUrl}" method="post" modelAttribute="signupForm">
       <div class="container">
         <h1>Register</h1>
         <p>Please fill in this form to create an account.</p>
@@ -327,11 +298,9 @@
         <button type="submit" class="registerbtn">Register</button>
       </div>
       <div class="container signin">
-        <p>Already have an account? <a href="${signinURL}">Sign in</a>.</p>
+        <p>Already have an account? <a href="${signInURL}">Sign in</a>.</p>
       </div>
       </form:form>
-      <script src="${jquery}" type="text/javascript"></script>
-      <script src="${bootJs}" type="text/javascript"></script>
 </body>
 </html>
 
