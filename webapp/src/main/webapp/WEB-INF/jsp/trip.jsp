@@ -19,6 +19,7 @@
     <c:url value="/home/profile/${user.id}" var="profile"/>
     <c:url value="/home/trip/${trip.id}/create-activity" var="createActivityURL"/>
     <c:url value="/home/trip/${trip.id}/join" var="joinTripURL"/>
+
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <link href="${bootcss}" rel="stylesheet">
     <link href="${customCSS}" rel="stylesheet">
@@ -80,8 +81,12 @@
     <h3>Members</h3>
     <div class="list-group">
         <c:forEach items="${usersAndRoles}" var="ur">
-            <button type="button" class="list-group-item list-group-item-action">${ur.key.firstname} ${ur.key.lastname}
-                    ${ur.value}</button>
+            <a href="<c:url value='/home/profile/${ur.key.id}'/>" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">${ur.key.firstname} ${ur.key.lastname}</h5>
+                </div>
+                <small>${ur.value}</small>
+            </a>
         </c:forEach>
     </div>
     <h3>Activities</h3>
