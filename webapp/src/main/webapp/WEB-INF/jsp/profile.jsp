@@ -19,7 +19,7 @@
     <c:url value="/home/profile/${user.id}" var="profile"/>
     <link href="${bootcss}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
-    <title>${user.firstname}´s profile</title>
+    <title>${userProfile.firstname}´s profile</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -74,6 +74,7 @@
                     <p class="card-text">${userProfile.email}</p>
                     <p class="card-text">${birthday}</p>
                     <p class="card-text"><%--TODO BIO--%></p>
+                    <%--TODO EDIT PROFILE--%>
                     <c:if test="${user.id == userProfile.id}">
                         <div class="card-footer">
                             <a href="#" class="btn btn-primary btn-success">Edit profile</a>

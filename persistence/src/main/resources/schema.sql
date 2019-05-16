@@ -53,7 +53,6 @@ CREATE TABLE IF NOT EXISTS trip_activities (
                 FOREIGN KEY (activity_id) REFERENCES activities ON DELETE CASCADE
 );
 
-
 CREATE TABLE IF NOT EXISTS trip_users (
                 id SERIAL PRIMARY KEY,
                 trip_id INTEGER NOT NULL,

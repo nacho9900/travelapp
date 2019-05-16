@@ -93,6 +93,7 @@ public class TripController extends MainController{
         Trip trip = ts.create(modelPlace.getId(), form.getName(), form.getDescription(),
                 DateManipulation.stringToCalendar(form.getStartDate()),
                 DateManipulation.stringToCalendar(form.getEndDate()));
+        String startDate = dateFormat.format(trip.getStartDate().getTime());
         TripUser tripUser = tus.create(trip.getId(), user.getId(), UserRole.ADMIN);
         TripPlace tripPlace = tps.create(trip.getId(), modelPlace.getId());
         mav.setViewName("userTrips");
@@ -104,17 +105,29 @@ public class TripController extends MainController{
         ModelAndView mav = new ModelAndView("trip");
         Optional<Trip> maybeTrip = ts.findById(tripId);
         Trip trip = maybeTrip.get();
+        boolean isTravelling = ts.isTravelling(user.getId(), tripId);
+        boolean isAdmin = ts.userIsAdmin(user.getId(), tripId);
         String startDate = dateFormat.format(trip.getStartDate().getTime());
         String endDate = dateFormat.format(trip.getEndDate().getTime());
         List<ar.edu.itba.paw.model.Place> tripPlaces = ps.getTripPlaces(trip.getId());
         List<DataPair<User, UserRole>> tripUsersAndRoles = us.getTripUsersAndRoles(tripId);
         List<DataPair<Activity, ar.edu.itba.paw.model.Place>> tripActAndPlace = as.getTripActivitiesDetails(tripId);
+        mav.addObject("isTravelling", isTravelling);
+        mav.addObject("isAdmin",isAdmin);
         mav.addObject("places", tripPlaces);
         mav.addObject("usersAndRoles", tripUsersAndRoles);
         mav.addObject("actAndPlaces", tripActAndPlace);
         mav.addObject("trip", trip);
         mav.addObject("startDate", startDate);
         mav.addObject("endDate", endDate);
+        return mav;
+    }
+    @RequestMapping("/home/trip/{tripId}/join")
+    public ModelAndView joinTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
+        ModelAndView mav = new ModelAndView("trip");
+        TripUser tripUserOpt = tus.create(tripId, user.getId(), UserRole.MEMBER);
+        String redirect = String.format("redirect:/home/trip/%d", tripId);
+        mav.setViewName(redirect);
         return mav;
     }
 

@@ -17,6 +17,8 @@
     <c:url value="/resources/icons/uu.png" var="userIMG"/>
     <c:url value="/signin" var="signinURL"/>
     <c:url value="/home/profile/${user.id}" var="profile"/>
+    <c:url value="/home/trip/${trip.id}/create-activity" var="createActivityURL"/>
+    <c:url value="/home/trip/${trip.id}/join" var="joinTripURL"/>
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <link href="${bootcss}" rel="stylesheet">
     <link href="${customCSS}" rel="stylesheet">
@@ -88,7 +90,12 @@
             <li class="list-group-item">${activity_places.key.name} ${activity_places.key.category} ${activity_places.value.address}</li>
         </c:forEach>
     </ul>
-    <a class="btn btn-primary btn-lg" href="/home/trip/${trip.id}/create-activity" role="button">Add activity</a>
+    <c:if test="${isAdmin}">
+        <a class="btn btn-primary btn-lg" href="${createActivityURL}" role="button">Add activity</a>
+    </c:if>
+    <c:if test="${!isTravelling}">
+        <a class="btn btn-success" href="${joinTripURL}" role="button">Join trip</a>
+    </c:if>
 </div>
 <script src="${jquery}" type="text/javascript"></script>
 <script src="${bootjs}" type="text/javascript"></script>

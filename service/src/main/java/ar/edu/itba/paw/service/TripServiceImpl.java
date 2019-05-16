@@ -17,7 +17,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Trip create(long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
-        return td.create(startPlaceId,name,description,startDate,endDate);
+        return td.create(startPlaceId, name, description, startDate, endDate);
     }
 
     @Override
@@ -28,5 +28,15 @@ public class TripServiceImpl implements TripService {
     @Override
     public Optional<Trip> findById(long id) {
         return td.findById(id);
+    }
+
+    @Override
+    public boolean userIsAdmin(long userId, long tripId) {
+        return td.userIsAdmin(userId, tripId);
+    }
+
+    @Override
+    public boolean isTravelling(long userId, long tripId) {
+        return td.isTravelling(userId, tripId);
     }
 }

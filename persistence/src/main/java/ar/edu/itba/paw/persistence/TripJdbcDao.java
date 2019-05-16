@@ -25,6 +25,10 @@ public class TripJdbcDao implements TripDao {
             DateManipulation.dateToCalendar(rs.getDate("start_date")), DateManipulation
             .dateToCalendar(rs.getDate("end_date")));
 
+    private final static RowMapper<String> ROW_MAPPER_ROLE = (rs, rowNum) -> rs.getString("user_role");
+
+    private final static RowMapper<Integer> ROW_MAPPER_COUNT = (rs, rowNum) -> rs.getInt("qty");
+
     @Autowired
     public TripJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -50,11 +54,20 @@ public class TripJdbcDao implements TripDao {
         return jdbcTemplate.query("SELECT * FROM trips WHERE id = ?", ROW_MAPPER, id).stream().findFirst();
     }
 
-
     @Override
-    public List<Trip> findUserTrips(long userid) {
-        return jdbcTemplate.query("SELECT trips.* FROM trips, trip_users WHERE user_id = ? AND trip_id = trips.id", ROW_MAPPER, userid);
+    public List<Trip> findUserTrips(long userId) {
+        return jdbcTemplate.query("SELECT trips.* FROM trips, trip_users WHERE user_id = ? AND trip_id = trips.id", ROW_MAPPER, userId);
     }
 
+    @Override
+    public boolean userIsAdmin(long userId, long tripId) {
+        Optional<String> roleOpt = jdbcTemplate.query("SELECT user_role FROM trip_users WHERE user_id = ? AND trip_id = ?", ROW_MAPPER_ROLE, userId, tripId).stream().findFirst();
+        return roleOpt.map(s -> s.equals("ADMIN")).orElse(false);
+    }
 
+    @Override
+    public boolean isTravelling(long userId, long tripId) {
+        Optional<Integer> roleOpt = jdbcTemplate.query("SELECT COUNT(*) AS qty FROM trip_users WHERE user_id = ? AND trip_id = ?", ROW_MAPPER_COUNT, userId, tripId).stream().findFirst();
+        return roleOpt.filter(integer -> integer != 0).isPresent();
+    }
 }
