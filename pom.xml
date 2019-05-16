@@ -24,6 +24,7 @@
     <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
     <maven-war-plugin.version>2.6</maven-war-plugin.version>
     <google-places-api-java-version>2.1.7</google-places-api-java-version>
+    <simple-java-mail-version>5.1.6</simple-java-mail-version>
   </properties>
 
   <build>
@@ -46,6 +47,11 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+      <groupId>org.simplejavamail</groupId>
+      <artifactId>simple-java-mail</artifactId>
+      <version>${simple-java-mail-version}</version>
+    </dependency>
       <dependency>
         <groupId>se.walkercrou</groupId>
         <artifactId>google-places-api-java</artifactId>

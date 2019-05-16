@@ -53,6 +53,10 @@
         <form:errors path="lastname" cssClass = "alert alert-warning" element="p"/>
         <form:input type="text" placeholder="Enter Last Name" name="lastname" path="lastname"/>
 
+        <c:if test="${alreadyExists}">
+              <p class="alert alert-danger">Email already attached to an existing account</p>
+        </c:if>
+
         <form:errors path="email" cssClass = "alert alert-warning" element="p"/>
         <form:input type="text" placeholder="Enter Email" name="email" path="email"/>
 

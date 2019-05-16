@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.User;
@@ -26,6 +27,9 @@ import java.util.Optional;
 
 @Controller
 public class UserController extends MainController{
+
+    @Autowired
+    private MailingService ms;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -60,11 +64,18 @@ public class UserController extends MainController{
         if(errors.hasErrors()) {
             return mav;
         }
+
+        Optional userOpt = us.findByUsername(form.getEmail());
+        if(userOpt.isPresent()) {
+            mav.addObject("alreadyExists", true);
+            return mav;
+        }
+
         //TODO CHECK IF USER EXISTS WITH SAME EMAIL.
         String encodedPassword =  passwordEncoder.encode(form.getPassword());
         User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), encodedPassword,
                 DateManipulation.stringToCalendar(form.getBirthday()), form.getNationality());
-
+        ms.sendRegisterMail(user.getEmail(), user.getFirstname(), user.getLastname());
         mav.setViewName("redirect:signin");
         return mav;
     }

@@ -21,6 +21,10 @@
 
   <dependencies>
    <dependency>
+    <groupId>org.simplejavamail</groupId>
+    <artifactId>simple-java-mail</artifactId>
+   </dependency>
+   <dependency>
     <groupId>ar.edu.itba.paw</groupId>
     <artifactId>interfaces</artifactId>
     <version>${parent.version}</version>
