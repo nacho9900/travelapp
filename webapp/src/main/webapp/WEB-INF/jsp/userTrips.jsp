@@ -17,7 +17,8 @@
         <c:otherwise>
             <div class="list-group">
                 <c:forEach items="${userTripsList}" var="dataPair">
-                    <a href="/home/trip/${dataPair.key.id}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <c:url value="/home/trip/${dataPair.key.id}" var="tripUrl"/>
+                    <a href="${tripUrl}" class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">${dataPair.key.name}</h5>
                             <small>${dateFormat.format(dataPair.key.startDate.getTime())}</small>
