@@ -71,18 +71,20 @@ e.preventDefault();
     </div>
 </nav>
 <div class="align-content-center">
-    <h3 class="display-4 ">Create Trip</h3>
     <div class="container">
+        <%--TODO: AGREGAR ALERT POR ERROR EN MAP INPUT--%>
+        <h3 id="headerID" class="display-4 ">Create Trip</h3>
         <form:form action="${createTripURL}" method="post" modelAttribute="createTripForm">
             <hr>
-            <div>
+            <div class="container">
                 <form:errors path="placeInput" cssClass = "alert alert-warning" element="p"/>
 
                 <form:errors path="name" cssClass = "alert alert-warning" element="p"/>
-                <form:input class="form-control" type="text" path="name"   name="trip_name" placeholder="Enter trip name"/>
+                <form:input class="form-control" cssStyle="margin-bottom: 10px" type="text" path="name"   name="trip_name" placeholder="Enter trip name"/>
 
                 <form:errors path="description" cssClass = "alert alert-warning" element="p"/>
-                <form:input class="form-control" type="text" path="description" name="trip_desc" placeholder="Enter trip description"/>
+                <form:textarea class="form-control" type="text" path="description" name="trip_desc" placeholder="Enter trip description"/>
+                <%--<form:input class="form-control" type="text" path="description" name="trip_desc" placeholder="Enter trip description"/>--%>
 
                 <form:errors path="startDate" cssClass = "alert alert-warning" element="p"/>
                 <form:label path="startDate" for="start_date">Start date:</form:label>
@@ -103,7 +105,9 @@ e.preventDefault();
                 <span id="place-name"  class="title"></span><br>
                 <span id="place-address"></span>
             </div>
-            <button type="submit" class="btn-primary" >Create</button>
+            <div class="text-center flex-fill">
+                <button type="submit" class="btn-success btn btn-lg" >Create</button>
+            </div>
         </form:form>
     </div>
 </div>
