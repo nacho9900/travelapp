@@ -4,11 +4,13 @@
 <html>
 <head>
     <%@include file="head.jsp"%>
+    <c:url value="/resources/css/userTrips.css" var="userTripsCss"/>
+    <link href="${userTripsCss}" rel="stylesheet">
     <title>My Trips</title>
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-    <%--TODO: change method call to model object--%>
+    <div class="container">
     <h3 id="header" class="display-4 context-menu">My Trips</h3>
     <c:choose>
         <c:when test="${userTripsList.size() == 0}">
@@ -30,5 +32,6 @@
             </div>
         </c:otherwise>
     </c:choose>
+    </div>
 </body>
 </html>

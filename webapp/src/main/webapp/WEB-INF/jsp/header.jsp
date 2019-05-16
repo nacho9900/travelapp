@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: nacho
-  Date: 16/05/19
-  Time: 11:10
-  To change this template use File | Settings | File Templates.
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ page contentType="text/html;charset=UTF-8"%>
 
@@ -16,7 +9,8 @@
 <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
 <c:url value="/resources/icons/uu.png" var="userIMG"/>
 <c:url value="/signin" var="signinURL"/>
-
+<c:url value="/resources/css/header.css" var="headerCss"/>
+<link href="${headerCss}" rel="stylesheet">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="${index}">
         <img src="${globeIMG}" height="42" width="42"/>
@@ -52,7 +46,7 @@
             <c:otherwise>
                 <c:url value="/home/profile/${user.id}" var="profile"/>
                 <a href="${profile}">
-                    <img alt="" style="margin-left: 10px" src="${userIMG}" height="32" width="32"/>
+                    <img alt="" id="profile-nav" src="${userIMG}" height="32" width="32"/>
                 </a>
             </c:otherwise>
         </c:choose>

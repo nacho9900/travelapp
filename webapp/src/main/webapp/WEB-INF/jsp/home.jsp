@@ -8,5 +8,6 @@
 <body>
     <%@include file="header.jsp"%>
     <h3 class="display-4">Welcome ${user.firstname} ${user.lastname}! </h3>
+    <%--TODO SHOW RANDOM TRIPS--%>
 </body>
 </html>

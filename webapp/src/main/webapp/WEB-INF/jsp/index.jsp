@@ -6,7 +6,7 @@
 	<c:url value="/signup" var="signUpUrl"/>
 	<c:url value="/resources/css/index.css" var="indexCss"/>
 	<link href="${indexCss}" rel="stylesheet">
-	<title>-Meet and Travel</title>
+	<title>Meet and Travel</title>
 </head>
 <body>
 	<jsp:include page="header.jsp"/>

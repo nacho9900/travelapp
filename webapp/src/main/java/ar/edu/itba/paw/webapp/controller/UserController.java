@@ -71,12 +71,15 @@ public class UserController extends MainController{
             return mav;
         }
 
-        //TODO CHECK IF USER EXISTS WITH SAME EMAIL.
+        if(!ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname())) {
+            mav.addObject("invalidEmail", true);
+            return mav;
+        }
         String encodedPassword =  passwordEncoder.encode(form.getPassword());
         User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), encodedPassword,
                 DateManipulation.stringToCalendar(form.getBirthday()), form.getNationality());
-        ms.sendRegisterMail(user.getEmail(), user.getFirstname(), user.getLastname());
-        mav.setViewName("redirect:signin");
+
+        mav.setViewName("redirect:/signin");
         return mav;
     }
 

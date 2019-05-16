@@ -27,7 +27,9 @@
         <c:if test="${alreadyExists}">
               <p class="alert alert-danger">Email already attached to an existing account</p>
         </c:if>
-
+        <c:if test="${invalidEmail}">
+              <p class="alert alert-danger">Invalid email address, we couldn't send a confirmation email</p>
+        </c:if>
         <form:errors path="email" cssClass = "alert alert-warning" element="p"/>
         <form:input type="text" placeholder="Enter Email" name="email" path="email"/>
 
