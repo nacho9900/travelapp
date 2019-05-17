@@ -46,7 +46,10 @@ public class UserController extends MainController{
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @RequestMapping("/")
-    public ModelAndView index() { return new ModelAndView("index"); }
+    public ModelAndView index() {
+        String likeName = "%" + "euroo" + "%";
+        System.out.println(likeName);
+        return new ModelAndView("index"); }
 
     //TODO ADD PAGINATION
     @RequestMapping("/home")

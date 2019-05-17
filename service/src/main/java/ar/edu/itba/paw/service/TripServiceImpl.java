@@ -49,4 +49,9 @@ public class TripServiceImpl implements TripService {
     public List<Trip> getAllTrips() {
         return td.getAllTrips();
     }
+
+    @Override
+    public List<Trip> findByName(String name) {
+        return td.findByName(name);
+    }
 }

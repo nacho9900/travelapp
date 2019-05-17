@@ -15,5 +15,6 @@ public interface TripDao {
     public boolean isTravelling(long userId, long tripId);
     public List<Trip> getAllTrips();
     public int countUserTrips(long userId);
+    public List<Trip> findByName(String name);
 
 }

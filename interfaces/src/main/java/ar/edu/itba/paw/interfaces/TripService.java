@@ -15,4 +15,5 @@ public interface TripService {
     public boolean userIsAdmin(long userId, long tripId);
     public boolean isTravelling(long userId, long tripId);
     public List<Trip> getAllTrips();
+    public List<Trip> findByName(String name);
 }

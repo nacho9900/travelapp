@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Place;
@@ -137,6 +134,15 @@ public class TripController extends MainController{
         TripUser tripUserOpt = tus.create(tripId, user.getId(), UserRole.MEMBER);
         String redirect = String.format("redirect:/home/trip/%d", tripId);
         mav.setViewName(redirect);
+        return mav;
+    }
+
+    @RequestMapping("/home/search-trip/")
+    public ModelAndView search(@ModelAttribute("user") User user, @RequestParam(value = "nameInput") String nameInput) {
+        ModelAndView mav = new ModelAndView("searchTrips");
+        List<Trip> trips = ts.findByName(nameInput);
+        mav.addObject("tripQty", trips.size());
+        mav.addObject("tripsList", trips);
         return mav;
     }
 

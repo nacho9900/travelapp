@@ -84,4 +84,11 @@ public class TripJdbcDao implements TripDao {
         Optional<Integer> qty = jdbcTemplate.query("SELECT COUNT(trips.id) AS qty FROM trips, trip_users WHERE user_id = ? AND trip_id = trips.id", ROW_MAPPER_COUNT, userId).stream().findFirst();
         return qty.orElse(0);
     }
+
+    @Override
+    public List<Trip> findByName(String name) {
+        String likeName = "%" + name + "%";
+        return jdbcTemplate.query("SELECT * FROM trips WHERE name ILIKE ?", ROW_MAPPER, likeName);
+    }
+
 }

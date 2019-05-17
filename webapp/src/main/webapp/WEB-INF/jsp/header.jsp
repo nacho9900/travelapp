@@ -10,6 +10,7 @@
 <c:url value="/resources/icons/uu.png" var="userIMG"/>
 <c:url value="/signin" var="signinURL"/>
 <c:url value="/resources/css/header.css" var="headerCss"/>
+<c:url value="/home/search-trip/" var="searchURL"/>
 <link href="${headerCss}" rel="stylesheet">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="${index}">
@@ -35,8 +36,8 @@
                 <a class="nav-link" href="${about}">About us</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search for trips" aria-label="Search">
+        <form action="${searchURL}" method="get" class="form-inline my-2 my-lg-0">
+            <input id="nameInput" name="nameInput" class="form-control mr-sm-2" type="search" placeholder="Search for trips" aria-label="Search">
             <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
         </form>
         <c:choose>
