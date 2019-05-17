@@ -6,12 +6,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <c:url value="/home/create-trip" var="createTripURL"/>
-
     <%@include file="head.jsp" %>
+    <c:url value="/home/create-trip" var="createTripURL"/>
     <c:url value="/resources/css/map.css" var="createTripcss"/>
-    <link rel="stylesheet" href="${createTripcss}">
     <c:url value="/resources/js/map.js" var="createTripjs"/>
+    <link rel="stylesheet" href="${createTripcss}">
     <title>Create Trip</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
@@ -29,10 +28,8 @@ e.preventDefault();
     <div class="container">
         <%--TODO: AGREGAR ALERT POR ERROR EN MAP INPUT--%>
         <h3 id="headerID" class="display-4 ">Create Trip</h3>
-
         <form:form action="${createTripURL}" method="post" modelAttribute="createTripForm">
             <div class="container">
-
                 <form:errors path="name" cssClass="alert alert-warning" element="p"/>
                 <form:input class="form-control" cssStyle="margin-bottom: 10px" type="text" path="name" name="trip_name"
                             placeholder="Enter trip name"/>
@@ -50,7 +47,6 @@ e.preventDefault();
                 <form:input class="form-control" type="date" path="endDate" name="end_date"/>
             </div>
             <form:errors path="placeInput" cssClass="alert alert-warning" element="p"/>
-
             <div class="pac-card" id="pac-card">
                 <div id="pac-container">
                     <form:input id="pac-input" type="text" path="placeInput" placeholder="Enter a location"/>

@@ -7,7 +7,16 @@
 </head>
 <body>
     <%@include file="header.jsp"%>
-    <h3 class="display-4">Welcome ${user.firstname} ${user.lastname}! </h3>
-    <%--TODO SHOW RANDOM TRIPS--%>
+    <div class="container">
+        <h3 class="display-4" >Welcome ${user.firstname} ${user.lastname}! </h3>
+        <div class="list-group">
+            <c:forEach items = "${tripList}" var="trip">
+                <div style="margin: 20px">
+                    <p class="list-group-item">${trip.name}</p>
+                    <p class="list-group-item">${trip.description}</p>
+                </div>
+            </c:forEach>
+        </div>
+    </div>
 </body>
 </html>

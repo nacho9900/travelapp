@@ -39,4 +39,9 @@ public class TripServiceImpl implements TripService {
     public boolean isTravelling(long userId, long tripId) {
         return td.isTravelling(userId, tripId);
     }
+
+    @Override
+    public List<Trip> getAllTrips() {
+        return td.getAllTrips();
+    }
 }

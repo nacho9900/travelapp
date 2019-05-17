@@ -70,4 +70,9 @@ public class TripJdbcDao implements TripDao {
         Optional<Integer> roleOpt = jdbcTemplate.query("SELECT COUNT(*) AS qty FROM trip_users WHERE user_id = ? AND trip_id = ?", ROW_MAPPER_COUNT, userId, tripId).stream().findFirst();
         return roleOpt.filter(integer -> integer != 0).isPresent();
     }
+
+    @Override
+    public List<Trip> getAllTrips() {
+        return jdbcTemplate.query("SELECT * FROM trips", ROW_MAPPER);
+    }
 }

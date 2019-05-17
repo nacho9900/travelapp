@@ -96,7 +96,8 @@ public class TripController extends MainController{
         String startDate = dateFormat.format(trip.getStartDate().getTime());
         TripUser tripUser = tus.create(trip.getId(), user.getId(), UserRole.ADMIN);
         TripPlace tripPlace = tps.create(trip.getId(), modelPlace.getId());
-        mav.setViewName("userTrips");
+        //userTrips
+        mav.setViewName("redirect:/home/trips");
         return mav;
     }
 

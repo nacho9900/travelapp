@@ -13,5 +13,6 @@ public interface TripDao {
     public List<Trip> findUserTrips(long userId);
     public boolean userIsAdmin(long userId, long tripId);
     public boolean isTravelling(long userId, long tripId);
+    public List<Trip> getAllTrips();
 
 }

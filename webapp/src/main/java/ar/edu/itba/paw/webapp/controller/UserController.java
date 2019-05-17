@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.MailingService;
+import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.DateManipulation;
+import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -37,14 +40,21 @@ public class UserController extends MainController{
     @Autowired
     private UserService us;
 
+    @Autowired
+    private TripService ts;
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @RequestMapping("/")
     public ModelAndView index() { return new ModelAndView("index"); }
 
 
     @RequestMapping("/home")
-    public ModelAndView home() {
-        return new ModelAndView("home");
+    public ModelAndView home(@ModelAttribute("user") User user) {
+        ModelAndView mav = new ModelAndView("home");
+        List<Trip> trips = ts.getAllTrips();
+        mav.addObject("tripList", trips);
+        return mav;
     }
 
     @RequestMapping("/signup")
