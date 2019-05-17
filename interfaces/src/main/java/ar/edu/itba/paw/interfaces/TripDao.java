@@ -10,9 +10,10 @@ public interface TripDao {
 
     public Trip create(long startPlaceId, String name, String description, Calendar startDate, Calendar endDate);
     public Optional<Trip> findById(long id);
-    public List<Trip> findUserTrips(long userId);
+    public List<Trip> findUserTrips(long userId, int pageNum);
     public boolean userIsAdmin(long userId, long tripId);
     public boolean isTravelling(long userId, long tripId);
     public List<Trip> getAllTrips();
+    public int countUserTrips(long userId);
 
 }

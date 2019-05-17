@@ -28,6 +28,8 @@ public class TripJdbcDao implements TripDao {
     private final static RowMapper<String> ROW_MAPPER_ROLE = (rs, rowNum) -> rs.getString("user_role");
 
     private final static RowMapper<Integer> ROW_MAPPER_COUNT = (rs, rowNum) -> rs.getInt("qty");
+    private final static int TRIPS_PER_PAGE = 4;
+
 
     @Autowired
     public TripJdbcDao(final DataSource ds) {
@@ -55,8 +57,9 @@ public class TripJdbcDao implements TripDao {
     }
 
     @Override
-    public List<Trip> findUserTrips(long userId) {
-        return jdbcTemplate.query("SELECT trips.* FROM trips, trip_users WHERE user_id = ? AND trip_id = trips.id", ROW_MAPPER, userId);
+    public List<Trip> findUserTrips(long userId, int pageNum) {
+        int offset = (pageNum - 1) * TRIPS_PER_PAGE;
+        return jdbcTemplate.query("SELECT trips.* FROM trips, trip_users WHERE user_id = ? AND trip_id = trips.id OFFSET ? LIMIT 4", ROW_MAPPER, userId, offset);
     }
 
     @Override
@@ -74,5 +77,11 @@ public class TripJdbcDao implements TripDao {
     @Override
     public List<Trip> getAllTrips() {
         return jdbcTemplate.query("SELECT * FROM trips", ROW_MAPPER);
+    }
+
+    @Override
+    public int countUserTrips(long userId) {
+        Optional<Integer> qty = jdbcTemplate.query("SELECT COUNT(trips.id) AS qty FROM trips, trip_users WHERE user_id = ? AND trip_id = trips.id", ROW_MAPPER_COUNT, userId).stream().findFirst();
+        return qty.orElse(0);
     }
 }

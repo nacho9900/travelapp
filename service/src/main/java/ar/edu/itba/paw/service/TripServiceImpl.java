@@ -21,8 +21,13 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> findUserTrips(long userId) {
-        return td.findUserTrips(userId);
+    public List<Trip> findUserTrips(long userId, int pageNum) {
+        return td.findUserTrips(userId, pageNum);
+    }
+
+    @Override
+    public int countUserTrips(long userId) {
+        return td.countUserTrips(userId);
     }
 
     @Override

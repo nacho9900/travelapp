@@ -32,6 +32,16 @@
             </div>
         </c:otherwise>
     </c:choose>
+
     </div>
+    <div class="d-flex justify-content-center align-bottom">
+        <ul class="pagination">
+            <c:forEach var = "i" begin = "1" end = "${pageQty}">
+                <c:url value="/home/trips/${i}" var="tripsPageUrl"/>
+                <li class="page-item"><a class="page-link" href="${tripsPageUrl}">${i}</a></li>
+            </c:forEach>
+        </ul>
+    </div>
+
 </body>
 </html>

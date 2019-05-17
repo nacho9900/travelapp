@@ -48,7 +48,7 @@ public class UserController extends MainController{
     @RequestMapping("/")
     public ModelAndView index() { return new ModelAndView("index"); }
 
-
+    //TODO ADD PAGINATION
     @RequestMapping("/home")
     public ModelAndView home(@ModelAttribute("user") User user) {
         ModelAndView mav = new ModelAndView("home");

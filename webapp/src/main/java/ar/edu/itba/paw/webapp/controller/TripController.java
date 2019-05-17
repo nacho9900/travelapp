@@ -31,6 +31,8 @@ public class TripController extends MainController{
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
+    private static final int MAX_TRIPS_PAGE = 4;
+
     @Autowired
     ActivityService as;
     @Autowired
@@ -49,20 +51,26 @@ public class TripController extends MainController{
         return new ModelAndView("createTrip");
     }
 
-    @RequestMapping("/home/trips")
-    public ModelAndView getUserTrips(@ModelAttribute("user") User user) {
+    @RequestMapping("/home/trips/{pageNum}")
+    public ModelAndView getUserTrips(@ModelAttribute("user") User user,  @PathVariable(value = "pageNum") int pageNum) {
         ModelAndView mav = new ModelAndView("userTrips");
-        List<Trip> userTrips = ts.findUserTrips(user.getId());
+        int userTripsQty = ts.countUserTrips(user.getId());
+        int requiredPages = (int) Math.ceil(userTripsQty/(double)MAX_TRIPS_PAGE);
+        if(pageNum > requiredPages) {
+            mav.setViewName("404");
+            return mav;
+        }
+        List<Trip> userTrips = ts.findUserTrips(user.getId(), pageNum);
         List<DataPair<Trip, ar.edu.itba.paw.model.Place>> dataPairList = new LinkedList<>();
-
         for (Trip trip: userTrips) {
             long placeId = trip.getStartPlaceId();
             ar.edu.itba.paw.model.Place place = ps.findById(placeId).get();
             dataPairList.add(new DataPair<>(trip, place));
-
         }
-        mav.addObject("userTripsList",dataPairList);
-        mav.addObject("dateFormat",dateFormat);
+        int pageQty = (int)Math.round(userTripsQty / (double) MAX_TRIPS_PAGE);
+        mav.addObject("pageQty", pageQty);
+        mav.addObject("userTripsList", dataPairList);
+        mav.addObject("dateFormat", dateFormat);
         return mav;
     }
 

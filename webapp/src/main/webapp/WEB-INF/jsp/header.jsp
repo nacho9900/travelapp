@@ -4,7 +4,7 @@
 <c:url value="/home" var="home"/>
 <c:url value="/" var="index"/>
 <c:url value="/about" var="about"/>
-<c:url value="/home/trips" var="trips"/>
+<c:url value="/home/trips/1" var="trips"/>
 <c:url value="/home/create-trip" var="createTrip"/>
 <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
 <c:url value="/resources/icons/uu.png" var="userIMG"/>
