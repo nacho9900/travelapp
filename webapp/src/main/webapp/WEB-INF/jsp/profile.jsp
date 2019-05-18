@@ -5,6 +5,7 @@
 <head>
     <%@include file="head.jsp"%>
     <c:url value="/resources/icons/defaultPP.png" var="defaultPP"/>
+    <c:url value="/home/profile/${user.id}/edit" var="editProfile"/>
     <link href="${bootstrapCss}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <title>${userProfile.firstname}´s profile</title>
@@ -13,7 +14,6 @@
     <jsp:include page="header.jsp"/>
     <div class="container text-center">
         <div class= "jumbotron jumbotron-fluid">
-            <%--TODO PROFILE PIC--%>
             <img class="img-fluid" src="${defaultPP}" width="410" height="430" style="margin: 20px">
             <div class="card car mx-auto" style="width: 18rem;">
                 <div class="card-header">
@@ -22,11 +22,10 @@
                 <div class="card-body">
                     <p class="card-text">${userProfile.email}</p>
                     <p class="card-text">${birthday}</p>
-                    <p class="card-text"><%--TODO BIO--%></p>
-                    <%--TODO EDIT PROFILE--%>
+                    <p class="card-text">BIOGRAPHY</p>
                     <c:if test="${user.id == userProfile.id}">
                         <div class="card-footer">
-                            <a href="#" class="btn btn-primary btn-success">Edit profile</a>
+                            <a href="${editProfile}" class="btn btn-primary btn-success">Edit profile</a>
                         </div>
                     </c:if>
                 </div>
