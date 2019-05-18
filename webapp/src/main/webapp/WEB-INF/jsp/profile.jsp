@@ -14,7 +14,16 @@
     <jsp:include page="header.jsp"/>
     <div class="container text-center">
         <div class= "jumbotron jumbotron-fluid">
-            <img class="img-fluid" src="${defaultPP}" width="410" height="430" style="margin: 20px">
+            <c:choose>
+                <c:when test="${hasProfilePicture}">
+                    <c:url value="/home/profile/${userProfile.id}/image" var="profilePictureURL"/>
+                    <img class="img-fluid" src="${profilePictureURL}" width="410" height="430" style="margin: 20px">
+                </c:when>
+                <c:otherwise>
+                    <img class="img-fluid" src="${defaultPP}" width="410" height="430" style="margin: 20px">
+                </c:otherwise>
+            </c:choose>
+
             <div class="card car mx-auto" style="width: 18rem;">
                 <div class="card-header">
                     <h5 class="card-title">${userProfile.firstname} ${userProfile.lastname}    ${userProfile.nationality}</h5>

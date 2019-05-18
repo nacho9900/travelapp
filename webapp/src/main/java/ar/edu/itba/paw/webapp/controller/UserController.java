@@ -10,7 +10,9 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
 import ar.edu.itba.paw.webapp.form.EdiProfileForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -19,8 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +50,9 @@ public class UserController extends MainController{
 
     private static final long MAX_UPLOAD_SIZE = 5242880;
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private static final String PROFILE_PIC_DEFAULT = "defaultPP.png";
+
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @RequestMapping("/")
     public ModelAndView index() {
@@ -96,6 +103,7 @@ public class UserController extends MainController{
         return mav;
     }
 
+
     @RequestMapping(value = "/home/profile/{userId}", method = {RequestMethod.GET})
     public ModelAndView profile( @PathVariable(value = "userId") long userProfileId) {
         ModelAndView mav = new ModelAndView("profile");
@@ -104,12 +112,34 @@ public class UserController extends MainController{
             mav.setViewName("404");
             return mav;
         }
+        Optional<UserPicture> userPictureOptional = ups.findByUserId(userProfileId);
+        if(userPictureOptional.isPresent()) {
+            mav.addObject("hasProfilePicture", true);
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String birthday = dateFormat.format(profileUser.get().getBirthday().getTime());
         mav.addObject("birthday", birthday);
         mav.addObject("userProfile", profileUser.get());
         return mav;
     }
+
+    @RequestMapping(value = "/home/profile/{userId}/image", method = {RequestMethod.GET})
+    public void getProfileImage(@PathVariable(value = "userId") long userProfileId, HttpServletResponse response) {
+        Optional<UserPicture> userPictureOptional = ups.findByUserId(userProfileId);
+        try {
+            if(userPictureOptional.isPresent()) {
+                UserPicture up = userPictureOptional.get();
+                String mimeType = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(up.getPicture()));
+                response.setContentType(mimeType);
+                response.getOutputStream().write(up.getPicture());
+            }
+        }
+        catch (IOException ex) {
+            //nothing to do here
+        }
+    }
+
+
 
 
     @RequestMapping(value = "/home/profile/{userId}/edit", method = {RequestMethod.GET})
