@@ -6,8 +6,6 @@ import java.util.Date;
 
 public class UserCreateForm {
 
-    //TODO PSW REPEAT CHECKING
-
     @Pattern(regexp = "[a-zA-Z]+")
     @Size(min = 2, max = 100)
     private String firstname;
@@ -16,7 +14,7 @@ public class UserCreateForm {
     @Size(min = 2, max = 100)
     private String lastname;
 
-    /*@Pattern(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$")*/
+    @Pattern(regexp =  "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     @Size(min = 6, max = 100)
     private String email;
 
@@ -26,7 +24,6 @@ public class UserCreateForm {
     @Size(min = 8, max = 100)
     private String pswrepeat;
 
-    @Pattern(regexp = "^(?:(?:(?:0?[13578]|1[02])(/)31)\\1|(?:(?:0?[1,3-9]|1[0-2])(/)(?:29|30)\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:0?2(/)29\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(/)(?:0?[1-9]|1\\d|2[0-8])\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$")
     private String birthday;
 
     @Size(min = 2, max = 5)
@@ -86,5 +83,9 @@ public class UserCreateForm {
 
     public void setPswrepeat(String pswrepeat) {
         this.pswrepeat = pswrepeat;
+    }
+
+    public boolean checkPswRepeat() {
+        return password.equals(pswrepeat);
     }
 }

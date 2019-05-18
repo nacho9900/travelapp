@@ -9,7 +9,7 @@
     <%@include file="header.jsp"%>
     <div class="container-fluid" id="index-main-container">
         <div class="container">
-            <h3 class="display-4" >Welcome back, ${user.firstname} ${user.lastname}! </h3>
+            <h3 class="display-4 text-center" >Welcome back, ${user.firstname} ${user.lastname}! </h3>
             <div class="row">
                 <div class="col-2"></div>
                 <div class="col-8">
