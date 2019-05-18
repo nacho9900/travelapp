@@ -61,3 +61,11 @@ CREATE TABLE IF NOT EXISTS trip_users (
                 FOREIGN KEY (trip_id) REFERENCES trips ON DELETE CASCADE,
                 FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS user_pictures (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                image BYTEA NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
+
+)
