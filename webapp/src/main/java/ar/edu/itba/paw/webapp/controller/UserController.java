@@ -2,34 +2,34 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.TripService;
+import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.UserPicture;
+import ar.edu.itba.paw.webapp.form.EdiProfileForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class UserController extends MainController{
+
+    @Autowired
+    UserPicturesService ups;
 
     @Autowired
     private MailingService ms;
@@ -43,15 +43,15 @@ public class UserController extends MainController{
     @Autowired
     private TripService ts;
 
+    private static final long MAX_UPLOAD_SIZE = 5242880;
+
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @RequestMapping("/")
     public ModelAndView index() {
-        String likeName = "%" + "euroo" + "%";
-        System.out.println(likeName);
         return new ModelAndView("index"); }
 
-    //TODO ADD PAGINATION
+
     @RequestMapping("/home")
     public ModelAndView home(@ModelAttribute("user") User user) {
         ModelAndView mav = new ModelAndView("home");
@@ -96,7 +96,7 @@ public class UserController extends MainController{
         return mav;
     }
 
-    @RequestMapping("/home/profile/{userId}")
+    @RequestMapping(value = "/home/profile/{userId}", method = {RequestMethod.GET})
     public ModelAndView profile( @PathVariable(value = "userId") long userProfileId) {
         ModelAndView mav = new ModelAndView("profile");
         Optional<User> profileUser = us.findByid(userProfileId);
@@ -108,6 +108,56 @@ public class UserController extends MainController{
         String birthday = dateFormat.format(profileUser.get().getBirthday().getTime());
         mav.addObject("birthday", birthday);
         mav.addObject("userProfile", profileUser.get());
+        return mav;
+    }
+
+
+    @RequestMapping(value = "/home/profile/{userId}/edit", method = {RequestMethod.GET})
+    public ModelAndView editProfileGet(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
+                                @ModelAttribute("editProfileForm") final EdiProfileForm form) {
+        ModelAndView mav = new ModelAndView("editProfile");
+        return mav;
+    }
+
+    @RequestMapping(value = "/home/profile/{userId}/edit", method = {RequestMethod.POST})
+    public ModelAndView profile(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
+                                @Valid @ModelAttribute("editProfileForm") final EdiProfileForm form,
+                                final BindingResult errors) {
+
+        ModelAndView mav = new ModelAndView("editProfile");
+        if(user.getId() != userId) {
+            mav.setViewName("403");
+            return mav;
+        }
+        if(errors.hasErrors()) {
+            return mav;
+        }
+        MultipartFile profilePicture = form.getImageUpload();
+        byte[] imageBytes = null;
+        if(profilePicture != null && !profilePicture.isEmpty()) {
+            String contentType = profilePicture.getContentType();
+            if(!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
+                mav.addObject("invalidContentError", true);
+                return mav;
+            }
+            else if(profilePicture.getSize() > MAX_UPLOAD_SIZE) {
+                mav.addObject("fileSizeError", true);
+                return mav;
+            }
+            try {
+                imageBytes = profilePicture.getBytes();
+            } catch (IOException e) {
+                mav.addObject("generalError", true);
+                return mav;
+            }
+        }
+        else {
+            mav.addObject("generalError", true);
+            return mav;
+        }
+        UserPicture userPicture = ups.create(userId, imageBytes);
+        String redirectFormat = String.format("redirect:/home/profile/%d", userId);
+        mav.setViewName(redirectFormat);
         return mav;
     }
 

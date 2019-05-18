@@ -28,12 +28,12 @@ public class UserPicturesJdbcDao implements UserPicturesDao {
     }
 
     private final static RowMapper<UserPicture> ROW_MAPPER = (rs, rowNum) -> new UserPicture(rs.getLong("id"),
-            rs.getBytes("profile_picture"), rs.getLong("user_id"));
+            rs.getBytes("image"), rs.getLong("user_id"));
 
     @Override
     public UserPicture create(long userId, byte[] image) {
         final Map<String, Object> args = new HashMap<>();
-        args.put("profile_picture", image);
+        args.put("image", image);
         args.put("user_id", userId);
         final Number id = jdbcInsert.executeAndReturnKey(args);
         return new UserPicture(id.longValue(), image, userId);

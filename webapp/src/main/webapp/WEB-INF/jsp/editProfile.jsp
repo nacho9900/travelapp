@@ -15,7 +15,7 @@
     <div class="container" >
         <form:form action="${editProfile}" method="post" modelAttribute="editProfileForm" enctype="multipart/form-data" >
             <form:errors path="imageUpload" cssClass = "alert alert-warning" element="p"/>
-            <form:input type="file" path="imageUpload" />
+            <form:input type="file" path="imageUpload" accept = "image/*"/>
             <br>
             <form:errors path="biography" cssClass = "alert alert-warning" element="p"/>
             <form:textarea rows="10"  cols="50" path="biography" maxlength="500" />
