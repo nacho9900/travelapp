@@ -18,31 +18,38 @@
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-<div class="container">
-    <form:form action="${postURL}" method="post" modelAttribute="activityForm">
 
-        <form:errors path="name" cssClass = "alert alert-warning" element="p"/>
-        <form:input type="text" placeholder="Enter activity name" path="name"/>
+<div class="container-fluid" id="main-container">
+    <div class="container box">
+        <form:form action="${postURL}" method="post" modelAttribute="activityForm">
 
-        <form:errors path="category" cssClass = "alert alert-warning" element="p"/>
-        <form:label path="category" >Categories:</form:label><br>
-        <form:input type="text" placeholder="Enter activity name" path="category"/>
+            <form:errors path="name" cssClass = "alert alert-warning" element="p"/>
+            <form:input type="text" placeholder="Enter activity name" path="name" cssClass="form-control"/>
 
-        <form:errors path="placeInput" cssClass = "alert alert-warning" element="p"/>
-        <div class="pac-card" id="pac-card">
-            <div id="pac-container">
-                <form:input id="pac-input" type="text" path="placeInput" placeholder="Enter a location"/>
+            <form:errors path="category" cssClass = "alert alert-warning" element="p"/>
+            <form:label path="category" for="category-input" cssClass="text-white">Categories:</form:label><br>
+            <form:input type="text" placeholder="Category" path="category" name="category-input" cssClass="form-control"/>
+
+            <form:errors path="placeInput" cssClass = "alert alert-warning" element="p"/>
+            <div class="pac-card" id="pac-card">
+                <div id="pac-container">
+                    <form:input id="pac-input" type="text" path="placeInput" placeholder="Enter a location"/>
+                </div>
             </div>
-        </div>
-        <div class="container" id="map"></div>
-        <div id="infowindow-content">
-            <img src="" width="16" height="16" id="place-icon">
-            <span id="place-name"  class="title"></span><br>
-            <span id="place-address"></span>
-        </div>
-        <button type="submit" class="btn-primary" >Create</button>
-    </form:form>
+            <div class="container" id="map"></div>
+            <div id="infowindow-content">
+                <img src="" width="16" height="16" id="place-icon">
+                <span id="place-name"  class="title"></span><br>
+                <span id="place-address"></span>
+            </div>
+            <button type="submit" class="btn-primary" >Create</button>
+        </form:form>
+    </div>
+
+
 </div>
+
+
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap"
         async defer></script>
 <script src="${createTripjs}"></script>
