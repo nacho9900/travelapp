@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class UserPicturesJdbcDao implements UserPicturesDao {
@@ -37,5 +38,10 @@ public class UserPicturesJdbcDao implements UserPicturesDao {
         args.put("user_id", userId);
         final Number id = jdbcInsert.executeAndReturnKey(args);
         return new UserPicture(id.longValue(), image, userId);
+    }
+
+    @Override
+    public Optional<UserPicture> findByUserId(long userId) {
+        return jdbcTemplate.query("SELECT * FROM user_pictures WHERE user_id = ?", ROW_MAPPER, userId).stream().findFirst();
     }
 }
