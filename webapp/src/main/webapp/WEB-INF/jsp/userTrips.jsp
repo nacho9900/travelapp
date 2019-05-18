@@ -8,7 +8,7 @@
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-<div class="container-fluid">
+<div class="container-fluid" id="main-container">
     <div class="container">
         <h3 class="display-4 context-menu">My Trips</h3>
         <c:choose>

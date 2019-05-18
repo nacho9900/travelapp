@@ -16,47 +16,64 @@
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-<div class="container" style="margin-top: 30px">
-    <div>
-        <h1 class="display-4">${trip.name}</h1>
-        <p>${trip.description}</p>
-        <p>[${startDate} - ${endDate}]</p>
-    </div>
-    <h3 class="marginClass">Places</h3>
-    <div class="list-group">
-        <c:forEach items="${places}" var="place">
-            <button type="button" class="list-group-item list-group-item-action">${place.address}</button>
-        </c:forEach>
-    </div>
-    <h3 class="marginClass">Members</h3>
-    <div class="list-group">
-        <c:forEach items="${usersAndRoles}" var="ur">
-            <a href="<c:url value='/home/profile/${ur.key.id}'/>"
-               class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">${ur.key.firstname} ${ur.key.lastname}</h5>
-                </div>
-                <small>${ur.value}</small>
-            </a>
-        </c:forEach>
+<div class="container-fluid" id="main-container">
+    <div class="container">
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8 box">
+        <div>
+            <h1 class="display-4 text-white">${trip.name}</h1>
+            <p class="text-white">${trip.description}</p>
+            <p>[${startDate} - ${endDate}]</p>
+        </div>
+        <h3 class="margin-class text-white">Places</h3>
+        <div class="list-group">
+            <c:forEach items="${places}" var="place">
+                <button type="button" class="list-group-item list-group-item-action">${place.address}</button>
+            </c:forEach>
+        </div>
+        <h3 class="margin-class text-white">Members</h3>
+        <div class="list-group">
+            <c:forEach items="${usersAndRoles}" var="ur">
+                <a href="<c:url value='/home/profile/${ur.key.id}'/>"
+                   class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">${ur.key.firstname} ${ur.key.lastname}</h5>
+                    </div>
+                    <small>${ur.value}</small>
+                </a>
+            </c:forEach>
+        </div>
+
+        <%--TODO: SHOW PLACE ACTIVITY IN MAP WHEN CLICKED--%>
+        <h3 class="margin-class text-white">Activities</h3>
+        <c:if test="${actAndPlaces.size() == 0}">
+            <div class="alert alert-primary" role="alert">This trip has no activities yet</div>
+        </c:if>
+        <ul class="list-group">
+            <c:forEach items="${actAndPlaces}" var="activity_places">
+                <li class="list-group-item">${activity_places.key.name} ${activity_places.key.category} ${activity_places.value.address}</li>
+            </c:forEach>
+        </ul>
+        <c:if test="${isAdmin}">
+            <a class="btn btn-primary btn-lg" href="${createActivityURL}" role="button">Add activity</a>
+        </c:if>
+        <c:if test="${!isTravelling}">
+            <a class="btn btn-success" href="${joinTripURL}" role="button">Join trip</a>
+        </c:if>
     </div>
 
-    <%--TODO: SHOW PLACE ACTIVITY IN MAP WHEN CLICKED--%>
-    <h3 class="marginClass">Activities</h3>
-    <c:if test="${actAndPlaces.size() == 0}">
-        <div class="alert alert-primary" role="alert">This trip has no activities yet</div>
-    </c:if>
-    <ul class="list-group">
-        <c:forEach items="${actAndPlaces}" var="activity_places">
-            <li class="list-group-item">${activity_places.key.name} ${activity_places.key.category} ${activity_places.value.address}</li>
-        </c:forEach>
-    </ul>
-    <c:if test="${isAdmin}">
-        <a class="btn btn-primary btn-lg" href="${createActivityURL}" role="button">Add activity</a>
-    </c:if>
-    <c:if test="${!isTravelling}">
-        <a class="btn btn-success" href="${joinTripURL}" role="button">Join trip</a>
-    </c:if>
+    </div>
 </div>
+
+
+
+
+
+
+
+
+</div>
+
 </body>
 </html>

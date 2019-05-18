@@ -13,7 +13,7 @@
 </head>
 <body>
     <jsp:include page="headerEmpty.jsp"/>
-    <div class="container-fluid" id="index-main-container">
+    <div class="container-fluid" id="main-container">
 <div class="row">
     <div class="col-4"></div>
     <div class="col-4">

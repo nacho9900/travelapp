@@ -7,7 +7,7 @@
 </head>
 <body>
     <%@include file="header.jsp"%>
-    <div class="container-fluid">
+    <div class="container-fluid" id="main-container">
         <div class="container">
             <h3 class="display-4 text-center" >Welcome back, ${user.firstname} ${user.lastname}! </h3>
             <div class="row">

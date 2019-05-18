@@ -1,5 +1,5 @@
-#index-main-container{
-    background-image: url("/resources/icons/trekkingcouple.jpg");
+#main-container{
+    background-image: url("../icons/trekkingcouple.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     min-height: 100vh;
@@ -8,7 +8,7 @@
 }
 
 .box{
-    background: rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.5);
     padding: 20px;
     border-radius: 5px;
 }
