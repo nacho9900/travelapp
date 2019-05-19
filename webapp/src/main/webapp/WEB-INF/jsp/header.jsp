@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <c:url value="/home" var="home"/>
@@ -26,32 +27,31 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="${home}">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="${home}"><spring:message code="header.home"/> <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="${trips}">My trips</a>
+                <a class="nav-link" href="${trips}"><spring:message code="header.myTrips"/></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="${createTrip}">Create trip</a>
+                <a class="nav-link" href="${createTrip}"><spring:message code="header.createTrip"/> </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="${about}">About us</a>
+                <a class="nav-link" href="${about}"><spring:message code="header.aboutUs"/> </a>
             </li>
         </ul>
-
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <form action="${searchURL}" method="get" class="form-inline my-2 my-lg-0 nav-link">
                     <input id="nameInput" name="nameInput" class="form-control mr-sm-2" type="search"
                            placeholder="Search for trips" aria-label="Search">
-                    <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+                    <button class="btn btn-success my-2 my-sm-0" type="submit"><spring:message code="header.searchBtn"/> </button>
                 </form>
             </li>
             <c:choose>
                 <c:when test="${user == null}">
-                    <a id="signinButton" class="btn btn-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
+                    <a id="signinButton" class="btn btn-success my-2 my-sm-0" href="${signinURL}"><spring:message code="header.signInBtn"/> </a>
                 </c:when>
                 <c:otherwise>
                     <c:url value="/home/profile/${user.id}" var="profile"/>
@@ -62,7 +62,7 @@
                     </li>
                     <li class="nav-item">
                     <form:form action="${logoutUrl}" method="post" cssClass="nav-link">
-                            <button type="submit" class="btn btn-danger">Logout</button>
+                            <button type="submit" class="btn btn-danger"><spring:message code="header.logout"/> </button>
                     </form:form>
                     </li>
                 </c:otherwise>

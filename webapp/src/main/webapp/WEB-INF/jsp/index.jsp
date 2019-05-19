@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
 <head>
@@ -10,11 +11,9 @@
 	<jsp:include page="header.jsp"/>
 	<div class="container-fluid" id="main-container">
 		<div class="container box">
-			<h1 class="text-white">Meet people and travel the world </h1>
-			<p class="text-white">If you are looking to meet people from all around the globe and go on adventures with them,
-				you are in the right place.
-			</p>
-			<a class="btn btn-success align-content-center" href="${signUpUrl}">Sign up today</a>
+			<h1 class="text-white"><spring:message code="index.title"/></h1>
+			<p class="text-white"><spring:message code="index.greeting"/></p>
+			<a class="btn btn-success align-content-center" href="${signUpUrl}"><spring:message code="index.signUp"/></a>
 		</div>
 	</div>
 </body>
