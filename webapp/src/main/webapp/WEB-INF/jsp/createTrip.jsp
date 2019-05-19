@@ -10,6 +10,7 @@
     <c:url value="/home/create-trip" var="createTripURL"/>
     <c:url value="/resources/css/map.css" var="createTripcss"/>
     <c:url value="/resources/js/map.js" var="createTripjs"/>
+    <c:url value="/resources/js/preventEnterDefault.js" var="noEnterJs"/>
     <link rel="stylesheet" href="${createTripcss}">
     <title>Create Trip</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -58,13 +59,9 @@
     </div>
 </div>
 <script>
-    document.getElementById("formId").onkeypress = function(e) {
-        var key = e.charCode || e.keyCode || 0;
-        if (key == 13) {
-            e.preventDefault();
-        }
-    }
+
 </script>
+<script src="${noEnterJs}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap"
         async defer></script>
 <script src="${createTripjs}"></script>

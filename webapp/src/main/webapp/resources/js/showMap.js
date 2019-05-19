@@ -1,17 +1,19 @@
-
-function initMap() {
-
+function initMap(activityId, lat, long) {
+    var id = "map".concat(activityId.toString())
+    var map = document.getElementById(id);
+    if (map.style.display === "none") {
+        map.style.display = "block";
+    } else {
+        map.style.display = "none";
+    }
     var options  = {
-        zoom:8,
-        center: {lat : ${place.latitude}, long : ${place.longitude}}
+        zoom:15,
+        center:{lat:lat,lng:long}
     };
-
-    var map = new google.maps.Map(document.getElementById('map"${place.id")'), options);
-
+    console.log(options);
+    var googleMap = new google.maps.Map(map, options);
     var marker = new google.maps.Marker({
-        position: {lat:${place.latitude} , lng:${place.longitude} },
-        map: map
+        position:{lat:lat,lng:long},
+        map: googleMap
     })
-
-
 }

@@ -7,6 +7,7 @@
     <c:url value="/home/trip/${trip.id}/create-activity" var="createActivityURL"/>
     <c:url value="/home/trip/${trip.id}/join" var="joinTripURL"/>
     <c:url value="/resources/css/trip.css" var="tripCSS"/>
+    <c:url value="/resources/js/showMap.js" var="showMapJs"/>
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <link href="${bootstrapCss}" rel="stylesheet">
     <link href="${tripCSS}" rel="stylesheet">
@@ -58,29 +59,6 @@
             <div id="map${activity_places.key.id}"  style="height: 400px;width: 97%;display: none;"></div>
         </c:forEach>
     </div>
-
-
-    <script>
-        function initMap(activityId, lat, long) {
-            var id = "map".concat(activityId.toString())
-            var map = document.getElementById(id);
-            if (map.style.display === "none") {
-                map.style.display = "block";
-            } else {
-                map.style.display = "none";
-            }
-            var options  = {
-                zoom:15,
-                center:{lat:lat,lng:long}
-            };
-            console.log(options);
-            var googleMap = new google.maps.Map(map, options);
-            var marker = new google.maps.Marker({
-                position:{lat:lat,lng:long},
-                map: googleMap
-                })
-        }
-    </script>
     <c:if test="${isAdmin}">
         <a class="btn btn-primary btn-lg" style="margin-top: 20px;" href="${createActivityURL}" role="button">Add activity</a>
     </c:if>
@@ -89,6 +67,7 @@
     </c:if>
 </div>
 </body>
+<script src="${showMapJs}"></script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M">
 </script>
