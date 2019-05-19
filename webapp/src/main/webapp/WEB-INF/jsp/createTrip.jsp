@@ -8,27 +8,17 @@
 <head>
     <%@include file="head.jsp" %>
     <c:url value="/home/create-trip" var="createTripURL"/>
-    <c:url value="/resources/css/map.css" var="createTripcss"/>
-    <c:url value="/resources/js/map.js" var="createTripjs"/>
+    <c:url value="/resources/css/map.css" var="createTripCss"/>
+    <c:url value="/resources/js/map.js" var="createTripJs"/>
     <c:url value="/resources/js/preventEnterDefault.js" var="noEnterJs"/>
-    <link rel="stylesheet" href="${createTripcss}">
+    <link rel="stylesheet" href="${createTripCss}">
+
     <title>Create Trip</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-<div class="align-content-center">
-    <div class="container">
-        <%--TODO: AGREGAR ALERT POR ERROR EN MAP INPUT--%>
-        <h3 id="headerID" class="display-4 ">Create trip</h3>
-        <form:form action="${createTripURL}" id="formId" method="post" modelAttribute="createTripForm">
-            <div class="container">
-                <form:errors path="name" cssClass="alert alert-warning" element="p"/>
-                <form:input class="form-control" cssStyle="margin-bottom: 10px" type="text" path="name" name="trip_name"
-                            placeholder="Enter trip name"/>
-
-
 
 <div class="container-fluid" id="main-container">
     <div class="container box">
@@ -79,6 +69,6 @@
 <script src="${noEnterJs}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap"
         async defer></script>
-<script src="${createTripjs}"></script>
+<script src="${createTripJs}"></script>
 </body>
 </html>
