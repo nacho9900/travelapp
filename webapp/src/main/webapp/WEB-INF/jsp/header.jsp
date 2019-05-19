@@ -41,33 +41,20 @@
                 <a class="nav-link" href="${about}"><spring:message code="header.aboutUs"/> </a>
             </li>
         </ul>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <form action="${searchURL}" method="get" class="form-inline my-2 my-lg-0 nav-link">
-                    <spring:message code="header.searchMessage" var="searchMessage"/>
-                    <input id="nameInput" name="nameInput" class="form-control mr-sm-2" type="search"
-                           placeholder="${searchMessage}" aria-label="Search">
-                    <button class="btn btn-success my-2 my-sm-0" type="submit"><spring:message code="header.searchBtn"/> </button>
-                </form>
-            </li>
-            <c:choose>
-                <c:when test="${user == null}">
-                    <a id="signinButton" class="btn btn-success my-2 my-sm-0" href="${signinURL}"><spring:message code="header.signInBtn"/> </a>
-                </c:when>
-                <c:otherwise>
-                    <c:url value="/home/profile/${user.id}" var="profile"/>
-                    <li class="nav-item align-content-center">
-                        <a href="${profile}" class="nav-link">
-                            <img alt="" id="profile-nav" src="${userIMG}" height="32" width="32"/>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                    <form:form action="${logoutUrl}" method="post" cssClass="nav-link">
-                            <button type="submit" class="btn btn-danger"><spring:message code="header.logout"/> </button>
-                    </form:form>
-                    </li>
-                </c:otherwise>
-            </c:choose>
-        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search for trips" aria-label="Search">
+            <button class="btn btn-success my-2 my-sm-0" type="submit"><spring:message code="header.searchBtn"/> </button>
+        </form>
+        <c:choose>
+            <c:when test="${user == null}">
+                <a id="signinButton" style="margin-left: 15px" class="btn btn-success my-2 my-sm-0" href="${signinURL}"><spring:message code="header.signInBtn"/></a>
+            </c:when>
+            <c:otherwise>
+                <a href="${profile}">
+                    <img alt="" style="margin-left: 10px" src="${userIMG}" height="32" width="32"/>
+                </a>
+                <a style="margin-left: 10px" class="btn btn-dark my-2 my-sm-0" href="${logoutUrl}"><spring:message code="header.logout"/></a>
+            </c:otherwise>
+        </c:choose>
     </div>
 </nav>
