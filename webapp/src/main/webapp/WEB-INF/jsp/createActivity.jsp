@@ -7,12 +7,11 @@
 <html>
 <head>
     <%@include file="head.jsp"%>
-
     <c:url value="/home/trip/${tripId}/create-activity" var="postURL"/>
     <c:url value="/resources/css/map.css" var="createTripcss"/>
     <c:url value="/resources/js/map.js" var="createTripjs"/>
     <link rel="stylesheet" href="${createTripcss}">
-    <title>Create Trip</title>
+    <title>Create Activity</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
 </head>
@@ -26,27 +25,29 @@
             <form:errors path="name" cssClass = "alert alert-warning" element="p"/>
             <form:input type="text" placeholder="Enter activity name" path="name" cssClass="form-control"/>
 
+        <form:errors path="placeInput" cssClass = "alert alert-warning" element="p"/>
+        <c:if test="${errorMap}">
+            <div class="alert alert-danger" role="alert">Error, invalid google place location</div>
+        </c:if>
+        <div class="pac-card" id="pac-card">
+            <div id="pac-container">
+                <form:input id="pac-input" type="text" path="placeInput" placeholder="Enter a location"/>
             <form:errors path="category" cssClass = "alert alert-warning" element="p"/>
             <form:label path="category" for="category-input" cssClass="text-white">Categories:</form:label><br>
             <form:input type="text" placeholder="Category" path="category" name="category-input" cssClass="form-control"/>
 
-            <form:errors path="placeInput" cssClass = "alert alert-warning" element="p"/>
-            <div class="pac-card" id="pac-card">
-                <div id="pac-container">
-                    <form:input id="pac-input" type="text" path="placeInput" placeholder="Enter a location"/>
-                </div>
             </div>
-            <div class="container" id="map"></div>
-            <div id="infowindow-content">
-                <img src="" width="16" height="16" id="place-icon">
-                <span id="place-name"  class="title"></span><br>
-                <span id="place-address"></span>
-            </div>
-            <button type="submit" class="btn-primary" >Create</button>
-        </form:form>
-    </div>
-
-
+        </div>
+        <div class="container" id="map"></div>
+        <div id="infowindow-content">
+            <img src="" width="16" height="16" id="place-icon">
+            <span id="place-name"  class="title"></span><br>
+            <span id="place-address"></span>
+        </div>
+        <div class="text-center flex-fill">
+            <button type="submit" class="btn-success btn btn-lg">Create</button>
+        </div>
+    </form:form>
 </div>
 
 

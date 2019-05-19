@@ -23,7 +23,6 @@
                     <img class="img-fluid" src="${defaultPP}" width="410" height="430" style="margin: 20px">
                 </c:otherwise>
             </c:choose>
-
             <div class="card car mx-auto" style="width: 18rem;">
                 <div class="card-header">
                     <h5 class="card-title">${userProfile.firstname} ${userProfile.lastname}    ${userProfile.nationality}</h5>

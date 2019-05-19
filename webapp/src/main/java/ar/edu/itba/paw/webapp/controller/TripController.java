@@ -118,6 +118,7 @@ public class TripController extends MainController{
         List<ar.edu.itba.paw.model.Place> tripPlaces = ps.getTripPlaces(trip.getId());
         List<DataPair<User, UserRole>> tripUsersAndRoles = us.getTripUsersAndRoles(tripId);
         List<DataPair<Activity, ar.edu.itba.paw.model.Place>> tripActAndPlace = as.getTripActivitiesDetails(tripId);
+        mav.addObject("isEmpty", tripActAndPlace.size() == 0);
         mav.addObject("isTravelling", isTravelling);
         mav.addObject("isAdmin",isAdmin);
         mav.addObject("places", tripPlaces);
