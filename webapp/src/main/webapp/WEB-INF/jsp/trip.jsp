@@ -3,9 +3,7 @@
 
 <html>
 <head>
-
     <%@include file="head.jsp" %>
-
     <c:url value="/home/trip/${trip.id}/create-activity" var="createActivityURL"/>
     <c:url value="/home/trip/${trip.id}/join" var="joinTripURL"/>
     <c:url value="/resources/css/trip.css" var="tripCSS"/>
@@ -36,27 +34,62 @@
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">${ur.key.firstname} ${ur.key.lastname}</h5>
                 </div>
-                <small>${ur.value}</small>
+                <c:if test="${ur.value != 'MEMBER'}">
+                    <small id="adminTag">${ur.value}</small>
+                </c:if>
             </a>
         </c:forEach>
     </div>
 
-    <%--TODO: SHOW PLACE ACTIVITY IN MAP WHEN CLICKED--%>
     <h3 class="marginClass">Activities</h3>
-    <c:if test="${actAndPlaces.size() == 0}">
+    <c:if test="${isEmpty}">
         <div class="alert alert-primary" role="alert">This trip has no activities yet</div>
     </c:if>
-    <ul class="list-group">
+    <div class="list-group" style="margin-bottom: 20px">
         <c:forEach items="${actAndPlaces}" var="activity_places">
-            <li class="list-group-item">${activity_places.key.name} ${activity_places.key.category} ${activity_places.value.address}</li>
+            <button type="button" class="list-group-item list-group-item-action flex-column align-items-start" onclick="initMap(${activity_places.key.id},
+                ${activity_places.value.latitude},${activity_places.value.longitude})">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">${activity_places.key.name}</h5>
+                    <small class="text-right float-right">${activity_places.key.category}</small>
+                </div>
+                <p class="mb-1">${activity_places.value.address}</p>
+            </button>
+            <div id="map${activity_places.key.id}"  style="height: 400px;width: 97%;display: none;"></div>
         </c:forEach>
-    </ul>
+    </div>
+
+
+    <script>
+        function initMap(activityId, lat, long) {
+            var id = "map".concat(activityId.toString())
+            var map = document.getElementById(id);
+            if (map.style.display === "none") {
+                map.style.display = "block";
+            } else {
+                map.style.display = "none";
+            }
+            var options  = {
+                zoom:15,
+                center:{lat:lat,lng:long}
+            };
+            console.log(options);
+            var googleMap = new google.maps.Map(map, options);
+            var marker = new google.maps.Marker({
+                position:{lat:lat,lng:long},
+                map: googleMap
+                })
+        }
+    </script>
     <c:if test="${isAdmin}">
-        <a class="btn btn-primary btn-lg" href="${createActivityURL}" role="button">Add activity</a>
+        <a class="btn btn-primary btn-lg" style="margin-top: 20px;" href="${createActivityURL}" role="button">Add activity</a>
     </c:if>
     <c:if test="${!isTravelling}">
-        <a class="btn btn-success" href="${joinTripURL}" role="button">Join trip</a>
+        <a class="btn btn-success" style="margin-top: 20px;" href="${joinTripURL}" role="button">Join trip</a>
     </c:if>
 </div>
 </body>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M">
+</script>
 </html>

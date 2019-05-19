@@ -16,19 +16,12 @@
     <meta charset="utf-8">
 </head>
 <body>
-<%-- STOP ENTER KEY FROM SUBMITING FORM AND ONLY ALLOWING CREATE BUTTON TO DO IT
-document.getElementById("YOURFORMNAMEHERE").onkeypress = function(e) {
-var key = e.charCode || e.keyCode || 0;
-if (key == 13) {
-e.preventDefault();
-}
-}--%>
 <jsp:include page="header.jsp"/>
 <div class="align-content-center">
     <div class="container">
         <%--TODO: AGREGAR ALERT POR ERROR EN MAP INPUT--%>
-        <h3 id="headerID" class="display-4 ">Create Trip</h3>
-        <form:form action="${createTripURL}" method="post" modelAttribute="createTripForm">
+        <h3 id="headerID" class="display-4 ">Create trip</h3>
+        <form:form action="${createTripURL}" id="formId" method="post" modelAttribute="createTripForm">
             <div class="container">
                 <form:errors path="name" cssClass="alert alert-warning" element="p"/>
                 <form:input class="form-control" cssStyle="margin-bottom: 10px" type="text" path="name" name="trip_name"
@@ -64,6 +57,14 @@ e.preventDefault();
         </form:form>
     </div>
 </div>
+<script>
+    document.getElementById("formId").onkeypress = function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        if (key == 13) {
+            e.preventDefault();
+        }
+    }
+</script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap"
         async defer></script>
 <script src="${createTripjs}"></script>

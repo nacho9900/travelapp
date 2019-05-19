@@ -50,7 +50,6 @@ public class UserController extends MainController{
 
     private static final long MAX_UPLOAD_SIZE = 5242880;
 
-    private static final String PROFILE_PIC_DEFAULT = "defaultPP.png";
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -116,7 +115,6 @@ public class UserController extends MainController{
         if(userPictureOptional.isPresent()) {
             mav.addObject("hasProfilePicture", true);
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String birthday = dateFormat.format(profileUser.get().getBirthday().getTime());
         mav.addObject("birthday", birthday);
         mav.addObject("userProfile", profileUser.get());
@@ -139,13 +137,14 @@ public class UserController extends MainController{
         }
     }
 
-
-
-
     @RequestMapping(value = "/home/profile/{userId}/edit", method = {RequestMethod.GET})
     public ModelAndView editProfileGet(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
                                 @ModelAttribute("editProfileForm") final EdiProfileForm form) {
         ModelAndView mav = new ModelAndView("editProfile");
+        if(user.getId() != userId) {
+            mav.setViewName("403");
+            return mav;
+        }
         return mav;
     }
 

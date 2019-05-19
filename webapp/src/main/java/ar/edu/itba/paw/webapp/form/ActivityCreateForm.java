@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 public class ActivityCreateForm {
 
-    @Pattern(regexp = "[a-zA-Z]+")
+
     @Size(min = 3, max = 40)
     private String name;
 
