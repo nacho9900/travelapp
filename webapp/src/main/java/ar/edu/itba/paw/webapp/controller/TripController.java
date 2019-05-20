@@ -68,14 +68,16 @@ public class TripController extends MainController{
             return mav;
         }
         List<Trip> userTrips = ts.findUserTrips(user.getId(), pageNum);
-        List<DataPair<Trip, ar.edu.itba.paw.model.Place>> dataPairList = new LinkedList<>();
+        List<DataPair<Trip, DataPair<ar.edu.itba.paw.model.Place, Boolean>>> dataPairList = new LinkedList<>();
         for (Trip trip: userTrips) {
             long placeId = trip.getStartPlaceId();
             ar.edu.itba.paw.model.Place place = ps.findById(placeId).get();
-            dataPairList.add(new DataPair<>(trip, place));
+            dataPairList.add(new DataPair<>(trip,
+                    new DataPair<>(place,tripPictureService.findByTripId(trip.getId()).isPresent())));
         }
         int pageQty = (int)Math.round(userTripsQty / (double) MAX_TRIPS_PAGE);
         mav.addObject("pageQty", pageQty);
+        mav.addObject("isEmpty", dataPairList.isEmpty());
         mav.addObject("userTripsList", dataPairList);
         mav.addObject("dateFormat", dateFormat);
         return mav;

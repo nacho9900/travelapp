@@ -26,7 +26,9 @@
             <div class="col-1"></div>
                 <div class="col-10">
                     <%--TODO: AGREGAR ALERT POR ERROR EN MAP INPUT--%>
-                    <h3 id="headerID" class="display-4 text-white">Create Trip</h3>
+                    <div class="form-group">
+                        <div id="headerID" class="display-4 text-white">Create Trip</div>
+                    </div>
                     <form:form action="${createTripURL}" method="post" modelAttribute="createTripForm">
                             <form:errors path="name" cssClass="alert alert-warning" element="p"/>
                             <form:input class="form-control" cssStyle="margin-bottom: 10px" type="text" path="name" name="trip_name"

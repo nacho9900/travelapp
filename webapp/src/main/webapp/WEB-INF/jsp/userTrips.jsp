@@ -12,20 +12,24 @@
     <div class="container">
         <h3 class="display-4 context-menu">My Trips</h3>
         <c:choose>
-            <c:when test="${userTripsList.size() == 0}">
+            <c:when test="${isEmpty}">
                 <p class="alert alert-warning">You are not participating in any trips, try joining one!</p>
             </c:when>
             <c:otherwise>
                 <div class="list-group">
                     <c:forEach items="${userTripsList}" var="dataPair">
-                        <c:url value="/home/trip/${dataPair.key.id}" var="tripUrl"/>
+                        <c:url value="/home/trip/${dataPair.key.id}" var = "tripUrl"/>
                         <a href="${tripUrl}" class="list-group-item list-group-item-action flex-column align-items-start">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">${dataPair.key.name}</h5>
                                 <small>${dateFormat.format(dataPair.key.startDate.getTime())}</small>
                             </div>
+                            <c:if test="${dataPair.value.value}">
+                                <c:url value="/home/trip/${dataPair.key.id}/image" var="tripImageURL"/>
+                                <img class="img-fluid" src="${tripImageURL}" width="205" height="215" >
+                            </c:if>
                             <p class="mb-1">${dataPair.key.description}</p>
-                            <small>${dataPair.value.address}</small>
+                            <small>${dataPair.value.key.address}</small>
                         </a>
                     </c:forEach>
                 </div>
