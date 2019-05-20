@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:url value="/home" var="home"/>
 <c:url value="/about" var="about"/>
@@ -18,14 +19,21 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="${home}">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="${home}">
+                    <spring:message code="header.home"/>
+                    <span class="sr-only">(current)</span>
+                </a>
             </li>
             <li class="nav-item">
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="${about}">About us</a>
+                <a class="nav-link" href="${about}">
+                    <spring:message code="header.aboutUs"/>
+                </a>
             </li>
         </ul>
     </div>
-    <a class="btn btn-success align-content-center" href="${signUpUrl}">Sign up</a>
+    <a class="btn btn-success align-content-center" href="${signUpUrl}">
+        <spring:message code="header.signUp"/>
+    </a>
 </nav>
