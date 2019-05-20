@@ -35,27 +35,28 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="${home}">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="${home}"><spring:message code="header.home"/> <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${trips}">My trips</a>
+                    <a class="nav-link" href="${trips}"><spring:message code="header.myTrips"/></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${createTrip}">Create trip</a>
+                    <a class="nav-link" href="${createTrip}"><spring:message code="header.createTrip"/></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About us</a>
+                    <a class="nav-link" href="#"><spring:message code="header.aboutUs"/></a>
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search for trips" aria-label="Search">
-                <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+                <input class="form-control mr-sm-2" type="search" placeholder="<spring:message code="header.searchMessage"/>" aria-label="Search">
+                <button class="btn btn-success my-2 my-sm-0" type="submit"><spring:message code="header.searchBtn"/></button>
             </form>
             <c:choose>
                 <c:when test="${user == null}">
-                    <a id="signinButton" style="margin-left: 15px" class="btn btn-success my-2 my-sm-0" href="${signinURL}">Sign in</a>
+                    <a id="signinButton" style="margin-left: 15px" class="btn btn-success my-2 my-sm-0" href="${signinURL}">
+                        <spring:message code="header.signInBtn"/></a>
                 </c:when>
                 <c:otherwise>
                     <a href="${profile}">
@@ -67,10 +68,10 @@
         </div>
     </nav>
     <div id="myContainer" class="container align-items-center">
-        <h3 id="myHeader" class="display-4">PAW 2019 1er cuatrimestre grupo 4</h3>
+        <h3 id="myHeader" class="display-4"> <spring:message code="about.title"/></h3>
         <ul class="list-group" >
-            <li class="list-group-item">Felipe Gorostiaga - 57200</li>
-            <li class="list-group-item">Ignacio Negro</li>
+            <li class="list-group-item"><spring:message code="about.felipe"/></li>
+            <li class="list-group-item"> <spring:message code="about.ignacio"/></li>
         </ul>
     </div>
     <script src="${bootjs}" type="text/javascript"></script>
