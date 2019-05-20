@@ -1,19 +1,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
 <head>
     <%@include file="head.jsp"%>
-    <title>My Trips</title>
+    <title><spring:message code="trips.title"/></title>
 </head>
 <body>
 <jsp:include page="header.jsp"/>
 <div class="container-fluid" id="main-container">
     <div class="container">
-        <h3 class="display-4 context-menu">My Trips</h3>
+        <h3 class="display-4 context-menu"><spring:message code="trips.pageTitle"/></h3>
         <c:choose>
             <c:when test="${isEmpty}">
-                <p class="alert alert-warning">You are not participating in any trips, try joining one!</p>
+                <p class="alert alert-warning">
+                    <spring:message code="trips.noTrips"/>
+                </p>
             </c:when>
             <c:otherwise>
                 <div class="list-group">
@@ -21,15 +24,15 @@
                         <c:url value="/home/trip/${dataPair.key.id}" var = "tripUrl"/>
                         <a href="${tripUrl}" class="list-group-item list-group-item-action flex-column align-items-start">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">${dataPair.key.name}</h5>
+                                <h5 class="mb-1"><c:out value="${dataPair.key.name}"/></h5>
                                 <small>${dateFormat.format(dataPair.key.startDate.getTime())}</small>
                             </div>
                             <c:if test="${dataPair.value.value}">
                                 <c:url value="/home/trip/${dataPair.key.id}/image" var="tripImageURL"/>
                                 <img class="img-fluid" src="${tripImageURL}" width="205" height="215" >
                             </c:if>
-                            <p class="mb-1">${dataPair.key.description}</p>
-                            <small>${dataPair.value.key.address}</small>
+                            <p class="mb-1"><c:out value="${dataPair.key.description}"/></p>
+                            <small><c:out value="${dataPair.value.key.address}"/></small>
                         </a>
                     </c:forEach>
                 </div>
