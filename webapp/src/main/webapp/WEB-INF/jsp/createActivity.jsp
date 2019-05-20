@@ -11,7 +11,9 @@
     <c:url value="/resources/css/map.css" var="createTripCss"/>
     <c:url value="/resources/js/map.js" var="createTripJs"/>
     <link rel="stylesheet" href="${createTripCss}">
-    <title>Create Activity</title>
+    <title>
+        <spring:message code="createActivity.title"/>
+    </title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
 </head>
@@ -24,25 +26,32 @@
             <div class="col-1"></div>
             <div class="col-10">
                 <div class="form-group">
-                    <div class="display-4 text-white">Create Activity</div>
+                    <div class="display-4 text-white">
+                        <spring:message code="createActivity.pageTitle"/>
+                    </div>
                 </div>
                 <form:form action="${postURL}" method="post" modelAttribute="activityForm">
                     <div class="form-group">
                         <form:errors path="name" cssClass="alert alert-warning" element="p"/>
-                        <form:input type="text" placeholder="Enter activity name" path="name" cssClass="form-control"/>
+                        <spring:message code="createActivity.namePh" var="namePh"/>
+                        <form:input type="text" placeholder="${namePh}" path="name" cssClass="form-control"/>
                     </div>
                     <div class="form-group">
                         <form:errors path="category" cssClass="alert alert-warning" element="p"/>
-                        <form:input type="text" placeholder="Category" path="category" name="category-input"
+                        <spring:message code="createActivity.categoryPh" var="categoryPh"/>
+                        <form:input type="text" placeholder="${categoryPh}" path="category" name="category-input"
                                     cssClass="form-control"/>
                     </div>
                     <form:errors path="placeInput" cssClass="alert alert-warning" element="p"/>
                     <c:if test="${errorMap}">
-                        <div class="alert alert-danger" role="alert">Error, invalid google place location</div>
+                        <div class="alert alert-danger" role="alert">
+                            <spring:message code="createActivity.invalidPlace"/>
+                        </div>
                     </c:if>
                     <div class="pac-card" id="pac-card">
                         <div id="pac-container">
-                            <form:input id="pac-input" type="text" path="placeInput" placeholder="Enter a location"/>
+                            <spring:message code="createActivity.locationPh" var="locationPh"/>
+                            <form:input id="pac-input" type="text" path="placeInput" placeholder="${locationPh}"/>
                         </div>
                     </div>
                     <div class="container" id="map"></div>
@@ -52,7 +61,9 @@
                         <span id="place-address"></span>
                     </div>
                     <div class="text-center flex-fill">
-                        <button type="submit" class="btn-success btn btn-lg">Create</button>
+                        <button type="submit" class="btn-success btn btn-lg">
+                            <spring:message code="createActivity.createBtn"/>
+                        </button>
                     </div>
                 </form:form>
             </div>
