@@ -63,7 +63,7 @@ public class TripController extends MainController{
         ModelAndView mav = new ModelAndView("userTrips");
         int userTripsQty = ts.countUserTrips(user.getId());
         int requiredPages = (int) Math.ceil(userTripsQty/(double)MAX_TRIPS_PAGE);
-        if(pageNum > requiredPages) {
+        if(pageNum > 1 && pageNum > requiredPages) {
             mav.setViewName("404");
             return mav;
         }

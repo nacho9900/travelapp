@@ -81,7 +81,10 @@ public class UserController extends MainController{
         if(errors.hasErrors()) {
             return mav;
         }
-
+        if(!form.checkPswRepeat()) {
+            mav.addObject("pswRepeatError", true);
+            return mav;
+        }
         Optional userOpt = us.findByUsername(form.getEmail());
         if(userOpt.isPresent()) {
             mav.addObject("alreadyExists", true);
