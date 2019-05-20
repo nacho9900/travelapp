@@ -134,8 +134,8 @@ public class TripController extends MainController{
         mav.addObject("usersAndRoles", us.getTripUsersAndRoles(tripId));
         mav.addObject("actAndPlaces", tripActAndPlace);
         mav.addObject("trip", trip);
-        mav.addObject("startDate", dateFormat.format(trip.getStartDate().getTime()));
-        mav.addObject("endDate", dateFormat.format(trip.getEndDate().getTime()));
+        mav.addObject("startDate", trip.getStartDate().getTime());
+        mav.addObject("endDate", trip.getEndDate().getTime());
         return mav;
     }
 
