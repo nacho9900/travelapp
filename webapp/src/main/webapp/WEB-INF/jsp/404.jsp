@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
 <head>
@@ -19,8 +20,8 @@
         <div class="error-wrapper">
             <div class="man-icon"></div>
             <h3 class="title">404</h3>
-            <p class="info">Oh! Page not found</p>
-            <a id="homeButton" class="btn btn-outline-success my-2 my-sm-0" href="${homeURL}">HOME</a>
+            <p class="info"><spring:message code="404.message"/></p>
+            <a id="homeButton" class="btn btn-outline-success my-2 my-sm-0" href="${homeURL}"><spring:message code="404.homeBtn"/></a>
         </div>
     </div>
     <script src="${jquery}" type="text/javascript"></script>
