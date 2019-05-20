@@ -8,6 +8,7 @@
 <body>
 <%@include file="header.jsp"%>
     <div class="container">
+        <h3 class="display-4 context-menu" style="margin-top: 20px;margin-bottom: 15px;">Search results:</h3>
         <c:choose>
             <c:when test="${tripQty == 0}">
                 <p class="alert alert-warning">We are sorry, we couldn't find any trips by that name...</p>
@@ -28,7 +29,6 @@
                 </div>
             </c:otherwise>
         </c:choose>
-
     </div>
 </body>
 </html>

@@ -76,7 +76,7 @@ public class TripJdbcDao implements TripDao {
 
     @Override
     public List<Trip> getAllTrips() {
-        return jdbcTemplate.query("SELECT * FROM trips", ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM trips LIMIT 4", ROW_MAPPER);
     }
 
     @Override

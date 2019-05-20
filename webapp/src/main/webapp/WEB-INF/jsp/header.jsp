@@ -14,6 +14,8 @@
 <c:url value="/resources/css/header.css" var="headerCss"/>
 <c:url value="/home/search-trip/" var="searchURL"/>
 <c:url value="/logout" var="logoutUrl"/>
+<c:url value="/home/profile/${user.id}" var="profile"/>
+<c:url value="/home/search-trip/" var="searchURL"/>
 
 <link href="${headerCss}" rel="stylesheet">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -41,9 +43,9 @@
                 <a class="nav-link" href="${about}"><spring:message code="header.aboutUs"/> </a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search for trips" aria-label="Search">
-            <button class="btn btn-success my-2 my-sm-0" type="submit"><spring:message code="header.searchBtn"/> </button>
+        <form action="${searchURL}" method="get" class="form-inline my-2 my-lg-0">
+            <input id="nameInput" name="nameInput" class="form-control mr-sm-2" type="search" placeholder="Search for trips" aria-label="Search">
+            <button class="btn btn-success my-2 my-sm-0" type="submit"><spring:message code="header.searchBtn"/></button>
         </form>
         <c:choose>
             <c:when test="${user == null}">
