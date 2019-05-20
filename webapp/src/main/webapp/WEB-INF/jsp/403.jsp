@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
 <head>
@@ -12,9 +13,9 @@
     <div id="app">
         <div>403</div>
         <div class="txt">
-            Forbidden<span class="blink">_</span>
+            <spring:message code="403.message"/><span class="blink">_</span>
         </div>
-        <a id="homeButton" href="${homeURL}">Home</a>
+        <a id="homeButton" href="${homeURL}"><spring:message code="403.homeBtn"/></a>
     </div>
 </body>
 </html>
