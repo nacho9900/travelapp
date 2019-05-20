@@ -71,9 +71,6 @@
         <ul class="list-group" >
             <li class="list-group-item">Felipe Gorostiaga - 57200</li>
             <li class="list-group-item">Ignacio Negro</li>
-            <li class="list-group-item">Ximena Zuberbuhler</li>
-            <li class="list-group-item">Florencia Monti</li>
-            <li class="list-group-item">Santiago Burgos</li>
         </ul>
     </div>
     <script src="${bootjs}" type="text/javascript"></script>
