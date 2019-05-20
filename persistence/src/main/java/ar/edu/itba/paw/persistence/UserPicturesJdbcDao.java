@@ -44,4 +44,9 @@ public class UserPicturesJdbcDao implements UserPicturesDao {
     public Optional<UserPicture> findByUserId(long userId) {
         return jdbcTemplate.query("SELECT * FROM user_pictures WHERE user_id = ?", ROW_MAPPER, userId).stream().findFirst();
     }
+
+    @Override
+    public boolean deleteByUserId(long userId) {
+        return jdbcTemplate.update("DELETE FROM user_pictures WHERE user_id = ?", userId) != 0;
+    }
 }

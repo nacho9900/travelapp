@@ -68,4 +68,12 @@ CREATE TABLE IF NOT EXISTS user_pictures (
                 image BYTEA NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
 
-)
+);
+
+CREATE TABLE IF NOT EXISTS trip_pictures (
+               id SERIAL PRIMARY KEY,
+               trip_id INTEGER NOT NULL,
+               image BYTEA NOT NULL,
+               FOREIGN KEY (trip_id) REFERENCES trips ON DELETE CASCADE
+
+);

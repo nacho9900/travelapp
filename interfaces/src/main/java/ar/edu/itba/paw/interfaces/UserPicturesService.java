@@ -8,4 +8,5 @@ public interface UserPicturesService {
 
     public UserPicture create(long userId, byte[] image);
     public Optional<UserPicture> findByUserId(long userId);
+    public boolean deleteByUserId(long userId);
 }

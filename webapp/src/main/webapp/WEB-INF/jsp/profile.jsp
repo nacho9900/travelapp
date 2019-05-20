@@ -30,7 +30,6 @@
                 <div class="card-body">
                     <p class="card-text">${userProfile.email}</p>
                     <p class="card-text">${birthday}</p>
-                    <p class="card-text">BIOGRAPHY</p>
                     <c:if test="${user.id == userProfile.id}">
                         <div class="card-footer">
                             <a href="${editProfile}" class="btn btn-primary btn-success">Edit profile</a>

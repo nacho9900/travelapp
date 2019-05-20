@@ -39,7 +39,7 @@ public class UserJdbcDaoTest {
 
     public Calendar initiateDate() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(19997,6,16);
+        calendar.set(1997,6,16);
         return calendar;
     }
 

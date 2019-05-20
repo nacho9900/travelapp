@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.webapp.form.EditTripForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,12 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -29,6 +36,7 @@ public class TripController extends MainController{
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     private static final int MAX_TRIPS_PAGE = 4;
+    private static final long MAX_UPLOAD_SIZE = 5242880;
 
     @Autowired
     ActivityService as;
@@ -42,6 +50,8 @@ public class TripController extends MainController{
     TripUsersService tus;
     @Autowired
     TripPlacesService tps;
+    @Autowired
+    TripPicturesService tripPictureService;
 
     @RequestMapping("/home/create-trip")
     public ModelAndView createTripGet(@ModelAttribute("createTripForm") final TripCreateForm form) {
@@ -70,6 +80,8 @@ public class TripController extends MainController{
         mav.addObject("dateFormat", dateFormat);
         return mav;
     }
+
+
 
     @RequestMapping(value = "/home/create-trip", method = {RequestMethod.POST})
     public ModelAndView createTripPost(@ModelAttribute("user") User user,
@@ -101,34 +113,77 @@ public class TripController extends MainController{
         String startDate = dateFormat.format(trip.getStartDate().getTime());
         TripUser tripUser = tus.create(trip.getId(), user.getId(), UserRole.ADMIN);
         TripPlace tripPlace = tps.create(trip.getId(), modelPlace.getId());
-        //userTrips
         mav.setViewName("redirect:/home/trips");
         return mav;
     }
 
-    @RequestMapping("/home/trip/{tripId}")
-    public ModelAndView trip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
+    @RequestMapping(value = "/home/trip/{tripId}", method = {RequestMethod.GET})
+    public ModelAndView trip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId,
+                             @ModelAttribute("editTripForm") final EditTripForm form) {
         ModelAndView mav = new ModelAndView("trip");
         Optional<Trip> maybeTrip = ts.findById(tripId);
         Trip trip = maybeTrip.get();
-        boolean isTravelling = ts.isTravelling(user.getId(), tripId);
-        boolean isAdmin = ts.userIsAdmin(user.getId(), tripId);
-        String startDate = dateFormat.format(trip.getStartDate().getTime());
-        String endDate = dateFormat.format(trip.getEndDate().getTime());
-        List<ar.edu.itba.paw.model.Place> tripPlaces = ps.getTripPlaces(trip.getId());
-        List<DataPair<User, UserRole>> tripUsersAndRoles = us.getTripUsersAndRoles(tripId);
         List<DataPair<Activity, ar.edu.itba.paw.model.Place>> tripActAndPlace = as.getTripActivitiesDetails(tripId);
+        mav.addObject("hasTripPicture", tripPictureService.findByTripId(tripId).isPresent());
         mav.addObject("isEmpty", tripActAndPlace.size() == 0);
-        mav.addObject("isTravelling", isTravelling);
-        mav.addObject("isAdmin",isAdmin);
-        mav.addObject("places", tripPlaces);
-        mav.addObject("usersAndRoles", tripUsersAndRoles);
+        mav.addObject("isTravelling", ts.isTravelling(user.getId(), tripId));
+        mav.addObject("isAdmin",ts.userIsAdmin(user.getId(), tripId));
+        mav.addObject("places",ps.getTripPlaces(trip.getId()));
+        mav.addObject("usersAndRoles", us.getTripUsersAndRoles(tripId));
         mav.addObject("actAndPlaces", tripActAndPlace);
         mav.addObject("trip", trip);
-        mav.addObject("startDate", startDate);
-        mav.addObject("endDate", endDate);
+        mav.addObject("startDate", dateFormat.format(trip.getStartDate().getTime()));
+        mav.addObject("endDate", dateFormat.format(trip.getEndDate().getTime()));
         return mav;
     }
+
+    @RequestMapping(value = "/home/trip/{tripId}", method = {RequestMethod.POST})
+    public ModelAndView editTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId,
+                             @Valid @ModelAttribute("editTripForm") final EditTripForm form, BindingResult errors,
+                                 final RedirectAttributes redirectAttributes) {
+        String redirectFormat = String.format("redirect:/home/trip/%d", tripId);
+        ModelAndView mav = new ModelAndView(redirectFormat);
+        if(errors.hasErrors()) {
+            return mav;
+        }
+        MultipartFile tripPicture = form.getImageUpload();
+        byte[] imageBytes;
+        if(tripPicture != null && !tripPicture.isEmpty()) {
+            String contentType = tripPicture.getContentType();
+            if(!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
+                redirectAttributes.addFlashAttribute("invalidContentError", true);
+                System.out.println("invalid content error");
+                return mav;
+            }
+            else if(tripPicture.getSize() > MAX_UPLOAD_SIZE) {
+                redirectAttributes.addFlashAttribute("fileSizeError", true);
+                System.out.println("file size error");
+                return mav;
+            }
+            try {
+                imageBytes = tripPicture.getBytes();
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("generalError", true);
+                System.out.println("general error 1");
+                return mav;
+            }
+        }
+        else {
+            redirectAttributes.addFlashAttribute("generalError", true);
+            System.out.println("general error 2");
+            return mav;
+        }
+        if(tripPictureService.findByTripId(tripId).isPresent()) {
+            if(!tripPictureService.deleteByTripId(tripId)) {
+                mav.addObject("generalError", true);
+                return mav;
+            }
+        }
+        TripPicture tripPictureModel = tripPictureService.create(tripId, imageBytes);
+        return mav;
+    }
+
+
     @RequestMapping("/home/trip/{tripId}/join")
     public ModelAndView joinTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ModelAndView mav = new ModelAndView("trip");
@@ -145,6 +200,22 @@ public class TripController extends MainController{
         mav.addObject("tripQty", trips.size());
         mav.addObject("tripsList", trips);
         return mav;
+    }
+
+    @RequestMapping(value = "/home/trip/{tripId}/image", method = {RequestMethod.GET})
+    public void getProfileImage(@PathVariable(value = "tripId") long tripId, HttpServletResponse response) {
+        Optional<TripPicture> tripPictureOptional = tripPictureService.findByTripId(tripId);
+        try {
+            if(tripPictureOptional.isPresent()) {
+                TripPicture tp = tripPictureOptional.get();
+                String mimeType = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(tp.getPicture()));
+                response.setContentType(mimeType);
+                response.getOutputStream().write(tp.getPicture());
+            }
+        }
+        catch (IOException ex) {
+            //nothing to do here
+        }
     }
 
 }

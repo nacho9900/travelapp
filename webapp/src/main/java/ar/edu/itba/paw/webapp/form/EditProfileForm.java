@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
 
-public class EdiProfileForm {
+public class EditProfileForm {
 
     @Size(max = 500)
     private String biography;

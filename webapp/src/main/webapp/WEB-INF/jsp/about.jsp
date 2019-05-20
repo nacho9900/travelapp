@@ -61,7 +61,7 @@
                     <a href="${profile}">
                         <img alt="" style="margin-left: 10px" src="${userIMG}" height="32" width="32"/>
                     </a>
-                    <a style="margin-left: 15px" class="btn btn-success my-2 my-sm-0" href="${logoutUrl}"><spring:message code="header.logout"/></a>
+                    <a style="margin-left: 15px" class="btn btn-dark my-2 my-sm-0" href="${logoutUrl}"><spring:message code="header.logout"/></a>
                 </c:otherwise>
             </c:choose>
         </div>

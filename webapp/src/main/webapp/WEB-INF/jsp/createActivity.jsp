@@ -19,7 +19,7 @@
 <jsp:include page="header.jsp"/>
 
 <div class="container-fluid" id="main-container">
-    <div class="container box">
+    <div class="container box" style="margin-top: 20px;">
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">

@@ -23,4 +23,9 @@ public class UserPicturesServiceImpl implements UserPicturesService {
     public Optional<UserPicture> findByUserId(long userId) {
         return upd.findByUserId(userId);
     }
+
+    @Override
+    public boolean deleteByUserId(long userId) {
+        return upd.deleteByUserId(userId);
+    }
 }

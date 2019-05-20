@@ -8,11 +8,9 @@ import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
-import ar.edu.itba.paw.webapp.form.EdiProfileForm;
+import ar.edu.itba.paw.webapp.form.EditProfileForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -139,7 +137,7 @@ public class UserController extends MainController{
 
     @RequestMapping(value = "/home/profile/{userId}/edit", method = {RequestMethod.GET})
     public ModelAndView editProfileGet(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
-                                @ModelAttribute("editProfileForm") final EdiProfileForm form) {
+                                @ModelAttribute("editProfileForm") final EditProfileForm form) {
         ModelAndView mav = new ModelAndView("editProfile");
         if(user.getId() != userId) {
             mav.setViewName("403");
@@ -150,7 +148,7 @@ public class UserController extends MainController{
 
     @RequestMapping(value = "/home/profile/{userId}/edit", method = {RequestMethod.POST})
     public ModelAndView profile(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
-                                @Valid @ModelAttribute("editProfileForm") final EdiProfileForm form,
+                                @Valid @ModelAttribute("editProfileForm") final EditProfileForm form,
                                 final BindingResult errors) {
 
         ModelAndView mav = new ModelAndView("editProfile");
@@ -183,6 +181,12 @@ public class UserController extends MainController{
         else {
             mav.addObject("generalError", true);
             return mav;
+        }
+        if(ups.findByUserId(userId).isPresent()) {
+            if(!ups.deleteByUserId(userId)) {
+                mav.addObject("generalError", true);
+                return mav;
+            }
         }
         UserPicture userPicture = ups.create(userId, imageBytes);
         String redirectFormat = String.format("redirect:/home/profile/%d", userId);

@@ -12,14 +12,19 @@
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-    <div class="container" >
+    <div class="container ">
+        <h3 class="display-4" style="margin-top: 20px;">Edit profile</h3>
+        <br>
         <form:form action="${editProfile}" method="post" modelAttribute="editProfileForm" enctype="multipart/form-data" >
+            <p>Upload profile picture</p>
             <form:errors path="imageUpload" cssClass = "alert alert-warning" element="p"/>
             <form:input type="file" path="imageUpload" accept = "image/*"/>
             <br>
+            <br>
             <form:errors path="biography" cssClass = "alert alert-warning" element="p"/>
-            <form:textarea rows="10"  cols="50" path="biography" maxlength="500" />
-            <button type="submit" class="btn btn-success">Apply changes</button>
+            <form:textarea rows="10"  cols="100" placeholder="Tell something about yourself..." path="biography"  maxlength="500" />
+            <br>
+            <button type="submit" class="btn btn-success text-center justify-content-center">Apply changes</button>
         </form:form>
         <c:if test="${fileSizeError}">
             <p class=" alert alert-warning">File size too big</p>

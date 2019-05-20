@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <html>
@@ -8,6 +9,8 @@
     <c:url value="/home/trip/${trip.id}/join" var="joinTripURL"/>
     <c:url value="/resources/css/trip.css" var="tripCSS"/>
     <c:url value="/resources/js/showMap.js" var="showMapJs"/>
+    <c:url value="/home/trip/${trip.id}" var="editTripURL"/>
+    <c:url value="/home/trip/${trip.id}/image" var="tripImageURL"/>
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <link href="${bootstrapCss}" rel="stylesheet">
     <link href="${tripCSS}" rel="stylesheet">
@@ -22,6 +25,26 @@
                     <p>${trip.description}</p>
                     <p>[${startDate} - ${endDate}]</p>
                 </div>
+                <c:if test="${hasTripPicture}">
+                    <img class="img-fluid" src="${tripImageURL}" width="205" height="215" style="margin: 20px">
+                </c:if>
+                <c:if test="${isAdmin}">
+                    <c:if test="${fileSizeError}">
+                        <p class=" alert alert-warning">File size too big</p>
+                    </c:if>
+                    <c:if test="${invalidContentError}">
+                        <p class=" alert alert-warning">Invalid content. File must be jpg or png format</p>
+                    </c:if>
+                    <c:if test="${generalError}">
+                        <p class=" alert alert-warning">Error uploading file</p>
+                    </c:if>
+                    <form:form action="${editTripURL}" method="post" modelAttribute="editTripForm" enctype="multipart/form-data" >
+                        <form:errors path="imageUpload" cssClass = "alert alert-warning" element="p"/>
+                        <form:input type="file" path="imageUpload" accept = "image/*"/>
+                        <br>
+                        <button type="submit" class="btn btn-success" style="margin-top: 10px;">Add image</button>
+                    </form:form>
+                </c:if>
                 <h3 class="margin-class">Places</h3>
                 <ul class="list-group">
                     <c:forEach items="${places}" var="place">
@@ -42,7 +65,6 @@
                         </a>
                     </c:forEach>
                 </div>
-
                 <h3 class="margin-class">Activities</h3>
                 <c:if test="${isEmpty}">
                     <div class="alert alert-primary" role="alert">This trip has no activities yet</div>

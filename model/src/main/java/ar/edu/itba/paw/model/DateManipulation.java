@@ -1,12 +1,12 @@
 package ar.edu.itba.paw.model;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Calendar;
 import java.util.Date;
 
 public class DateManipulation {
-
-    //Static methods so they can be called from ROWMAPPER lambdas which is static.
 
     public static Calendar dateToCalendar(Date date) {
         Calendar cal = Calendar.getInstance();
@@ -25,4 +25,5 @@ public class DateManipulation {
         }
         return cal;
     }
+
 }

@@ -44,7 +44,8 @@
             </li>
         </ul>
         <form action="${searchURL}" method="get" class="form-inline my-2 my-lg-0">
-            <input id="nameInput" name="nameInput" class="form-control mr-sm-2" type="search" placeholder="Search for trips" aria-label="Search">
+            <input id="nameInput" name="nameInput" class="form-control mr-sm-2" type="search" placeholder="<spring:message code="header.searchMessage"/>"
+                   aria-label="Search">
             <button class="btn btn-success my-2 my-sm-0" type="submit"><spring:message code="header.searchBtn"/></button>
         </form>
         <c:choose>

@@ -10,5 +10,6 @@ public interface UserPicturesDao {
 
     public Optional<UserPicture> findByUserId(long userId);
 
+    public boolean deleteByUserId(long userId);
 
 }
