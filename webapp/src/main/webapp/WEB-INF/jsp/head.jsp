@@ -13,3 +13,4 @@
 <script src="${bootstrapJs}" type="text/javascript"></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
