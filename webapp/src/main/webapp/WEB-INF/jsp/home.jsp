@@ -13,27 +13,21 @@
     <div class="container">
         <spring:message code="home.greeting" arguments="${user.firstname}" var="welcome"/>
         <h3 class="text-center"><c:out value="${welcome}"/></h3>
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <c:forEach items="${tripList}" var="trip">
-                                <c:url value="/home/trip/${trip.id}" var="tripUrl"/>
-                                <a href="${tripUrl}" class="list-group-item-action">
-                                    <div class="card" style="margin-top: 10px; margin-bottom: 10px;">
-                                        <div class="card-body">
-                                            <h4 class="card-title"><c:out value="${trip.name}"/></h4>
-                                            <p class="card-text"><c:out value="${trip.description}"/></p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </c:forEach>
-                        </div>
+        <div class="list-group">
+            <c:forEach items = "${tripList}" var="trip">
+                <c:url value="/home/trip/${trip.key.id}" var = "tripUrl"/>
+                <a href="${tripUrl}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><c:out value="${trip.key.name}"/></h5>
+                        <small>${dateFormat.format(trip.key.startDate.time)}</small>
                     </div>
-                </div>
-            </div>
+                    <c:if test="${trip.value}">
+                        <c:url value="/home/trip/${trip.key.id}/image" var="tripImageURL"/>
+                        <img class="img-fluid" src="${tripImageURL}" width="205" height="215" >
+                    </c:if>
+                    <p class="mb-1"><c:out value="${trip.key.description}"/></p>
+                </a>
+            </c:forEach>
         </div>
     </div>
 </div>

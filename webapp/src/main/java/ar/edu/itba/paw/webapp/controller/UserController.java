@@ -1,13 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.MailingService;
-import ar.edu.itba.paw.interfaces.TripService;
-import ar.edu.itba.paw.interfaces.UserPicturesService;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.model.DateManipulation;
-import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.UserPicture;
+import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.form.EditProfileForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +41,9 @@ public class UserController extends MainController{
     @Autowired
     private TripService ts;
 
+    @Autowired
+    private TripPicturesService tripPicturesService;
+
     private static final long MAX_UPLOAD_SIZE = 5242880;
 
 
@@ -60,7 +58,12 @@ public class UserController extends MainController{
     public ModelAndView home(@ModelAttribute("user") User user) {
         ModelAndView mav = new ModelAndView("home");
         List<Trip> trips = ts.getAllTrips();
-        mav.addObject("tripList", trips);
+        List<DataPair<Trip, Boolean>> list = new ArrayList<>();
+        for(Trip trip : trips) {
+            list.add(new DataPair<>(trip, tripPicturesService.findByTripId(trip.getId()).isPresent()));
+        }
+        mav.addObject("dateFormat", dateFormat);
+        mav.addObject("tripList", list);
         return mav;
     }
 

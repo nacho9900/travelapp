@@ -99,6 +99,7 @@ public class TripController extends MainController{
         }
         catch(GooglePlacesException gpe) {
             LOGGER.debug("INVALID GOOGLE PLACES QUERY LOCATION");
+            mav.addObject("invalidPlace", true);
             return mav;
         }
         Place place = places.get(0);
@@ -115,7 +116,8 @@ public class TripController extends MainController{
         String startDate = dateFormat.format(trip.getStartDate().getTime());
         TripUser tripUser = tus.create(trip.getId(), user.getId(), UserRole.ADMIN);
         TripPlace tripPlace = tps.create(trip.getId(), modelPlace.getId());
-        mav.setViewName("redirect:/home/trips");
+        String redirectFormat = String.format("redirect:/home/trip/%d", trip.getId());
+        mav.setViewName(redirectFormat);
         return mav;
     }
 

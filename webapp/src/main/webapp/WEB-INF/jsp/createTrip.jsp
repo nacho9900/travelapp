@@ -56,6 +56,11 @@
                     </form:label>
                     <form:input class="form-control" type="date" path="endDate" name="end_date"/>
                     <form:errors path="placeInput" cssClass="alert alert-warning" element="p"/>
+                    <c:if test="${invalidPlace}">
+                        <div class="alert alert-danger" role="alert">
+                            <spring:message code="createTrip.invalidQuery"/>
+                        </div>
+                    </c:if>
                     <div class="pac-card" id="pac-card">
                         <div id="pac-container">
                             <spring:message code="createTrip.locationPh" var ="locationPh"/>
