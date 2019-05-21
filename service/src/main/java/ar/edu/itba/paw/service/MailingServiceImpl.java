@@ -21,7 +21,7 @@ public class MailingServiceImpl implements MailingService {
     @Override
     public boolean sendRegisterMail(String emailName, String name, String lastname) {
 
-        String htmlFormat = String.format("<h1>$s welcome to Meet and Travel!</h1>" +
+        String htmlFormat = String.format("<h1>%s welcome to Meet and Travel!</h1>" +
                 "<h3>Your account has been successfully created</h3>" +
                 "<p>Join and create trips to start travelling the world while meeting new and exciting people!", name);
 

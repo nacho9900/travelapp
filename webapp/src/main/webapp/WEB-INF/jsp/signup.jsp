@@ -304,8 +304,9 @@
                     <form:errors path="password" cssClass="alert alert-warning" element="p"/>
                     <spring:message code="signUp.passwordPh" var="passwordPh"/>
                     <form:input type="password" placeholder="${passwordPh}" name="password" path="password"/>
-
-                    <p class="alert alert-warning"><spring:message code="signUp.pswRepeat"/></p>
+                    <c:if test="${pswRepeatError}">
+                        <p class="alert alert-warning"><spring:message code="signUp.pswRepeat"/></p>
+                    </c:if>
                     <form:errors path="pswrepeat" cssClass="alert alert-warning" role="alert" element="p"/>
                     <spring:message code="signUp.repeatPasswordPh" var="repeatPasswordPh"/>
                     <form:input type="password" placeholder="${repeatPasswordPh}" name="pswrepeat" path="pswrepeat"/>
