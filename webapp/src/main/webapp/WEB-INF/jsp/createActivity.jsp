@@ -26,8 +26,7 @@
 <div class="container-fluid" id="main-container">
     <div class="container box" style="margin-top: 20px;">
         <div class="row">
-            <div class="col-1"></div>
-            <div class="col-10">
+            <div class="col-12">
                 <div class="form-group">
                     <div class="display-4 text-white">
                         <spring:message code="createActivity.pageTitle"/>

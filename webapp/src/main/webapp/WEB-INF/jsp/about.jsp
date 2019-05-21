@@ -25,6 +25,7 @@
     <link href="${aboutCss}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <title><spring:message code="about.title"/></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -79,7 +80,7 @@
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">
-                <h3 id="myHeader" class="display-4 text-white"><spring:message code="about.pageTitle"/></h3>
+                <div id="myHeader" class="display-4 text-white"><spring:message code="about.pageTitle"/></div>
                 <ul class="list-group">
                     <li class="list-group-item"><spring:message code="about.felipe"/></li>
                     <li class="list-group-item"><spring:message code="about.ignacio"/></li>

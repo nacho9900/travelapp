@@ -25,8 +25,7 @@
 <div class="container-fluid" id="main-container">
     <div class="container box">
         <div class="row">
-            <div class="col-1"></div>
-            <div class="col-10">
+            <div class="col-12">
                 <%--TODO: AGREGAR ALERT POR ERROR EN MAP INPUT--%>
                 <div class="form-group">
                     <div id="headerID" class="display-4 text-white">
