@@ -1,9 +1,13 @@
-#main-container{
+html,body{
+    min-height: 100vh;
     background-image: url("../icons/trekkingcouple.jpg");
     background-size: cover;
     background-repeat: no-repeat;
-    min-height: 100vh;
+}
+
+#main-container{
     font-family: 'Numans', sans-serif;
+    min-height: auto;
     padding: 30px;
 }
 
