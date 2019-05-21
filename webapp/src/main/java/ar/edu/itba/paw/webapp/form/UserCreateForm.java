@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Date;
 
 public class UserCreateForm {
 
@@ -24,6 +26,8 @@ public class UserCreateForm {
     @Size(min = 8, max = 100)
     private String pswrepeat;
 
+    @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String birthday;
 
     @Size(min = 2, max = 5)

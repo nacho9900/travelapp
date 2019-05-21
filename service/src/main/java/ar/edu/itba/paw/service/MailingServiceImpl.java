@@ -39,7 +39,6 @@ public class MailingServiceImpl implements MailingService {
                     .withSessionTimeout(10 * 1000)
                     .clearEmailAddressCriteria() // turns off email validation
                     .withProperty("mail.smtp.sendpartial", "true")
-                    .withDebugLogging(true)
                     .buildMailer();
 
             mailer.sendMail(email, true);

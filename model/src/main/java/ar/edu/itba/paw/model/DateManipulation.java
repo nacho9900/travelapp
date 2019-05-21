@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.model;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -16,7 +14,7 @@ public class DateManipulation {
 
     public static Calendar stringToCalendar(String string) {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = sdf.parse(string);
             cal.setTime(date);
