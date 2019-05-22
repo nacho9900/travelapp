@@ -8,8 +8,14 @@
     <c:url value="/signup" var="signUpUrl"/>
     <c:url value="/signin" var="signInURL"/>
     <c:url value="/resources/css/signup.css" var="signUpCss"/>
+    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js" var="datepickerJs"/>
+    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" var="datepickerCss"/>
+    <c:url value="/resources/js/datePicker.js" var="calendarJs"/>
     <link rel="stylesheet" type="text/css" href="${signUpCss}"/>
     <title><spring:message code="signUp.title"/></title>
+    <script type="text/javascript" src="${datepickerJs}"></script>
+    <script type="text/javascript" src="${calendarJs}"></script>
+    <link rel="stylesheet" href="${datepickerCss}"/>
 </head>
 <body>
 <jsp:include page="headerEmpty.jsp"/>
@@ -44,17 +50,19 @@
                     <spring:message code="signUp.enterEmailPh" var="enterEmailPh"/>
                     <form:input type="text" placeholder="${enterEmailPh}" name="email" path="email"/>
 
-                    <form:label path="birthday" for="birthday" cssClass="text-white">
-                        <spring:message code="signUp.birthday"/>
-                    </form:label>
                     <form:errors path="birthday" cssClass="alert alert-warning" element="p"/>
-                    <form:input type="date" name="birthday" path="birthday"/>
+                    <div class="form-group">
+                        <form:label path="birthday" for="birthday" cssClass="text-white">
+                            <spring:message code="signUp.birthday"/>
+                        </form:label>
+                        <form:input cssClass="form-control" type="text" placeholder="mm/dd/yyyy" name="birthday" id="date" path="birthday"/>
+                    </div>
+
                 </div>
                 <div class="col-12 col-md-6">
                     <form:errors path="nationality" cssClass="alert alert-warning" element="p"/>
                     <form:select name="nationality" path="nationality">
                         <option value="AFG">Afghanistan</option>
-                        <option value="ALA">Åland Islands</option>
                         <option value="ALB">Albania</option>
                         <option value="DZA">Algeria</option>
                         <option value="ASM">American Samoa</option>
@@ -322,7 +330,7 @@
                 <spring:message code="signUp.termsMessage"/>
                 <a href="#">
                     <spring:message code="signUp.terms"/>
-                </a>.
+                </a>
             </p>
             <button type="submit" class="registerbtn">
                 <spring:message code="signUp.registerBtn"/>
@@ -337,8 +345,11 @@
             </p>
         </div>
     </div>
-
 </form:form>
+
+<script>
+
+</script>
 </body>
 </html>
 
