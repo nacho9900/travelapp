@@ -67,7 +67,7 @@ public class UserJdbcDaoTest {
     }
 
     @Test
-    public void TestFindById() {
+    public void testFindById() {
         Optional<User> user = userDao.findById(userId);
         Assert.assertTrue(user.isPresent());
         Assert.assertEquals(userId, user.get().getId());
@@ -76,7 +76,7 @@ public class UserJdbcDaoTest {
     }
 
     @Test
-    public void TestFindByUsername() {
+    public void testFindByUsername() {
         Optional<User> user = userDao.findByUsername(EMAIL);
         Assert.assertTrue(user.isPresent());
         Assert.assertEquals(EMAIL, user.get().getEmail());
@@ -86,7 +86,7 @@ public class UserJdbcDaoTest {
 
 
     @Test
-    public void TestGetTripUsers() {
+    public void testGetTripUsers() {
         List<User> users = userDao.getTripUsers(tripId);
         Assert.assertNotNull(users);
         Assert.assertTrue(!users.isEmpty());
@@ -94,7 +94,7 @@ public class UserJdbcDaoTest {
     }
 
     @Test
-    public void TestGetUserRole() {
+    public void testGetUserRole() {
         Optional<UserRole> userRoleOptional = userDao.getUserRole(userId, tripId);
         Assert.assertNotNull(userRoleOptional);
         Assert.assertTrue(userRoleOptional.isPresent());
