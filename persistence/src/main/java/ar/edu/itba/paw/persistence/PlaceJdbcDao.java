@@ -59,7 +59,7 @@ public class PlaceJdbcDao implements PlaceDao {
 
     @Override
     public List<Place> getTripPlaces(long tripId) {
-        return jdbcTemplate.query("SELECT places.* FROM places, trip_places  WHERE trip_id = ? AND places.id = place_id ", ROW_MAPPER, tripId);
+        return jdbcTemplate.query("SELECT DISTINCT places.* FROM places, trip_places  WHERE trip_id = ? AND places.id = place_id ", ROW_MAPPER, tripId);
     }
 
 
