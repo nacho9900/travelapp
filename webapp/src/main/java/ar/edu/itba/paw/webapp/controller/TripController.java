@@ -109,7 +109,6 @@ public class TripController extends MainController{
 
         modelPlace = maybePlace.orElseGet(() -> ps.create(place.getPlaceId(), place.getName(), place.getLatitude(),
                 place.getLongitude(), place.getAddress()));
-
         Trip trip = ts.create(modelPlace.getId(), form.getName(), form.getDescription(),
                 DateManipulation.stringToCalendar(form.getStartDate()),
                 DateManipulation.stringToCalendar(form.getEndDate()));

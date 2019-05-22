@@ -28,19 +28,22 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
+
+        <c:if test="${user != null}">
             <li class="nav-item active">
-                <a class="nav-link" href="${home}"><spring:message code="header.home"/> <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="${home}"><spring:message code="header.home"/> <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="${trips}"><spring:message code="header.myTrips"/></a>
+            <a class="nav-link" href="${trips}"><spring:message code="header.myTrips"/></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="${createTrip}"><spring:message code="header.createTrip"/> </a>
+            <a class="nav-link" href="${createTrip}"><spring:message code="header.createTrip"/> </a>
             </li>
+        </c:if>
             <li class="nav-item">
-                <a class="nav-link" href="${about}"><spring:message code="header.aboutUs"/> </a>
+                 <a class="nav-link" href="${about}"><spring:message code="header.aboutUs"/> </a>
             </li>
         </ul>
         <form action="${searchURL}" method="get" class="form-inline my-2 my-lg-0">
