@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -28,6 +30,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findByUsername(String email) {
         return userDao.findByUsername(email);
     }
+
 
     @Override
     public User create(String firstname, String lastname, String email, String password, Calendar birthday, String nationality) {

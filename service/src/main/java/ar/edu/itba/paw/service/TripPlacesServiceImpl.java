@@ -6,12 +6,14 @@ import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.TripPlace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class TripPlacesServiceImpl implements TripPlacesService {
 
 
