@@ -19,9 +19,18 @@
 
 <link href="${headerCss}" rel="stylesheet">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <c:choose>
+    <c:when test="${user == null}">
     <a class="navbar-brand" href="${index}">
         <img src="${globeIMG}" height="42" width="42"/>
     </a>
+    </c:when>
+        <c:otherwise>
+        <a class="navbar-brand" href="${home}">
+            <img src="${globeIMG}" height="42" width="42"/>
+        </a>
+        </c:otherwise>
+    </c:choose>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
