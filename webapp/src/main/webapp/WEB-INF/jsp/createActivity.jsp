@@ -42,20 +42,17 @@
                         <form:errors path="category" cssClass="alert alert-warning" element="p"/>
                         <spring:message code="createActivity.categoryPh" var="categoryPh"/>
                         <form:input type="text" placeholder="${categoryPh}" path="category" name="category-input"
-                                    cssClass="form-control"/>
+                                    cssClass="form-control" cssStyle="margin-bottom: 10px;"/>
                     </div>
                     <form:errors path="placeInput" cssClass="alert alert-warning" element="p"/>
+                    <spring:message code="createActivity.locationPh" var="locationPh"/>
+                    <form:input id="pac-input" type="text" path="placeInput" placeholder="${locationPh}" cssClass="form-control"/>
+
                     <c:if test="${errorMap}">
                         <div class="alert alert-danger" role="alert">
                             <spring:message code="createActivity.invalidPlace"/>
                         </div>
                     </c:if>
-                    <div class="pac-card" id="pac-card">
-                        <div id="pac-container">
-                            <spring:message code="createActivity.locationPh" var="locationPh"/>
-                            <form:input id="pac-input" type="text" path="placeInput" placeholder="${locationPh}"/>
-                        </div>
-                    </div>
                     <div class="container" id="map"></div>
                     <div id="infowindow-content">
                         <img src="" width="16" height="16" id="place-icon">

@@ -54,19 +54,17 @@
                     <form:label path="endDate" for="start_date" cssClass="text-white">
                         <spring:message code="createTrip.endDate"/>
                     </form:label>
-                    <form:input class="form-control" type="date" path="endDate" name="end_date"/>
+                    <form:input class="form-control" type="date" path="endDate" name="end_date"  cssStyle="margin-bottom: 10px;"/>
                     <form:errors path="placeInput" cssClass="alert alert-warning" element="p"/>
+
+                    <spring:message code="createTrip.locationPh" var ="locationPh"/>
+                    <form:input id="pac-input" type="text" path="placeInput" placeholder="${locationPh}" cssClass="form-control"/>
+
                     <c:if test="${invalidPlace}">
                         <div class="alert alert-danger" role="alert">
                             <spring:message code="createTrip.invalidQuery"/>
                         </div>
                     </c:if>
-                    <div class="pac-card" id="pac-card">
-                        <div id="pac-container">
-                            <spring:message code="createTrip.locationPh" var ="locationPh"/>
-                            <form:input id="pac-input" type="text" path="placeInput" placeholder="${locationPh}"/>
-                        </div>
-                    </div>
                     <div class="container" id="map"></div>
                     <div id="infowindow-content">
                         <img src="" width="16" height="16" id="place-icon">
@@ -87,8 +85,8 @@
 
 </script>
 <script src="${noEnterJs}"></script>
+<script src="${createTripJs}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap"
         async defer></script>
-<script src="${createTripJs}"></script>
 </body>
 </html>
