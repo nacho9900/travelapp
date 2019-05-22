@@ -44,6 +44,9 @@
                     <spring:message code="signUp.enterEmailPh" var="enterEmailPh"/>
                     <form:input type="text" placeholder="${enterEmailPh}" name="email" path="email"/>
 
+                    <form:label path="birthday" for="birthday" cssClass="text-white">
+                        <spring:message code="signUp.birthday"/>
+                    </form:label>
                     <form:errors path="birthday" cssClass="alert alert-warning" element="p"/>
                     <form:input type="date" name="birthday" path="birthday"/>
                 </div>
