@@ -31,6 +31,8 @@ public class ActivityJdbcDaoTest {
     private static final String name2 ="Scuba diving";
     private static final String category2 = "Sports";
 
+    private static final long tripId = 2;
+
 
 
 
@@ -72,6 +74,14 @@ public class ActivityJdbcDaoTest {
         Optional<Place> place = ad.getActivityPlace(ID);
         Assert.assertTrue(place.isPresent());
         Assert.assertEquals(placeID, place.get().getId());
+    }
+
+    @Test
+    public void testgetTripActivities() {
+        List<Activity> activities = ad.getTripActivities(tripId);
+        Assert.assertNotNull(activities);
+        Assert.assertTrue(!activities.isEmpty());
+        Assert.assertEquals(ID, activities.get(0).getId());
     }
 
 }
