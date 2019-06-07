@@ -1,32 +1,70 @@
 package ar.edu.itba.paw.model;
 
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "trip_users")
 public class TripUser {
 
-    private final long id;
-    private final long tripId;
-    private final long userId;
-    private final UserRole userRole;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_users_id_seq")
+    @SequenceGenerator(sequenceName = "trip_users_id_seq", name = "trip_users_id_seq", allocationSize = 1)
+    private long id;
 
-    public TripUser(long id, long tripId, long userId, UserRole userRole) {
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "trip_id")
+    private Trip trip;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(name = "user_role", nullable = false, length = 10)
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
+    public TripUser(long id, Trip trip, User user, UserRole userRole) {
+        this(trip, user, userRole);
         this.id = id;
-        this.tripId = tripId;
-        this.userId = userId;
+    }
+
+    public TripUser(Trip trip, User user, UserRole userRole) {
+
+        this.trip = trip;
+        this.user = user;
         this.userRole = userRole;
+    }
+
+    /* package */ TripUser() {
+        // Just for Hibernate
     }
 
     public long getId() {
         return id;
     }
 
-    public long getTripId() {
-        return tripId;
+    public Trip getTrip() {
+        return trip;
     }
 
-    public long getUserId() {
-        return userId;
+    public void setTrip(Trip trip) {
+        this.trip = trip;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public UserRole getUserRole() {
         return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 }

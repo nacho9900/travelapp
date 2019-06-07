@@ -1,32 +1,69 @@
 package ar.edu.itba.paw.model;
 
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "trip_activities")
 public class TripActivity {
 
-    private final long id;
-    private final long tripId;
-    private final long placeId;
-    private final long activityId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_activities_id_seq")
+    @SequenceGenerator(sequenceName = "trip_activities_id_seq", name = "trip_activities_id_seq", allocationSize = 1)
+    private long id;
 
-    public TripActivity(long id, long tripId, long placeId, long activityId) {
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "trip_id")
+    private Trip trip;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "place_id")
+    private Place place;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "activity_id")
+    private Activity activity;
+
+    public TripActivity(long id, Trip trip, Place place, Activity activity) {
+        this(trip, place, activity);
         this.id = id;
-        this.tripId = tripId;
-        this.placeId = placeId;
-        this.activityId = activityId;
+    }
+
+    public TripActivity(Trip trip, Place place, Activity activity) {
+        this.place = place;
+        this.trip = trip;
+        this.activity = activity;
+    }
+
+    /* package */ TripActivity() {
+        // Just for Hibernate
     }
 
     public long getId() {
         return id;
     }
 
-    public long getTripId() {
-        return tripId;
+    public Trip getTrip() {
+        return trip;
     }
 
-    public long getPlaceId() {
-        return placeId;
+    public void setTrip(Trip trip) {
+        this.trip = trip;
     }
 
-    public long getActivityId() {
-        return activityId;
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
+    }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 }

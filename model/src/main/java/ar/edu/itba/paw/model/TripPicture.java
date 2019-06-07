@@ -1,15 +1,36 @@
 package ar.edu.itba.paw.model;
 
+import javax.persistence.*;
+
+
+@Entity
+@Table(name = "trip_pictures")
 public class TripPicture {
 
-    private final long id;
-    private byte[] picture;
-    private final long tripId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_pictures_id_seq")
+    @SequenceGenerator(sequenceName = "trip_pictures_id_seq", name = "trip_pictures_id_seq", allocationSize = 1)
+    private long id;
 
-    public TripPicture(long id, byte[] picture, long tripId) {
+    @Column(name = "image")
+    private byte[] picture;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="trip_id")
+    private Trip trip;
+
+    public TripPicture(long id, byte[] picture, Trip trip) {
+        this(picture, trip);
         this.id = id;
+    }
+
+    public TripPicture(byte[] picture, Trip trip) {
         this.picture = picture;
-        this.tripId = tripId;
+        this.trip = trip;
+    }
+
+    /* package */ TripPicture() {
+        // Just for Hibernate
     }
 
     public long getId() {
@@ -24,7 +45,11 @@ public class TripPicture {
         this.picture = picture;
     }
 
-    public long getTripId() {
-        return tripId;
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
     }
 }

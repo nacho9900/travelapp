@@ -1,33 +1,77 @@
 package ar.edu.itba.paw.model;
 
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "activities")
 public class Activity {
 
-    private final long id;
-    private final String name;
-    private final String category;
-    private final long placeId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "activities_id_seq")
+    @SequenceGenerator(sequenceName = "activities_id_seq", name = "activities_id_seq", allocationSize = 1)
+    private long id;
 
 
-    public Activity(long id, String name, String category, long placeId) {
+    @Column(length = 40, nullable = false)
+    private String name;
+
+    @Column(length = 40, nullable = false)
+    private String category;
+
+
+    ///////////////
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "place_id")
+    private Place place;
+
+    //////////////
+
+    public Activity(long id, String name, String category, Place place) {
+        this(name, category, place);
         this.id = id;
+    }
+
+    public Activity(String name, String category, Place place) {
         this.name = name;
         this.category = category;
-        this.placeId = placeId;
+        this.place = place;
+    }
+
+    /* package */ Activity() {
+        // Just for Hibernate
     }
 
     public long getId() {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCategory() {
         return category;
     }
 
-    public long getPlaceId() {
-        return placeId;
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

@@ -1,26 +1,56 @@
 package ar.edu.itba.paw.model;
 
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "trip_places")
 public class TripPlace {
 
-    private final long id;
-    private final long tripId;
-    private final long placeId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_places_id_seq")
+    @SequenceGenerator(sequenceName = "trip_places_id_seq", name = "trip_places_id_seq", allocationSize = 1)
+    private long id;
 
-    public TripPlace(long id, long tripId, long placeId) {
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "trip_id")
+    private Trip trip;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "place_id")
+    private Place place;
+
+    public TripPlace(long id, Trip trip, Place place) {
+        this(trip, place);
         this.id = id;
-        this.tripId = tripId;
-        this.placeId = placeId;
+    }
+
+    public TripPlace(Trip trip, Place place) {
+        this.trip = trip;
+        this.place = place;
+    }
+
+    /* package */ TripPlace() {
+        // Just for Hibernate
     }
 
     public long getId() {
         return id;
     }
 
-    public long getTripId() {
-        return tripId;
+    public Trip getTrip() {
+        return trip;
     }
 
-    public long getPlaceId() {
-        return placeId;
+    public void setTrip(Trip trip) {
+        this.trip = trip;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
     }
 }
