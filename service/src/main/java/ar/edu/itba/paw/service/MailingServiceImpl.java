@@ -47,7 +47,7 @@ public class MailingServiceImpl implements MailingService {
 
             mailer.sendMail(email, true);
 
-        } catch (MailException ex) {
+        } catch (MailException ignored) {
 
         }
     }

@@ -22,8 +22,8 @@ public class TripHibernateDao implements TripDao {
     EntityManager em;
 
     @Override
-    public Trip create(Place place, String name, String description, Calendar startDate, Calendar endDate) {
-        Trip trip = new Trip(place, name, description, startDate, endDate);
+    public Trip create(User user, Place place, String name, String description, Calendar startDate, Calendar endDate) {
+        Trip trip = new Trip(user, place, name, description, startDate, endDate);
         em.persist(trip);
         return trip;
     }
@@ -40,13 +40,6 @@ public class TripHibernateDao implements TripDao {
         query.setFirstResult((pageNum - 1) * MAX_ROWS);
         query.setMaxResults(MAX_ROWS);
         return query.getResultList();
-    }
-
-
-    //TODO: q verga hacemos con esto
-    @Override
-    public boolean userIsAdmin(long userId, long tripId) {
-        return false;
     }
 
 

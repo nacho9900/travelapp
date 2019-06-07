@@ -38,6 +38,8 @@ public class UserServiceImpl implements UserService {
         return userDao.create(firstname, lastname, email, password, birthday, nationality);
     }
 
+
+    //TODO VER
     @Override
     public List<DataPair<User, UserRole>> getTripUsersAndRoles(Trip trip) {
         List<User> tripUsers = trip.getUsers();
@@ -53,6 +55,6 @@ public class UserServiceImpl implements UserService {
     public Optional<UserRole> getUserRole(long userId, long tripId) {
         return userDao.getUserRole(userId, tripId);
     }
-    
+
 
 }

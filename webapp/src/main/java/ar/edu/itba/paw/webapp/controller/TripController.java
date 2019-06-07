@@ -18,7 +18,10 @@ import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,6 +41,9 @@ public class TripController extends MainController{
     private static final int MAX_TRIPS_PAGE = 4;
     private static final long MAX_UPLOAD_SIZE = 5242880;
 
+    @PersistenceContext
+    EntityManager em;
+
     @Autowired
     ActivityService as;
     @Autowired
@@ -46,10 +52,6 @@ public class TripController extends MainController{
     UserService us;
     @Autowired
     PlaceService ps;
-    @Autowired
-    TripUsersService tus;
-    @Autowired
-    TripPlacesService tps;
     @Autowired
     TripPicturesService tripPictureService;
 
@@ -61,16 +63,23 @@ public class TripController extends MainController{
     @RequestMapping("/home/trips/{pageNum}")
     public ModelAndView getUserTrips(@ModelAttribute("user") User user,  @PathVariable(value = "pageNum") int pageNum) {
         ModelAndView mav = new ModelAndView("userTrips");
-        int userTripsQty = ts.countUserTrips(user.getId());
+        Optional<User> userOptional = us.findByid(user.getId());
+        if(!userOptional.isPresent()) {
+            return mav;
+        }
+        User u = userOptional.get();
+        int userTripsQty = u.getTrips().size();
         int requiredPages = (int) Math.ceil(userTripsQty/(double)MAX_TRIPS_PAGE);
         if(pageNum > 1 && pageNum > requiredPages) {
             mav.setViewName("404");
             return mav;
         }
-        List<Trip> userTrips = ts.findUserTrips(user.getId(), pageNum);
+        int n = (pageNum - 1) * MAX_TRIPS_PAGE;
+        List<Trip> userTrips =  u.getTrips().subList(n, n + MAX_TRIPS_PAGE);
+                                //ts.findUserTrips(user.getId(), pageNum);
         List<DataPair<Trip, DataPair<ar.edu.itba.paw.model.Place, Boolean>>> dataPairList = new LinkedList<>();
         for (Trip trip: userTrips) {
-            long placeId = trip.getStartPlaceId();
+            long placeId = trip.getStartPlace().getId();
             ar.edu.itba.paw.model.Place place = ps.findById(placeId).get();
             dataPairList.add(new DataPair<>(trip,
                     new DataPair<>(place,tripPictureService.findByTripId(trip.getId()).isPresent())));
@@ -104,17 +113,24 @@ public class TripController extends MainController{
         }
         Place place = places.get(0);
         LOGGER.debug("Google Place name is {}", place.getName());
-
+        Optional<User> userOptional = us.findByid(user.getId());
+        if(!userOptional.isPresent()) {
+            return mav;
+        }
+        User u = userOptional.get();
         Optional<ar.edu.itba.paw.model.Place> maybePlace = ps.findByGoogleId(place.getPlaceId());
-
         modelPlace = maybePlace.orElseGet(() -> ps.create(place.getPlaceId(), place.getName(), place.getLatitude(),
                 place.getLongitude(), place.getAddress()));
-        Trip trip = ts.create(modelPlace.getId(), form.getName(), form.getDescription(),
+        Trip trip = ts.create(u, modelPlace, form.getName(), form.getDescription(),
                 DateManipulation.stringToCalendar(form.getStartDate()),
                 DateManipulation.stringToCalendar(form.getEndDate()));
-        String startDate = dateFormat.format(trip.getStartDate().getTime());
-        TripUser tripUser = tus.create(trip.getId(), user.getId(), UserRole.ADMIN);
-        TripPlace tripPlace = tps.create(trip.getId(), modelPlace.getId());
+        trip.getPlaces().add(modelPlace);
+        trip.getUsers().add(u);
+        u.getCreatedTrips().add(trip);
+        //TODO ver que onda esto
+        u.getTrips().add(trip);
+        em.persist(trip);
+        em.persist(user);
         String redirectFormat = String.format("redirect:/home/trip/%d", trip.getId());
         mav.setViewName(redirectFormat);
         return mav;
@@ -126,13 +142,13 @@ public class TripController extends MainController{
         ModelAndView mav = new ModelAndView("trip");
         Optional<Trip> maybeTrip = ts.findById(tripId);
         Trip trip = maybeTrip.get();
-        List<DataPair<Activity, ar.edu.itba.paw.model.Place>> tripActAndPlace = as.getTripActivitiesDetails(tripId);
+        List<DataPair<Activity, ar.edu.itba.paw.model.Place>> tripActAndPlace = as.getTripActivitiesDetails(trip);
         mav.addObject("hasTripPicture", tripPictureService.findByTripId(tripId).isPresent());
         mav.addObject("isEmpty", tripActAndPlace.size() == 0);
-        mav.addObject("isTravelling", ts.isTravelling(user.getId(), tripId));
-        mav.addObject("isAdmin",ts.userIsAdmin(user.getId(), tripId));
-        mav.addObject("places",ps.getTripPlaces(trip.getId()));
-        mav.addObject("usersAndRoles", us.getTripUsersAndRoles(tripId));
+        mav.addObject("isTravelling", trip.getUsers().contains(user));
+        mav.addObject("isAdmin", trip.getCreatedBy().getId() == user.getId());
+        mav.addObject("places", trip.getPlaces());
+        mav.addObject("users", trip.getUsers());
         mav.addObject("actAndPlaces", tripActAndPlace);
         mav.addObject("trip", trip);
         mav.addObject("startDate", trip.getStartDate().getTime());
@@ -182,7 +198,12 @@ public class TripController extends MainController{
                 return mav;
             }
         }
-        TripPicture tripPictureModel = tripPictureService.create(tripId, imageBytes);
+        Optional<Trip> tripOptional = ts.findById(tripId);
+        if(tripOptional.isPresent()) {
+            TripPicture tripPictureModel = tripPictureService.create(tripOptional.get(), imageBytes);
+            tripOptional.get().setProfilePicture(tripPictureModel);
+            em.persist(tripOptional.get());
+        }
         return mav;
     }
 
@@ -190,7 +211,12 @@ public class TripController extends MainController{
     @RequestMapping("/home/trip/{tripId}/join")
     public ModelAndView joinTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ModelAndView mav = new ModelAndView("trip");
-        TripUser tripUserOpt = tus.create(tripId, user.getId(), UserRole.MEMBER);
+        Optional<User> userOptional = us.findByid(user.getId());
+        Optional<Trip> tripOptional = ts.findById(tripId);
+        tripOptional.ifPresent(trip -> trip.getUsers().add(user));
+        userOptional.ifPresent(value -> value.getTrips().add(tripOptional.get()));
+        em.persist(userOptional.get());
+        em.persist(tripOptional.get());
         String redirect = String.format("redirect:/home/trip/%d", tripId);
         mav.setViewName(redirect);
         return mav;

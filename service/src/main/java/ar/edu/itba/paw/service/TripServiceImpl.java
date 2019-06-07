@@ -2,7 +2,9 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.interfaces.TripService;
+import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,33 +21,13 @@ public class TripServiceImpl implements TripService {
     private TripDao td;
 
     @Override
-    public Trip create(long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
-        return td.create(startPlaceId, name, description, startDate, endDate);
-    }
-
-    @Override
-    public List<Trip> findUserTrips(long userId, int pageNum) {
-        return td.findUserTrips(userId, pageNum);
-    }
-
-    @Override
-    public int countUserTrips(long userId) {
-        return td.countUserTrips(userId);
+    public Trip create(User user, Place place, String name, String description, Calendar startDate, Calendar endDate) {
+        return td.create(user, place, name, description, startDate, endDate);
     }
 
     @Override
     public Optional<Trip> findById(long id) {
         return td.findById(id);
-    }
-
-    @Override
-    public boolean userIsAdmin(long userId, long tripId) {
-        return td.userIsAdmin(userId, tripId);
-    }
-
-    @Override
-    public boolean isTravelling(long userId, long tripId) {
-        return td.isTravelling(userId, tripId);
     }
 
     @Override

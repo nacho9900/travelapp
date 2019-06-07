@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.Activity;
+import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripActivity;
 import ar.edu.itba.paw.model.TripPlace;
 import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
@@ -35,11 +36,6 @@ public class ActivityController extends MainController {
     @Autowired
     TripService ts;
 
-    @Autowired
-    TripPlacesService tps;
-
-    @Autowired
-    TripActivitiesService tas;
 
     @RequestMapping(value = "/home/trip/{tripId}/create-activity", method = {RequestMethod.GET})
     public ModelAndView createActivityGet(@PathVariable(value = "tripId") long tripId,
@@ -69,9 +65,12 @@ public class ActivityController extends MainController {
         Optional<ar.edu.itba.paw.model.Place> maybePlace = ps.findByGoogleId(googlePlace.getPlaceId());
         modelPlace = maybePlace.orElseGet(() -> ps.create(googlePlace.getPlaceId(), googlePlace.getName(), googlePlace.getLatitude(),
                 googlePlace.getLongitude(), googlePlace.getAddress()));
-        Activity activity = as.create(form.getName(), form.getCategory(), modelPlace.getId());
-        TripActivity tripActivity = tas.create(tripId, modelPlace.getId(), activity.getId());
-        TripPlace tripPlace = tps.create(tripId, modelPlace.getId());
+        Activity activity = as.create(form.getName(), form.getCategory(), modelPlace);
+        Optional<Trip> tripOptional = ts.findById(tripId);
+        if(tripOptional.isPresent()) {
+            tripOptional.get().getActivities().add(activity);
+            tripOptional.get().getPlaces().add(modelPlace);
+        }
         String redirectURL = String.format("redirect:/home/trip/%d", tripId);
         mav.setViewName(redirectURL);
         return mav;

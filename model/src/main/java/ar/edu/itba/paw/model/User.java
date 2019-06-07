@@ -32,7 +32,10 @@ public class User {
 
     ///////////////todo checkear esto
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "createdBy")
+    private List<Trip> createdTrips;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
     private List<Trip> trips;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
@@ -60,6 +63,14 @@ public class User {
 
     /* package */ User() {
         // Just for Hibernate
+    }
+
+    public List<Trip> getCreatedTrips() {
+        return createdTrips;
+    }
+
+    public void setCreatedTrips(List<Trip> createdTrips) {
+        this.createdTrips = createdTrips;
     }
 
     public long getId() {

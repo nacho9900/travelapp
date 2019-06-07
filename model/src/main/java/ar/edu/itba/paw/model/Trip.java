@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
-import javax.xml.crypto.Data;
 import java.util.Calendar;
 import java.util.List;
 
@@ -34,6 +33,9 @@ public class Trip {
 
     /////////////////
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User createdBy;
+
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Place> places;
 
@@ -48,13 +50,14 @@ public class Trip {
 
     /////////////////
 
-    public Trip(long id, Place startPlace, String name, String description, Calendar startDate, Calendar endDate) {
-        this(startPlace, name, description, startDate, endDate);
+    public Trip(long id,User createdBy, Place startPlace, String name, String description, Calendar startDate, Calendar endDate) {
+        this(createdBy, startPlace, name, description, startDate, endDate);
         this.id = id;
     }
 
-    public Trip(Place startPlace, String name, String description, Calendar startDate, Calendar endDate) {
+    public Trip(User createdBy, Place startPlace, String name, String description, Calendar startDate, Calendar endDate) {
         super();
+        this.createdBy = createdBy;
         this.startPlace = startPlace;
         this.name = name;
         this.description = description;
@@ -64,6 +67,14 @@ public class Trip {
 
     /* package */ Trip() {
         // Just for Hibernate
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 
     public long getId() {
