@@ -88,12 +88,12 @@ public class UserController extends MainController{
             mav.addObject("pswRepeatError", true);
             return mav;
         }
-        Optional userOpt = us.findByUsername(form.getEmail());
+        /*Optional userOpt = us.findByUsername(form.getEmail());
         if(userOpt.isPresent()) {
             mav.addObject("alreadyExists", true);
             return mav;
         }
-
+        */
         ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname());
 
         String encodedPassword =  passwordEncoder.encode(form.getPassword());

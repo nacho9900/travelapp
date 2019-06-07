@@ -44,6 +44,14 @@ public class Activity {
         // Just for Hibernate
     }
 
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
+    }
+
     public long getId() {
         return id;
     }

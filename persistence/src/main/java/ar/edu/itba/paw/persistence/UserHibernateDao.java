@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,7 +31,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public Optional<User> findByUsername(String email) {
-        final TypedQuery<User> query = em.createQuery("from User as u where u.email like :email", User.class);
+        final TypedQuery<User> query = em.createQuery("from User as u where u.email = :email", User.class);
         query.setParameter("email", email);
         return query.getResultList().stream().findFirst();
     }

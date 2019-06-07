@@ -10,7 +10,7 @@ public class Trip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trips_id_seq")
-    @SequenceGenerator(sequenceName = "trips_id_seq", name = "trip_id_seq", allocationSize = 1)
+    @SequenceGenerator(sequenceName = "trips_id_seq", name = "trips_id_seq", allocationSize = 1)
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -42,7 +42,7 @@ public class Trip {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<User> users;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip")
     private List<Activity> activities;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip")

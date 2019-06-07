@@ -41,9 +41,6 @@ public class TripController extends MainController{
     private static final int MAX_TRIPS_PAGE = 4;
     private static final long MAX_UPLOAD_SIZE = 5242880;
 
-    @PersistenceContext
-    EntityManager em;
-
     @Autowired
     ActivityService as;
     @Autowired
@@ -129,8 +126,6 @@ public class TripController extends MainController{
         u.getCreatedTrips().add(trip);
         //TODO ver que onda esto
         u.getTrips().add(trip);
-        em.persist(trip);
-        em.persist(user);
         String redirectFormat = String.format("redirect:/home/trip/%d", trip.getId());
         mav.setViewName(redirectFormat);
         return mav;
@@ -202,7 +197,6 @@ public class TripController extends MainController{
         if(tripOptional.isPresent()) {
             TripPicture tripPictureModel = tripPictureService.create(tripOptional.get(), imageBytes);
             tripOptional.get().setProfilePicture(tripPictureModel);
-            em.persist(tripOptional.get());
         }
         return mav;
     }
@@ -215,8 +209,6 @@ public class TripController extends MainController{
         Optional<Trip> tripOptional = ts.findById(tripId);
         tripOptional.ifPresent(trip -> trip.getUsers().add(user));
         userOptional.ifPresent(value -> value.getTrips().add(tripOptional.get()));
-        em.persist(userOptional.get());
-        em.persist(tripOptional.get());
         String redirect = String.format("redirect:/home/trip/%d", tripId);
         mav.setViewName(redirect);
         return mav;
