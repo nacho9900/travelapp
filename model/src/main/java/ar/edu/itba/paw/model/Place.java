@@ -33,7 +33,7 @@ public class Place {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Activity> activities;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Trip> trips;
 
     ////////////////

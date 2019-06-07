@@ -12,19 +12,20 @@ public class Activity {
     @SequenceGenerator(sequenceName = "activities_id_seq", name = "activities_id_seq", allocationSize = 1)
     private long id;
 
-
     @Column(length = 40, nullable = false)
     private String name;
 
     @Column(length = 40, nullable = false)
     private String category;
 
-
     ///////////////
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "place_id")
     private Place place;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    private Trip trip;
 
     //////////////
 
