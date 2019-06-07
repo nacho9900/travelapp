@@ -7,6 +7,7 @@ import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
 import org.simplejavamail.mailer.config.TransportStrategy;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +21,9 @@ public class MailingServiceImpl implements MailingService {
     private static final String EMAIL_NAME = "meet.travel.paw@gmail.com";
     private static final String EMAIL_PASS = "power123321";
 
+    @Async
     @Override
-    public boolean sendRegisterMail(String emailName, String name, String lastname) {
+    public void sendRegisterMail(String emailName, String name, String lastname) {
 
         String htmlFormat = String.format("<h1>%s welcome to Meet and Travel!</h1>" +
                 "<h3>Your account has been successfully created</h3>" +
@@ -46,8 +48,7 @@ public class MailingServiceImpl implements MailingService {
             mailer.sendMail(email, true);
 
         } catch (MailException ex) {
-            return false;
+
         }
-        return true;
     }
 }

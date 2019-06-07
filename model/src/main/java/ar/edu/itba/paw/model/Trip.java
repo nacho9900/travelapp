@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
+import javax.xml.crypto.Data;
 import java.util.Calendar;
 import java.util.List;
 
@@ -109,4 +110,35 @@ public class Trip {
         this.endDate = endDate;
     }
 
+    public List<Place> getPlaces() {
+        return places;
+    }
+
+    public void setPlaces(List<Place> places) {
+        this.places = places;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public List<Activity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<Activity> activities) {
+        this.activities = activities;
+    }
+
+    public TripPicture getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(TripPicture profilePicture) {
+        this.profilePicture = profilePicture;
+    }
 }

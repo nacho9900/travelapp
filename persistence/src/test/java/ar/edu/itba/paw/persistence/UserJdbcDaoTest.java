@@ -48,7 +48,7 @@ public class UserJdbcDaoTest {
     private DataSource ds;
 
     @Autowired
-    private UserJdbcDao userDao;
+    private UserDao userDao;
 
     private JdbcTemplate jdbcTemplate;
 

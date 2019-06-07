@@ -36,10 +36,6 @@ public class ActivityServiceImpl implements ActivityService {
         return ad.create(name, category, placeId);
     }
 
-    @Override
-    public List<Activity> getTripActivities(long tripId) {
-        return ad.getTripActivities(tripId);
-    }
 
     @Override
     public List<DataPair<Activity, Place>> getTripActivitiesDetails(long tripId) {

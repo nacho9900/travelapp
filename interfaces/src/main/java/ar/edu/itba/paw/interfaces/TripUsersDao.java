@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TripUsersDao {
-
     public TripUser create(long tripId, long userId, UserRole userRole);
     public Optional<TripUser> findById(long id);
     public List<TripUser> findByTripId(long tripId);

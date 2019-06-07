@@ -37,11 +37,6 @@ public class UserHibernateDao implements UserDao {
         return query.getResultList().stream().findFirst();
     }
 
-    //TODO
-    @Override
-    public List<User> getTripUsers(long tripId) {
-        return null;
-    }
 
     //TODO
     @Override

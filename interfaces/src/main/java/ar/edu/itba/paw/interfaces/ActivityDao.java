@@ -10,9 +10,8 @@ public interface ActivityDao {
 
     public Optional<Activity> findById(long id);
     public Optional<Activity> findByName(String name);
-    public Activity create(String name, String category, long placeId);
+    public Activity create(String name, String category, Place place);
     public Optional<Place> getActivityPlace(long id);
-    public List<Activity> getTripActivities(long tripId);
     public Optional<Activity> findByCategory(String category);
 
 }

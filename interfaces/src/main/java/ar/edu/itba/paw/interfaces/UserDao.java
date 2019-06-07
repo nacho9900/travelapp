@@ -13,7 +13,7 @@ public interface UserDao {
     public Optional<User> findByUsername(final String email);
     public User create(final String firstname, final String lastname, final String email, final String password,
                        Calendar birthday, final String nationality);
-    public List<User> getTripUsers(long tripId);
+
     public Optional<UserRole> getUserRole(long userId, long tripId);
 
 }
