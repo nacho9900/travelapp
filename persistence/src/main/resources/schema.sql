@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS places (
+/*CREATE TABLE IF NOT EXISTS places (
                 id SERIAL PRIMARY KEY,
                 google_id varchar(150) UNIQUE NOT NULL,
                 name varchar(100) NOT NULL,
@@ -46,10 +46,8 @@ CREATE TABLE IF NOT EXISTS trip_places (
 CREATE TABLE IF NOT EXISTS trip_activities (
                 id SERIAL PRIMARY KEY,
                 trip_id INTEGER NOT NULL,
-                place_id INTEGER NOT NULL,
                 activity_id INTEGER NOT NULL,
                 FOREIGN KEY (trip_id) REFERENCES trips ON DELETE CASCADE,
-                FOREIGN KEY (place_id) REFERENCES places ON DELETE CASCADE,
                 FOREIGN KEY (activity_id) REFERENCES activities ON DELETE CASCADE
 );
 
@@ -76,4 +74,4 @@ CREATE TABLE IF NOT EXISTS trip_pictures (
                image BYTEA NOT NULL,
                FOREIGN KEY (trip_id) REFERENCES trips ON DELETE CASCADE
 
-);
+);*/

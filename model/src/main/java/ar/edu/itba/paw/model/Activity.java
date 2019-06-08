@@ -8,8 +8,8 @@ import javax.persistence.*;
 public class Activity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "activities_id_seq")
-    @SequenceGenerator(sequenceName = "activities_id_seq", name = "activities_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "activity_id_seq")
+    @SequenceGenerator(sequenceName = "activity_id_seq", name = "activity_id_seq", allocationSize = 1)
     private long id;
 
     @Column(length = 40, nullable = false)
@@ -18,26 +18,36 @@ public class Activity {
     @Column(length = 40, nullable = false)
     private String category;
 
+
     ///////////////
+
+
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "place_id")
     private Place place;
 
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "trip_id")
     private Trip trip;
+
+
 
     //////////////
 
-    public Activity(long id, String name, String category, Place place) {
-        this(name, category, place);
+
+
+    public Activity(long id, String name, String category, Place place, Trip trip) {
+        this(name, category, place, trip);
         this.id = id;
     }
 
-    public Activity(String name, String category, Place place) {
+    public Activity(String name, String category, Place place, Trip trip) {
         this.name = name;
         this.category = category;
         this.place = place;
+        this.trip = trip;
     }
 
     /* package */ Activity() {

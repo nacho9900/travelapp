@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface ActivityService {
     public Optional<Activity> findById(long id);
     public Optional<Activity> findByName(String name);
-    public Activity create(String name, String category, Place place);
+    public Activity create(String name, String category, Place place, Trip trip);
     public Optional<Activity> findByCategory(String category);
     public List<DataPair<Activity, Place>> getTripActivitiesDetails(Trip trip);
 }

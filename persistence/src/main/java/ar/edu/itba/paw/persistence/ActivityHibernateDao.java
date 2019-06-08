@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.ActivityDao;
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.model.Place;
+import ar.edu.itba.paw.model.Trip;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -32,8 +33,8 @@ public class ActivityHibernateDao implements ActivityDao {
     }
 
     @Override
-    public Activity create(String name, String category, Place place) {
-        Activity activity = new Activity(name, category, place);
+    public Activity create(String name, String category, Place place, Trip trip) {
+        Activity activity = new Activity(name, category, place, trip);
         em.persist(activity);
         return activity;
     }

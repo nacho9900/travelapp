@@ -33,8 +33,8 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Activity create(String name, String category, Place place) {
-        return ad.create(name, category, place);
+    public Activity create(String name, String category, Place place, Trip trip) {
+        return ad.create(name, category, place, trip);
     }
 
     @Override

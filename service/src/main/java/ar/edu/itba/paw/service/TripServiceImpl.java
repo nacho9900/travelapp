@@ -21,8 +21,8 @@ public class TripServiceImpl implements TripService {
     private TripDao td;
 
     @Override
-    public Trip create(User user, Place place, String name, String description, Calendar startDate, Calendar endDate) {
-        return td.create(user, place, name, description, startDate, endDate);
+    public Trip create(long userId, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
+        return td.create(userId, startPlaceId, name, description, startDate, endDate);
     }
 
     @Override

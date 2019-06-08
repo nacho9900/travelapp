@@ -1,17 +1,14 @@
 package ar.edu.itba.paw.model;
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
-    @SequenceGenerator(sequenceName = "users_id_seq", name = "users_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
+    @SequenceGenerator(sequenceName = "user_id_seq", name = "user_id_seq", allocationSize = 1)
     private long id;
 
     @Column(length = 100, nullable = false)
@@ -30,16 +27,34 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar birthday;
 
-    ///////////////todo checkear esto
+    //////////////
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "createdBy")
-    private List<Trip> createdTrips;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
+
+
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Trip> trips;
+
+
+
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     private UserPicture profilePicture;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /////////////
 
@@ -65,13 +80,6 @@ public class User {
         // Just for Hibernate
     }
 
-    public List<Trip> getCreatedTrips() {
-        return createdTrips;
-    }
-
-    public void setCreatedTrips(List<Trip> createdTrips) {
-        this.createdTrips = createdTrips;
-    }
 
     public long getId() {
         return id;

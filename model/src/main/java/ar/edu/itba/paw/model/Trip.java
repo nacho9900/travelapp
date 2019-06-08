@@ -2,6 +2,7 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -9,13 +10,15 @@ import java.util.List;
 public class Trip {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trips_id_seq")
-    @SequenceGenerator(sequenceName = "trips_id_seq", name = "trips_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_id_seq")
+    @SequenceGenerator(sequenceName = "trip_id_seq", name = "trip_id_seq", allocationSize = 1)
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "startplace_id")
-    private Place startPlace;
+    @Column
+    private long startPlaceId;
+
+    @Column
+    private long adminId;
 
     @Column(length = 100, nullable = false)
     private String name;
@@ -31,63 +34,79 @@ public class Trip {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar endDate;
 
+
     /////////////////
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User createdBy;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Place> places;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<User> users;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip")
-    private List<Activity> activities;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip")
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Place> places = new LinkedList<>();
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<User> users = new LinkedList<>();
+
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
+    private List<Activity> activities = new LinkedList<>();
+
+
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "trip")
     private TripPicture profilePicture;
 
+
+
+
+
+
+
+
+
     /////////////////
 
-    public Trip(long id,User createdBy, Place startPlace, String name, String description, Calendar startDate, Calendar endDate) {
-        this(createdBy, startPlace, name, description, startDate, endDate);
+
+    public Trip(long id, long adminId, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
+        this(adminId, startPlaceId, name, description, startDate, endDate);
         this.id = id;
     }
 
-    public Trip(User createdBy, Place startPlace, String name, String description, Calendar startDate, Calendar endDate) {
+    public Trip(long adminId, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
         super();
-        this.createdBy = createdBy;
-        this.startPlace = startPlace;
+        this.adminId = adminId;
+        this.startPlaceId = startPlaceId;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
+    public long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(long adminId) {
+        this.adminId = adminId;
+    }
+
     /* package */ Trip() {
         // Just for Hibernate
     }
 
-    public User getCreatedBy() {
-        return createdBy;
+    public long getStartPlaceId() {
+        return startPlaceId;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void setStartPlaceId(long startPlaceId) {
+        this.startPlaceId = startPlaceId;
     }
 
     public long getId() {
         return id;
     }
 
-    public Place getStartPlace() {
-        return startPlace;
-    }
-
-    public void setStartPlace(Place startPlace) {
-        this.startPlace = startPlace;
-    }
 
     public String getName() {
         return name;

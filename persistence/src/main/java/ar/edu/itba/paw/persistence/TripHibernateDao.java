@@ -22,8 +22,8 @@ public class TripHibernateDao implements TripDao {
     EntityManager em;
 
     @Override
-    public Trip create(User user, Place place, String name, String description, Calendar startDate, Calendar endDate) {
-        Trip trip = new Trip(user, place, name, description, startDate, endDate);
+    public Trip create(long userId, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
+        Trip trip = new Trip(userId, startPlaceId, name, description, startDate, endDate);
         em.persist(trip);
         return trip;
     }

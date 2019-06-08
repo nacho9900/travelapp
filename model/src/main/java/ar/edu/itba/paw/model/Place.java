@@ -9,8 +9,8 @@ import java.util.List;
 public class Place {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "places_id_seq")
-    @SequenceGenerator(sequenceName = "places_id_seq", name = "places_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "place_id_seq")
+    @SequenceGenerator(sequenceName = "place_id_seq", name = "place_id_seq", allocationSize = 1)
     private long id;
 
     @Column(length = 150, name = "google_id", nullable = false)
@@ -30,13 +30,35 @@ public class Place {
 
     ////////////////
 
+
+
+
+
+
+
+
+
+
     @OneToMany(fetch = FetchType.LAZY)
     private List<Activity> activities;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Trip> trips;
 
+
+
+
+
+
+
+
+
+
+
+
+
     ////////////////
+
 
     public Place(long id, String googleId, String name, double latitude, double longitude, String address) {
         this(googleId, name, latitude, longitude, address);
@@ -53,6 +75,22 @@ public class Place {
 
     /* package */ Place() {
         // Just for Hibernate
+    }
+
+    public List<Activity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<Activity> activities) {
+        this.activities = activities;
+    }
+
+    public List<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
     }
 
     public long getId() {

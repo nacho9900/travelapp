@@ -3,8 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.TripActivity;
-import ar.edu.itba.paw.model.TripPlace;
 import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -65,11 +63,14 @@ public class ActivityController extends MainController {
         Optional<ar.edu.itba.paw.model.Place> maybePlace = ps.findByGoogleId(googlePlace.getPlaceId());
         modelPlace = maybePlace.orElseGet(() -> ps.create(googlePlace.getPlaceId(), googlePlace.getName(), googlePlace.getLatitude(),
                 googlePlace.getLongitude(), googlePlace.getAddress()));
-        Activity activity = as.create(form.getName(), form.getCategory(), modelPlace);
         Optional<Trip> tripOptional = ts.findById(tripId);
         if(tripOptional.isPresent()) {
-            tripOptional.get().getActivities().add(activity);
             tripOptional.get().getPlaces().add(modelPlace);
+            Activity activity = as.create(form.getName(), form.getCategory(), modelPlace, tripOptional.get());
+            tripOptional.get().getActivities().add(activity);
+        }
+        else {
+            return mav;
         }
         String redirectURL = String.format("redirect:/home/trip/%d", tripId);
         mav.setViewName(redirectURL);

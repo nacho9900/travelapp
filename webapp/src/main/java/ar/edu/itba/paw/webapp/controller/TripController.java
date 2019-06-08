@@ -21,7 +21,6 @@ import se.walkercrou.places.exception.GooglePlacesException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -72,11 +71,19 @@ public class TripController extends MainController{
             return mav;
         }
         int n = (pageNum - 1) * MAX_TRIPS_PAGE;
-        List<Trip> userTrips =  u.getTrips().subList(n, n + MAX_TRIPS_PAGE);
-                                //ts.findUserTrips(user.getId(), pageNum);
+
+        List<Trip> userTrips =  u.getTrips();
+        System.out.println(userTrips.size());
+        int size = userTrips.size();
+        if(size > MAX_TRIPS_PAGE) {
+            if(n > size) {
+                int end = ((n + MAX_TRIPS_PAGE) > size) ? size-1 : (n + MAX_TRIPS_PAGE);
+                userTrips = userTrips.subList(n, end);
+            }
+        }
         List<DataPair<Trip, DataPair<ar.edu.itba.paw.model.Place, Boolean>>> dataPairList = new LinkedList<>();
         for (Trip trip: userTrips) {
-            long placeId = trip.getStartPlace().getId();
+            long placeId = trip.getStartPlaceId();
             ar.edu.itba.paw.model.Place place = ps.findById(placeId).get();
             dataPairList.add(new DataPair<>(trip,
                     new DataPair<>(place,tripPictureService.findByTripId(trip.getId()).isPresent())));
@@ -88,7 +95,6 @@ public class TripController extends MainController{
         mav.addObject("dateFormat", dateFormat);
         return mav;
     }
-
 
 
     @RequestMapping(value = "/home/create-trip", method = {RequestMethod.POST})
@@ -110,22 +116,26 @@ public class TripController extends MainController{
         }
         Place place = places.get(0);
         LOGGER.debug("Google Place name is {}", place.getName());
-        Optional<User> userOptional = us.findByid(user.getId());
-        if(!userOptional.isPresent()) {
-            return mav;
-        }
-        User u = userOptional.get();
+
         Optional<ar.edu.itba.paw.model.Place> maybePlace = ps.findByGoogleId(place.getPlaceId());
         modelPlace = maybePlace.orElseGet(() -> ps.create(place.getPlaceId(), place.getName(), place.getLatitude(),
                 place.getLongitude(), place.getAddress()));
-        Trip trip = ts.create(u, modelPlace, form.getName(), form.getDescription(),
+        Trip trip = ts.create(user.getId(), modelPlace.getId(), form.getName(), form.getDescription(),
                 DateManipulation.stringToCalendar(form.getStartDate()),
                 DateManipulation.stringToCalendar(form.getEndDate()));
-        trip.getPlaces().add(modelPlace);
-        trip.getUsers().add(u);
-        u.getCreatedTrips().add(trip);
-        //TODO ver que onda esto
-        u.getTrips().add(trip);
+        if(trip.getPlaces() != null) {
+            trip.getPlaces().add(modelPlace);
+        }
+        else {
+            trip.setPlaces(new LinkedList<>());
+        }
+        if(trip.getUsers() != null) {
+            trip.getUsers().add(user);
+        }
+        else {
+            trip.setUsers(new LinkedList<>());
+        }
+        user.getTrips().add(trip);
         String redirectFormat = String.format("redirect:/home/trip/%d", trip.getId());
         mav.setViewName(redirectFormat);
         return mav;
@@ -141,7 +151,7 @@ public class TripController extends MainController{
         mav.addObject("hasTripPicture", tripPictureService.findByTripId(tripId).isPresent());
         mav.addObject("isEmpty", tripActAndPlace.size() == 0);
         mav.addObject("isTravelling", trip.getUsers().contains(user));
-        mav.addObject("isAdmin", trip.getCreatedBy().getId() == user.getId());
+        //mav.addObject("isAdmin", trip.getCreatedBy().getId() == user.getId());
         mav.addObject("places", trip.getPlaces());
         mav.addObject("users", trip.getUsers());
         mav.addObject("actAndPlaces", tripActAndPlace);

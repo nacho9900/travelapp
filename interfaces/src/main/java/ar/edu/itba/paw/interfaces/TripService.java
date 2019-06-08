@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface TripService {
 
-    public Trip create(User createdBy, Place place, String name, String description, Calendar startDate, Calendar endDate);
+    public Trip create(long createdBy, long place, String name, String description, Calendar startDate, Calendar endDate);
     public Optional<Trip> findById(long id);
     public List<Trip> getAllTrips();
     public List<Trip> findByName(String name);

@@ -8,8 +8,8 @@ import javax.persistence.*;
 public class TripPicture {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_pictures_id_seq")
-    @SequenceGenerator(sequenceName = "trip_pictures_id_seq", name = "trip_pictures_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_picture_id_seq")
+    @SequenceGenerator(sequenceName = "trip_picture_id_seq", name = "trip_picture_id_seq", allocationSize = 1)
     private long id;
 
     @Column(name = "image")
