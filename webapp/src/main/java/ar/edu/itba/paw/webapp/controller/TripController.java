@@ -123,7 +123,7 @@ public class TripController extends MainController{
         Trip trip = ts.create(user.getId(), modelPlace.getId(), form.getName(), form.getDescription(),
                 DateManipulation.stringToCalendar(form.getStartDate()),
                 DateManipulation.stringToCalendar(form.getEndDate()));
-        if(trip.getPlaces() != null) {
+        /*if(trip.getPlaces() != null) {
             trip.getPlaces().add(modelPlace);
         }
         else {
@@ -134,7 +134,7 @@ public class TripController extends MainController{
         }
         else {
             trip.setUsers(new LinkedList<>());
-        }
+        }*/
         user.getTrips().add(trip);
         String redirectFormat = String.format("redirect:/home/trip/%d", trip.getId());
         mav.setViewName(redirectFormat);
@@ -152,7 +152,7 @@ public class TripController extends MainController{
         mav.addObject("isEmpty", tripActAndPlace.size() == 0);
         mav.addObject("isTravelling", trip.getUsers().contains(user));
         //mav.addObject("isAdmin", trip.getCreatedBy().getId() == user.getId());
-        mav.addObject("places", trip.getPlaces());
+        //mav.addObject("places", trip.getPlaces());
         mav.addObject("users", trip.getUsers());
         mav.addObject("actAndPlaces", tripActAndPlace);
         mav.addObject("trip", trip);

@@ -33,20 +33,13 @@ public class User {
 
 
 
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
     private List<Trip> trips;
-
 
 
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     private UserPicture profilePicture;
-
-
-
-
-
 
 
 

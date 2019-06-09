@@ -54,6 +54,7 @@ public class Activity {
         // Just for Hibernate
     }
 
+
     public Trip getTrip() {
         return trip;
     }

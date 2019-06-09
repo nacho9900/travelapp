@@ -28,31 +28,12 @@ public class Place {
     @Column(length = 500, nullable = false)
     private String address;
 
-    ////////////////
+    ///////////////
 
 
 
-
-
-
-
-
-
-
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "place")
     private List<Activity> activities;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Trip> trips;
-
-
-
-
-
-
-
-
-
 
 
 
@@ -85,16 +66,12 @@ public class Place {
         this.activities = activities;
     }
 
-    public List<Trip> getTrips() {
-        return trips;
-    }
-
-    public void setTrips(List<Trip> trips) {
-        this.trips = trips;
-    }
-
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getGoogleId() {

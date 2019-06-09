@@ -40,25 +40,18 @@ public class Trip {
 
 
 
-
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Place> places = new LinkedList<>();
-
-
     @ManyToMany(fetch = FetchType.EAGER)
     private List<User> users = new LinkedList<>();
+
 
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<Activity> activities = new LinkedList<>();
 
 
+
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "trip")
     private TripPicture profilePicture;
-
-
-
 
 
 
@@ -138,14 +131,6 @@ public class Trip {
 
     public void setEndDate(Calendar endDate) {
         this.endDate = endDate;
-    }
-
-    public List<Place> getPlaces() {
-        return places;
-    }
-
-    public void setPlaces(List<Place> places) {
-        this.places = places;
     }
 
     public List<User> getUsers() {
