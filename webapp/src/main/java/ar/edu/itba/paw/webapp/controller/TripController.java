@@ -18,6 +18,7 @@ import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
 
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
@@ -42,14 +43,24 @@ public class TripController extends MainController{
 
     @Autowired
     ActivityService as;
+
     @Autowired
     TripService ts;
+
     @Autowired
     UserService us;
+
     @Autowired
     PlaceService ps;
+
     @Autowired
     TripPicturesService tripPictureService;
+
+
+    @PersistenceContext
+    EntityManager em;
+
+
 
     @RequestMapping("/home/create-trip")
     public ModelAndView createTripGet(@ModelAttribute("createTripForm") final TripCreateForm form) {
@@ -59,28 +70,27 @@ public class TripController extends MainController{
     @RequestMapping("/home/trips/{pageNum}")
     public ModelAndView getUserTrips(@ModelAttribute("user") User user,  @PathVariable(value = "pageNum") int pageNum) {
         ModelAndView mav = new ModelAndView("userTrips");
-        Optional<User> userOptional = us.findByid(user.getId());
-        if(!userOptional.isPresent()) {
-            return mav;
-        }
-        User u = userOptional.get();
+
+        System.out.println("IN home/trips/" + pageNum);
+
+        ////////
+        User u = us.findByid(user.getId()).get();
+        ////////
+
+        System.out.println("FOUND user: " + u);
+
+        Set<Trip> userTrips =  ts.getAllUserTrips(u, pageNum);
+
+        System.out.println("AFTER GET ALL USER TRIPS");
         int userTripsQty = u.getTrips().size();
+
         int requiredPages = (int) Math.ceil(userTripsQty/(double)MAX_TRIPS_PAGE);
+        //int n = (pageNum - 1) * MAX_TRIPS_PAGE;
         if(pageNum > 1 && pageNum > requiredPages) {
             mav.setViewName("404");
             return mav;
         }
-        int n = (pageNum - 1) * MAX_TRIPS_PAGE;
 
-        List<Trip> userTrips =  u.getTrips();
-        System.out.println(userTrips.size());
-        int size = userTrips.size();
-        if(size > MAX_TRIPS_PAGE) {
-            if(n > size) {
-                int end = ((n + MAX_TRIPS_PAGE) > size) ? size-1 : (n + MAX_TRIPS_PAGE);
-                userTrips = userTrips.subList(n, end);
-            }
-        }
         List<DataPair<Trip, DataPair<ar.edu.itba.paw.model.Place, Boolean>>> dataPairList = new LinkedList<>();
         for (Trip trip: userTrips) {
             long placeId = trip.getStartPlaceId();
@@ -117,25 +127,15 @@ public class TripController extends MainController{
         Place place = places.get(0);
         LOGGER.debug("Google Place name is {}", place.getName());
 
+
         Optional<ar.edu.itba.paw.model.Place> maybePlace = ps.findByGoogleId(place.getPlaceId());
+
         modelPlace = maybePlace.orElseGet(() -> ps.create(place.getPlaceId(), place.getName(), place.getLatitude(),
                 place.getLongitude(), place.getAddress()));
         Trip trip = ts.create(user.getId(), modelPlace.getId(), form.getName(), form.getDescription(),
                 DateManipulation.stringToCalendar(form.getStartDate()),
                 DateManipulation.stringToCalendar(form.getEndDate()));
-        /*if(trip.getPlaces() != null) {
-            trip.getPlaces().add(modelPlace);
-        }
-        else {
-            trip.setPlaces(new LinkedList<>());
-        }
-        if(trip.getUsers() != null) {
-            trip.getUsers().add(user);
-        }
-        else {
-            trip.setUsers(new LinkedList<>());
-        }*/
-        user.getTrips().add(trip);
+
         String redirectFormat = String.format("redirect:/home/trip/%d", trip.getId());
         mav.setViewName(redirectFormat);
         return mav;
@@ -146,15 +146,47 @@ public class TripController extends MainController{
                              @ModelAttribute("editTripForm") final EditTripForm form) {
         ModelAndView mav = new ModelAndView("trip");
         Optional<Trip> maybeTrip = ts.findById(tripId);
+        if(!maybeTrip.isPresent()) {
+            mav.setViewName("404");
+            return mav;
+        }
+
         Trip trip = maybeTrip.get();
+
+
         List<DataPair<Activity, ar.edu.itba.paw.model.Place>> tripActAndPlace = as.getTripActivitiesDetails(trip);
+        List <ar.edu.itba.paw.model.Place> tripPlaces = ts.findTripPlaces(trip);
+
+        List<User> tripMembers = trip.getUsers();
+        User u = us.findByid(trip.getAdminId()).get();
+
+        System.out.println(u);
+
+        tripMembers.add(u);
+        boolean isAdmin = trip.getAdminId() == user.getId();
+        boolean isTravelling = false;
+        if(isAdmin || trip.getUsers().contains(user)) {
+            isTravelling = true;
+        }
+
+        System.out.println("has trip picture" + tripPictureService.findByTripId(tripId).isPresent());
         mav.addObject("hasTripPicture", tripPictureService.findByTripId(tripId).isPresent());
+
+        System.out.println("is empty" + (tripActAndPlace.size() == 0));
         mav.addObject("isEmpty", tripActAndPlace.size() == 0);
-        mav.addObject("isTravelling", trip.getUsers().contains(user));
-        //mav.addObject("isAdmin", trip.getCreatedBy().getId() == user.getId());
-        //mav.addObject("places", trip.getPlaces());
-        mav.addObject("users", trip.getUsers());
+        mav.addObject("isTravelling", isTravelling );
+        mav.addObject("isAdmin", isAdmin);
+
+        System.out.println("PLACES: " + tripPlaces);
+        mav.addObject("places", tripPlaces);
+
+        System.out.println("USERS: " + tripMembers);
+        mav.addObject("users", tripMembers);
+
+        System.out.println("ACT AND PLACES: " + tripActAndPlace);
         mav.addObject("actAndPlaces", tripActAndPlace);
+
+        System.out.println("TRIP: " + trip);
         mav.addObject("trip", trip);
         mav.addObject("startDate", trip.getStartDate().getTime());
         mav.addObject("endDate", trip.getEndDate().getTime());

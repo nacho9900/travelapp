@@ -37,9 +37,4 @@ public class UserHibernateDao implements UserDao {
     }
 
 
-    //TODO
-    @Override
-    public Optional<UserRole> getUserRole(long userId, long tripId) {
-        return Optional.empty();
-    }
 }

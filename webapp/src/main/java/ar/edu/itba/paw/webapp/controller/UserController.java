@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+////////////////////////CHECKED /////////////////////////////////////////////////////////
 @Controller
 public class UserController extends MainController{
 
@@ -88,12 +90,12 @@ public class UserController extends MainController{
             mav.addObject("pswRepeatError", true);
             return mav;
         }
-        /*Optional userOpt = us.findByUsername(form.getEmail());
+        Optional userOpt = us.findByUsername(form.getEmail());
         if(userOpt.isPresent()) {
             mav.addObject("alreadyExists", true);
             return mav;
         }
-        */
+
         ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname());
 
         String encodedPassword =  passwordEncoder.encode(form.getPassword());
@@ -192,6 +194,7 @@ public class UserController extends MainController{
                 return mav;
             }
         }
+        //TODO ver si se necesita esto
         Optional<User> u = us.findByid(userId);
         if(u.isPresent()) {
             UserPicture userPicture = ups.create(u.get(), imageBytes);

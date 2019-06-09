@@ -24,32 +24,31 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Calendar birthday;
+
+
+
+
+
+
 
     //////////////
 
-
-
-
-
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
     private List<Trip> trips;
-
-
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     private UserPicture profilePicture;
 
 
-
-
-
-
-
-
-
     /////////////
+
+
+
+
+
+
 
     @Column(length = 100, nullable = false)
     private String nationality;
@@ -163,6 +162,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User: email, " + firstname + " " + lastname;
+        return "[" + id + "]" +  firstname + " " + lastname;
     }
 }

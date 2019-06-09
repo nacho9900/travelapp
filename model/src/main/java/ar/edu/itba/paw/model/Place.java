@@ -2,6 +2,7 @@ package ar.edu.itba.paw.model;
 
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,7 @@ public class Place {
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "place")
-    private List<Activity> activities;
+    private List<Activity> activities = new LinkedList<>();
 
 
 

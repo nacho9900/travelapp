@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.User;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface TripService {
 
@@ -14,4 +15,6 @@ public interface TripService {
     public Optional<Trip> findById(long id);
     public List<Trip> getAllTrips();
     public List<Trip> findByName(String name);
+    public Set<Trip> getAllUserTrips(User user, int pageNum);
+    public List<Place> findTripPlaces(Trip trip);
 }

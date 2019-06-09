@@ -27,34 +27,25 @@ public class Trip {
     private String description;
 
     @Column(name = "start_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Calendar startDate;
 
     @Column(name = "end_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Calendar endDate;
 
 
     /////////////////
 
 
-
-
     @ManyToMany(fetch = FetchType.EAGER)
     private List<User> users = new LinkedList<>();
-
-
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<Activity> activities = new LinkedList<>();
 
-
-
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "trip")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip")
     private TripPicture profilePicture;
-
-
-
 
 
 

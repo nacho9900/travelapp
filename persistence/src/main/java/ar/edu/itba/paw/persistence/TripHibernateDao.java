@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripDao;
-import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -16,7 +14,7 @@ import java.util.Optional;
 @Repository
 public class TripHibernateDao implements TripDao {
 
-    private static final int MAX_ROWS = 5;
+    private static final int MAX_ROWS = 6;
 
     @PersistenceContext
     EntityManager em;
@@ -35,13 +33,9 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> findUserTrips(long userId, int pageNum) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip where User:id like :userId ", Trip.class);
-        query.setParameter("userId", userId);
-        query.setFirstResult((pageNum - 1) * MAX_ROWS);
-        query.setMaxResults(MAX_ROWS);
-        return query.getResultList();
+        //TODO
+        return null;
     }
-
 
     @Override
     public List<Trip> findByName(String name) {
@@ -53,10 +47,23 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> getAllTrips() {
-        int pageNum = 1; //TODO
+        int pageNum = 1; //TODO add pagination
         final TypedQuery<Trip> query = em.createQuery("From Trip", Trip.class);
         query.setFirstResult((pageNum - 1) * MAX_ROWS);
         query.setMaxResults(MAX_ROWS);
+        return query.getResultList();
+    }
+
+
+    @Override
+    public List<Trip> findUserCreatedTrips(long userId, int pageNum) {
+
+        System.out.println("IN DAO: findUserCreatedTrips");
+        final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.adminId = :userId ", Trip.class);
+        query.setParameter("userId", userId);
+        query.setFirstResult((pageNum - 1) * MAX_ROWS);
+        query.setMaxResults(MAX_ROWS);
+        System.out.println("userCreatedTrips: " + query.getResultList());
         return query.getResultList();
     }
 

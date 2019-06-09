@@ -39,18 +39,8 @@ public class ActivityHibernateDao implements ActivityDao {
         return activity;
     }
 
-    /*@Override
-    public List<Activity> getTripActivities(long tripId) {
-        return jdbcTemplate.query("SELECT * FROM activities, trip_activities WHERE trip_id = ? AND activities.id = activity_id ", ROW_MAPPER, tripId);
-    }*/
 
-    @Override
-    public Optional<Place> getActivityPlace(long id) {
-        final TypedQuery<Place> query = em.createQuery("select place From Activity as a where a.id = :id", Place.class);
-        query.setParameter("id", id);
-        return query.getResultList().stream().findFirst();
-    }
-
+    //TODO
     @Override
     public Optional<Activity> findByCategory(String category) {
         final TypedQuery<Activity> query = em.createQuery("From Activity as a where a.category like :category", Activity.class);

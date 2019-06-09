@@ -24,12 +24,10 @@ public class Activity {
 
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "place_id")
     private Place place;
 
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "trip_id")
     private Trip trip;
 
 
