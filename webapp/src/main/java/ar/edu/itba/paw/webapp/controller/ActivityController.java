@@ -64,10 +64,10 @@ public class ActivityController extends MainController {
         modelPlace = maybePlace.orElseGet(() -> ps.create(googlePlace.getPlaceId(), googlePlace.getName(), googlePlace.getLatitude(),
                 googlePlace.getLongitude(), googlePlace.getAddress()));
         Optional<Trip> tripOptional = ts.findById(tripId);
+
         if(tripOptional.isPresent()) {
-            //tripOptional.get().getPlaces().add(modelPlace);
             Activity activity = as.create(form.getName(), form.getCategory(), modelPlace, tripOptional.get());
-            tripOptional.get().getActivities().add(activity);
+            ts.addActivityToTrip(activity.getId(), tripId);
         }
         else {
             return mav;

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.ActivityDao;
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserDao;
@@ -19,6 +20,9 @@ public class TripServiceImpl implements TripService {
 
     @Autowired
     private TripDao td;
+
+    @Autowired
+    private ActivityDao ad;
 
     @Autowired
     private UserDao ud;
@@ -62,6 +66,15 @@ public class TripServiceImpl implements TripService {
             places.add(activity.getPlace());
         }
         return places;
+    }
+
+    @Override
+    public void addActivityToTrip(long actId, long tripId) {
+        Optional<Trip> ot = td.findById(tripId);
+        Optional<Activity> oa = ad.findById(actId);
+        if(ot.isPresent() && oa.isPresent()) {
+            ot.get().getActivities().add(oa.get());
+        }
     }
 
     @Override
