@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -41,7 +40,7 @@ public class TripHibernateDao implements TripDao {
     @Override
     public List<Trip> findByName(String name) {
         final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.name like :name", Trip.class);
-        query.setParameter("name", name);
+        query.setParameter("name", "%"+name+"%");
         query.setMaxResults(MAX_ROWS);
         return query.getResultList();
     }
@@ -55,10 +54,8 @@ public class TripHibernateDao implements TripDao {
         return query.getResultList();
     }
 
-
     @Override
     public List<Trip> findUserCreatedTrips(long userId, int pageNum) {
-
         System.out.println("IN DAO: findUserCreatedTrips");
         final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.adminId = :userId ", Trip.class);
         query.setParameter("userId", userId);
@@ -67,7 +64,4 @@ public class TripHibernateDao implements TripDao {
         System.out.println("userCreatedTrips: " + query.getResultList());
         return query.getResultList();
     }
-
-
-
 }
