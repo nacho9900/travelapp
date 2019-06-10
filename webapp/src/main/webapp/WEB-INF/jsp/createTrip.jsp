@@ -11,6 +11,12 @@
     <c:url value="/resources/css/map.css" var="createTripCss"/>
     <c:url value="/resources/js/map.js" var="createTripJs"/>
     <c:url value="/resources/js/preventEnterDefault.js" var="noEnterJs"/>
+    <c:url value="/resources/js/createTripDatepicker.js" var="datePicker"/>
+    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js" var="datepickerJs"/>
+    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" var="datepickerCss"/>
+    <script type="text/javascript" src="${datepickerJs}"></script>
+    <script type="text/javascript" src="${datePicker}"></script>
+    <link rel="stylesheet" href="${datepickerCss}"/>
     <link rel="stylesheet" href="${createTripCss}">
     <title>
         <spring:message code="createTrip.title"/>
@@ -30,7 +36,7 @@
                         <spring:message code="createTrip.pageTitle"/>
                     </div>
                 </div>
-                <form:form action="${createTripURL}" method="post" modelAttribute="createTripForm">
+                <form:form action="${createTripURL}" method="post" modelAttribute="createTripForm" id="formId">
                     <form:errors path="name" cssClass="alert alert-warning" element="p"/>
                     <spring:message code="createTrip.namePh" var="namePh"/>
                     <form:input class="form-control" cssStyle="margin-bottom: 10px" type="text" path="name"
@@ -43,18 +49,22 @@
                                    placeholder="${descriptionPh}"/>
 
                     <form:errors path="startDate" cssClass="alert alert-warning" element="p"/>
-                    <form:label path="startDate" for="start_date" cssClass="text-white">
-                        <spring:message code="createTrip.startDate"/>
-                    </form:label>
-                    <form:input class="form-control" type="date" path="startDate" name="start_date"/>
+                    <div class="form-group">
+                        <form:label path="startDate" for="start_date" cssClass="text-white">
+                            <spring:message code="createTrip.startDate"/>
+                        </form:label>
+                        <form:input class="form-control" type="text" placeholder="dd/mm/yyyy" id="startDate" path="startDate" name="startDate"/>
+                    </div>
                     
                     <form:errors path="endDate" cssClass="alert alert-warning" element="p"/>
-                    <form:label path="endDate" for="start_date" cssClass="text-white">
-                        <spring:message code="createTrip.endDate"/>
-                    </form:label>
-                    <form:input class="form-control" type="date" path="endDate" name="end_date"  cssStyle="margin-bottom: 10px;"/>
-                    <form:errors path="placeInput" cssClass="alert alert-warning" element="p"/>
+                    <div class="form-group">
+                        <form:label path="endDate" for="end_date" cssClass="text-white">
+                            <spring:message code="createTrip.endDate"/>
+                        </form:label>
+                        <form:input class="form-control" type="text" placeholder="dd/mm/yyyy" path="endDate" name="endDate" id="end_date" />
+                    </div>
 
+                    <form:errors path="placeInput" cssClass="alert alert-warning" element="p"/>
                     <spring:message code="createTrip.locationPh" var ="locationPh"/>
                     <form:input id="pac-input" type="text" path="placeInput" placeholder="${locationPh}" cssClass="form-control"/>
 
@@ -81,9 +91,7 @@
 </div>
 <script src="${noEnterJs}"></script>
 <script src="${createTripJs}"></script>
-
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap">
 </script>
-
 </body>
 </html>

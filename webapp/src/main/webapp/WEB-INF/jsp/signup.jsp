@@ -55,9 +55,8 @@
                         <form:label path="birthday" for="birthday" cssClass="text-white">
                             <spring:message code="signUp.birthday"/>
                         </form:label>
-                        <form:input cssClass="form-control" type="text" placeholder="mm/dd/yyyy" name="birthday" id="date" path="birthday"/>
+                        <form:input cssClass="form-control" type="text" placeholder="dd/mm/yyyy" name="birthday" id="date" path="birthday"/>
                     </div>
-
                 </div>
                 <div class="col-12 col-md-6">
                     <form:errors path="nationality" cssClass="alert alert-warning" element="p"/>
