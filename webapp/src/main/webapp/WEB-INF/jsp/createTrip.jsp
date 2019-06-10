@@ -12,7 +12,6 @@
     <c:url value="/resources/js/map.js" var="createTripJs"/>
     <c:url value="/resources/js/preventEnterDefault.js" var="noEnterJs"/>
     <link rel="stylesheet" href="${createTripCss}">
-
     <title>
         <spring:message code="createTrip.title"/>
     </title>
@@ -26,7 +25,6 @@
     <div class="container box">
         <div class="row">
             <div class="col-12">
-                <%--TODO: AGREGAR ALERT POR ERROR EN MAP INPUT--%>
                 <div class="form-group">
                     <div id="headerID" class="display-4 text-white">
                         <spring:message code="createTrip.pageTitle"/>
@@ -49,7 +47,7 @@
                         <spring:message code="createTrip.startDate"/>
                     </form:label>
                     <form:input class="form-control" type="date" path="startDate" name="start_date"/>
-
+                    
                     <form:errors path="endDate" cssClass="alert alert-warning" element="p"/>
                     <form:label path="endDate" for="start_date" cssClass="text-white">
                         <spring:message code="createTrip.endDate"/>
@@ -81,12 +79,11 @@
         </div>
     </div>
 </div>
-<script>
-
-</script>
 <script src="${noEnterJs}"></script>
 <script src="${createTripJs}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap"
-        async defer></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap">
+</script>
+
 </body>
 </html>

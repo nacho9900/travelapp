@@ -27,12 +27,6 @@ public class User {
     @Temporal(TemporalType.DATE)
     private Calendar birthday;
 
-
-
-
-
-
-
     //////////////
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
@@ -43,12 +37,6 @@ public class User {
 
 
     /////////////
-
-
-
-
-
-
 
     @Column(length = 100, nullable = false)
     private String nationality;

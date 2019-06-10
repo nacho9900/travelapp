@@ -346,10 +346,6 @@
         </div>
     </div>
 </form:form>
-
-<script>
-
-</script>
 </body>
 </html>
 

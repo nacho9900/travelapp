@@ -97,7 +97,6 @@ public class UserController extends MainController{
         }
 
         ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname());
-
         String encodedPassword =  passwordEncoder.encode(form.getPassword());
         User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), encodedPassword,
                 DateManipulation.stringToCalendar(form.getBirthday()), form.getNationality());
@@ -166,7 +165,7 @@ public class UserController extends MainController{
             return mav;
         }
         MultipartFile profilePicture = form.getImageUpload();
-        byte[] imageBytes = null;
+        byte[] imageBytes;
         if(profilePicture != null && !profilePicture.isEmpty()) {
             String contentType = profilePicture.getContentType();
             if(!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
@@ -194,7 +193,6 @@ public class UserController extends MainController{
                 return mav;
             }
         }
-        //TODO ver si se necesita esto
         Optional<User> u = us.findByid(userId);
         if(u.isPresent()) {
             UserPicture userPicture = ups.create(u.get(), imageBytes);
