@@ -1,15 +1,18 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.ActivityDao;
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.interfaces.TripService;
+import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.model.Activity;
+import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -18,19 +21,15 @@ public class TripServiceImpl implements TripService {
     @Autowired
     private TripDao td;
 
-    @Override
-    public Trip create(long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
-        return td.create(startPlaceId, name, description, startDate, endDate);
-    }
+    @Autowired
+    private ActivityDao ad;
+
+    @Autowired
+    private UserDao ud;
 
     @Override
-    public List<Trip> findUserTrips(long userId, int pageNum) {
-        return td.findUserTrips(userId, pageNum);
-    }
-
-    @Override
-    public int countUserTrips(long userId) {
-        return td.countUserTrips(userId);
+    public Trip create(long userId, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
+        return td.create(userId, startPlaceId, name, description, startDate, endDate);
     }
 
     @Override
@@ -39,13 +38,8 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public boolean userIsAdmin(long userId, long tripId) {
-        return td.userIsAdmin(userId, tripId);
-    }
-
-    @Override
-    public boolean isTravelling(long userId, long tripId) {
-        return td.isTravelling(userId, tripId);
+    public List<Trip> findByName(String name) {
+        return td.findByName(name);
     }
 
     @Override
@@ -53,8 +47,46 @@ public class TripServiceImpl implements TripService {
         return td.getAllTrips();
     }
 
-    @Override
-    public List<Trip> findByName(String name) {
-        return td.findByName(name);
+    public Set<Trip> getAllUserTrips(User user, int pageNum) {
+        System.out.println("IN GET ALL USER TRIPS");
+        System.out.println("USER TRIPS: " + user.getTrips());
+        Set<Trip> trips = new HashSet<>(user.getTrips());
+
+
+        List<Trip> createdTrips = td.findUserCreatedTrips(user.getId(), pageNum);
+        trips.addAll(createdTrips);
+        return trips;
     }
+
+    @Override
+    public List<Place> findTripPlaces(Trip trip) {
+        List<Activity> activities = trip.getActivities();
+        List<Place> places = new LinkedList<>();
+        for(Activity activity: activities) {
+            places.add(activity.getPlace());
+        }
+        return places;
+    }
+
+    @Override
+    public void addActivityToTrip(long actId, long tripId) {
+        Optional<Trip> ot = td.findById(tripId);
+        Optional<Activity> oa = ad.findById(actId);
+        if(ot.isPresent() && oa.isPresent()) {
+            ot.get().getActivities().add(oa.get());
+        }
+    }
+
+    @Override
+    public void addUserToTrip(long userId, long tripId) {
+        Optional<User> ou = ud.findById(userId);
+        Optional<Trip> ot = td.findById(tripId);
+        if(ou.isPresent() && ot.isPresent()) {
+            ou.get().getTrips().add(ot.get());
+            ot.get().getUsers().add(ou.get());
+        }
+
+    }
+
+
 }

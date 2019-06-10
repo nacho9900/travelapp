@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserRole;
 
@@ -13,7 +14,6 @@ public interface UserDao {
     public Optional<User> findByUsername(final String email);
     public User create(final String firstname, final String lastname, final String email, final String password,
                        Calendar birthday, final String nationality);
-    public List<User> getTripUsers(long tripId);
-    public Optional<UserRole> getUserRole(long userId, long tripId);
+    public void persistTrip(User user, Trip trip);
 
 }

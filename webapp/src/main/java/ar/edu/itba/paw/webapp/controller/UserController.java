@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+////////////////////////CHECKED /////////////////////////////////////////////////////////
 @Controller
 public class UserController extends MainController{
 
@@ -94,10 +96,8 @@ public class UserController extends MainController{
             return mav;
         }
 
-        if(!ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname())) {
-            mav.addObject("invalidEmail", true);
-            return mav;
-        }
+        ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname());
+
         String encodedPassword =  passwordEncoder.encode(form.getPassword());
         User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), encodedPassword,
                 DateManipulation.stringToCalendar(form.getBirthday()), form.getNationality());
@@ -194,9 +194,13 @@ public class UserController extends MainController{
                 return mav;
             }
         }
-        UserPicture userPicture = ups.create(userId, imageBytes);
-        String redirectFormat = String.format("redirect:/home/profile/%d", userId);
-        mav.setViewName(redirectFormat);
+        //TODO ver si se necesita esto
+        Optional<User> u = us.findByid(userId);
+        if(u.isPresent()) {
+            UserPicture userPicture = ups.create(u.get(), imageBytes);
+            String redirectFormat = String.format("redirect:/home/profile/%d", userId);
+            mav.setViewName(redirectFormat);
+        }
         return mav;
     }
 

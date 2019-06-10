@@ -1,27 +1,75 @@
 package ar.edu.itba.paw.model;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
+import javax.persistence.*;
+import java.util.*;
 
+@Entity
+@Table(name = "users")
 public class User {
 
-    private final long id;
-    private final String firstname;
-    private final String lastname;
-    private final String email;
-    private String password;
-    private final Calendar birthday;
-    private final String nationality;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
+    @SequenceGenerator(sequenceName = "user_id_seq", name = "user_id_seq", allocationSize = 1)
+    private long id;
 
+    @Column(length = 100, nullable = false)
+    private String firstname;
+
+    @Column(length = 100, nullable = false)
+    private String lastname;
+
+    @Column(length = 100, nullable = false, unique = true)
+    private String email;
+
+    @Column(length = 100, nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Calendar birthday;
+
+
+
+
+
+
+
+    //////////////
+
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
+    private List<Trip> trips;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    private UserPicture profilePicture;
+
+
+    /////////////
+
+
+
+
+
+
+
+    @Column(length = 100, nullable = false)
+    private String nationality;
 
     public User(long id, String firstname, String lastname, String email, String password, Calendar birthday, String nationality) {
+        this(firstname, lastname, email, password, birthday, nationality);
         this.id = id;
+    }
+
+    public User(String firstname, String lastname, String email, String password, Calendar birthday, String nationality) {
+        super();
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.birthday = birthday;
         this.nationality = nationality;
+    }
+
+    /* package */ User() {
+        // Just for Hibernate
     }
 
 
@@ -33,12 +81,24 @@ public class User {
         return firstname;
     }
 
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
     public String getLastname() {
         return lastname;
     }
 
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -53,8 +113,32 @@ public class User {
         return birthday;
     }
 
+    public void setBirthday(Calendar birthday) {
+        this.birthday = birthday;
+    }
+
     public String getNationality() {
         return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public List<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
+    }
+
+    public UserPicture getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(UserPicture profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     @Override
@@ -78,10 +162,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                '}';
+        return "[" + id + "]" +  firstname + " " + lastname;
     }
-
 }

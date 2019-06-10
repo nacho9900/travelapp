@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.ActivityService;
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.model.DataPair;
 import ar.edu.itba.paw.model.Place;
+import ar.edu.itba.paw.model.Trip;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,22 +33,17 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Activity create(String name, String category, long placeId) {
-        return ad.create(name, category, placeId);
+    public Activity create(String name, String category, Place place, Trip trip) {
+        return ad.create(name, category, place, trip);
     }
 
     @Override
-    public List<Activity> getTripActivities(long tripId) {
-        return ad.getTripActivities(tripId);
-    }
-
-    @Override
-    public List<DataPair<Activity, Place>> getTripActivitiesDetails(long tripId) {
-        List<Activity> activities = ad.getTripActivities(tripId);
+    public List<DataPair<Activity, Place>> getTripActivitiesDetails(Trip trip) {
+        List<Activity> activities = trip.getActivities();
         List<DataPair<Activity, Place>> dataPairList = new ArrayList<>();
         for(Activity activity : activities) {
-            Optional<Place> optionalPlace = ad.getActivityPlace(activity.getId());
-            optionalPlace.ifPresent(place -> dataPairList.add(new DataPair<>(activity, place)));
+            Place place = activity.getPlace();
+            dataPairList.add(new DataPair<>(activity, place));
 
         }
         return dataPairList;

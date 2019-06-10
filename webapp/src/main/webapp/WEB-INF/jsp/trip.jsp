@@ -78,17 +78,12 @@
                     <spring:message code="trip.members"/>
                 </h3>
                 <div class="list-group">
-                    <c:forEach items="${usersAndRoles}" var="ur">
-                        <a href="<c:url value='/home/profile/${ur.key.id}'/>"
-                           class="list-group-item list-group-item-action flex-column align-items-start">
+                    <c:forEach items="${users}" var="ur">
+                        <a class="list-group-item list-group-item-action flex-column align-items-start"
+                            href="<c:url value='/home/profile/${ur.id}'/>">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">
-                                    <c:out value="${ur.key.firstname}"/> <c:out value="${ur.key.lastname}"/>
-                                </h5>
+                                <h5 class="mb-1"><c:out value="${ur.firstname}"/> <c:out value="${ur.lastname}"/></h5>
                             </div>
-                            <c:if test="${ur.value != 'MEMBER'}">
-                                <small id="adminTag"><c:out value="${ur.value}"/></small>
-                            </c:if>
                         </a>
                     </c:forEach>
                 </div>

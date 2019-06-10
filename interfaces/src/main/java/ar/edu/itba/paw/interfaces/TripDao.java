@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.interfaces;
 
+
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.User;
 
 import java.util.Calendar;
 import java.util.List;
@@ -8,13 +10,13 @@ import java.util.Optional;
 
 public interface TripDao {
 
-    public Trip create(long startPlaceId, String name, String description, Calendar startDate, Calendar endDate);
+    public Trip create(long userId, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate);
     public Optional<Trip> findById(long id);
-    public List<Trip> findUserTrips(long userId, int pageNum);
-    public boolean userIsAdmin(long userId, long tripId);
-    public boolean isTravelling(long userId, long tripId);
-    public List<Trip> getAllTrips();
-    public int countUserTrips(long userId);
     public List<Trip> findByName(String name);
+    public List<Trip> getAllTrips();
+
+    public List<Trip> findUserTrips(long userId, int pageNum);
+    public List<Trip> findUserCreatedTrips(long userId, int pageNum);
+
 
 }

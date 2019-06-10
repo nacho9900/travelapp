@@ -32,8 +32,5 @@ public class PlaceServiceImpl implements PlaceService {
         return pd.findByGoogleId(googleId);
     }
 
-    @Override
-    public List<Place> getTripPlaces(long tripId) {
-        return pd.getTripPlaces(tripId);
-    }
+
 }
