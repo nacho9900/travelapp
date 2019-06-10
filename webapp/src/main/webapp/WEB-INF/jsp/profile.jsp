@@ -32,6 +32,7 @@
                                 value="${userProfile.lastname}"/> <c:out value="${userProfile.nationality}"/></h5>
                     </div>
                     <div class="card-body">
+                        <p class="card-text"><c:out value="${userProfile.biography}"/></p>
                         <p class="card-text"><c:out value="${userProfile.email}"/></p>
                         <p class="card-text"><c:out value="${birthday}"/></p>
                         <c:if test="${user.id == userProfile.id}">

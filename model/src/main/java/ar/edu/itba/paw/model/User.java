@@ -27,6 +27,12 @@ public class User {
     @Temporal(TemporalType.DATE)
     private Calendar birthday;
 
+    @Column(length = 500, nullable = true)
+    private String biography;
+
+
+
+
     //////////////
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
@@ -151,5 +157,13 @@ public class User {
     @Override
     public String toString() {
         return "[" + id + "]" +  firstname + " " + lastname;
+    }
+
+    public String getBiography() {
+        return biography;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
     }
 }

@@ -35,6 +35,11 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    public boolean update(User u) {
+        return em.merge(u) != null;
+    }
+
+    @Override
     public Optional<User> findById(long id) {
         return Optional.of(em.find(User.class, id));
     }

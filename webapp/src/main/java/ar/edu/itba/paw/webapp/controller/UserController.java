@@ -197,6 +197,8 @@ public class UserController extends MainController{
         if(u.isPresent()) {
             UserPicture userPicture = ups.create(u.get(), imageBytes);
             String redirectFormat = String.format("redirect:/home/profile/%d", userId);
+            user.setBiography(form.getBiography());
+            us.update(user);
             mav.setViewName(redirectFormat);
         }
         return mav;

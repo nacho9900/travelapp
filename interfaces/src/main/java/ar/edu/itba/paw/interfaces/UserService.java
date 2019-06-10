@@ -12,11 +12,11 @@ import java.util.Optional;
 
 public interface UserService {
 
-    public Optional<User> findByid(final long id);
-    public Optional<User> findByUsername(final String email);
-    public User create(final String firstname, final String lastname, final String email, final String password,
-                       final Calendar birthday, final String nationality);
-
-    public void persistTrip(User user, Trip trip);
+    Optional<User> findByid(final long id);
+    Optional<User> findByUsername(final String email);
+    User create(final String firstname, final String lastname, final String email, final String password,
+                final Calendar birthday, final String nationality);
+    boolean update(User user);
+    void persistTrip(User user, Trip trip);
 
 }

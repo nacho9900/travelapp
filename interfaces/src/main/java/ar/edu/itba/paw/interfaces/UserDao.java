@@ -10,10 +10,10 @@ import java.util.Optional;
 
 public interface UserDao {
 
-    public Optional<User> findById(final long id);
-    public Optional<User> findByUsername(final String email);
-    public User create(final String firstname, final String lastname, final String email, final String password,
-                       Calendar birthday, final String nationality);
-    public void persistTrip(User user, Trip trip);
-
+    Optional<User> findById(final long id);
+    Optional<User> findByUsername(final String email);
+    User create(final String firstname, final String lastname, final String email, final String password,
+                Calendar birthday, final String nationality);
+    void persistTrip(User user, Trip trip);
+    boolean update(User u);
 }
