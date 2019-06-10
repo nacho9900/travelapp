@@ -156,7 +156,8 @@ public class TripController extends MainController{
 
         List<DataPair<Activity, ar.edu.itba.paw.model.Place>> tripActAndPlace = as.getTripActivitiesDetails(trip);
         List <ar.edu.itba.paw.model.Place> tripPlaces = ts.findTripPlaces(trip);
-
+        Optional<ar.edu.itba.paw.model.Place> sPlaceOpt = ps.findById(trip.getStartPlaceId());
+        sPlaceOpt.ifPresent(tripPlaces::add);
         List<User> tripMembers = trip.getUsers();
         User u = us.findByid(trip.getAdminId()).get();
 
@@ -243,14 +244,11 @@ public class TripController extends MainController{
         return mav;
     }
 
-
     @RequestMapping("/home/trip/{tripId}/join")
     public ModelAndView joinTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ModelAndView mav = new ModelAndView("trip");
-        Optional<User> userOptional = us.findByid(user.getId());
-        Optional<Trip> tripOptional = ts.findById(tripId);
-        tripOptional.ifPresent(trip -> trip.getUsers().add(user));
-        userOptional.ifPresent(value -> value.getTrips().add(tripOptional.get()));
+        System.out.println("IN JOIN TRIP METHOD");
+        ts.addUserToTrip(user.getId(), tripId);
         String redirect = String.format("redirect:/home/trip/%d", tripId);
         mav.setViewName(redirect);
         return mav;

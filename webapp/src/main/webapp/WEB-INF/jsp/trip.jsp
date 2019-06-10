@@ -79,8 +79,11 @@
                 </h3>
                 <div class="list-group">
                     <c:forEach items="${users}" var="ur">
-                        <a href="<c:url value='/home/profile/${ur.id}'/>">
-                            <c:out value="${ur.firstname}"/> <c:out value="${ur.lastname}"/>
+                        <a class="list-group-item list-group-item-action flex-column align-items-start"
+                            href="<c:url value='/home/profile/${ur.id}'/>">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1"><c:out value="${ur.firstname}"/> <c:out value="${ur.lastname}"/></h5>
+                            </div>
                         </a>
                     </c:forEach>
                 </div>

@@ -17,4 +17,6 @@ public interface UserService {
     public User create(final String firstname, final String lastname, final String email, final String password,
                        final Calendar birthday, final String nationality);
 
+    public void persistTrip(User user, Trip trip);
+
 }

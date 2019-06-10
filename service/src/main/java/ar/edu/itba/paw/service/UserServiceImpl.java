@@ -35,4 +35,9 @@ public class UserServiceImpl implements UserService {
         return userDao.create(firstname, lastname, email, password, birthday, nationality);
     }
 
+    @Override
+    public void persistTrip(User user, Trip trip) {
+        userDao.persistTrip(user, trip);
+    }
+
 }

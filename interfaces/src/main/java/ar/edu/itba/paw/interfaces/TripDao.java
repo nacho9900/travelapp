@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces;
 
 
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.User;
 
 import java.util.Calendar;
 import java.util.List;
@@ -16,5 +17,6 @@ public interface TripDao {
 
     public List<Trip> findUserTrips(long userId, int pageNum);
     public List<Trip> findUserCreatedTrips(long userId, int pageNum);
+
 
 }

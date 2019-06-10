@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -66,6 +67,7 @@ public class TripHibernateDao implements TripDao {
         System.out.println("userCreatedTrips: " + query.getResultList());
         return query.getResultList();
     }
+
 
 
 }

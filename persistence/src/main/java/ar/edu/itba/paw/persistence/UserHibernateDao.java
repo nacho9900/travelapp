@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.UserRole;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -22,6 +22,16 @@ public class UserHibernateDao implements UserDao {
        final User user = new User(firstname, lastname, email, password, birthday, nationality);
        em.persist(user);
        return user;
+    }
+
+    @Override
+    public void persistTrip(User user, Trip trip) {
+
+        System.out.println("In DAO, persist trip method");
+        user.getTrips().add(trip);
+        System.out.println("ADDED TRIP TO LIST");
+        em.persist(trip);
+        em.persist(user);
     }
 
     @Override

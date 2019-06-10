@@ -17,4 +17,6 @@ public interface TripService {
     public List<Trip> findByName(String name);
     public Set<Trip> getAllUserTrips(User user, int pageNum);
     public List<Place> findTripPlaces(Trip trip);
+
+    public void addUserToTrip(long userId, long tripId);
 }

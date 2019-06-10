@@ -2,6 +2,7 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.interfaces.TripService;
+import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
@@ -18,6 +19,9 @@ public class TripServiceImpl implements TripService {
 
     @Autowired
     private TripDao td;
+
+    @Autowired
+    private UserDao ud;
 
     @Override
     public Trip create(long userId, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
@@ -58,6 +62,17 @@ public class TripServiceImpl implements TripService {
             places.add(activity.getPlace());
         }
         return places;
+    }
+
+    @Override
+    public void addUserToTrip(long userId, long tripId) {
+        Optional<User> ou = ud.findById(userId);
+        Optional<Trip> ot = td.findById(tripId);
+        if(ou.isPresent() && ot.isPresent()) {
+            ou.get().getTrips().add(ot.get());
+            ot.get().getUsers().add(ou.get());
+        }
+
     }
 
 
