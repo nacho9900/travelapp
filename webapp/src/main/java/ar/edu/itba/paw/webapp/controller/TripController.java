@@ -132,6 +132,11 @@ public class TripController extends MainController{
 
         modelPlace = maybePlace.orElseGet(() -> ps.create(place.getPlaceId(), place.getName(), place.getLatitude(),
                 place.getLongitude(), place.getAddress()));
+
+        System.out.println("START DATE FROM INPUT: " + form.getStartDate());
+        System.out.println("END DATE FROM INPUT: " + form.getEndDate());
+        System.out.println("START DATE FROM CALENDAR: " + DateManipulation.stringToCalendar(form.getStartDate()));
+        System.out.println("END DATE FROM CALENDAR: " + DateManipulation.stringToCalendar(form.getEndDate()));
         Trip trip = ts.create(user.getId(), modelPlace.getId(), form.getName(), form.getDescription(),
                 DateManipulation.stringToCalendar(form.getStartDate()),
                 DateManipulation.stringToCalendar(form.getEndDate()));
@@ -170,24 +175,13 @@ public class TripController extends MainController{
             isTravelling = true;
         }
 
-        System.out.println("has trip picture" + tripPictureService.findByTripId(tripId).isPresent());
         mav.addObject("hasTripPicture", tripPictureService.findByTripId(tripId).isPresent());
-
-        System.out.println("is empty" + (tripActAndPlace.size() == 0));
         mav.addObject("isEmpty", tripActAndPlace.size() == 0);
         mav.addObject("isTravelling", isTravelling );
         mav.addObject("isAdmin", isAdmin);
-
-        System.out.println("PLACES: " + tripPlaces);
         mav.addObject("places", tripPlaces);
-
-        System.out.println("USERS: " + tripMembers);
         mav.addObject("users", tripMembers);
-
-        System.out.println("ACT AND PLACES: " + tripActAndPlace);
         mav.addObject("actAndPlaces", tripActAndPlace);
-
-        System.out.println("TRIP: " + trip);
         mav.addObject("trip", trip);
         mav.addObject("startDate", trip.getStartDate().getTime());
         mav.addObject("endDate", trip.getEndDate().getTime());
@@ -247,7 +241,6 @@ public class TripController extends MainController{
     @RequestMapping("/home/trip/{tripId}/join")
     public ModelAndView joinTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ModelAndView mav = new ModelAndView("trip");
-        System.out.println("IN JOIN TRIP METHOD");
         ts.addUserToTrip(user.getId(), tripId);
         String redirect = String.format("redirect:/home/trip/%d", tripId);
         mav.setViewName(redirect);
