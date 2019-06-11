@@ -55,11 +55,13 @@
                  <a class="nav-link" href="${about}"><spring:message code="header.aboutUs"/> </a>
             </li>
         </ul>
+        <c:if test="${user != null}">
         <form action="${searchURL}" method="get" class="form-inline my-2 my-lg-0">
             <input id="nameInput" name="nameInput" class="form-control mr-sm-2" type="search" placeholder="<spring:message code="header.searchMessage"/>"
                    aria-label="Search">
             <button class="btn btn-success my-2 my-sm-0" type="submit"><spring:message code="header.searchBtn"/></button>
         </form>
+        </c:if>
         <c:choose>
             <c:when test="${user == null}">
                 <a id="signinButton" style="margin-left: 15px" class="btn btn-success my-2 my-sm-0" href="${signinURL}"><spring:message code="header.signInBtn"/></a>
