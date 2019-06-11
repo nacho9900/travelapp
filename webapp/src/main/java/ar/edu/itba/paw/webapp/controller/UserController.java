@@ -5,6 +5,11 @@ import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.form.EditProfileForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
@@ -39,6 +45,9 @@ public class UserController extends MainController{
 
     @Autowired
     private TripPicturesService tripPicturesService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     private static final long MAX_UPLOAD_SIZE = 5242880;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -72,7 +81,7 @@ public class UserController extends MainController{
 
     @RequestMapping(value = "/signup", method = {RequestMethod.POST})
     public ModelAndView validateSignUp(@Valid @ModelAttribute("signupForm") final UserCreateForm form,
-                                       final BindingResult errors) {
+                                       final BindingResult errors, HttpServletRequest request) {
 
         ModelAndView mav = new ModelAndView("signup");
         if(errors.hasErrors()) {
@@ -92,7 +101,12 @@ public class UserController extends MainController{
         User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), form.getPassword(),
                 DateManipulation.stringToCalendar(form.getBirthday()), form.getNationality());
 
-        mav.setViewName("redirect:/signin");
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
+        authToken.setDetails(new WebAuthenticationDetails(request));
+        Authentication authentication = authenticationManager.authenticate(authToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        
+        mav.setViewName("redirect:/home");
         return mav;
     }
 
