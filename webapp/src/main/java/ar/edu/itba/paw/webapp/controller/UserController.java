@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.form.EditProfileForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
+import ar.edu.itba.paw.webapp.form.UserUpdateBioForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -147,18 +149,46 @@ public class UserController extends MainController{
 
     @RequestMapping(value = "/home/profile/{userId}/edit", method = {RequestMethod.GET})
     public ModelAndView editProfileGet(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
-                                @ModelAttribute("editProfileForm") final EditProfileForm form) {
+                                @ModelAttribute("editProfileForm") final EditProfileForm form,
+                                @ModelAttribute("UserUpdateBioForm") UserUpdateBioForm userUpdateBioForm) {
         ModelAndView mav = new ModelAndView("editProfile");
         if(user.getId() != userId) {
             mav.setViewName("403");
             return mav;
         }
+
+        userUpdateBioForm.setBiography(user.getBiography());
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/home/profile/{userId}/editBio", method = {RequestMethod.POST})
+    public ModelAndView editBiography(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
+                                      @Valid @ModelAttribute("UserUpdateBioForm")UserUpdateBioForm userUpdateBioForm,
+                                      @ModelAttribute("editProfileForm") final EditProfileForm form,
+                                      final BindingResult errors) {
+        ModelAndView mav = new ModelAndView("editProfile");
+        if(user.getId() != userId) {
+            mav.setViewName("403");
+            return mav;
+        }
+        if(errors.hasErrors()) {
+            return mav;
+        }
+
+        user.setBiography(userUpdateBioForm.getBiography());
+        if(us.update(user)) {
+            String redirectFormat = String.format("redirect:/home/profile/%d", userId);
+            mav.setViewName(redirectFormat);
+        }
+
         return mav;
     }
 
     @RequestMapping(value = "/home/profile/{userId}/edit", method = {RequestMethod.POST})
     public ModelAndView profile(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
                                 @Valid @ModelAttribute("editProfileForm") final EditProfileForm form,
+                                @ModelAttribute("UserUpdateBioForm")UserUpdateBioForm userUpdateBioForm,
                                 final BindingResult errors) {
 
         ModelAndView mav = new ModelAndView("editProfile");
@@ -166,6 +196,9 @@ public class UserController extends MainController{
             mav.setViewName("403");
             return mav;
         }
+
+        user.setBiography(userUpdateBioForm.getBiography());
+
         if(errors.hasErrors()) {
             return mav;
         }
@@ -202,8 +235,6 @@ public class UserController extends MainController{
         if(u.isPresent()) {
             UserPicture userPicture = ups.create(u.get(), imageBytes);
             String redirectFormat = String.format("redirect:/home/profile/%d", userId);
-            user.setBiography(form.getBiography());
-            us.update(user);
             mav.setViewName(redirectFormat);
         }
         return mav;

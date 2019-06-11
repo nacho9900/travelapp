@@ -6,7 +6,7 @@
 <head>
     <%@include file="head.jsp" %>
     <c:url value="/resources/icons/defaultPP.png" var="defaultPP"/>
-    <c:url value="/home/profile/${user.id}/edit" var="editProfile"/>
+    <c:url value="/home/profile/${user.id}/edit" var="editProfilePicture"/>
     <link href="${bootstrapCss}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <title><spring:message code="profile.title" arguments="${userProfile.firstname}"/></title>
@@ -37,7 +37,7 @@
                         <p class="card-text"><c:out value="${birthday}"/></p>
                         <c:if test="${user.id == userProfile.id}">
                             <div class="card-footer">
-                                <a href="${editProfile}" class="btn btn-primary btn-success">
+                                <a href="${editProfilePicture}" class="btn btn-primary btn-success">
                                     <spring:message code="profile.editProfileBtn"/>
                                 </a>
                             </div>
