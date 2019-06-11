@@ -16,13 +16,9 @@
     </title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <script src="${createTripJs}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap">
-    </script>
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-
 <div class="container-fluid" id="main-container">
     <div class="container box" style="margin-top: 20px;">
         <div class="row">
@@ -69,5 +65,8 @@
         </div>
     </div>
 </div>
+<script src="${createTripJs}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap">
+</script>
 </body>
 </html>

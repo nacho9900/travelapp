@@ -14,7 +14,7 @@ public class TripCreateForm {
     @Size(min = 5, max = 100)
     private String placeInput;
 
-    @Size(min = 5, max = 100)
+    @Size(min = 5, max = 50)
     private String name;
 
     @Size(min = 25, max = 100)
