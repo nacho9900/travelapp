@@ -1,32 +1,27 @@
 package ar.edu.itba.paw.model;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
 public class DateManipulation {
 
-    /*Utility class, enforce noninstantiability*/
+    /* Utility class, enforce non-instantiability */
     private DateManipulation() {
-
     }
 
-    public static Calendar dateToCalendar(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public static LocalDate stringToLocalDate(String dateString) {
+        LocalDate date = LocalDate.parse(dateString, formatter);
+        return date;
     }
 
-    public static Calendar stringToCalendar(String string) {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            Date date = sdf.parse(string);
-            cal.setTime(date);
-        }
-        catch(Exception e) {
-        }
-        return cal;
+    public static LocalDate dateToLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
 }

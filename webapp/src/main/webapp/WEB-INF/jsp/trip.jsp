@@ -3,6 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="format" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html>
 <head>
@@ -30,11 +31,11 @@
                     <p class="text-white"><c:out value="${trip.description}"/></p>
                     <p class="text-white">
                         <spring:message code="trip.start"/>
-                        <format:formatDate value="${startDate}" type="date" pattern="dd/MM/yyyy"/>
+                        <c:out value="${startDate.format(formatter)}"/>
                     </p>
                     <p class="text-white">
                         <spring:message code="trip.end"/>
-                        <format:formatDate value="${endDate}" type="date" pattern="dd/MM/yyyy"/>
+                        <c:out value="${endDate.format(formatter)}"/>
                     </p>
                 </div>
                 <c:if test="${hasTripPicture}">

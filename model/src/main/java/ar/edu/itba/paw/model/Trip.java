@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,13 +28,10 @@ public class Trip {
     private String description;
 
     @Column(name = "start_date", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Calendar startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Calendar endDate;
-
+    private LocalDate endDate;
 
     /////////////////
 
@@ -48,16 +46,15 @@ public class Trip {
     private TripPicture profilePicture;
 
 
-
     /////////////////
 
 
-    public Trip(long id, long adminId, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
+    public Trip(long id, long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate) {
         this(adminId, startPlaceId, name, description, startDate, endDate);
         this.id = id;
     }
 
-    public Trip(long adminId, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
+    public Trip(long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate) {
         super();
         this.adminId = adminId;
         this.startPlaceId = startPlaceId;
@@ -108,19 +105,19 @@ public class Trip {
         this.description = description;
     }
 
-    public Calendar getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Calendar startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Calendar getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Calendar endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

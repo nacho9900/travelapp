@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.form.EditProfileForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ar.edu.itba.paw.webapp.form.UserUpdateBioForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +27,7 @@ import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,8 +53,11 @@ public class UserController extends MainController{
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
     private static final long MAX_UPLOAD_SIZE = 5242880;
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @RequestMapping("/")
     public ModelAndView index() {
@@ -67,7 +72,8 @@ public class UserController extends MainController{
         for(Trip trip : trips) {
             list.add(new DataPair<>(trip, tripPicturesService.findByTripId(trip.getId()).isPresent()));
         }
-        mav.addObject("dateFormat", dateFormat);
+        //check this
+        mav.addObject("dateFormat", formatter);
         mav.addObject("tripList", list);
         return mav;
     }
@@ -101,13 +107,12 @@ public class UserController extends MainController{
 
         ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname());
         User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), form.getPassword(),
-                DateManipulation.stringToCalendar(form.getBirthday()), form.getNationality());
+                DateManipulation.stringToLocalDate(form.getBirthday()), form.getNationality());
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         authToken.setDetails(new WebAuthenticationDetails(request));
         Authentication authentication = authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        
         mav.setViewName("redirect:/home");
         return mav;
     }
@@ -125,7 +130,8 @@ public class UserController extends MainController{
         if(userPictureOptional.isPresent()) {
             mav.addObject("hasProfilePicture", true);
         }
-        String birthday = dateFormat.format(profileUser.get().getBirthday().getTime());
+        String birthday = profileUser.get().getBirthday().format(formatter);
+        LOGGER.debug("User profile birthday {}", birthday);
         mav.addObject("birthday", birthday);
         mav.addObject("userProfile", profileUser.get());
         return mav;

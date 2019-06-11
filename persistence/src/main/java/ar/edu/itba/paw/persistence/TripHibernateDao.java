@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +20,7 @@ public class TripHibernateDao implements TripDao {
     EntityManager em;
 
     @Override
-    public Trip create(long userId, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
+    public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate) {
         Trip trip = new Trip(userId, startPlaceId, name, description, startDate, endDate);
         em.persist(trip);
         return trip;

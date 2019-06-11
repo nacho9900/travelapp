@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Repository
@@ -18,20 +18,10 @@ public class UserHibernateDao implements UserDao {
     private EntityManager em;
 
     @Override
-    public User create(String firstname, String lastname, String email, String password, Calendar birthday, String nationality) {
+    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
        final User user = new User(firstname, lastname, email, password, birthday, nationality);
        em.persist(user);
        return user;
-    }
-
-    @Override
-    public void persistTrip(User user, Trip trip) {
-
-        System.out.println("In DAO, persist trip method");
-        user.getTrips().add(trip);
-        System.out.println("ADDED TRIP TO LIST");
-        em.persist(trip);
-        em.persist(user);
     }
 
     @Override

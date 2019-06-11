@@ -25,7 +25,7 @@
                         <a href="${tripUrl}" class="list-group-item list-group-item-action flex-column align-items-start">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1"><c:out value="${dataPair.key.name}"/></h5>
-                                <small>${dateFormat.format(dataPair.key.startDate.getTime())}</small>
+                                <small>${dataPair.key.startDate.format(formatter)}</small>
                             </div>
                             <c:if test="${dataPair.value.value}">
                                 <c:url value="/home/trip/${dataPair.key.id}/image" var="tripImageURL"/>
