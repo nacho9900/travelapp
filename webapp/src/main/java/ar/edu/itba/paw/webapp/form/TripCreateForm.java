@@ -1,6 +1,13 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.model.DateManipulation;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+
+
 
 public class TripCreateForm {
 
@@ -13,8 +20,12 @@ public class TripCreateForm {
     @Size(min = 25, max = 100)
     private String description;
 
+    @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String startDate;
 
+    @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String endDate;
 
     public String getPlaceInput() {
@@ -55,5 +66,12 @@ public class TripCreateForm {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public boolean validateDates() {
+        LocalDate sDate = DateManipulation.stringToLocalDate(startDate);
+        LocalDate eDate = DateManipulation.stringToLocalDate(endDate);
+        LocalDate now = LocalDate.now();
+        return  now.isBefore(sDate) && sDate.isBefore(eDate);
     }
 }

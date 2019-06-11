@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -97,6 +96,10 @@ public class UserController extends MainController{
         }
         if(!form.checkPswRepeat()) {
             mav.addObject("pswRepeatError", true);
+            return mav;
+        }
+        if(!form.checkBirthday()) {
+            mav.addObject("invalidBirthday", true);
             return mav;
         }
         Optional userOpt = us.findByUsername(form.getEmail());

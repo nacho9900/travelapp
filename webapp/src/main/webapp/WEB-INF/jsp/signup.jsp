@@ -50,6 +50,11 @@
                     <spring:message code="signUp.enterEmailPh" var="enterEmailPh"/>
                     <form:input type="text" placeholder="${enterEmailPh}" name="email" path="email"/>
 
+                    <c:if test="${invalidBirthday}">
+                        <div class="alert alert-warning" style="margin-top: 5px;">
+                            <spring:message code="signUp.invalidBirthday"/>
+                        </div>
+                    </c:if>
                     <form:errors path="birthday" cssClass="alert alert-warning" element="p"/>
                     <div class="form-group">
                         <form:label path="birthday" for="birthday" cssClass="text-white">
