@@ -52,11 +52,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return resolver;
     }
 
-    @Bean
-    public DateManipulation dateManipulation() {
-        return new DateManipulation();
-    }
-
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");

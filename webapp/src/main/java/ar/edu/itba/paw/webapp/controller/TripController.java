@@ -42,25 +42,19 @@ public class TripController extends MainController{
     private static final long MAX_UPLOAD_SIZE = 5242880;
 
     @Autowired
-    ActivityService as;
+    private ActivityService as;
 
     @Autowired
-    TripService ts;
+    private TripService ts;
 
     @Autowired
-    UserService us;
+    private UserService us;
 
     @Autowired
-    PlaceService ps;
+    private PlaceService ps;
 
     @Autowired
-    TripPicturesService tripPictureService;
-
-
-    @PersistenceContext
-    EntityManager em;
-
-
+    private TripPicturesService tripPictureService;
 
     @RequestMapping("/home/create-trip")
     public ModelAndView createTripGet(@ModelAttribute("createTripForm") final TripCreateForm form) {

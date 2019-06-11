@@ -5,7 +5,6 @@ import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.form.EditProfileForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +26,10 @@ import java.util.Optional;
 public class UserController extends MainController{
 
     @Autowired
-    UserPicturesService ups;
+    private UserPicturesService ups;
 
     @Autowired
     private MailingService ms;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserService us;
@@ -45,8 +41,6 @@ public class UserController extends MainController{
     private TripPicturesService tripPicturesService;
 
     private static final long MAX_UPLOAD_SIZE = 5242880;
-
-
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @RequestMapping("/")
@@ -95,8 +89,7 @@ public class UserController extends MainController{
         }
 
         ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname());
-        String encodedPassword =  passwordEncoder.encode(form.getPassword());
-        User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), encodedPassword,
+        User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), form.getPassword(),
                 DateManipulation.stringToCalendar(form.getBirthday()), form.getNationality());
 
         mav.setViewName("redirect:/signin");
