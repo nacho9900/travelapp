@@ -48,6 +48,12 @@
                     <form:textarea class="form-control" type="text" path="description" name="trip_desc"
                                    placeholder="${descriptionPh}"/>
 
+                    <c:if test="${invalidDates}">
+                        <div class="alert alert-warning" style="margin-top: 5px;">
+                            <spring:message code="createTrip.invalidDates"/>
+                        </div>
+                    </c:if>
+
                     <form:errors path="startDate" cssClass="alert alert-warning" element="p"/>
                     <div class="form-group">
                         <form:label path="startDate" for="start_date" cssClass="text-white">

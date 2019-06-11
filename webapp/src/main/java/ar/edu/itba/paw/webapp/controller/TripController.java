@@ -88,7 +88,6 @@ public class TripController extends MainController{
         return mav;
     }
 
-
     @RequestMapping(value = "/home/create-trip", method = {RequestMethod.POST})
     public ModelAndView createTripPost(@ModelAttribute("user") User user,
                                        @Valid @ModelAttribute("createTripForm") final TripCreateForm form,
@@ -96,13 +95,19 @@ public class TripController extends MainController{
         List<Place> places;
         ar.edu.itba.paw.model.Place modelPlace;
         ModelAndView mav = new ModelAndView("createTrip");
-        if(errors.hasErrors()) return mav;
-        LOGGER.debug("NO ERRORS IN CREATE TRIP FORM");
+        if(errors.hasErrors()) {
+            return mav;
+        }
+        if(!form.validateDates()) {
+            mav.addObject("invalidDates", true);
+            return mav;
+        }
+        LOGGER.debug("No errors in create trip form");
         try {
             places = client.getPlacesByQuery(form.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
         }
         catch(GooglePlacesException gpe) {
-            LOGGER.debug("INVALID GOOGLE PLACES QUERY LOCATION");
+            LOGGER.debug("Invalid google maps query location");
             mav.addObject("invalidPlace", true);
             return mav;
         }
