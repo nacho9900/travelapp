@@ -9,9 +9,11 @@ import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -28,7 +30,7 @@ public class TripServiceImpl implements TripService {
     private UserDao ud;
 
     @Override
-    public Trip create(long userId, long startPlaceId, String name, String description, Calendar startDate, Calendar endDate) {
+    public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate) {
         return td.create(userId, startPlaceId, name, description, startDate, endDate);
     }
 

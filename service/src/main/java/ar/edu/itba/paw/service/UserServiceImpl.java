@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User create(String firstname, String lastname, String email, String password, Calendar birthday, String nationality) {
+    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
         return userDao.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality);
     }
 
@@ -42,9 +43,5 @@ public class UserServiceImpl implements UserService {
         return userDao.update(user);
     }
 
-    @Override
-    public void persistTrip(User user, Trip trip) {
-        userDao.persistTrip(user, trip);
-    }
 
 }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.model;
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -24,12 +25,10 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Calendar birthday;
+    private LocalDate birthday;
 
     @Column(length = 500, nullable = true)
     private String biography;
-    
 
     //////////////
 
@@ -39,18 +38,17 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     private UserPicture profilePicture;
 
-
     /////////////
 
     @Column(length = 100, nullable = false)
     private String nationality;
 
-    public User(long id, String firstname, String lastname, String email, String password, Calendar birthday, String nationality) {
+    public User(long id, String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
         this(firstname, lastname, email, password, birthday, nationality);
         this.id = id;
     }
 
-    public User(String firstname, String lastname, String email, String password, Calendar birthday, String nationality) {
+    public User(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
         super();
         this.firstname = firstname;
         this.lastname = lastname;
@@ -63,7 +61,6 @@ public class User {
     /* package */ User() {
         // Just for Hibernate
     }
-
 
     public long getId() {
         return id;
@@ -101,11 +98,11 @@ public class User {
         this.password = password;
     }
 
-    public Calendar getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Calendar birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 
@@ -154,7 +151,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "[" + id + "]" +  firstname + " " + lastname;
+        return "USER = [" + id + "]" +  firstname + " " + lastname;
     }
 
     public String getBiography() {

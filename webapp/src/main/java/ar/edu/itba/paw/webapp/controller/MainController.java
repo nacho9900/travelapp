@@ -31,7 +31,7 @@ public class MainController  {
         }
 
         final Optional<User> user = us.findByUsername(auth.getName());
-        LOGGER.debug("Current logged user is {}",user.get());
+        LOGGER.debug("Current logged user is {}", user.get());
         return user.get();
     }
 }

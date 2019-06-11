@@ -18,15 +18,12 @@ import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
 
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
@@ -36,7 +33,7 @@ public class TripController extends MainController{
 
     private GooglePlaces client = new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private static final int MAX_TRIPS_PAGE = 4;
     private static final long MAX_UPLOAD_SIZE = 5242880;
@@ -87,7 +84,7 @@ public class TripController extends MainController{
         mav.addObject("pageQty", pageQty);
         mav.addObject("isEmpty", dataPairList.isEmpty());
         mav.addObject("userTripsList", dataPairList);
-        mav.addObject("dateFormat", dateFormat);
+        mav.addObject("formatter", formatter);
         return mav;
     }
 
@@ -120,8 +117,8 @@ public class TripController extends MainController{
 
 
         Trip trip = ts.create(user.getId(), modelPlace.getId(), form.getName(), form.getDescription(),
-                DateManipulation.stringToCalendar(form.getStartDate()),
-                DateManipulation.stringToCalendar(form.getEndDate()));
+                DateManipulation.stringToLocalDate(form.getStartDate()),
+                DateManipulation.stringToLocalDate(form.getEndDate()));
 
         String redirectFormat = String.format("redirect:/home/trip/%d", trip.getId());
         mav.setViewName(redirectFormat);
@@ -137,26 +134,19 @@ public class TripController extends MainController{
             mav.setViewName("404");
             return mav;
         }
-
         Trip trip = maybeTrip.get();
-
-
         List<DataPair<Activity, ar.edu.itba.paw.model.Place>> tripActAndPlace = as.getTripActivitiesDetails(trip);
         List <ar.edu.itba.paw.model.Place> tripPlaces = ts.findTripPlaces(trip);
         Optional<ar.edu.itba.paw.model.Place> sPlaceOpt = ps.findById(trip.getStartPlaceId());
         sPlaceOpt.ifPresent(tripPlaces::add);
         List<User> tripMembers = trip.getUsers();
         User u = us.findByid(trip.getAdminId()).get();
-
-
-
         tripMembers.add(u);
         boolean isAdmin = trip.getAdminId() == user.getId();
         boolean isTravelling = false;
         if(isAdmin || trip.getUsers().contains(user)) {
             isTravelling = true;
         }
-
         mav.addObject("hasTripPicture", tripPictureService.findByTripId(tripId).isPresent());
         mav.addObject("isEmpty", tripActAndPlace.size() == 0);
         mav.addObject("isTravelling", isTravelling );
@@ -165,8 +155,9 @@ public class TripController extends MainController{
         mav.addObject("users", tripMembers);
         mav.addObject("actAndPlaces", tripActAndPlace);
         mav.addObject("trip", trip);
-        mav.addObject("startDate", trip.getStartDate().getTime());
-        mav.addObject("endDate", trip.getEndDate().getTime());
+        mav.addObject("formatter", formatter);
+        mav.addObject("startDate", trip.getStartDate());
+        mav.addObject("endDate", trip.getEndDate());
         return mav;
     }
 

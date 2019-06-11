@@ -19,7 +19,7 @@
                 <a href="${tripUrl}" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1"><c:out value="${trip.key.name}"/></h5>
-                        <small>${dateFormat.format(trip.key.startDate.time)}</small>
+                        <small>${trip.key.startDate.format(dateFormat)}</small>
                     </div>
                     <c:if test="${trip.value}">
                         <c:url value="/home/trip/${trip.key.id}/image" var="tripImageURL"/>
