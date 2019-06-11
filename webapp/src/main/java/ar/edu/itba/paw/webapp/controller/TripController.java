@@ -71,17 +71,8 @@ public class TripController extends MainController{
     public ModelAndView getUserTrips(@ModelAttribute("user") User user,  @PathVariable(value = "pageNum") int pageNum) {
         ModelAndView mav = new ModelAndView("userTrips");
 
-        System.out.println("IN home/trips/" + pageNum);
-
-        ////////
         User u = us.findByid(user.getId()).get();
-        ////////
-
-        System.out.println("FOUND user: " + u);
-
         Set<Trip> userTrips =  ts.getAllUserTrips(u, pageNum);
-
-        System.out.println("AFTER GET ALL USER TRIPS");
         int userTripsQty = u.getTrips().size();
 
         int requiredPages = (int) Math.ceil(userTripsQty/(double)MAX_TRIPS_PAGE);
@@ -133,10 +124,7 @@ public class TripController extends MainController{
         modelPlace = maybePlace.orElseGet(() -> ps.create(place.getPlaceId(), place.getName(), place.getLatitude(),
                 place.getLongitude(), place.getAddress()));
 
-        System.out.println("START DATE FROM INPUT: " + form.getStartDate());
-        System.out.println("END DATE FROM INPUT: " + form.getEndDate());
-        System.out.println("START DATE FROM CALENDAR: " + DateManipulation.stringToCalendar(form.getStartDate()));
-        System.out.println("END DATE FROM CALENDAR: " + DateManipulation.stringToCalendar(form.getEndDate()));
+
         Trip trip = ts.create(user.getId(), modelPlace.getId(), form.getName(), form.getDescription(),
                 DateManipulation.stringToCalendar(form.getStartDate()),
                 DateManipulation.stringToCalendar(form.getEndDate()));
@@ -166,7 +154,7 @@ public class TripController extends MainController{
         List<User> tripMembers = trip.getUsers();
         User u = us.findByid(trip.getAdminId()).get();
 
-        System.out.println(u);
+
 
         tripMembers.add(u);
         boolean isAdmin = trip.getAdminId() == user.getId();
@@ -203,25 +191,21 @@ public class TripController extends MainController{
             String contentType = tripPicture.getContentType();
             if(!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
                 redirectAttributes.addFlashAttribute("invalidContentError", true);
-                System.out.println("invalid content error");
                 return mav;
             }
             else if(tripPicture.getSize() > MAX_UPLOAD_SIZE) {
                 redirectAttributes.addFlashAttribute("fileSizeError", true);
-                System.out.println("file size error");
                 return mav;
             }
             try {
                 imageBytes = tripPicture.getBytes();
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("generalError", true);
-                System.out.println("general error 1");
                 return mav;
             }
         }
         else {
             redirectAttributes.addFlashAttribute("generalError", true);
-            System.out.println("general error 2");
             return mav;
         }
         if(tripPictureService.findByTripId(tripId).isPresent()) {

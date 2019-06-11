@@ -6,6 +6,11 @@ import java.util.Date;
 
 public class DateManipulation {
 
+    /*Utility class, enforce noninstantiability*/
+    private DateManipulation() {
+
+    }
+
     public static Calendar dateToCalendar(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

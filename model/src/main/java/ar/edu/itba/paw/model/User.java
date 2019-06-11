@@ -29,9 +29,7 @@ public class User {
 
     @Column(length = 500, nullable = true)
     private String biography;
-
-
-
+    
 
     //////////////
 
