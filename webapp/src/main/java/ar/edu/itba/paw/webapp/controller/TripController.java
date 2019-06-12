@@ -62,7 +62,7 @@ public class TripController extends MainController{
     public ModelAndView getUserTrips(@ModelAttribute("user") User user,  @PathVariable(value = "pageNum") int pageNum) {
         ModelAndView mav = new ModelAndView("userTrips");
 
-        User u = us.findByid(user.getId()).get();
+        User u = us.findById(user.getId()).get();
         Set<Trip> userTrips =  ts.getAllUserTrips(u, pageNum);
         int userTripsQty = u.getTrips().size();
 
@@ -145,7 +145,7 @@ public class TripController extends MainController{
         Optional<ar.edu.itba.paw.model.Place> sPlaceOpt = ps.findById(trip.getStartPlaceId());
         sPlaceOpt.ifPresent(tripPlaces::add);
         List<User> tripMembers = trip.getUsers();
-        User u = us.findByid(trip.getAdminId()).get();
+        User u = us.findById(trip.getAdminId()).get();
         tripMembers.add(u);
         boolean isAdmin = trip.getAdminId() == user.getId();
         boolean isTravelling = false;

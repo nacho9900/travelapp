@@ -7,9 +7,14 @@ import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
 import org.simplejavamail.mailer.config.TransportStrategy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import java.util.Locale;
 
 
 @Service
@@ -21,27 +26,34 @@ public class MailingServiceImpl implements MailingService {
     private static final String EMAIL_NAME = "meet.travel.paw@gmail.com";
     private static final String EMAIL_PASS = "power123321";
 
+    @Autowired
+    private TemplateEngine htmlTemplateEngine;
+
+    private static final String REGISTER_TEMPLATE = "templates/registerMail.html";
+
     @Async
     @Override
     public void sendRegisterMail(String emailName, String name, String lastname) {
 
-        String htmlFormat = String.format("<h1>%s welcome to Meet and Travel!</h1>" +
-                "<h3>Your account has been successfully created</h3>" +
-                "<p>Join and create trips to start travelling the world while meeting new and exciting people!", name);
-
         try {
+            final Context ctx = new Context();
+            ctx.setVariable("email", emailName);
+            ctx.setVariable("name", name);
+            ctx.setVariable("lastname", lastname);
+            String html = htmlTemplateEngine.process(REGISTER_TEMPLATE, ctx);
+
             Email email = EmailBuilder.startingBlank()
                     .to(name + " " + lastname, emailName)
                     .from("Meet and Travel", "meet.travel.paw@gmail.com")
                     .withSubject("Welcome to Meet and Travel")
-                    .withHTMLText(htmlFormat)
+                    .withHTMLText(html)
                     .buildEmail();
 
             Mailer mailer = MailerBuilder
                     .withSMTPServer(EMAIL_SERVER, PORT, EMAIL_NAME , EMAIL_PASS)
                     .withTransportStrategy(TransportStrategy.SMTP_TLS)
                     .withSessionTimeout(10 * 1000)
-                    .clearEmailAddressCriteria() // turns off email validation
+                    .clearEmailAddressCriteria()
                     .withProperty("mail.smtp.sendpartial", "true")
                     .buildMailer();
 

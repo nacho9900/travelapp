@@ -123,7 +123,7 @@ public class UserController extends MainController{
     @RequestMapping(value = "/home/profile/{userId}", method = {RequestMethod.GET})
     public ModelAndView profile( @PathVariable(value = "userId") long userProfileId) {
         ModelAndView mav = new ModelAndView("profile");
-        Optional<User> profileUser = us.findByid(userProfileId);
+        Optional<User> profileUser = us.findById(userProfileId);
         if(!profileUser.isPresent()) {
             mav.setViewName("404");
             return mav;
@@ -181,7 +181,7 @@ public class UserController extends MainController{
         if(errors.hasErrors()) {
             return mav;
         }
-        Optional<User> uo = us.findByid(userId);
+        Optional<User> uo = us.findById(userId);
         if(uo.isPresent()) {
             User u = uo.get();
             MultipartFile profilePicture = form.getImageUpload();
