@@ -5,13 +5,11 @@ import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
 import org.imgscalr.Scalr;
-import org.omg.CORBA.portable.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

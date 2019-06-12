@@ -37,8 +37,17 @@
                     <div class="form-group">
                         <form:errors path="category" cssClass="alert alert-warning" element="p"/>
                         <spring:message code="createActivity.categoryPh" var="categoryPh"/>
-                        <form:input type="text" placeholder="${categoryPh}" path="category" name="category-input"
-                                    cssClass="form-control" cssStyle="margin-bottom: 10px;"/>
+                        <form:select name="nationality" path="category" cssClass="form-control" cssStyle="margin-bottom: 10px;">
+                            <option value="Cultural"><spring:message code="createActivity.cultural"/></option>
+                            <option value="Sports"><spring:message code="createActivity.sports"/></option>
+                            <option value="Social"><spring:message code="createActivity.social"/></option>
+                            <option value="Romantic"><spring:message code="createActivity.romantic"/></option>
+                            <option value="Adventure"><spring:message code="createActivity.adventure"/></option>
+                            <option value="Family"><spring:message code="createActivity.family"/></option>
+                            <option value="Friends"><spring:message code="createActivity.friends"/></option>
+                            <option value="Business"><spring:message code="createActivity.business"/></option>
+                            <option value="Relaxation"><spring:message code="createActivity.relaxation"/></option>
+                        </form:select>
                     </div>
                     <form:errors path="placeInput" cssClass="alert alert-warning" element="p"/>
                     <spring:message code="createActivity.locationPh" var="locationPh"/>
