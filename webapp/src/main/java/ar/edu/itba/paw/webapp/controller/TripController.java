@@ -216,9 +216,17 @@ public class TripController extends MainController{
     public ModelAndView joinTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ModelAndView mav = new ModelAndView("trip");
         ts.addUserToTrip(user.getId(), tripId);
+        //SEND MAIL TO TRIP OWNEER
         String redirect = String.format("redirect:/home/trip/%d", tripId);
         mav.setViewName(redirect);
         return mav;
+    }
+
+    @RequestMapping("/home/trip/{tripId}/exit")
+    public ModelAndView exitTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
+        ts.removeUserFromTrip(user.getId(), tripId);
+        String redirect = String.format("redirect:/home/trip/%d", tripId);
+        return new ModelAndView(redirect);
     }
 
     @RequestMapping("/home/search-trip/")

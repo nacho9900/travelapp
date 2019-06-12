@@ -87,7 +87,16 @@ public class TripServiceImpl implements TripService {
             ou.get().getTrips().add(ot.get());
             ot.get().getUsers().add(ou.get());
         }
+    }
 
+    @Override
+    public void removeUserFromTrip(long userId, long tripId) {
+        Optional<User> ou = ud.findById(userId);
+        Optional<Trip> ot = td.findById(tripId);
+        if(ou.isPresent() && ot.isPresent()) {
+            ou.get().getTrips().remove(ot.get());
+            ot.get().getUsers().remove(ou.get());
+        }
     }
 
 

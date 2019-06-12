@@ -10,6 +10,7 @@
     <%@include file="head.jsp" %>
     <c:url value="/home/trip/${trip.id}/create-activity" var="createActivityURL"/>
     <c:url value="/home/trip/${trip.id}/join" var="joinTripURL"/>
+    <c:url value="/home/trip/${trip.id}/exit" var="exitTripURL"/>
     <c:url value="/resources/css/trip.css" var="tripCSS"/>
     <c:url value="/resources/js/showMap.js" var="showMapJs"/>
     <c:url value="/home/trip/${trip.id}" var="editTripURL"/>
@@ -38,6 +39,12 @@
                         <c:out value="${endDate.format(formatter)}"/>
                     </p>
                 </div>
+                <c:if test="${isAdmin}">
+                    <a class="btn btn-dark btn-lg" style="margin-top: 15px;" href="#"
+                       role="button">
+                        Delete trip
+                    </a>
+                </c:if>
                 <c:if test="${hasTripPicture}">
                     <img class="img-fluid rounded" src="${tripImageURL}"
                          style="height: 500px; width: 100%; margin: 10px">
@@ -111,20 +118,34 @@
                         <div id="map${activity_places.key.id}" style="height: 400px;width: 97%;display: none;"></div>
                     </c:forEach>
                 </div>
-                <c:if test="${isAdmin}">
-                    <a class="btn btn-success btn-lg" style="margin-top: 15px;" href="${createActivityURL}"
-                       role="button">
-                        <spring:message code="trip.addActivityBtn"/>
-                    </a>
-                </c:if>
-                <c:if test="${!isTravelling}">
-                    <a class="btn btn-success" style="margin-top: 20px;" href="${joinTripURL}" role="button">
-                        <spring:message code="trip.joinTripBtn"/>
-                    </a>
-                </c:if>
+
+                <c:choose>
+                    <c:when test="${isAdmin}">
+                        <a class="btn btn-success btn-lg" style="margin-top: 15px;" href="${createActivityURL}"
+                           role="button">
+                            <spring:message code="trip.addActivityBtn"/>
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <c:choose>
+                            <c:when test="${!isTravelling}">
+                                <a class="btn btn-success" style="margin-top: 20px;" href="${joinTripURL}" role="button">
+                                    <spring:message code="trip.joinTripBtn"/>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <a class="btn btn-danger" style="margin-top: 20px;" href="${exitTripURL}" role="button">
+                                    <spring:message code="trip.exitTripBtn"/>
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:otherwise>
+                </c:choose>
+
+
+
             </div>
         </div>
-
     </div>
 </div>
 </body>
