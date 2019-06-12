@@ -40,6 +40,9 @@ public class TripController extends MainController{
     private static final long MAX_UPLOAD_SIZE = 5242880;
 
     @Autowired
+    private MailingService ms;
+
+    @Autowired
     private ActivityService as;
 
     @Autowired
@@ -217,7 +220,17 @@ public class TripController extends MainController{
     public ModelAndView joinTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ModelAndView mav = new ModelAndView("trip");
         ts.addUserToTrip(user.getId(), tripId);
-        //SEND MAIL TO TRIP OWNEER
+        Optional<Trip> optionalTrip = ts.findById(tripId);
+        //send mail
+        if(optionalTrip.isPresent()) {
+            Optional<User> u = us.findById(optionalTrip.get().getAdminId());
+            if(u.isPresent()) {
+                User us = u.get();
+                ms.sendJoinTripMail(us.getEmail(), us.getFirstname(),  optionalTrip.get().getName(),
+                        user.getFirstname(), user.getLastname());
+            }
+
+        }
         String redirect = String.format("redirect:/home/trip/%d", tripId);
         mav.setViewName(redirect);
         return mav;

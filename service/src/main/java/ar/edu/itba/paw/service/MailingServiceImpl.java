@@ -30,6 +30,10 @@ public class MailingServiceImpl implements MailingService {
     private TemplateEngine htmlTemplateEngine;
 
     private static final String REGISTER_TEMPLATE = "templates/registerMail.html";
+    private static final String JOIN_TRIP_TEMPLATE = "templates/joinTripMail.html";
+
+
+    //TODO HACER MAS EFICIENTE EL CODIGO (NO REPETIR)
 
     @Async
     @Override
@@ -57,7 +61,40 @@ public class MailingServiceImpl implements MailingService {
                     .buildMailer();
 
             mailer.sendMail(email, true);
+        } catch (MailException ignored) {
 
+        }
+    }
+
+    @Async
+    @Override
+    public void sendJoinTripMail(String emailA, String adminName, String tripName, String firstname, String lastname) {
+
+        try {
+            final Context ctx = new Context();
+            ctx.setVariable("email", emailA);
+            ctx.setVariable("adminname", adminName);
+            ctx.setVariable("firstname", firstname);
+            ctx.setVariable("lastname", lastname);
+            ctx.setVariable("tripname", tripName);
+            String html = htmlTemplateEngine.process(JOIN_TRIP_TEMPLATE, ctx);
+
+            Email email = EmailBuilder.startingBlank()
+                    .to(adminName , emailA)
+                    .from("Meet and Travel", "meet.travel.paw@gmail.com")
+                    .withSubject("Someone joined your trip")
+                    .withHTMLText(html)
+                    .buildEmail();
+
+            Mailer mailer = MailerBuilder
+                    .withSMTPServer(EMAIL_SERVER, PORT, EMAIL_NAME , EMAIL_PASS)
+                    .withTransportStrategy(TransportStrategy.SMTP_TLS)
+                    .withSessionTimeout(10 * 1000)
+                    .clearEmailAddressCriteria()
+                    .withProperty("mail.smtp.sendpartial", "true")
+                    .buildMailer();
+
+            mailer.sendMail(email, true);
         } catch (MailException ignored) {
 
         }
