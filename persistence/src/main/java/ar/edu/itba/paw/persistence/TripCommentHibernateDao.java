@@ -7,7 +7,7 @@ import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -18,7 +18,7 @@ public class TripCommentHibernateDao implements TripCommentsDao {
 
     @Override
     public TripComment create(User user, Trip trip, String comment) {
-        TripComment tc = new TripComment(trip, comment, user, LocalDate.now());
+        TripComment tc = new TripComment(trip, comment, user, LocalDateTime.now());
         em.persist(tc);
         return tc;
     }

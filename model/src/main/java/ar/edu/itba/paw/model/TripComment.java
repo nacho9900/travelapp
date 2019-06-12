@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "trip_comments")
@@ -23,13 +23,13 @@ public class TripComment {
     private User user;
 
     @Column(name = "created_on", nullable = false)
-    private LocalDate createdOn;
+    private LocalDateTime createdOn;
 
     /* package */ TripComment() {
         // Just for Hibernate
     }
 
-    public TripComment(Trip trip, String comment, User user, LocalDate createdOn) {
+    public TripComment(Trip trip, String comment, User user, LocalDateTime createdOn) {
         this.trip = trip;
         this.comment = comment;
         this.user = user;
@@ -64,11 +64,11 @@ public class TripComment {
         return id;
     }
 
-    public LocalDate getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(LocalDate createdOn) {
+    public void setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
     }
 }
