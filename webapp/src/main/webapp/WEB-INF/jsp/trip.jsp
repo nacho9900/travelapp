@@ -77,7 +77,7 @@
                         </button>
                     </form:form>
                 </c:if>
-                <h3 class="margin-class text-white"><spring:message code="trip.places"/></h3>
+                <h3 class="margin-class text-white"></h3>
                 <ul class="list-group">
                     <c:forEach items="${places}" var="place">
                         <li class="list-group-item"><c:out value="${place.name}"/></li>
@@ -92,6 +92,11 @@
                             href="<c:url value='/home/profile/${ur.id}'/>">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1"><c:out value="${ur.firstname}"/> <c:out value="${ur.lastname}"/></h5>
+                                <c:if test="${ur.id == adminId}">
+                                    <small><spring:message code="trip.admin"/></small>
+                                </c:if>
+
+
                             </div>
                         </a>
                     </c:forEach>

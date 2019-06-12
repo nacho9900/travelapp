@@ -158,6 +158,7 @@ public class TripController extends MainController{
         if(isAdmin || trip.getUsers().contains(user)) {
             isTravelling = true;
         }
+        mav.addObject("adminId", trip.getAdminId());
         mav.addObject("hasTripPicture", tripPictureService.findByTripId(tripId).isPresent());
         mav.addObject("isEmpty", tripActAndPlace.size() == 0);
         mav.addObject("isTravelling", isTravelling );

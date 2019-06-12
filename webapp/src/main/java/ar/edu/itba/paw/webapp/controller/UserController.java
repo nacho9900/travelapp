@@ -72,7 +72,6 @@ public class UserController extends MainController{
         for(Trip trip : trips) {
             list.add(new DataPair<>(trip, tripPicturesService.findByTripId(trip.getId()).isPresent()));
         }
-        //check this
         mav.addObject("dateFormat", formatter);
         mav.addObject("tripList", list);
         return mav;
