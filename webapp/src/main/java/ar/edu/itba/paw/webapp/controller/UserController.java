@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
+
 @Controller
 public class UserController extends MainController{
 
@@ -107,7 +109,7 @@ public class UserController extends MainController{
             return mav;
         }
 
-        ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname());
+        ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname(), getLocale());
         User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), form.getPassword(),
                 DateManipulation.stringToLocalDate(form.getBirthday()), form.getNationality());
 

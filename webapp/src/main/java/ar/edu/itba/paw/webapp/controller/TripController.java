@@ -27,6 +27,8 @@ import java.net.URLConnection;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
+
 @Controller
 public class TripController extends MainController{
 
@@ -227,7 +229,7 @@ public class TripController extends MainController{
             if(u.isPresent()) {
                 User us = u.get();
                 ms.sendJoinTripMail(us.getEmail(), us.getFirstname(),  optionalTrip.get().getName(),
-                        user.getFirstname(), user.getLastname());
+                        user.getFirstname(), user.getLastname(), getLocale());
             }
 
         }
@@ -239,6 +241,16 @@ public class TripController extends MainController{
     @RequestMapping("/home/trip/{tripId}/exit")
     public ModelAndView exitTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ts.removeUserFromTrip(user.getId(), tripId);
+        Optional<Trip> optionalTrip = ts.findById(tripId);
+        if(optionalTrip.isPresent()) {
+            Optional<User> u = us.findById(optionalTrip.get().getAdminId());
+            if(u.isPresent()) {
+                User us = u.get();
+                ms.sendExitTripMail(us.getEmail(), us.getFirstname(),  optionalTrip.get().getName(),
+                        user.getFirstname(), user.getLastname(), getLocale());
+            }
+
+        }
         String redirect = String.format("redirect:/home/trip/%d", tripId);
         return new ModelAndView(redirect);
     }
