@@ -31,6 +31,7 @@
     <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
     <spring-integration-version>5.0.8.RELEASE</spring-integration-version>
     <java-mail-version>1.4.7</java-mail-version>
+    <org.imgscalr.version>4.2</org.imgscalr.version>
   </properties>
 
   <build>
@@ -223,6 +224,11 @@
         <groupId>org.thymeleaf</groupId>
         <artifactId>thymeleaf-spring4</artifactId>
         <version>3.0.10.RELEASE</version>
+      </dependency>
+      <dependency>
+        <groupId>org.imgscalr</groupId>
+        <artifactId>imgscalr-lib</artifactId>
+        <version>${org.imgscalr.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -34,7 +34,6 @@ public class MailingServiceImpl implements MailingService {
     @Async
     @Override
     public void sendRegisterMail(String emailName, String name, String lastname) {
-
         try {
             final Context ctx = new Context();
             ctx.setVariable("email", emailName);
