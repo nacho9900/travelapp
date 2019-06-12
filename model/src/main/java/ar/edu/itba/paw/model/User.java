@@ -38,6 +38,9 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     private UserPicture profilePicture;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<TripComment> comments;
+
     /////////////
 
     @Column(length = 100, nullable = false)
@@ -160,5 +163,13 @@ public class User {
 
     public void setBiography(String biography) {
         this.biography = biography;
+    }
+
+    public List<TripComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<TripComment> comments) {
+        this.comments = comments;
     }
 }

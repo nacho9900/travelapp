@@ -45,6 +45,8 @@ public class Trip {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip")
     private TripPicture profilePicture;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
+    private List<TripComment> comments;
 
     /////////////////
 
@@ -143,5 +145,13 @@ public class Trip {
 
     public void setProfilePicture(TripPicture profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public List<TripComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<TripComment> comments) {
+        this.comments = comments;
     }
 }
