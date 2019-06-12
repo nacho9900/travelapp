@@ -50,11 +50,7 @@ public class TripServiceImpl implements TripService {
     }
 
     public Set<Trip> getAllUserTrips(User user, int pageNum) {
-        System.out.println("IN GET ALL USER TRIPS");
-        System.out.println("USER TRIPS: " + user.getTrips());
         Set<Trip> trips = new HashSet<>(user.getTrips());
-
-
         List<Trip> createdTrips = td.findUserCreatedTrips(user.getId(), pageNum);
         trips.addAll(createdTrips);
         return trips;

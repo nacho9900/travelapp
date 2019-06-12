@@ -251,8 +251,7 @@ public class TripController extends MainController{
             }
 
         }
-        String redirect = String.format("redirect:/home/trip/%d", tripId);
-        return new ModelAndView(redirect);
+        return new ModelAndView("redirect:/home/trips/1");
     }
 
     @RequestMapping("/home/trip/{tripId}/delete")
