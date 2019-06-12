@@ -4,10 +4,17 @@ import ar.edu.itba.paw.interfaces.UserPicturesDao;
 import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
+import org.omg.CORBA.portable.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -31,4 +38,5 @@ public class UserPicturesServiceImpl implements UserPicturesService {
     public boolean deleteByUserId(long userId) {
         return upd.deleteByUserId(userId);
     }
+
 }

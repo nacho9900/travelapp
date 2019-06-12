@@ -6,7 +6,6 @@ import ar.edu.itba.paw.webapp.form.EditProfileForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ar.edu.itba.paw.webapp.form.UserUpdateBioForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -158,46 +157,20 @@ public class UserController extends MainController{
 
     @RequestMapping(value = "/home/profile/{userId}/edit", method = {RequestMethod.GET})
     public ModelAndView editProfileGet(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
-                                @ModelAttribute("editProfileForm") final EditProfileForm form,
-                                @ModelAttribute("UserUpdateBioForm") UserUpdateBioForm userUpdateBioForm) {
+                                @ModelAttribute("editProfileForm") final EditProfileForm form) {
         ModelAndView mav = new ModelAndView("editProfile");
         if(user.getId() != userId) {
             mav.setViewName("403");
             return mav;
         }
-
-        userUpdateBioForm.setBiography(user.getBiography());
-
+        form.setBiography(user.getBiography());
         return mav;
     }
 
-    @RequestMapping(value = "/home/profile/{userId}/editBio", method = {RequestMethod.POST})
-    public ModelAndView editBiography(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
-                                      @Valid @ModelAttribute("UserUpdateBioForm")UserUpdateBioForm userUpdateBioForm,
-                                      @ModelAttribute("editProfileForm") final EditProfileForm form,
-                                      final BindingResult errors) {
-        ModelAndView mav = new ModelAndView("editProfile");
-        if(user.getId() != userId) {
-            mav.setViewName("403");
-            return mav;
-        }
-        if(errors.hasErrors()) {
-            return mav;
-        }
-
-        user.setBiography(userUpdateBioForm.getBiography());
-        if(us.update(user)) {
-            String redirectFormat = String.format("redirect:/home/profile/%d", userId);
-            mav.setViewName(redirectFormat);
-        }
-
-        return mav;
-    }
 
     @RequestMapping(value = "/home/profile/{userId}/edit", method = {RequestMethod.POST})
     public ModelAndView profile(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
                                 @Valid @ModelAttribute("editProfileForm") final EditProfileForm form,
-                                @ModelAttribute("UserUpdateBioForm")UserUpdateBioForm userUpdateBioForm,
                                 final BindingResult errors) {
 
         ModelAndView mav = new ModelAndView("editProfile");
@@ -205,48 +178,46 @@ public class UserController extends MainController{
             mav.setViewName("403");
             return mav;
         }
-
-        user.setBiography(userUpdateBioForm.getBiography());
-
         if(errors.hasErrors()) {
             return mav;
         }
-        MultipartFile profilePicture = form.getImageUpload();
-        byte[] imageBytes;
-        if(profilePicture != null && !profilePicture.isEmpty()) {
-            String contentType = profilePicture.getContentType();
-            if(!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
-                mav.addObject("invalidContentError", true);
-                return mav;
+        Optional<User> uo = us.findByid(userId);
+        if(uo.isPresent()) {
+            User u = uo.get();
+            MultipartFile profilePicture = form.getImageUpload();
+            byte[] imageBytes;
+            if(profilePicture != null && !profilePicture.isEmpty()) {
+                String contentType = profilePicture.getContentType();
+                if(!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
+                    mav.addObject("invalidContentError", true);
+                    return mav;
+                }
+                else if(profilePicture.getSize() > MAX_UPLOAD_SIZE) {
+                    mav.addObject("fileSizeError", true);
+                    return mav;
+                }
+                try {
+                    imageBytes = profilePicture.getBytes();
+                } catch (IOException e) {
+                    mav.addObject("generalError", true);
+                    return mav;
+                }
+                if(ups.findByUserId(userId).isPresent()) {
+                    if(!ups.deleteByUserId(userId)) {
+                        mav.addObject("generalError", true);
+                        return mav;
+                    }
+                }
+                UserPicture userPicture = ups.create(u, imageBytes);
+
             }
-            else if(profilePicture.getSize() > MAX_UPLOAD_SIZE) {
-                mav.addObject("fileSizeError", true);
-                return mav;
-            }
-            try {
-                imageBytes = profilePicture.getBytes();
-            } catch (IOException e) {
-                mav.addObject("generalError", true);
-                return mav;
-            }
-        }
-        else {
-            mav.addObject("generalError", true);
-            return mav;
-        }
-        if(ups.findByUserId(userId).isPresent()) {
-            if(!ups.deleteByUserId(userId)) {
-                mav.addObject("generalError", true);
-                return mav;
-            }
-        }
-        Optional<User> u = us.findByid(userId);
-        if(u.isPresent()) {
-            UserPicture userPicture = ups.create(u.get(), imageBytes);
+            u.setBiography(form.getBiography());
+            us.update(u);
             String redirectFormat = String.format("redirect:/home/profile/%d", userId);
             mav.setViewName(redirectFormat);
         }
         return mav;
+
     }
 
     @RequestMapping("/about")
