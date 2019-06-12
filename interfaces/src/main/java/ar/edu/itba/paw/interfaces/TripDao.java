@@ -12,9 +12,7 @@ public interface TripDao {
     public Optional<Trip> findById(long id);
     public List<Trip> findByName(String name);
     public List<Trip> getAllTrips();
-
-    public List<Trip> findUserTrips(long userId, int pageNum);
     public List<Trip> findUserCreatedTrips(long userId, int pageNum);
-
+    public void deleteTrip(long tripId);
 
 }

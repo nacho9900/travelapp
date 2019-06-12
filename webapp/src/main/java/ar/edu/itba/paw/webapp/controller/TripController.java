@@ -18,6 +18,7 @@ import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
 
+import javax.jws.WebParam;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
@@ -229,6 +230,23 @@ public class TripController extends MainController{
         return new ModelAndView(redirect);
     }
 
+    @RequestMapping("/home/trip/{tripId}/delete")
+    public ModelAndView deleteTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
+        ModelAndView mav = new ModelAndView();
+        Optional<Trip> optionalTrip = ts.findById(tripId);
+        if(optionalTrip.isPresent()) {
+            Trip trip = optionalTrip.get();
+            if(user.getId() != trip.getAdminId()) {
+                mav.setViewName("403");
+                return mav;
+            }
+        }
+        ts.deleteTrip(tripId);
+        mav.setViewName("redirect:/home/trips/1");
+        return mav;
+    }
+
+
     @RequestMapping("/home/search-trip/")
     public ModelAndView search(@ModelAttribute("user") User user, @RequestParam(value = "nameInput") String nameInput) {
         ModelAndView mav = new ModelAndView("searchTrips");
@@ -237,6 +255,8 @@ public class TripController extends MainController{
         mav.addObject("tripsList", trips);
         return mav;
     }
+
+
 
     @RequestMapping(value = "/home/trip/{tripId}/image", method = {RequestMethod.GET})
     public void getProfileImage(@PathVariable(value = "tripId") long tripId, HttpServletResponse response) {

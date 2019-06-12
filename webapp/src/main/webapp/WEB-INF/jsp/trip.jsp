@@ -11,6 +11,7 @@
     <c:url value="/home/trip/${trip.id}/create-activity" var="createActivityURL"/>
     <c:url value="/home/trip/${trip.id}/join" var="joinTripURL"/>
     <c:url value="/home/trip/${trip.id}/exit" var="exitTripURL"/>
+    <c:url value="/home/trip/${trip.id}/delete" var="deleteTripURL"/>
     <c:url value="/resources/css/trip.css" var="tripCSS"/>
     <c:url value="/resources/js/showMap.js" var="showMapJs"/>
     <c:url value="/home/trip/${trip.id}" var="editTripURL"/>
@@ -40,9 +41,9 @@
                     </p>
                 </div>
                 <c:if test="${isAdmin}">
-                    <a class="btn btn-dark btn-lg" style="margin-top: 15px;" href="#"
+                    <a class="btn btn-dark btn-lg" style="margin-top: 15px;" href="${deleteTripURL}"
                        role="button">
-                        Delete trip
+                        <spring:message code="trip.deleteTripBtn"/>
                     </a>
                 </c:if>
                 <c:if test="${hasTripPicture}">

@@ -21,4 +21,5 @@ public interface TripService {
     public void addActivityToTrip(long actId, long tripId);
     public void addUserToTrip(long userId, long tripId);
     public void removeUserFromTrip(long userId, long tripId);
+    public void deleteTrip(long tripId);
 }

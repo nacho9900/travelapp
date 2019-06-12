@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.List;
@@ -32,12 +33,6 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
-    public List<Trip> findUserTrips(long userId, int pageNum) {
-        //TODO
-        return null;
-    }
-
-    @Override
     public List<Trip> findByName(String name) {
         final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.name like :name", Trip.class);
         query.setParameter("name", "%"+name+"%");
@@ -56,12 +51,17 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> findUserCreatedTrips(long userId, int pageNum) {
-        System.out.println("IN DAO: findUserCreatedTrips");
         final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.adminId = :userId ", Trip.class);
         query.setParameter("userId", userId);
         query.setFirstResult((pageNum - 1) * MAX_ROWS);
         query.setMaxResults(MAX_ROWS);
-        System.out.println("userCreatedTrips: " + query.getResultList());
         return query.getResultList();
+    }
+
+    @Override
+    public void deleteTrip(long tripId) {
+        Query tripDelete = em.createQuery("delete Trip as t where t.id = :id");
+        tripDelete.setParameter("id", tripId);
+        tripDelete.executeUpdate();
     }
 }

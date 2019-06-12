@@ -99,5 +99,10 @@ public class TripServiceImpl implements TripService {
         }
     }
 
+    @Override
+    public void deleteTrip(long tripId) {
+        td.deleteTrip(tripId);
+    }
+
 
 }
