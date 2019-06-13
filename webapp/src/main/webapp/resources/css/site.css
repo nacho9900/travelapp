@@ -14,5 +14,14 @@ html,body{
 .box{
     background: rgba(0,0,0,0.5);
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 0 0 5px 5px;
+}
+
+.img-container{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    background-size: cover;
+    position: relative;
+    height: 500px;
 }

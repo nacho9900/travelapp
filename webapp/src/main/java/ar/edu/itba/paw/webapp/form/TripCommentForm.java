@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.springframework.beans.factory.annotation.Required;
+
 import javax.validation.constraints.Size;
 
 public class TripCommentForm {

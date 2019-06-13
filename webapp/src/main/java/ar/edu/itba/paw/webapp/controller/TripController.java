@@ -4,11 +4,13 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.form.EditTripForm;
+import ar.edu.itba.paw.webapp.form.TripCommentForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +20,6 @@ import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
 
-import javax.jws.WebParam;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
@@ -40,6 +41,9 @@ public class TripController extends MainController{
 
     private static final int MAX_TRIPS_PAGE = 4;
     private static final long MAX_UPLOAD_SIZE = 5242880;
+
+    @Autowired
+    private TripCommentsService tripCommentsService;
 
     @Autowired
     private MailingService ms;
@@ -108,7 +112,7 @@ public class TripController extends MainController{
             mav.addObject("invalidDates", true);
             return mav;
         }
-        LOGGER.debug("No errors in create trip form");
+        LOGGER.debug("No errors in create editTripGet form");
         try {
             places = client.getPlacesByQuery(form.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
         }
@@ -136,48 +140,23 @@ public class TripController extends MainController{
         return mav;
     }
 
-    @RequestMapping(value = "/home/trip/{tripId}", method = {RequestMethod.GET})
-    public ModelAndView trip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId,
-                             @ModelAttribute("editTripForm") final EditTripForm form) {
-        ModelAndView mav = new ModelAndView("trip");
+    @RequestMapping(value = "/home/trip/{tripId}/edit", method = {RequestMethod.GET})
+    public ModelAndView editTripGet(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId,
+                                    @ModelAttribute("editTripForm") final EditTripForm form) {
+        ModelAndView mav = new ModelAndView("editTrip");
         Optional<Trip> maybeTrip = ts.findById(tripId);
         if(!maybeTrip.isPresent()) {
             mav.setViewName("404");
             return mav;
         }
-        Trip trip = maybeTrip.get();
-        List<DataPair<Activity, ar.edu.itba.paw.model.Place>> tripActAndPlace = as.getTripActivitiesDetails(trip);
-        List <ar.edu.itba.paw.model.Place> tripPlaces = ts.findTripPlaces(trip);
-        Optional<ar.edu.itba.paw.model.Place> sPlaceOpt = ps.findById(trip.getStartPlaceId());
-        sPlaceOpt.ifPresent(tripPlaces::add);
-        List<User> tripMembers = trip.getUsers();
-        User u = us.findById(trip.getAdminId()).get();
-        tripMembers.add(u);
-        boolean isAdmin = trip.getAdminId() == user.getId();
-        boolean isTravelling = false;
-        if(isAdmin || trip.getUsers().contains(user)) {
-            isTravelling = true;
-        }
-        mav.addObject("adminId", trip.getAdminId());
-        mav.addObject("hasTripPicture", tripPictureService.findByTripId(tripId).isPresent());
-        mav.addObject("isEmpty", tripActAndPlace.size() == 0);
-        mav.addObject("isTravelling", isTravelling );
-        mav.addObject("isAdmin", isAdmin);
-        mav.addObject("places", tripPlaces);
-        mav.addObject("users", tripMembers);
-        mav.addObject("actAndPlaces", tripActAndPlace);
-        mav.addObject("trip", trip);
-        mav.addObject("formatter", formatter);
-        mav.addObject("startDate", trip.getStartDate());
-        mav.addObject("endDate", trip.getEndDate());
-        return mav;
+        return getTripModelAndView(tripId, user, maybeTrip.get(), mav);
     }
 
-    @RequestMapping(value = "/home/trip/{tripId}", method = {RequestMethod.POST})
+    @RequestMapping(value = "/home/trip/{tripId}/edit", method = {RequestMethod.POST})
     public ModelAndView editTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId,
                              @Valid @ModelAttribute("editTripForm") final EditTripForm form, BindingResult errors,
                                  final RedirectAttributes redirectAttributes) {
-        String redirectFormat = String.format("redirect:/home/trip/%d", tripId);
+        String redirectFormat = String.format("redirect:/home/trip/%d/edit", tripId);
         ModelAndView mav = new ModelAndView(redirectFormat);
         if(errors.hasErrors()) {
             return mav;
@@ -221,7 +200,7 @@ public class TripController extends MainController{
 
     @RequestMapping("/home/trip/{tripId}/join")
     public ModelAndView joinTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
-        ModelAndView mav = new ModelAndView("trip");
+        ModelAndView mav = new ModelAndView("editTrip");
         ts.addUserToTrip(user.getId(), tripId);
         Optional<Trip> optionalTrip = ts.findById(tripId);
         //send mail
@@ -299,4 +278,72 @@ public class TripController extends MainController{
         }
     }
 
+    @RequestMapping(value = "/home/trip/{tripId}")
+    public ModelAndView trip(@PathVariable(value = "tripId") long tripId,
+                             @ModelAttribute("user") User user,
+                             @ModelAttribute("tripCommentForm")TripCommentForm tripCommentForm){
+        Optional<Trip> maybeTrip = ts.findById(tripId);
+        if(!maybeTrip.isPresent()){
+            return new ModelAndView("404");
+        }
+
+        ModelAndView mav = new ModelAndView("trip");
+        return getTripModelAndView(tripId, user, maybeTrip.get(), mav);
+    }
+
+    @RequestMapping(value = "/home/trip/{tripId}", method = {RequestMethod.POST})
+    public ModelAndView comment(@PathVariable(value = "tripId") long tripId,
+                                @ModelAttribute("user") User user,
+                                @Valid @ModelAttribute("tripCommentForm")TripCommentForm tripCommentForm,
+                                final BindingResult errors){
+        String redirectFormat = String.format("redirect:/home/trip/%d", tripId);
+        ModelAndView  mav = new ModelAndView(redirectFormat);
+        if(errors.hasErrors()){
+            return mav;
+        }
+
+        Optional<Trip> maybeTrip = ts.findById(tripId);
+        if(!maybeTrip.isPresent()){
+            return new ModelAndView("404");
+        }
+
+        Trip trip = maybeTrip.get();
+
+        if(!(trip.getAdminId() == user.getId() || trip.getUsers().contains(user))){
+            return  new ModelAndView("403");
+        }
+
+        TripComment tripComment = tripCommentsService.create(user, trip, tripCommentForm.getComment());
+
+        return mav;
+    }
+
+    private ModelAndView getTripModelAndView(long tripId,User user, Trip trip, ModelAndView mav) {
+        List<DataPair<Activity, ar.edu.itba.paw.model.Place>> tripActAndPlace = as.getTripActivitiesDetails(trip);
+        List <ar.edu.itba.paw.model.Place> tripPlaces = ts.findTripPlaces(trip);
+        Optional<ar.edu.itba.paw.model.Place> sPlaceOpt = ps.findById(trip.getStartPlaceId());
+        sPlaceOpt.ifPresent(tripPlaces::add);
+        List<User> tripMembers = trip.getUsers();
+        User u = us.findById(trip.getAdminId()).get();
+        tripMembers.add(u);
+        boolean isAdmin = trip.getAdminId() == user.getId();
+        boolean isTravelling = false;
+        if(isAdmin || trip.getUsers().contains(user)) {
+            isTravelling = true;
+        }
+
+        mav.addObject("adminId", trip.getAdminId());
+        mav.addObject("hasTripPicture", tripPictureService.findByTripId(tripId).isPresent());
+        mav.addObject("isEmpty", tripActAndPlace.size() == 0);
+        mav.addObject("isTravelling", isTravelling );
+        mav.addObject("isAdmin", isAdmin);
+        mav.addObject("places", tripPlaces);
+        mav.addObject("users", tripMembers);
+        mav.addObject("actAndPlaces", tripActAndPlace);
+        mav.addObject("trip", trip);
+        mav.addObject("formatter", formatter);
+        mav.addObject("startDate", trip.getStartDate());
+        mav.addObject("endDate", trip.getEndDate());
+        return mav;
+    }
 }

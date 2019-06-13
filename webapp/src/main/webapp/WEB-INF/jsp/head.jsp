@@ -11,6 +11,7 @@
 <link href="${siteCss}" rel="stylesheet">
 <script src="${jquery}" type="text/javascript"></script>
 <script src="${bootstrapJs}" type="text/javascript"></script>
+<script src="https://kit.fontawesome.com/d26b996e46.js"></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">

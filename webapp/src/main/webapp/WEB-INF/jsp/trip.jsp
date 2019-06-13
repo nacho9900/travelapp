@@ -14,8 +14,9 @@
     <c:url value="/home/trip/${trip.id}/delete" var="deleteTripURL"/>
     <c:url value="/resources/css/trip.css" var="tripCSS"/>
     <c:url value="/resources/js/showMap.js" var="showMapJs"/>
-    <c:url value="/home/trip/${trip.id}" var="editTripURL"/>
+    <c:url value="/home/trip/${trip.id}/edit" var="editTripURL"/>
     <c:url value="/home/trip/${trip.id}/image" var="tripImageURL"/>
+    <c:url value="/home/trip/${trip.id}" var="commentUrl"/>
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
     <link href="${bootstrapCss}" rel="stylesheet">
     <link href="${tripCSS}" rel="stylesheet">
@@ -25,11 +26,29 @@
 <jsp:include page="header.jsp"/>
 <div class="container-fluid" id="main-container">
     <div class="container box">
+
+                <c:if test="${hasTripPicture}">
+                    <div class="img-container" style="background-image: url(${tripImageURL});">
+
+                    </div>
+
+                </c:if>
+
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">
                 <div>
-                    <h1 class="display-4 text-white" style="margin-top: 30px;"><c:out value="${trip.name}"/></h1>
+                    <div class="d-flex justify-content-between">
+                        <div class="display-4 text-white p-2"><c:out value="${trip.name}"/></div>
+                        <c:if test="${isAdmin}">
+                            <div class="p-2">
+                                <a href="${editTripURL}" class="btn btn-primary  align-middle">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </c:if>
+                    </div>
+
                     <p class="text-white"><c:out value="${trip.description}"/></p>
                     <p class="text-white">
                         <spring:message code="trip.start"/>
@@ -40,47 +59,13 @@
                         <c:out value="${endDate.format(formatter)}"/>
                     </p>
                 </div>
-                <c:if test="${isAdmin}">
-                    <a class="btn btn-dark btn-lg" style="margin-top: 15px;" href="${deleteTripURL}"
-                       role="button">
-                        <spring:message code="trip.deleteTripBtn"/>
-                    </a>
-                </c:if>
-                <c:if test="${hasTripPicture}">
-                    <img class="img-fluid rounded" src="${tripImageURL}"
-                         style="height: 500px; width: 100%; margin: 10px">
-                </c:if>
-                <c:if test="${isAdmin}">
-                    <c:if test="${fileSizeError}">
-                        <p class=" alert alert-warning">
-                            <spring:message code="trip.sizeError"/>
-                        </p>
-                    </c:if>
-                    <c:if test="${invalidContentError}">
-                        <p class=" alert alert-warning">
-                            <spring:message code="trip.contentError"/>
-                        </p>
-                    </c:if>
-                    <c:if test="${generalError}">
-                        <p class=" alert alert-warning">
-                            <spring:message code="trip.generalError"/>
-                        </p>
-                    </c:if>
-                    <form:form action="${editTripURL}" method="post" modelAttribute="editTripForm"
-                               enctype="multipart/form-data">
-                        <form:errors path="imageUpload" cssClass="alert alert-warning" element="p"/>
-                        <form:input type="file" path="imageUpload" accept="image/*"
-                                    cssClass="text-white form-control-file"/>
-                        <br>
-                        <button type="submit" class="btn btn-success" style="margin-top: 10px;">
-                            <spring:message code="trip.addImgBtn"/>
-                        </button>
-                    </form:form>
-                </c:if>
+
                 <h3 class="margin-class text-white"></h3>
                 <ul class="list-group">
                     <c:forEach items="${places}" var="place">
-                        <li class="list-group-item"><c:out value="${place.name}"/></li>
+                        <li class="list-group-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <c:out value="${place.name}"/></li>
                     </c:forEach>
                 </ul>
                 <h3 class="margin-class text-white">
@@ -89,9 +74,10 @@
                 <div class="list-group">
                     <c:forEach items="${users}" var="ur">
                         <a class="list-group-item list-group-item-action flex-column align-items-start"
-                            href="<c:url value='/home/profile/${ur.id}'/>">
+                           href="<c:url value='/home/profile/${ur.id}'/>">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1"><c:out value="${ur.firstname}"/> <c:out value="${ur.lastname}"/></h5>
+                                <h5 class="mb-1">                                 <i class="fas fa-user"></i>
+                                    <c:out value="${ur.firstname}"/> <c:out value="${ur.lastname}"/></h5>
                                 <c:if test="${ur.id == adminId}">
                                     <small><spring:message code="trip.admin"/></small>
                                 </c:if>
@@ -104,51 +90,63 @@
                 <h3 class="margin-class text-white">
                     <spring:message code="trip.activities"/>
                 </h3>
-                <c:if test="${isEmpty}">
-                    <div class="alert alert-primary" role="alert">
-                        <spring:message code="trip.noActivities"/>
-                    </div>
-                </c:if>
-                <div class="list-group" style="margin-bottom: 20px">
-                    <c:forEach items="${actAndPlaces}" var="activity_places">
-                        <button type="button"
-                                class="list-group-item list-group-item-action flex-column align-items-start"
-                                onclick="initMap(${activity_places.key.id},
-                                    ${activity_places.value.latitude},${activity_places.value.longitude})">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1"><c:out value="${activity_places.key.name}"/></h5>
-                            </div>
-                            <small><c:out value="${activity_places.key.category}"/></small>
-                            <p class="mb-1"><c:out value="${activity_places.value.address}"/></p>
-                        </button>
-                        <div id="map${activity_places.key.id}" style="height: 400px;width: 97%;display: none;"></div>
-                    </c:forEach>
-                </div>
 
                 <c:choose>
-                    <c:when test="${isAdmin}">
-                        <a class="btn btn-success btn-lg" style="margin-top: 15px;" href="${createActivityURL}"
-                           role="button">
-                            <spring:message code="trip.addActivityBtn"/>
-                        </a>
+                    <c:when test="${isEmpty}">
+                        <div class="alert alert-primary" role="alert">
+                            <spring:message code="trip.noActivities"/>
+                        </div>
                     </c:when>
                     <c:otherwise>
-                        <c:choose>
-                            <c:when test="${!isTravelling}">
-                                <a class="btn btn-success" style="margin-top: 20px;" href="${joinTripURL}" role="button">
-                                    <spring:message code="trip.joinTripBtn"/>
-                                </a>
-                            </c:when>
-                            <c:otherwise>
-                                <a class="btn btn-danger" style="margin-top: 20px;" href="${exitTripURL}" role="button">
-                                    <spring:message code="trip.exitTripBtn"/>
-                                </a>
-                            </c:otherwise>
-                        </c:choose>
+                        <div class="list-group" style="margin-bottom: 20px">
+                            <c:forEach items="${actAndPlaces}" var="activity_places">
+                                <button type="button"
+                                        class="list-group-item list-group-item-action flex-column align-items-start"
+                                        onclick="initMap(${activity_places.key.id},
+                                            ${activity_places.value.latitude},${activity_places.value.longitude})">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1"><c:out value="${activity_places.key.name}"/></h5>
+                                    </div>
+                                    <small><c:out value="${activity_places.key.category}"/></small>
+                                    <p class="mb-1"><c:out value="${activity_places.value.address}"/></p>
+                                </button>
+                                <div id="map${activity_places.key.id}" style="height: 400px;width: 97%;display: none;"></div>
+                            </c:forEach>
+                        </div>
+
                     </c:otherwise>
                 </c:choose>
 
+                <h3 class="text-white">Comentarios</h3>
 
+                <c:forEach var="comment" items="${trip.getComments()}">
+                    <div class="form-group text-white">
+                        <strong>${comment.getUser().getFirstname()}:</strong> ${comment.getComment()}
+                    </div>
+                </c:forEach>
+
+                <form:form action="${commentUrl}" method="post" modelAttribute="tripCommentForm" >
+                    <div class="form-group">
+                        <form:textarea path="comment" cssClass="text-area form-control"/>
+                        <form:errors path="comment" cssClass="alert alert-warning" element="p"/>
+                    </div>
+                    <form:button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                    </form:button>
+                </form:form>
+
+                <c:choose>
+                    <c:when test="${!isTravelling}">
+                        <a class="btn btn-success" style="margin-top: 20px;" href="${joinTripURL}" role="button">
+                            <spring:message code="trip.joinTripBtn"/>
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a class="btn btn-danger" style="margin-top: 20px;" href="${exitTripURL}" role="button">
+                            <spring:message code="trip.exitTripBtn"/>
+                        </a>
+                    </c:otherwise>
+                </c:choose>
 
             </div>
         </div>
