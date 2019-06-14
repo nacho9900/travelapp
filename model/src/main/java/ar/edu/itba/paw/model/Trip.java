@@ -2,7 +2,6 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class Trip {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private TripPicture profilePicture;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<TripComment> comments = new LinkedList<>();
 
     /////////////////

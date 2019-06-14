@@ -49,4 +49,8 @@ public class ActivityHibernateDao implements ActivityDao {
         return query.getResultList().stream().findFirst();
     }
 
+    public void delete(Activity activity) {
+        em.remove(activity);
+    }
+
 }

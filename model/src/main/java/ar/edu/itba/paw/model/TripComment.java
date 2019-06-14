@@ -19,7 +19,7 @@ public class TripComment {
 
     ////////////
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Trip trip;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

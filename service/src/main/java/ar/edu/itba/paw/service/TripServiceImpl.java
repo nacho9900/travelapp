@@ -24,6 +24,9 @@ public class TripServiceImpl implements TripService {
     private TripCommentsDao tcd;
 
     @Autowired
+    private TripPicturesDao tpd;
+
+    @Autowired
     private UserDao ud;
 
     @Override
@@ -94,6 +97,17 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void deleteTrip(long tripId) {
+        Optional<Trip> ot = td.findById(tripId);
+        if(ot.isPresent()) {
+            Trip trip = ot.get();
+            for(TripComment comment: trip.getComments()) {
+                tcd.delete(comment);
+            }
+            for(Activity activity: trip.getActivities()) {
+                ad.delete(activity);
+            }
+            tpd.deleteByTripId(tripId);
+        }
         td.deleteTrip(tripId);
     }
 

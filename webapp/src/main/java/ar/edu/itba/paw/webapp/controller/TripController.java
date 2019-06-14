@@ -10,12 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
@@ -34,11 +32,8 @@ import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 public class TripController extends MainController{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
-
-    private GooglePlaces client = new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
-
+    private static final GooglePlaces client = new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
     private static final int MAX_TRIPS_PAGE = 4;
     private static final long MAX_UPLOAD_SIZE = 5242880;
 
@@ -143,6 +138,7 @@ public class TripController extends MainController{
     @RequestMapping(value = "/home/trip/{tripId}/edit", method = {RequestMethod.GET})
     public ModelAndView editTripGet(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId,
                                     @ModelAttribute("editTripForm") final EditTripForm form) {
+
         ModelAndView mav = new ModelAndView("editTrip");
         Optional<Trip> maybeTrip = ts.findById(tripId);
         if(!maybeTrip.isPresent()) {
@@ -153,39 +149,50 @@ public class TripController extends MainController{
             mav.setViewName("403");
             return mav;
         }
+        mav.addObject("trip", maybeTrip.get());
         return mav;
     }
 
     @RequestMapping(value = "/home/trip/{tripId}/edit", method = {RequestMethod.POST})
     public ModelAndView editTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId,
-                             @Valid @ModelAttribute("editTripForm") final EditTripForm form, BindingResult errors,
-                                 final RedirectAttributes redirectAttributes) {
-        String redirectFormat = String.format("redirect:/home/trip/%d/edit", tripId);
-        ModelAndView mav = new ModelAndView(redirectFormat);
+                             @Valid @ModelAttribute("editTripForm") final EditTripForm form, BindingResult errors) {
+        ModelAndView mav = new ModelAndView("editTrip");
+        Optional<Trip> tripOptional = ts.findById(tripId);
+        if(!tripOptional.isPresent()) {
+            mav.setViewName("404");
+            return mav;
+        }
+        Trip trip = tripOptional.get();
+        mav.addObject("trip", trip);
+        if(tripOptional.get().getAdminId() != user.getId()) {
+            mav.setViewName("403");
+            return mav;
+        }
         if(errors.hasErrors()) {
             return mav;
         }
+
         MultipartFile tripPicture = form.getImageUpload();
         byte[] imageBytes;
         if(tripPicture != null && !tripPicture.isEmpty()) {
             String contentType = tripPicture.getContentType();
             if(!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
-                redirectAttributes.addFlashAttribute("invalidContentError", true);
+                mav.addObject("invalidContentError", true);
                 return mav;
             }
             else if(tripPicture.getSize() > MAX_UPLOAD_SIZE) {
-                redirectAttributes.addFlashAttribute("fileSizeError", true);
+                mav.addObject("fileSizeError", true);
                 return mav;
             }
             try {
                 imageBytes = tripPicture.getBytes();
             } catch (IOException e) {
-                redirectAttributes.addFlashAttribute("generalError", true);
+                mav.addObject("generalError", true);
                 return mav;
             }
         }
         else {
-            redirectAttributes.addFlashAttribute("generalError", true);
+            mav.addObject("generalError", true);
             return mav;
         }
         if(tripPictureService.findByTripId(tripId).isPresent()) {
@@ -194,11 +201,10 @@ public class TripController extends MainController{
                 return mav;
             }
         }
-        Optional<Trip> tripOptional = ts.findById(tripId);
-        if(tripOptional.isPresent()) {
-            TripPicture tripPictureModel = tripPictureService.create(tripOptional.get(), imageBytes);
-            tripOptional.get().setProfilePicture(tripPictureModel);
-        }
+        TripPicture tripPictureModel = tripPictureService.create(trip, imageBytes);
+        trip.setProfilePicture(tripPictureModel);
+        String redirectFormat = String.format("redirect:/home/trip/%d", tripId);
+        mav.setViewName(redirectFormat);
         return mav;
     }
 
