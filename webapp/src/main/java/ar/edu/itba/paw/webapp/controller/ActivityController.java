@@ -49,7 +49,18 @@ public class ActivityController extends MainController {
                                           @Valid @ModelAttribute("activityForm") final ActivityCreateForm form,
                                           final BindingResult errors) {
         ModelAndView mav = new ModelAndView("createActivity");
-        if(errors.hasErrors()) {
+        Optional<Trip> tripOptional = ts.findById(tripId);
+        if(!tripOptional.isPresent()) return mav;
+        Trip trip = tripOptional.get();
+        if(errors.hasErrors() ) {
+            return mav;
+        }
+        if(!form.checkDates()) {
+            mav.addObject("invalidDates", true);
+            return mav;
+        }
+        if(!form.checkTimeline(trip.getActivities())) {
+            mav.addObject("intervalError", true);
             return mav;
         }
         ar.edu.itba.paw.model.Place modelPlace;
@@ -65,16 +76,10 @@ public class ActivityController extends MainController {
         Optional<ar.edu.itba.paw.model.Place> maybePlace = ps.findByGoogleId(googlePlace.getPlaceId());
         modelPlace = maybePlace.orElseGet(() -> ps.create(googlePlace.getPlaceId(), googlePlace.getName(), googlePlace.getLatitude(),
                 googlePlace.getLongitude(), googlePlace.getAddress()));
-        Optional<Trip> tripOptional = ts.findById(tripId);
 
-        if(tripOptional.isPresent()) {
-            Activity activity = as.create(form.getName(), form.getCategory(), modelPlace, tripOptional.get(),
-                    DateManipulation.stringToLocalDate(form.getStartDate()), DateManipulation.stringToLocalDate(form.getEndDate()));
-            ts.addActivityToTrip(activity.getId(), tripId);
-        }
-        else {
-            return mav;
-        }
+        Activity activity = as.create(form.getName(), form.getCategory(), modelPlace, tripOptional.get(),
+                DateManipulation.stringToLocalDate(form.getStartDate()), DateManipulation.stringToLocalDate(form.getEndDate()));
+        ts.addActivityToTrip(activity.getId(), tripId);
         String redirectURL = String.format("redirect:/home/trip/%d", tripId);
         mav.setViewName(redirectURL);
         return mav;

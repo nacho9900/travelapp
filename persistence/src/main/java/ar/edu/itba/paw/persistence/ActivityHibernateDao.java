@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -40,7 +41,6 @@ public class ActivityHibernateDao implements ActivityDao {
         return activity;
     }
 
-
     //TODO
     @Override
     public Optional<Activity> findByCategory(String category) {
@@ -49,8 +49,11 @@ public class ActivityHibernateDao implements ActivityDao {
         return query.getResultList().stream().findFirst();
     }
 
-    public void delete(Activity activity) {
-        em.remove(activity);
+    @Override
+    public void deleteActivities(long tripId) {
+        Query activityDelete = em.createQuery("delete Activity as a where a.trip.id = :tripId");
+        activityDelete.setParameter("tripId", tripId);
+        activityDelete.executeUpdate();
     }
 
 }

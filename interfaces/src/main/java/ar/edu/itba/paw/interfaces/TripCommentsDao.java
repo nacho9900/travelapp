@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface TripCommentsDao {
     TripComment create(User user, Trip trip, String comment);
     Optional<TripComment> findById(long id);
-    void delete(TripComment tripComment);
+    void deleteComments(long tripId);
 }

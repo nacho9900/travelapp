@@ -56,6 +56,16 @@
                             <option value="Relaxation"><spring:message code="createActivity.relaxation"/></option>
                         </form:select>
                     </div>
+                    <c:if test="${invalidDates}">
+                        <div class="alert alert-danger" role="alert">
+                            <spring:message code="createActivity.invalidDates"/>
+                        </div>
+                    </c:if>
+                    <c:if test="${intervalError}">
+                        <div class="alert alert-danger" role="alert">
+                            <spring:message code="createActivity.intervalError"/>
+                        </div>
+                    </c:if>
 
                     <%--START DATE INPUT--%>
                     <div class="form-group">
@@ -69,7 +79,7 @@
                     <%--END DATE INPUT--%>
                     <div class="form-group">
                         <form:errors path="endDate" cssClass="alert alert-warning" element="p"/>
-                        <form:label path="endDate" for="startDate" cssClass="text-white">
+                        <form:label path="endDate" for="endDate" cssClass="text-white">
                             <spring:message code="createActivity.endDate"/>
                         </form:label>
                         <form:input cssClass="form-control" type="text" placeholder="dd/mm/yyyy" name="endDate" id="endDate" path="endDate"/>

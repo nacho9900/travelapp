@@ -29,8 +29,5 @@ public class TripCommentServiceImpl implements TripCommentsService {
         return tripCommentsDao.findById(id);
     }
 
-    @Override
-    public void delete(TripComment tripComment) {
-        tripCommentsDao.delete(tripComment);
-    }
+
 }

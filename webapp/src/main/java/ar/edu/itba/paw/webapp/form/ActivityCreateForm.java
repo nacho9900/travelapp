@@ -1,8 +1,14 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.model.Activity;
+import ar.edu.itba.paw.model.DateManipulation;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.List;
 
 public class ActivityCreateForm {
 
@@ -19,10 +25,12 @@ public class ActivityCreateForm {
 
     @NotNull
     @Size(min = 8, max = 10)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String startDate;
 
     @NotNull
     @Size(min = 8, max = 10)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String endDate;
 
     public String getStartDate() {
@@ -63,5 +71,27 @@ public class ActivityCreateForm {
 
     public void setPlaceInput(String placeInput) {
         this.placeInput = placeInput;
+    }
+
+    public boolean checkDates() {
+        LocalDate sDate = DateManipulation.stringToLocalDate(startDate);
+        LocalDate eDate = DateManipulation.stringToLocalDate(endDate);
+        LocalDate now = LocalDate.now();
+        System.out.println();
+        return  now.isBefore(sDate) && sDate.isBefore(eDate);
+    }
+
+    public boolean checkTimeline(List<Activity> activities) {
+        LocalDate sDate = DateManipulation.stringToLocalDate(startDate);
+        LocalDate eDate = DateManipulation.stringToLocalDate(endDate);
+        for(Activity activity : activities) {
+            if(  (sDate.isBefore(activity.getStartDate()) && eDate.isAfter(activity.getStartDate()))
+                    || (sDate.isBefore(activity.getEndDate()) && eDate.isAfter(activity.getEndDate()))
+                    || (sDate.isBefore(activity.getStartDate()) && eDate.isAfter(activity.getEndDate()))
+                    || (sDate.isAfter(activity.getStartDate()) && eDate.isBefore(activity.getEndDate())) ) {
+                return false;
+            }
+        }
+        return true;
     }
 }

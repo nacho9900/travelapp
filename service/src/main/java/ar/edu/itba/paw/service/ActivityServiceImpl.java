@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public List<DataPair<Activity, Place>> getTripActivitiesDetails(Trip trip) {
         List<Activity> activities = trip.getActivities();
+        Collections.sort(activities);
         List<DataPair<Activity, Place>> dataPairList = new ArrayList<>();
         for(Activity activity : activities) {
             Place place = activity.getPlace();

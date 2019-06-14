@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface TripCommentsService {
     TripComment create(User user, Trip trip, String comment);
     Optional<TripComment> getById(long id);
-    void delete(TripComment tripComment);
+
 }

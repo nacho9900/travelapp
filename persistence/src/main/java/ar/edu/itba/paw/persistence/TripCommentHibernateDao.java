@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -29,7 +30,9 @@ public class TripCommentHibernateDao implements TripCommentsDao {
     }
 
     @Override
-    public void delete(TripComment tripComment) {
-        em.remove(tripComment);
+    public void deleteComments(long tripId) {
+        Query commentDelete = em.createQuery("delete TripComment as tp where tp.trip.id = :tripId");
+        commentDelete.setParameter("tripId", tripId);
+        commentDelete.executeUpdate();
     }
 }

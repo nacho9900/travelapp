@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "activities")
-public class Activity {
+public class Activity implements Comparable<Activity> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "activity_id_seq")
@@ -33,7 +33,7 @@ public class Activity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Trip trip;
 
-    //////////////
+    ////////////////
 
     public Activity(long id, String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
         this(name, category, place, trip, startDate, endDate);
@@ -108,5 +108,10 @@ public class Activity {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    @Override
+    public int compareTo(Activity o) {
+        return (this.startDate.isBefore(o.startDate)) ? -1 : 1;
     }
 }

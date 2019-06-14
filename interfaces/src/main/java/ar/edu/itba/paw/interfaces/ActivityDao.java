@@ -14,6 +14,6 @@ public interface ActivityDao {
     public Optional<Activity> findByName(String name);
     public Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate);
     public Optional<Activity> findByCategory(String category);
-    public void delete(Activity activity);
+    public void deleteActivities(long tripId);
 
 }
