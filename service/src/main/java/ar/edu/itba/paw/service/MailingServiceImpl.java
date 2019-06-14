@@ -43,7 +43,7 @@ public class MailingServiceImpl implements MailingService {
     @Async
     @Override
     public void sendRegisterMail(String emailName, String name, String lastname, Locale locale) {
-        String subject = applicationContext.getMessage("mailJoinSubject", null, locale);
+        String subject = applicationContext.getMessage("mailRegisterSubject", null, locale);
         final Context ctx = new Context(locale);
         ctx.setVariable("email", emailName);
         ctx.setVariable("name", name);

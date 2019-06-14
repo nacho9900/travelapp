@@ -11,19 +11,21 @@ public class TripComment {
     @SequenceGenerator(sequenceName = "trip_comments_id_seq", name = "trip_comments_id_seq", allocationSize = 1)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="trip_id")
-    private Trip trip;
-
     @Column(length = 160, nullable = false)
     private String comment;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
+
+    ////////////
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    private Trip trip;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    private User user;
+
+    ////////////
 
     /* package */ TripComment() {
         // Just for Hibernate

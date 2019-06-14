@@ -44,8 +44,8 @@ public class Trip {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private TripPicture profilePicture;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
-    private List<TripComment> comments;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripComment> comments = new LinkedList<>();
 
     /////////////////
 

@@ -24,7 +24,6 @@ public class Activity {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Place place;
 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Trip trip;
 

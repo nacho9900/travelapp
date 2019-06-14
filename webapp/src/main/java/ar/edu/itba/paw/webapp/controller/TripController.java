@@ -43,7 +43,7 @@ public class TripController extends MainController{
     private static final long MAX_UPLOAD_SIZE = 5242880;
 
     @Autowired
-    private TripCommentsService tripCommentsService;
+    private TripCommentsService tcs;
 
     @Autowired
     private MailingService ms;
@@ -344,7 +344,9 @@ public class TripController extends MainController{
         if(!(trip.getAdminId() == user.getId() || trip.getUsers().contains(user))){
             return  new ModelAndView("403");
         }
-        TripComment tripComment = tripCommentsService.create(user, trip, tripCommentForm.getComment());
+
+        TripComment tripComment = tcs.create(user, trip, tripCommentForm.getComment());
+        ts.addCommentToTrip(tripComment.getId(), tripId);
         return mav;
     }
 }

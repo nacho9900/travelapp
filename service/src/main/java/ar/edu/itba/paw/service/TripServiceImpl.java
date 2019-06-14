@@ -1,13 +1,7 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.interfaces.ActivityDao;
-import ar.edu.itba.paw.interfaces.TripDao;
-import ar.edu.itba.paw.interfaces.TripService;
-import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.model.Activity;
-import ar.edu.itba.paw.model.Place;
-import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -25,6 +19,9 @@ public class TripServiceImpl implements TripService {
 
     @Autowired
     private ActivityDao ad;
+
+    @Autowired
+    private TripCommentsDao tcd;
 
     @Autowired
     private UserDao ud;
@@ -100,5 +97,13 @@ public class TripServiceImpl implements TripService {
         td.deleteTrip(tripId);
     }
 
+    @Override
+    public void addCommentToTrip(long commentId, long tripId) {
+        Optional<TripComment> otc = tcd.findById(commentId);
+        Optional<Trip> ot = td.findById(tripId);
+        if(otc.isPresent() && ot.isPresent()) {
+            ot.get().getComments().add(otc.get());
+        }
+    }
 
 }
