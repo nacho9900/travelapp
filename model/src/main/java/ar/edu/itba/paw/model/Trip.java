@@ -35,14 +35,13 @@ public class Trip {
 
     /////////////////
 
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<User> users = new LinkedList<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Activity> activities = new LinkedList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private TripPicture profilePicture;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")

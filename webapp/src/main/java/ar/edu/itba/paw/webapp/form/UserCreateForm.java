@@ -29,9 +29,10 @@ public class UserCreateForm {
     private String pswrepeat;
 
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Size(min = 8, max = 10)
     private String birthday;
 
+    @NotNull
     @Size(min = 2, max = 5)
     private String nationality;
 

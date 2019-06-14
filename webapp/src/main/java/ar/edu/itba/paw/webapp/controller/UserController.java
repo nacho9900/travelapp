@@ -91,7 +91,7 @@ public class UserController extends MainController{
                                        final BindingResult errors, HttpServletRequest request) {
 
         ModelAndView mav = new ModelAndView("signup");
-        if(errors.hasErrors()) {
+        if(errors.hasErrors() ) {
             return mav;
         }
         if(!form.checkPswRepeat()) {

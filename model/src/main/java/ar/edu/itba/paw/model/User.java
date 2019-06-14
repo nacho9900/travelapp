@@ -27,18 +27,18 @@ public class User {
     @Column(nullable = false)
     private LocalDate birthday;
 
-    @Column(length = 500, nullable = true)
+    @Column(length = 500)
     private String biography;
 
     //////////////
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Trip> trips;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private UserPicture profilePicture;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripComment> comments;
 
     /////////////

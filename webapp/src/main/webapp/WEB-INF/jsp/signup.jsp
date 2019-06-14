@@ -41,11 +41,6 @@
                             <spring:message code="signUp.emailExists"/>
                         </p>
                     </c:if>
-                    <c:if test="${invalidEmail}">
-                        <p class="alert alert-danger">
-                            <spring:message code="signUp.emailInvalid"/>
-                        </p>
-                    </c:if>
                     <form:errors path="email" cssClass="alert alert-warning" element="p"/>
                     <spring:message code="signUp.enterEmailPh" var="enterEmailPh"/>
                     <form:input type="text" placeholder="${enterEmailPh}" name="email" path="email"/>
@@ -66,6 +61,7 @@
                 <div class="col-12 col-md-6">
                     <form:errors path="nationality" cssClass="alert alert-warning" element="p"/>
                     <form:select name="nationality" path="nationality">
+                        <option disabled selected><spring:message code="signUp.nationality"/></option>
                         <option value="AFG">Afghanistan</option>
                         <option value="ALB">Albania</option>
                         <option value="DZA">Algeria</option>
