@@ -10,6 +10,12 @@
     <c:url value="/home/trip/${tripId}/create-activity" var="postURL"/>
     <c:url value="/resources/css/map.css" var="createTripCss"/>
     <c:url value="/resources/js/map.js" var="createTripJs"/>
+    <c:url value="/resources/js/createTripDatepicker.js" var="datePicker"/>
+    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js" var="datepickerJs"/>
+    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" var="datepickerCss"/>
+    <script type="text/javascript" src="${datepickerJs}"></script>
+    <script type="text/javascript" src="${datePicker}"></script>
+    <link rel="stylesheet" href="${datepickerCss}"/>
     <link rel="stylesheet" href="${createTripCss}">
     <title>
         <spring:message code="createActivity.title"/>
@@ -38,6 +44,7 @@
                         <form:errors path="category" cssClass="alert alert-warning" element="p"/>
                         <spring:message code="createActivity.categoryPh" var="categoryPh"/>
                         <form:select name="nationality" path="category" cssClass="form-control" cssStyle="margin-bottom: 10px;">
+                            <option disabled selected><spring:message code="createActivity.dropdown"/></option>
                             <option value="Cultural"><spring:message code="createActivity.cultural"/></option>
                             <option value="Sports"><spring:message code="createActivity.sports"/></option>
                             <option value="Social"><spring:message code="createActivity.social"/></option>
@@ -49,6 +56,26 @@
                             <option value="Relaxation"><spring:message code="createActivity.relaxation"/></option>
                         </form:select>
                     </div>
+
+                    <%--START DATE INPUT--%>
+                    <div class="form-group">
+                        <form:errors path="startDate" cssClass="alert alert-warning" element="p"/>
+                        <form:label path="startDate" for="startDate" cssClass="text-white">
+                            <spring:message code="createActivity.startDate"/>
+                        </form:label>
+                        <form:input cssClass="form-control" type="text" placeholder="dd/mm/yyyy" name="startDate" id="startDate" path="startDate"/>
+                    </div>
+
+                    <%--END DATE INPUT--%>
+                    <div class="form-group">
+                        <form:errors path="endDate" cssClass="alert alert-warning" element="p"/>
+                        <form:label path="endDate" for="startDate" cssClass="text-white">
+                            <spring:message code="createActivity.endDate"/>
+                        </form:label>
+                        <form:input cssClass="form-control" type="text" placeholder="dd/mm/yyyy" name="endDate" id="endDate" path="endDate"/>
+                    </div>
+
+
                     <form:errors path="placeInput" cssClass="alert alert-warning" element="p"/>
                     <spring:message code="createActivity.locationPh" var="locationPh"/>
                     <form:input id="pac-input" type="text" path="placeInput" placeholder="${locationPh}" cssClass="form-control"/>

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.Activity;
+import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +68,8 @@ public class ActivityController extends MainController {
         Optional<Trip> tripOptional = ts.findById(tripId);
 
         if(tripOptional.isPresent()) {
-            Activity activity = as.create(form.getName(), form.getCategory(), modelPlace, tripOptional.get());
+            Activity activity = as.create(form.getName(), form.getCategory(), modelPlace, tripOptional.get(),
+                    DateManipulation.stringToLocalDate(form.getStartDate()), DateManipulation.stringToLocalDate(form.getEndDate()));
             ts.addActivityToTrip(activity.getId(), tripId);
         }
         else {

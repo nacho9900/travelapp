@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -15,6 +16,30 @@ public class ActivityCreateForm {
 
     @Size(min = 3, max = 100)
     private String placeInput;
+
+    @NotNull
+    @Size(min = 8, max = 10)
+    private String startDate;
+
+    @NotNull
+    @Size(min = 8, max = 10)
+    private String endDate;
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
 
     public String getName() {
         return name;

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Repository
@@ -33,8 +34,8 @@ public class ActivityHibernateDao implements ActivityDao {
     }
 
     @Override
-    public Activity create(String name, String category, Place place, Trip trip) {
-        Activity activity = new Activity(name, category, place, trip);
+    public Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
+        Activity activity = new Activity(name, category, place, trip, startDate, endDate);
         em.persist(activity);
         return activity;
     }

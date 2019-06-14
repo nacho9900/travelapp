@@ -11,8 +11,6 @@
 <%@include file="header.jsp" %>
 <div class="container-fluid" id="main-container">
     <div class="container">
-        <spring:message code="home.greeting" arguments="${user.firstname}" var="welcome"/>
-        <h3 class="text-center"><c:out value="${welcome}"/></h3>
         <div class="list-group">
             <c:forEach items = "${tripList}" var="trip">
                 <c:url value="/home/trip/${trip.key.id}" var = "tripUrl"/>

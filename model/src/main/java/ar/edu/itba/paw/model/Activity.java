@@ -2,6 +2,7 @@ package ar.edu.itba.paw.model;
 
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "activities")
@@ -18,6 +19,11 @@ public class Activity {
     @Column(length = 40, nullable = false)
     private String category;
 
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
 
     ///////////////
 
@@ -29,18 +35,18 @@ public class Activity {
 
     //////////////
 
-
-
-    public Activity(long id, String name, String category, Place place, Trip trip) {
-        this(name, category, place, trip);
+    public Activity(long id, String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
+        this(name, category, place, trip, startDate, endDate);
         this.id = id;
     }
 
-    public Activity(String name, String category, Place place, Trip trip) {
+    public Activity(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.category = category;
         this.place = place;
         this.trip = trip;
+        this.endDate = endDate;
+        this.startDate = startDate;
     }
 
     /* package */ Activity() {
@@ -86,5 +92,21 @@ public class Activity {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 }

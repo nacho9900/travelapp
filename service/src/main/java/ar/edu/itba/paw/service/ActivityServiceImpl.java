@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +34,8 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Activity create(String name, String category, Place place, Trip trip) {
-        return ad.create(name, category, place, trip);
+    public Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
+        return ad.create(name, category, place, trip, startDate, endDate);
     }
 
     @Override
