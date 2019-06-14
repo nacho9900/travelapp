@@ -31,24 +31,21 @@
                     <div class="img-container" style="background-image: url(${tripImageURL});">
 
                     </div>
-
                 </c:if>
-
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">
                 <div>
                     <div class="d-flex justify-content-between">
-                        <div class="display-4 text-white p-2"><c:out value="${trip.name}"/></div>
-                        <c:if test="${isAdmin}">
+                        <c:if test="${user.id == admin.id}">
                             <div class="p-2">
-                                <a href="${editTripURL}" class="btn btn-primary  align-middle">
+                                <a href="${editTripURL}" class="btn btn-primary  align-middle" style="margin-top: 10px;">
                                     <i class="fas fa-edit"></i>
                                 </a>
                             </div>
                         </c:if>
                     </div>
-
+                    <div class="display-4 text-white p-2"><c:out value="${trip.name}"/></div>
                     <p class="text-white"><c:out value="${trip.description}"/></p>
                     <p class="text-white">
                         <spring:message code="trip.start"/>
@@ -72,16 +69,20 @@
                     <spring:message code="trip.members"/>
                 </h3>
                 <div class="list-group">
+                    <a class="list-group-item list-group-item-action flex-column align-items-start"
+                       href="<c:url value='/home/profile/${admin.id}'/>">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1"><i class="fas fa-user" style="margin-right: 5px;"></i>
+                                <c:out value="${admin.firstname}"/> <c:out value="${admin.lastname}"/></h5>
+                            <small><spring:message code="trip.admin"/></small>
+                        </div>
+                    </a>
                     <c:forEach items="${users}" var="ur">
                         <a class="list-group-item list-group-item-action flex-column align-items-start"
                            href="<c:url value='/home/profile/${ur.id}'/>">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">                                 <i class="fas fa-user"></i>
+                                <h5 class="mb-1"><i class="fas fa-user" style="margin-right: 5px;"></i>
                                     <c:out value="${ur.firstname}"/> <c:out value="${ur.lastname}"/></h5>
-                                <c:if test="${ur.id == adminId}">
-                                    <small><spring:message code="trip.admin"/></small>
-                                </c:if>
-
 
                             </div>
                         </a>
@@ -117,11 +118,19 @@
                     </c:otherwise>
                 </c:choose>
 
+                <c:if test="${user.id == admin.id}">
+                    <a class="btn btn-success btn-lg" style="margin-top: 15px;" href="${createActivityURL}"
+                       role="button">
+                        <spring:message code="trip.addActivityBtn"/>
+                    </a>
+                </c:if>
+
+
                 <h3 class="text-white">Comentarios</h3>
 
-                <c:forEach var="comment" items="${trip.getComments()}">
+                <c:forEach items="${comments}" var="comment" >
                     <div class="form-group text-white">
-                        <strong>${comment.getUser().getFirstname()}:</strong> ${comment.getComment()}
+                        <strong>${comment.user.firstname}:</strong> ${comment.comment}
                     </div>
                 </c:forEach>
 
@@ -135,19 +144,20 @@
                     </form:button>
                 </form:form>
 
-                <c:choose>
-                    <c:when test="${!isTravelling}">
-                        <a class="btn btn-success" style="margin-top: 20px;" href="${joinTripURL}" role="button">
-                            <spring:message code="trip.joinTripBtn"/>
-                        </a>
-                    </c:when>
-                    <c:otherwise>
-                        <a class="btn btn-danger" style="margin-top: 20px;" href="${exitTripURL}" role="button">
-                            <spring:message code="trip.exitTripBtn"/>
-                        </a>
-                    </c:otherwise>
-                </c:choose>
-
+                <c:if test="${user.id != admin.id}">
+                    <c:choose>
+                        <c:when test="${!isTravelling}">
+                            <a class="btn btn-success" style="margin-top: 20px;" href="${joinTripURL}" role="button">
+                                <spring:message code="trip.joinTripBtn"/>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="btn btn-danger" style="margin-top: 20px;" href="${exitTripURL}" role="button">
+                                <spring:message code="trip.exitTripBtn"/>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
             </div>
         </div>
     </div>
