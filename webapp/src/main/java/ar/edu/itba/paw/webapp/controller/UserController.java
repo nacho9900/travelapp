@@ -123,7 +123,7 @@ public class UserController extends MainController{
         authToken.setDetails(new WebAuthenticationDetails(request));
         Authentication authentication = authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        mav.setViewName("redirect:/home");
+        mav.setViewName("redirect:/home/1");
         return mav;
     }
 
