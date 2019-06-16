@@ -29,5 +29,13 @@
         </div>
     </div>
 </div>
+<div class="d-flex justify-content-center align-bottom" >
+    <ul class="pagination">
+        <c:forEach var = "i" begin = "1" end = "${pages}">
+            <c:url value="/home/${i}" var="homepageURL"/>
+            <li class="page-item"><a class="page-link" href="${homepageURL}">${i}</a></li>
+        </c:forEach>
+    </ul>
+</div>
 </body>
 </html>

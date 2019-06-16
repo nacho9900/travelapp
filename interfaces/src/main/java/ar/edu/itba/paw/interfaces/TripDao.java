@@ -11,8 +11,9 @@ public interface TripDao {
     public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate);
     public Optional<Trip> findById(long id);
     public List<Trip> findByName(String name);
-    public List<Trip> getAllTrips();
+    public List<Trip> getAllTrips(int pageNum);
     public List<Trip> findUserCreatedTrips(long userId, int pageNum);
     public void deleteTrip(long tripId);
+    public int countAllTrips();
 
 }

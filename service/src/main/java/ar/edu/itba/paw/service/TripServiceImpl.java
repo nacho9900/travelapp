@@ -45,8 +45,8 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> getAllTrips() {
-        return td.getAllTrips();
+    public List<Trip> getAllTrips(int pageNum) {
+        return td.getAllTrips(pageNum);
     }
 
     public Set<Trip> getAllUserTrips(User user, int pageNum) {
@@ -121,6 +121,10 @@ public class TripServiceImpl implements TripService {
             oa.get().getPlace().getActivities().remove(oa.get());
             ad.deleteActivity(activityId);
         }
+    }
+    @Override
+    public int countAllTrips() {
+        return td.countAllTrips();
     }
 
 }

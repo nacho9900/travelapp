@@ -54,9 +54,8 @@ public class UserController extends MainController{
     private AuthenticationManager authenticationManager;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-
     private static final long MAX_UPLOAD_SIZE = 5242880;
-
+    private static final int MAX_TRIPS_PAGE = 6;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @RequestMapping("/")
@@ -64,14 +63,22 @@ public class UserController extends MainController{
         return new ModelAndView("index"); }
 
 
-    @RequestMapping("/home")
-    public ModelAndView home(@ModelAttribute("user") User user) {
+    @RequestMapping("/home/{pageNum}")
+    public ModelAndView home(@ModelAttribute("user") User user, @PathVariable(value = "pageNum") int pageNum) {
         ModelAndView mav = new ModelAndView("home");
-        List<Trip> trips = ts.getAllTrips();
+        int tripQty = ts.countAllTrips();
+        List<Trip> trips = ts.getAllTrips(pageNum);
+        int requiredPages = (int) Math.ceil(tripQty/(double)MAX_TRIPS_PAGE);
+        if(pageNum == 0 || (pageNum > 1 && pageNum > requiredPages)) {
+            mav.setViewName("404");
+            return mav;
+        }
+
         List<DataPair<Trip, Boolean>> list = new ArrayList<>();
         for(Trip trip : trips) {
             list.add(new DataPair<>(trip, tripPicturesService.findByTripId(trip.getId()).isPresent()));
         }
+        mav.addObject("pages", requiredPages);
         mav.addObject("dateFormat", formatter);
         mav.addObject("tripList", list);
         return mav;

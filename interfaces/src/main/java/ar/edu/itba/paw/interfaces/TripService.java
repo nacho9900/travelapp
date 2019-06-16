@@ -14,7 +14,7 @@ public interface TripService {
 
     public Trip create(long createdBy, long place, String name, String description, LocalDate startDate, LocalDate endDate);
     public Optional<Trip> findById(long id);
-    public List<Trip> getAllTrips();
+    public List<Trip> getAllTrips(int pageNum);
     public List<Trip> findByName(String name);
     public Set<Trip> getAllUserTrips(User user, int pageNum);
     public List<Place> findTripPlaces(Trip trip);
@@ -24,4 +24,5 @@ public interface TripService {
     public void deleteTrip(long tripId);
     public void addCommentToTrip(long commentId, long tripId);
     public void deleteTripActivity(long activityId, long tripId);
+    public int countAllTrips();
 }

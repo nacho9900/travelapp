@@ -41,8 +41,7 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
-    public List<Trip> getAllTrips() {
-        int pageNum = 1; //TODO add pagination
+    public List<Trip> getAllTrips(int pageNum) {
         final TypedQuery<Trip> query = em.createQuery("From Trip", Trip.class);
         query.setFirstResult((pageNum - 1) * MAX_ROWS);
         query.setMaxResults(MAX_ROWS);
@@ -63,5 +62,10 @@ public class TripHibernateDao implements TripDao {
         Query tripDelete = em.createQuery("delete Trip as t where t.id = :id");
         tripDelete.setParameter("id", tripId);
         tripDelete.executeUpdate();
+    }
+
+    public int countAllTrips() {
+        TypedQuery<Long> query = em.createQuery("select count(*) from Trip", Long.class);
+        return query.getSingleResult().intValue();
     }
 }
