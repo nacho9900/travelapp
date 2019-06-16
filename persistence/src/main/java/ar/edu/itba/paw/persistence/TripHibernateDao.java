@@ -49,11 +49,9 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
-    public List<Trip> findUserCreatedTrips(long userId, int pageNum) {
+    public List<Trip> findUserCreatedTrips(long userId) {
         final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.adminId = :userId ", Trip.class);
         query.setParameter("userId", userId);
-        query.setFirstResult((pageNum - 1) * MAX_ROWS);
-        query.setMaxResults(MAX_ROWS);
         return query.getResultList();
     }
 

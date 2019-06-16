@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "trips")
-public class Trip {
+public class Trip implements Comparable<Trip>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_id_seq")
@@ -151,5 +151,10 @@ public class Trip {
 
     public void setComments(List<TripComment> comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public int compareTo(Trip o) {
+        return (this.startDate.isBefore(o.startDate)) ? -1 : 1;
     }
 }

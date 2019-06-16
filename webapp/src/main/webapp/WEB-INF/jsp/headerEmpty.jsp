@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<c:url value="/home" var="home"/>
+<c:url value="/home/1" var="home"/>
 <c:url value="/about" var="about"/>
 <c:url value="/signup" var="signUpUrl"/>
 <c:url value="/" var="index"/>

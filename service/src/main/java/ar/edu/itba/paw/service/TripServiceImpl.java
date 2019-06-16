@@ -49,10 +49,12 @@ public class TripServiceImpl implements TripService {
         return td.getAllTrips(pageNum);
     }
 
-    public Set<Trip> getAllUserTrips(User user, int pageNum) {
-        Set<Trip> trips = new HashSet<>(user.getTrips());
-        List<Trip> createdTrips = td.findUserCreatedTrips(user.getId(), pageNum);
+    @Override
+    public List<Trip> getAllUserTrips(User user) {
+        List<Trip> trips = new ArrayList<>(user.getTrips());
+        List<Trip> createdTrips = td.findUserCreatedTrips(user.getId());
         trips.addAll(createdTrips);
+        Collections.sort(trips);
         return trips;
     }
 

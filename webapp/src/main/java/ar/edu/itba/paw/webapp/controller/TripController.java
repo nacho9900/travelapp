@@ -34,7 +34,7 @@ public class TripController extends MainController{
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
     private static final GooglePlaces client = new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final int MAX_TRIPS_PAGE = 4;
+    private static final int MAX_TRIPS_PAGE = 2;
     private static final long MAX_UPLOAD_SIZE = 5242880;
 
     @Autowired
@@ -66,29 +66,37 @@ public class TripController extends MainController{
     @RequestMapping("/home/trips/{pageNum}")
     public ModelAndView getUserTrips(@ModelAttribute("user") User user,  @PathVariable(value = "pageNum") int pageNum) {
         ModelAndView mav = new ModelAndView("userTrips");
-
+        System.out.println("PAGE NUM: " + pageNum);
         User u = us.findById(user.getId()).get();
-        //int userTripsQty = ts.countUserTrips(user.getId());
-
-        Set<Trip> userTrips =  ts.getAllUserTrips(u, pageNum);
-        int userTripsQty = u.getTrips().size();
+        System.out.println(u);
+        List<Trip> userTrips =  ts.getAllUserTrips(u);
+        System.out.println("USER TRIPS");
+        System.out.println(userTrips);
+        int userTripsQty = userTrips.size();
+        System.out.println("USER TRIPS SIZE" + userTripsQty);
 
         int requiredPages = (int) Math.ceil(userTripsQty/(double)MAX_TRIPS_PAGE);
-        //int n = (pageNum - 1) * MAX_TRIPS_PAGE;
+        System.out.println("REQUIRED PAGES:" + requiredPages);
+        int offset = (pageNum - 1) * MAX_TRIPS_PAGE;
         if(pageNum > 1 && pageNum > requiredPages) {
             mav.setViewName("404");
             return mav;
         }
 
+        int end = (offset + MAX_TRIPS_PAGE) > userTripsQty ? (userTripsQty) : (offset + MAX_TRIPS_PAGE);
+        System.out.println("SUBLIST, FROM" + offset + " TO " + end);
+        List<Trip> subList = userTrips.subList(offset, end);
+        System.out.println("SUBLIST");
+        System.out.println(subList);
         List<DataPair<Trip, DataPair<ar.edu.itba.paw.model.Place, Boolean>>> dataPairList = new LinkedList<>();
-        for (Trip trip: userTrips) {
+        for (Trip trip: subList) {
             long placeId = trip.getStartPlaceId();
             ar.edu.itba.paw.model.Place place = ps.findById(placeId).get();
             dataPairList.add(new DataPair<>(trip,
                     new DataPair<>(place,tripPictureService.findByTripId(trip.getId()).isPresent())));
         }
         int pageQty = (int)Math.round(userTripsQty / (double) MAX_TRIPS_PAGE);
-        mav.addObject("pageQty", pageQty);
+        mav.addObject("pageQty", requiredPages);
         mav.addObject("isEmpty", dataPairList.isEmpty());
         mav.addObject("userTripsList", dataPairList);
         mav.addObject("formatter", formatter);
@@ -120,7 +128,6 @@ public class TripController extends MainController{
         }
         Place place = places.get(0);
         LOGGER.debug("Google Place name is {}", place.getName());
-
 
         Optional<ar.edu.itba.paw.model.Place> maybePlace = ps.findByGoogleId(place.getPlaceId());
 

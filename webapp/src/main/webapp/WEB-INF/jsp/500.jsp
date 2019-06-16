@@ -8,7 +8,7 @@
     <c:url value="/webjars/bootstrap/4.1.3/js/bootstrap.min.js" var="bootjs"/>
     <c:url value="/resources/icons/globe.ico" var="iconURL"/>
     <c:url value="/resources/css/404.css" var="cssStyle"/>
-    <c:url value="/home" var="homeURL"/>
+    <c:url value="/home/1" var="homeURL"/>
     <link href="${bootstrapCss}" rel="stylesheet">
     <link href="${cssStyle}" rel="stylesheet">
     <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
