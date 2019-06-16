@@ -66,28 +66,17 @@ public class TripController extends MainController{
     @RequestMapping("/home/trips/{pageNum}")
     public ModelAndView getUserTrips(@ModelAttribute("user") User user,  @PathVariable(value = "pageNum") int pageNum) {
         ModelAndView mav = new ModelAndView("userTrips");
-        System.out.println("PAGE NUM: " + pageNum);
         User u = us.findById(user.getId()).get();
-        System.out.println(u);
         List<Trip> userTrips =  ts.getAllUserTrips(u);
-        System.out.println("USER TRIPS");
-        System.out.println(userTrips);
         int userTripsQty = userTrips.size();
-        System.out.println("USER TRIPS SIZE" + userTripsQty);
-
         int requiredPages = (int) Math.ceil(userTripsQty/(double)MAX_TRIPS_PAGE);
-        System.out.println("REQUIRED PAGES:" + requiredPages);
         int offset = (pageNum - 1) * MAX_TRIPS_PAGE;
         if(pageNum > 1 && pageNum > requiredPages) {
             mav.setViewName("404");
             return mav;
         }
-
         int end = (offset + MAX_TRIPS_PAGE) > userTripsQty ? (userTripsQty) : (offset + MAX_TRIPS_PAGE);
-        System.out.println("SUBLIST, FROM" + offset + " TO " + end);
         List<Trip> subList = userTrips.subList(offset, end);
-        System.out.println("SUBLIST");
-        System.out.println(subList);
         List<DataPair<Trip, DataPair<ar.edu.itba.paw.model.Place, Boolean>>> dataPairList = new LinkedList<>();
         for (Trip trip: subList) {
             long placeId = trip.getStartPlaceId();
@@ -268,11 +257,64 @@ public class TripController extends MainController{
     }
 
     @RequestMapping("/home/search-trip/")
-    public ModelAndView search(@ModelAttribute("user") User user, @RequestParam(value = "nameInput") String nameInput) {
+    public ModelAndView searchByName(@ModelAttribute("user") User user, @RequestParam(value = "nameInput") String nameInput) {
         ModelAndView mav = new ModelAndView("searchTrips");
         List<Trip> trips = ts.findByName(nameInput);
         mav.addObject("tripQty", trips.size());
         mav.addObject("tripsList", trips);
+        return mav;
+    }
+
+    @RequestMapping(value = "/home/advanced-search")
+    public ModelAndView advancedSearch() {
+        ModelAndView mav = new ModelAndView("advancedSearch");
+        return mav;
+    }
+
+    @RequestMapping(value = "/home/advanced-search", method = {RequestMethod.POST})
+    public ModelAndView advancedSearchPost(@ModelAttribute("user") User user,
+                                       @RequestParam(value = "placeName", required = false) String placeName,
+                                       @RequestParam(value = "startDate", required = false) String startDate,
+                                       @RequestParam(value = "endDate", required = false) String endDate,
+                                       @RequestParam(value = "category", required = false) String category) {
+        ModelAndView mav = new ModelAndView("advancedSearch");
+        if(placeName == null && startDate == null && endDate == null && category == null) {
+            mav.addObject("noInput", true);
+            return mav;
+        }
+        Map<String, Object> filterMap = new HashMap<>();
+        if(startDate != null) {
+            if(DateManipulation.validate(startDate)){
+                filterMap.put("startDate", DateManipulation.stringToLocalDate(startDate));
+                System.out.println("ADDED START DATE FILTER " + DateManipulation.stringToLocalDate(startDate));
+            }
+            else {
+                mav.addObject("invalidStartDate", true);
+            }
+
+        }
+        if(endDate != null) {
+            if(DateManipulation.validate(endDate)){
+                filterMap.put("endDate", DateManipulation.stringToLocalDate(endDate));
+                System.out.println("ADDED END DATE FILTER" + DateManipulation.stringToLocalDate(endDate));
+            }
+            else {
+                mav.addObject("invalidEndDate", true);
+            }
+        }
+        if(category != null) {
+            System.out.println("ADDED CATEGORY FILTER " + category);
+            filterMap.put("category", category);
+        }
+        if(placeName != null) {
+            System.out.println("ADDED PLACENAME FILTER " + placeName);
+            filterMap.put("placeName", placeName);
+        }
+        List<Trip> searchResult = ts.findWithFilters(filterMap);
+        System.out.println("RESULT LIST: " + searchResult);
+        mav.addObject("tripQty", searchResult.size());
+        mav.addObject("tripsList", searchResult);
+        mav.setViewName("searchTrips");
         return mav;
     }
 

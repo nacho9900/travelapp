@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,8 +21,14 @@ public class DateManipulation {
         return date;
     }
 
-    public static LocalDate dateToLocalDate(Date date) {
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    public static boolean validate(String dateString) {
+        try {
+            LocalDate date = LocalDate.parse(dateString, formatter);
+        }
+        catch(DateTimeParseException e) {
+            return false;
+        }
+        return true;
     }
 
 }

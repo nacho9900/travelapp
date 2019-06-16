@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -35,7 +36,7 @@ public class TripHibernateDao implements TripDao {
     @Override
     public List<Trip> findByName(String name) {
         final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.name like :name", Trip.class);
-        query.setParameter("name", "%"+name+"%");
+        query.setParameter("name", "%" + name + "%");
         query.setMaxResults(MAX_ROWS);
         return query.getResultList();
     }
@@ -65,5 +66,75 @@ public class TripHibernateDao implements TripDao {
     public int countAllTrips() {
         TypedQuery<Long> query = em.createQuery("select count(*) from Trip", Long.class);
         return query.getSingleResult().intValue();
+    }
+
+    @Override
+    public List<Trip> findByCategory(String category) {
+        final TypedQuery<Trip> query = em.createQuery("select t From Trip as t, Activity as a" +
+                " where a.trip.id = t.id and a.category like :category", Trip.class);
+        query.setParameter("category", category);
+        query.setMaxResults(MAX_ROWS);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Trip> findByPlace(String placeName) {
+        final TypedQuery<Trip> query = em.createQuery("select t From Trip as t, Place as p" +
+                " where t.startPlaceId = p.id and lower(p.address) like lower(:placeName)", Trip.class);
+        query.setParameter("placeName", "%" + placeName + "%");
+        query.setMaxResults(MAX_ROWS);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Trip> findWithFilters(Map<String, Object> filterMap) {
+        System.out.println("FILTER QUERY:");
+        System.out.println(filtersQuery(filterMap));
+        final TypedQuery<Trip> query = em.createQuery("select distinct t From Trip as t, Place as p, Activity as a where " +
+                        filtersQuery(filterMap), Trip.class);
+        setQueryParameters(query, filterMap);
+        query.setMaxResults(MAX_ROWS);
+        return query.getResultList();
+    }
+
+    private void setQueryParameters(TypedQuery<Trip> query, Map<String, Object> filterMap) {
+        for(String filter : filterMap.keySet()) {
+            if(filter.equals("placeName")) {
+                query.setParameter(filter, "%" +  (String)filterMap.get(filter) + "%");
+            }
+            else {
+                query.setParameter(filter, filterMap.get(filter));
+            }
+        }
+    }
+
+    private String filtersQuery(Map<String, Object> filterMap) {
+        int count = 0;
+        StringBuilder buffer = new StringBuilder();
+        for(String filter : filterMap.keySet()) {
+            switch(filter) {
+                case "category":
+                    if(count != 0) buffer.append(" and ");
+                    buffer.append("a.trip.id = t.id and a.category like :category");
+                    count++;
+                    break;
+                case "placeName":
+                    if(count != 0) buffer.append(" and ");
+                    buffer.append("t.startPlaceId = p.id and lower(p.address) like lower(:placeName) ");
+                    count++;
+                    break;
+                case "startDate":
+                    if(count != 0) buffer.append(" and ");
+                    buffer.append("t.startDate = :startDate");
+                    count++;
+                    break;
+                case "endDate":
+                    if(count != 0) buffer.append(" and ");
+                    buffer.append("t.endDate = :endDate");
+                    count++;
+                    break;
+            }
+        }
+        return buffer.toString();
     }
 }

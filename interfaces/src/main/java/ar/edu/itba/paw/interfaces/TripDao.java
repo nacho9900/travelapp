@@ -4,6 +4,7 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.model.Trip;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface TripDao {
@@ -15,5 +16,8 @@ public interface TripDao {
     public List<Trip> findUserCreatedTrips(long userId);
     public void deleteTrip(long tripId);
     public int countAllTrips();
+    public List<Trip> findByCategory(String category);
+    public List<Trip> findByPlace(String placeName);
+    public List<Trip> findWithFilters(Map<String,Object> filterMap);
 
 }

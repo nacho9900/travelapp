@@ -48,7 +48,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/home/**").authenticated()
                 .and().formLogin()
                 .loginPage("/signin")
-                .defaultSuccessUrl("/home", true)
+                .defaultSuccessUrl("/home/1", true)
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .failureUrl("/signin?error=true")

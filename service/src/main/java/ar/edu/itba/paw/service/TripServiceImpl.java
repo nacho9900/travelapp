@@ -129,4 +129,19 @@ public class TripServiceImpl implements TripService {
         return td.countAllTrips();
     }
 
+    @Override
+    public List<Trip> findByCategory(String category) {
+        return td.findByCategory(category);
+    }
+
+    @Override
+    public List<Trip> findByPlace(String placeName) {
+        return td.findByPlace(placeName);
+    }
+
+    @Override
+    public List<Trip> findWithFilters(Map<String, Object> filterMap) {
+        return td.findWithFilters(filterMap);
+    }
+
 }

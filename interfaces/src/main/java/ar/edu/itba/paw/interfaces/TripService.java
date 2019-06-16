@@ -5,10 +5,7 @@ import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public interface TripService {
 
@@ -25,5 +22,8 @@ public interface TripService {
     public void addCommentToTrip(long commentId, long tripId);
     public void deleteTripActivity(long activityId, long tripId);
     public int countAllTrips();
+    public List<Trip> findByCategory(String category);
+    public List<Trip> findByPlace(String placeName);
+    public List<Trip> findWithFilters(Map<String,Object> filterMap);
 
 }
