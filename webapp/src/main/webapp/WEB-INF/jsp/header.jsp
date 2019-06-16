@@ -9,13 +9,14 @@
 <c:url value="/home/trips/1" var="trips"/>
 <c:url value="/home/create-trip" var="createTrip"/>
 <c:url value="/resources/icons/earth-globe.png" var="globeIMG"/>
+<c:url value="https://img.icons8.com/cotton/50/000000/detective.png" var="searchIMG"/>
 <c:url value="/resources/icons/uu.png" var="userIMG"/>
 <c:url value="/signin" var="signinURL"/>
 <c:url value="/resources/css/header.css" var="headerCss"/>
-<c:url value="/home/search-trip/" var="searchURL"/>
 <c:url value="/logout" var="logoutUrl"/>
 <c:url value="/home/profile/${user.id}" var="profile"/>
 <c:url value="/home/search-trip/" var="searchURL"/>
+<c:url value="/home/advanced-search/" var="advancedSearchURL"/>
 
 <link href="${headerCss}" rel="stylesheet">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -55,6 +56,9 @@
                  <a class="nav-link" href="${about}"><spring:message code="header.aboutUs"/> </a>
             </li>
         </ul>
+        <a class="nav-item" href="${advancedSearchURL}">
+            <img src="${searchIMG}" height="38" width="38" style="margin-right: 7px;">
+        </a>
         <c:if test="${user != null}">
         <form action="${searchURL}" method="get" class="form-inline my-2 my-lg-0">
             <input id="nameInput" name="nameInput" class="form-control mr-sm-2" type="search" placeholder="<spring:message code="header.searchMessage"/>"

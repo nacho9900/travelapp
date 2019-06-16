@@ -88,8 +88,6 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> findWithFilters(Map<String, Object> filterMap) {
-        System.out.println("FILTER QUERY:");
-        System.out.println(filtersQuery(filterMap));
         final TypedQuery<Trip> query = em.createQuery("select distinct t From Trip as t, Place as p, Activity as a where " +
                         filtersQuery(filterMap), Trip.class);
         setQueryParameters(query, filterMap);

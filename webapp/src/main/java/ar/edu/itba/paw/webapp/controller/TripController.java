@@ -271,7 +271,7 @@ public class TripController extends MainController{
         return mav;
     }
 
-    @RequestMapping(value = "/home/advanced-search", method = {RequestMethod.POST})
+    @RequestMapping(value = "/home/advanced-search/query")
     public ModelAndView advancedSearchPost(@ModelAttribute("user") User user,
                                        @RequestParam(value = "placeName", required = false) String placeName,
                                        @RequestParam(value = "startDate", required = false) String startDate,
@@ -286,7 +286,6 @@ public class TripController extends MainController{
         if(startDate != null) {
             if(DateManipulation.validate(startDate)){
                 filterMap.put("startDate", DateManipulation.stringToLocalDate(startDate));
-                System.out.println("ADDED START DATE FILTER " + DateManipulation.stringToLocalDate(startDate));
             }
             else {
                 mav.addObject("invalidStartDate", true);
@@ -296,22 +295,18 @@ public class TripController extends MainController{
         if(endDate != null) {
             if(DateManipulation.validate(endDate)){
                 filterMap.put("endDate", DateManipulation.stringToLocalDate(endDate));
-                System.out.println("ADDED END DATE FILTER" + DateManipulation.stringToLocalDate(endDate));
             }
             else {
                 mav.addObject("invalidEndDate", true);
             }
         }
         if(category != null) {
-            System.out.println("ADDED CATEGORY FILTER " + category);
             filterMap.put("category", category);
         }
-        if(placeName != null) {
-            System.out.println("ADDED PLACENAME FILTER " + placeName);
+        if(placeName != null && placeName.length() > 0) {
             filterMap.put("placeName", placeName);
         }
         List<Trip> searchResult = ts.findWithFilters(filterMap);
-        System.out.println("RESULT LIST: " + searchResult);
         mav.addObject("tripQty", searchResult.size());
         mav.addObject("tripsList", searchResult);
         mav.setViewName("searchTrips");

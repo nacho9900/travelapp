@@ -118,8 +118,9 @@
                                 <c:url value="/home/trip/${trip.id}/${activity_places.key.id}/delete" var="deleteActURL"/>
                                 <c:if test="${user.id == admin.id}">
                                     <form action="${deleteActURL}" method="post">
-                                        <input type="submit" value="<spring:message code="trip.deleteActivity"/>"
-                                               class="btn btn-danger" >
+                                        <button type="submit" class="btn btn-danger">
+                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>  <spring:message code="trip.deleteActivity"/>
+                                        </button>
                                     </form>
                                 </c:if>
                                 <div id="map${activity_places.key.id}" style="height: 400px;width: 97%;display: none;"></div>
