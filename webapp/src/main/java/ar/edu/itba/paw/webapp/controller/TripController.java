@@ -340,7 +340,6 @@ public class TripController extends MainController{
             return mav;
         }
         Trip trip = maybeTrip.get();
-
         LOGGER.debug("trip {}", trip);
         Optional<User> adminUserOp = us.findById(trip.getAdminId());
         if(!adminUserOp.isPresent()) {
@@ -354,11 +353,11 @@ public class TripController extends MainController{
         Optional<ar.edu.itba.paw.model.Place> sPlaceOpt = ps.findById(trip.getStartPlaceId());
         sPlaceOpt.ifPresent(tripPlaces::add);
         List<User> tripMembers = trip.getUsers();
-
         boolean isTravelling = false;
         if(trip.getUsers().contains(user) || trip.getAdminId() == user.getId()) {
             isTravelling = true;
         }
+        mav.addObject("startPlace", sPlaceOpt.get());
         mav.addObject("admin", adminUser);
         mav.addObject("users", tripMembers);
         mav.addObject("passengerCount", tripMembers.size() + 1 );

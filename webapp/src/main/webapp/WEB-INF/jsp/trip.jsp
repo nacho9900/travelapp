@@ -57,13 +57,18 @@
                     </p>
                 </div>
 
-                <h3 class="margin-class text-white"></h3>
+
+
+
+                <h3 class="margin-class text-white"><spring:message code="trip.startPlace"/></h3>
                 <ul class="list-group">
-                    <c:forEach items="${places}" var="place">
-                        <li class="list-group-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <c:out value="${place.name}"/></li>
-                    </c:forEach>
+                    <button type="button"
+                            class="list-group-item list-group-item-action flex-column align-items-start"
+                            onclick="initMapStartPlace(${startPlace.latitude},${startPlace.longitude})">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <c:out value="${startPlace.name}"/>
+                    </button>
+                    <div id="startPlaceMap" style="height: 400px;width: 97%;display: none;"></div>
                 </ul>
                 <h3 class="margin-class text-white">
                     <spring:message code="trip.members"/>
@@ -113,7 +118,9 @@
                                     <small><c:out value="${activity_places.key.startDate.format(formatter)}"/> -
                                         <c:out value="${activity_places.key.endDate.format(formatter)}"/>
                                     </small>
-                                    <p class="mb-1"><c:out value="${activity_places.value.address}"/></p>
+
+                                    <p class="mb-1"><i class="fas fa-map-marker-alt"></i>
+                                        <c:out value="${activity_places.value.address}"/></p>
                                 </button>
                                 <c:url value="/home/trip/${trip.id}/${activity_places.key.id}/delete" var="deleteActURL"/>
                                 <c:if test="${user.id == admin.id}">
