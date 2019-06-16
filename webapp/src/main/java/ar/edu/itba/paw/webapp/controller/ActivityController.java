@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,14 +37,25 @@ public class ActivityController extends MainController {
     @Autowired
     TripService ts;
 
-   /* @RequestMapping(value = "/home/trip/{tripId}/{activityId}/delete", method = {RequestMethod.DELETE})
-    public ModelAndView createActivityGet(@PathVariable(value = "tripId") long tripId,
-                                          @ModelAttribute("activityForm") final ActivityCreateForm form) {
-        ModelAndView mav = new ModelAndView("createActivity");
-        return mav;
+    @RequestMapping(value = "/home/trip/{tripId}/{activityId}/delete", method = {RequestMethod.POST})
+    public ModelAndView deleteTripActivity(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId,
+                                          @PathVariable(value = "activityId") long activityId) {
+
+        Optional<Trip> tripOptional = ts.findById(tripId);
+        if(tripOptional.isPresent()) {
+            if(tripOptional.get().getAdminId() != user.getId()) {
+                return new ModelAndView("403");
+            }
+        }
+        else {
+            return new ModelAndView("404");
+        }
+        ts.deleteTripActivity(activityId, tripId);
+        String redirectFormat = String.format("redirect:/home/trip/%d", tripId);
+        return new ModelAndView(redirectFormat);
     }
 
-*/
+
     @RequestMapping(value = "/home/trip/{tripId}/create-activity", method = {RequestMethod.GET})
     public ModelAndView createActivityGet(@PathVariable(value = "tripId") long tripId,
                                           @ModelAttribute("activityForm") final ActivityCreateForm form) {

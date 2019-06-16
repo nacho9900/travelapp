@@ -112,4 +112,15 @@ public class TripServiceImpl implements TripService {
         }
     }
 
+    @Override
+    public void deleteTripActivity(long activityId, long tripId) {
+        Optional<Trip> ot = td.findById(tripId);
+        Optional<Activity> oa = ad.findById(activityId);
+        if(ot.isPresent() && oa.isPresent()) {
+            ot.get().getActivities().remove(oa.get());
+            oa.get().getPlace().getActivities().remove(oa.get());
+            ad.deleteActivity(activityId);
+        }
+    }
+
 }

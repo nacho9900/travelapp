@@ -3,6 +3,7 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(name = "activities")
@@ -108,6 +109,23 @@ public class Activity implements Comparable<Activity> {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Activity activity = (Activity) o;
+        return id == activity.id &&
+                Objects.equals(name, activity.name) &&
+                Objects.equals(category, activity.category) &&
+                Objects.equals(startDate, activity.startDate) &&
+                Objects.equals(endDate, activity.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, category, startDate, endDate, place, trip);
     }
 
     @Override

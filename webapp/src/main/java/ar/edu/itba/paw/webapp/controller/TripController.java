@@ -173,7 +173,6 @@ public class TripController extends MainController{
         if(errors.hasErrors()) {
             return mav;
         }
-
         MultipartFile tripPicture = form.getImageUpload();
         byte[] imageBytes;
         if(tripPicture != null && !tripPicture.isEmpty()) {
@@ -215,7 +214,6 @@ public class TripController extends MainController{
         ModelAndView mav = new ModelAndView("editTrip");
         ts.addUserToTrip(user.getId(), tripId);
         Optional<Trip> optionalTrip = ts.findById(tripId);
-        //send mail
         if(optionalTrip.isPresent()) {
             Optional<User> u = us.findById(optionalTrip.get().getAdminId());
             if(u.isPresent()) {
@@ -262,7 +260,6 @@ public class TripController extends MainController{
         return mav;
     }
 
-
     @RequestMapping("/home/search-trip/")
     public ModelAndView search(@ModelAttribute("user") User user, @RequestParam(value = "nameInput") String nameInput) {
         ModelAndView mav = new ModelAndView("searchTrips");
@@ -271,8 +268,6 @@ public class TripController extends MainController{
         mav.addObject("tripsList", trips);
         return mav;
     }
-
-
 
     @RequestMapping(value = "/home/trip/{tripId}/image", method = {RequestMethod.GET})
     public void getProfileImage(@PathVariable(value = "tripId") long tripId, HttpServletResponse response) {

@@ -4,6 +4,7 @@ package ar.edu.itba.paw.model;
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "places")
@@ -31,13 +32,8 @@ public class Place {
 
     ///////////////
 
-
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "place")
     private List<Activity> activities = new LinkedList<>();
-
-
-
 
     ////////////////
 
@@ -113,5 +109,23 @@ public class Place {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Place place = (Place) o;
+        return id == place.id &&
+                Double.compare(place.latitude, latitude) == 0 &&
+                Double.compare(place.longitude, longitude) == 0 &&
+                Objects.equals(googleId, place.googleId) &&
+                Objects.equals(name, place.name) &&
+                Objects.equals(address, place.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, googleId, name, latitude, longitude, address);
     }
 }

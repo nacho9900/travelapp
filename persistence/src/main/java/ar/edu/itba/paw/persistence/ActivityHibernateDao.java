@@ -56,4 +56,11 @@ public class ActivityHibernateDao implements ActivityDao {
         activityDelete.executeUpdate();
     }
 
+    @Override
+    public void deleteActivity(long activityId) {
+        Query activityDelete = em.createQuery("delete Activity as a where a.id = :activityId");
+        activityDelete.setParameter("activityId", activityId);
+        activityDelete.executeUpdate();
+    }
+
 }
