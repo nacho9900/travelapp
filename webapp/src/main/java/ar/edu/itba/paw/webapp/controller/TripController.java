@@ -68,6 +68,8 @@ public class TripController extends MainController{
         ModelAndView mav = new ModelAndView("userTrips");
 
         User u = us.findById(user.getId()).get();
+        //int userTripsQty = ts.countUserTrips(user.getId());
+
         Set<Trip> userTrips =  ts.getAllUserTrips(u, pageNum);
         int userTripsQty = u.getTrips().size();
 
@@ -244,7 +246,7 @@ public class TripController extends MainController{
         return new ModelAndView("redirect:/home/trips/1");
     }
 
-    @RequestMapping("/home/trip/{tripId}/delete")
+    @RequestMapping(value = "/home/trip/{tripId}/delete", method = {RequestMethod.POST})
     public ModelAndView deleteTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ModelAndView mav = new ModelAndView();
         Optional<Trip> optionalTrip = ts.findById(tripId);
@@ -299,6 +301,8 @@ public class TripController extends MainController{
             return mav;
         }
         Trip trip = maybeTrip.get();
+
+        LOGGER.debug("trip {}", trip);
         Optional<User> adminUserOp = us.findById(trip.getAdminId());
         if(!adminUserOp.isPresent()) {
             mav.setViewName("404");

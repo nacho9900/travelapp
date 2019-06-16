@@ -55,7 +55,7 @@
                     </c:if>
 
                     <form:errors path="startDate" cssClass="alert alert-warning" element="p"/>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-top: 5px;">
                         <form:label path="startDate" for="start_date" cssClass="text-white">
                             <spring:message code="createTrip.startDate"/>
                         </form:label>

@@ -16,6 +16,7 @@ public class ActivityCreateForm {
     @Size(min = 3, max = 40)
     private String name;
 
+    @NotNull
     @Pattern(regexp = "[a-zA-Z]+")
     @Size(min = 3, max = 40)
     private String category;

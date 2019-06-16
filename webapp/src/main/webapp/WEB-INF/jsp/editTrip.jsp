@@ -28,10 +28,11 @@
                        role="button">
                         <spring:message code="editTrip.back"/>
                     </a>
-                    <a class="btn btn-danger btn-lg" style="margin-top: 15px;margin-bottom: 15px;" href="${deleteTripURL}"
-                       role="button">
-                        <spring:message code="trip.deleteTripBtn"/>
-                    </a>
+
+                    <form action="${deleteTripURL}" method="post">
+                        <input type="submit" value="<spring:message code="trip.deleteTripBtn"/>" class="btn btn-danger btn-lg" >
+                    </form>
+
                     <c:if test="${fileSizeError}">
                         <p class=" alert alert-warning">
                             <spring:message code="trip.sizeError"/>

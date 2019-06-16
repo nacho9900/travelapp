@@ -109,6 +109,10 @@
                                         <h5 class="mb-1"><c:out value="${activity_places.key.name}"/></h5>
                                     </div>
                                     <small><c:out value="${activity_places.key.category}"/></small>
+                                    <br>
+                                    <small><c:out value="${activity_places.key.startDate.format(formatter)}"/> -
+                                        <c:out value="${activity_places.key.endDate.format(formatter)}"/>
+                                    </small>
                                     <p class="mb-1"><c:out value="${activity_places.value.address}"/></p>
                                 </button>
                                 <div id="map${activity_places.key.id}" style="height: 400px;width: 97%;display: none;"></div>

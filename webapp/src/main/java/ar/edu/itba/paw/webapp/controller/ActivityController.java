@@ -36,7 +36,14 @@ public class ActivityController extends MainController {
     @Autowired
     TripService ts;
 
+   /* @RequestMapping(value = "/home/trip/{tripId}/{activityId}/delete", method = {RequestMethod.DELETE})
+    public ModelAndView createActivityGet(@PathVariable(value = "tripId") long tripId,
+                                          @ModelAttribute("activityForm") final ActivityCreateForm form) {
+        ModelAndView mav = new ModelAndView("createActivity");
+        return mav;
+    }
 
+*/
     @RequestMapping(value = "/home/trip/{tripId}/create-activity", method = {RequestMethod.GET})
     public ModelAndView createActivityGet(@PathVariable(value = "tripId") long tripId,
                                           @ModelAttribute("activityForm") final ActivityCreateForm form) {
