@@ -20,7 +20,7 @@
     <div class="container">
         <div class="list-group">
             <c:if test="${noInput}">
-                <p cssClass="alert alert-warning"><spring:message code="advancedSearch.noInput"/></p>
+                <p class="alert alert-warning"><spring:message code="advancedSearch.noInput"/></p>
             </c:if>
             <form action="${asearchURL}" method="get" class="form-inline my-2 my-lg-0">
 
@@ -28,7 +28,7 @@
                        placeholder="<spring:message code="advancedSearch.placeName"/>">
 
                 <c:if test="${invalidStartDate || invalidEndDate}">
-                    <p cssClass="alert alert-warning"><spring:message code="advancedSearch.invalidDate"/></p>
+                    <p class="alert alert-warning"><spring:message code="advancedSearch.invalidDate"/></p>
                 </c:if>
 
                 <label path="startDate" for="startDate"><spring:message code="advancedSearch.startDate"/></label>
@@ -39,8 +39,8 @@
                 <input id="endDate" name="endDate" class="form-control mr-sm-2" type="text"
                        placeholder="dd/mm/yyyy" aria-label="Search">
 
-                <select name="category" path="category" cssClass="form-control mr-sm-2" cssStyle="margin-bottom: 10px;">
-                    <option disabled selected><spring:message code="createActivity.dropdown"/></option>
+                <select name="category" path="category" id="category" cssClass="form-control mr-sm-2" cssStyle="margin-bottom: 10px;">
+                    <option value="NA" selected><spring:message code="createActivity.dropdown"/></option>
                     <option value="Cultural"><spring:message code="createActivity.cultural"/></option>
                     <option value="Sports"><spring:message code="createActivity.sports"/></option>
                     <option value="Social"><spring:message code="createActivity.social"/></option>

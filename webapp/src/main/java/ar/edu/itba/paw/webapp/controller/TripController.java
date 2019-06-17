@@ -279,32 +279,34 @@ public class TripController extends MainController{
                                        @RequestParam(value = "endDate", required = false) String endDate,
                                        @RequestParam(value = "category", required = false) String category) {
         ModelAndView mav = new ModelAndView("advancedSearch");
-        if(placeName == null && startDate == null && endDate == null && category == null) {
+        if((placeName.length() < 1) && (startDate.length() < 1) && (endDate.length() < 1) && category.equals("NA")) {
             mav.addObject("noInput", true);
             return mav;
         }
         Map<String, Object> filterMap = new HashMap<>();
-        if(startDate != null) {
+        if(startDate.length() > 0) {
             if(DateManipulation.validate(startDate)){
                 filterMap.put("startDate", DateManipulation.stringToLocalDate(startDate));
             }
             else {
                 mav.addObject("invalidStartDate", true);
+                return mav;
             }
 
         }
-        if(endDate != null) {
+        if(endDate.length() > 0) {
             if(DateManipulation.validate(endDate)){
                 filterMap.put("endDate", DateManipulation.stringToLocalDate(endDate));
             }
             else {
                 mav.addObject("invalidEndDate", true);
+                return mav;
             }
         }
-        if(category != null) {
+        if(!category.equals("NA")) {
             filterMap.put("category", category);
         }
-        if(placeName != null && placeName.length() > 0) {
+        if(placeName.length() > 0) {
             filterMap.put("placeName", placeName);
         }
         List<Trip> searchResult = ts.findWithFilters(filterMap);
