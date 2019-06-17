@@ -103,29 +103,32 @@
                     <c:otherwise>
                         <div class="list-group" style="margin-bottom: 20px">
                             <c:forEach items="${actAndPlaces}" var="activity_places">
-                                <button type="button"
-                                        class="list-group-item list-group-item-action flex-column align-items-start"
-                                        onclick="initMap(${activity_places.key.id},
-                                            ${activity_places.value.latitude},${activity_places.value.longitude})">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h5 class="mb-1"><c:out value="${activity_places.key.name}"/></h5>
-                                    </div>
-                                    <small><c:out value="${activity_places.key.category}"/></small>
-                                    <br>
-                                    <small><c:out value="${activity_places.key.startDate.format(formatter)}"/> -
-                                        <c:out value="${activity_places.key.endDate.format(formatter)}"/>
-                                    </small>
-                                    <p class="mb-1"><i class="fas fa-map-marker-alt"></i>
-                                        <c:out value="${activity_places.value.address}"/></p>
-                                </button>
-                                <c:url value="/home/trip/${trip.id}/${activity_places.key.id}/delete" var="deleteActURL"/>
-                                <c:if test="${user.id == admin.id}">
-                                    <form action="${deleteActURL}" method="post">
-                                        <button type="submit" class="btn">
-                                            <i class="fas fa-trash-alt align-content-xl-end"></i>
-                                        </button>
-                                    </form>
-                                </c:if>
+                                <div class="container">
+                                    <button type="button"
+                                            class="list-group-item list-group-item-action flex-column align-items-start"
+                                            onclick="initMap(${activity_places.key.id},
+                                                ${activity_places.value.latitude},${activity_places.value.longitude})">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1"><c:out value="${activity_places.key.name}"/></h5>
+                                        </div>
+                                        <small><c:out value="${activity_places.key.category}"/></small>
+                                        <br>
+                                        <small><c:out value="${activity_places.key.startDate.format(formatter)}"/> -
+                                            <c:out value="${activity_places.key.endDate.format(formatter)}"/>
+                                        </small>
+                                        <p class="mb-1"><i class="fas fa-map-marker-alt"></i>
+                                            <c:out value="${activity_places.value.address}"/></p>
+                                    </button>
+
+                                    <c:url value="/home/trip/${trip.id}/${activity_places.key.id}/delete" var="deleteActURL"/>
+                                    <c:if test="${user.id == admin.id}">
+                                        <form action="${deleteActURL}" method="post">
+                                            <button type="submit" class="btn float-right">
+                                                <i class="fas fa-trash-alt "></i>
+                                            </button>
+                                        </form>
+                                    </c:if>
+                                </div>
                                 <div id="map${activity_places.key.id}" style="height: 400px;width: 97%;display: none;"></div>
                             </c:forEach>
                         </div>
