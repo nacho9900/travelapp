@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "trip_comments")
-public class TripComment {
+public class TripComment implements Comparable<TripComment>{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_comments_id_seq")
     @SequenceGenerator(sequenceName = "trip_comments_id_seq", name = "trip_comments_id_seq", allocationSize = 1)
@@ -72,5 +72,10 @@ public class TripComment {
 
     public void setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
+    }
+
+    @Override
+    public int compareTo(TripComment o) {
+        return this.createdOn.isBefore(o.createdOn) ? -1 : 1;
     }
 }

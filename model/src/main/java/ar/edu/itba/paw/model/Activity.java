@@ -31,7 +31,7 @@ public class Activity implements Comparable<Activity> {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Place place;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Trip trip;
 
     ////////////////

@@ -41,7 +41,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public List<DataPair<Activity, Place>> getTripActivitiesDetails(Trip trip) {
-        List<Activity> activities = trip.getActivities();
+        List<Activity> activities = ad.getTripActivities(trip.getId());
         Collections.sort(activities);
         List<DataPair<Activity, Place>> dataPairList = new ArrayList<>();
         for(Activity activity : activities) {

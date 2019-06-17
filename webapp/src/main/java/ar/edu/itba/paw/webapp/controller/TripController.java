@@ -34,6 +34,7 @@ public class TripController extends MainController{
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
     private static final GooglePlaces client = new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     private static final int MAX_TRIPS_PAGE = 2;
     private static final long MAX_UPLOAD_SIZE = 5242880;
 
@@ -367,7 +368,8 @@ public class TripController extends MainController{
         mav.addObject("places", tripPlaces);
         mav.addObject("actAndPlaces", tripActAndPlace);
         mav.addObject("trip", trip);
-        mav.addObject("comments", trip.getComments());
+        mav.addObject("comments", ts.getTripComments(trip.getId()));
+        mav.addObject("timeFormatter", formatterTime);
         mav.addObject("formatter", formatter);
         mav.addObject("startDate", trip.getStartDate());
         mav.addObject("endDate", trip.getEndDate());

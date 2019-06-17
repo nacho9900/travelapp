@@ -143,5 +143,12 @@ public class TripServiceImpl implements TripService {
     public List<Trip> findWithFilters(Map<String, Object> filterMap) {
         return td.findWithFilters(filterMap);
     }
+    @Override
+    public List<TripComment> getTripComments(long tripId) {
+
+        List<TripComment> comments = td.getTripComments(tripId);
+        Collections.sort(comments);
+        return comments;
+    }
 
 }

@@ -57,9 +57,6 @@
                     </p>
                 </div>
 
-
-
-
                 <h3 class="margin-class text-white"><spring:message code="trip.startPlace"/></h3>
                 <ul class="list-group">
                     <button type="button"
@@ -118,15 +115,14 @@
                                     <small><c:out value="${activity_places.key.startDate.format(formatter)}"/> -
                                         <c:out value="${activity_places.key.endDate.format(formatter)}"/>
                                     </small>
-
                                     <p class="mb-1"><i class="fas fa-map-marker-alt"></i>
                                         <c:out value="${activity_places.value.address}"/></p>
                                 </button>
                                 <c:url value="/home/trip/${trip.id}/${activity_places.key.id}/delete" var="deleteActURL"/>
                                 <c:if test="${user.id == admin.id}">
                                     <form action="${deleteActURL}" method="post">
-                                        <button type="submit" class="btn btn-danger">
-                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>  <spring:message code="trip.deleteActivity"/>
+                                        <button type="submit" class="btn">
+                                            <i class="fas fa-trash-alt align-content-xl-end"></i>
                                         </button>
                                     </form>
                                 </c:if>
@@ -138,7 +134,7 @@
                 </c:choose>
 
                 <c:if test="${user.id == admin.id}">
-                    <a class="btn btn-success btn-lg" style="margin-top: 15px;" href="${createActivityURL}"
+                    <a class="btn btn-success btn-lg" style="margin-top: 10px;margin-bottom: 10px;" href="${createActivityURL}"
                        role="button">
                         <spring:message code="trip.addActivityBtn"/>
                     </a>
@@ -149,7 +145,8 @@
 
                 <c:forEach items="${comments}" var="comment" >
                     <div class="form-group text-white">
-                        <strong>${comment.user.firstname}:</strong> ${comment.comment}
+                        <strong><c:out value="${comment.user.firstname}"/> <c:out value="${comment.user.lastname}"/> </strong>
+                        <c:out value="${comment.createdOn.format((timeFormatter))}"/><br> <c:out value="${comment.comment}"/>
                     </div>
                 </c:forEach>
 

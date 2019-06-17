@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -41,7 +42,6 @@ public class ActivityHibernateDao implements ActivityDao {
         return activity;
     }
 
-    //TODO
     @Override
     public Optional<Activity> findByCategory(String category) {
         final TypedQuery<Activity> query = em.createQuery("From Activity as a where a.category like :category", Activity.class);
@@ -61,6 +61,12 @@ public class ActivityHibernateDao implements ActivityDao {
         Query activityDelete = em.createQuery("delete Activity as a where a.id = :activityId");
         activityDelete.setParameter("activityId", activityId);
         activityDelete.executeUpdate();
+    }
+    @Override
+    public List<Activity> getTripActivities(long tripId) {
+        final TypedQuery<Activity> query = em.createQuery("From Activity as a where a.trip.id = :tripId", Activity.class);
+        query.setParameter("tripId", tripId);
+        return query.getResultList();
     }
 
 }

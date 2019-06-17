@@ -16,5 +16,5 @@ public interface ActivityDao {
     public Optional<Activity> findByCategory(String category);
     public void deleteActivities(long tripId);
     public void deleteActivity(long activityId);
-
+    public List<Activity> getTripActivities(long tripId);
 }
