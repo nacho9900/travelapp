@@ -98,6 +98,21 @@
                                 </a>
                             </c:forEach>
                         </div>
+
+                        <c:if test="${user.id != admin.id}">
+                            <c:choose>
+                                <c:when test="${!isTravelling}">
+                                    <a class="btn btn-success" style="margin-top: 20px;" href="${joinTripURL}" role="button">
+                                        <spring:message code="trip.joinTripBtn"/>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a class="btn btn-danger" style="margin-top: 20px;" href="${exitTripURL}" role="button">
+                                        <spring:message code="trip.exitTripBtn"/>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
                     </div>
 
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
@@ -154,7 +169,7 @@
 
                     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                         <c:forEach items="${comments}" var="comment" >
-                            <div class="form-group ">
+                            <div class="form-group" style="margin-top: 25px;">
                                 <strong><c:out value="${comment.user.firstname}"/> <c:out value="${comment.user.lastname}"/> </strong>
                                 <c:out value="${comment.createdOn.format((timeFormatter))}"/><br> <c:out value="${comment.comment}"/>
                             </div>
@@ -170,20 +185,6 @@
                             </form:button>
                         </form:form>
 
-                        <c:if test="${user.id != admin.id}">
-                            <c:choose>
-                                <c:when test="${!isTravelling}">
-                                    <a class="btn btn-success" style="margin-top: 20px;" href="${joinTripURL}" role="button">
-                                        <spring:message code="trip.joinTripBtn"/>
-                                    </a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a class="btn btn-danger" style="margin-top: 20px;" href="${exitTripURL}" role="button">
-                                        <spring:message code="trip.exitTripBtn"/>
-                                    </a>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:if>
                     </div>
                 </div>
             </div>
