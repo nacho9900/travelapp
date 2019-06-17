@@ -74,7 +74,7 @@ public class ActivityController extends MainController {
         if(errors.hasErrors() ) {
             return mav;
         }
-        if(!form.checkDates()) {
+        if(!form.checkDates(trip.getStartDate(), trip.getEndDate())) {
             mav.addObject("invalidDates", true);
             return mav;
         }

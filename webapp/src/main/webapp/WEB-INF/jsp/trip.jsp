@@ -137,7 +137,7 @@
                 </c:choose>
 
                 <c:if test="${user.id == admin.id}">
-                    <a class="btn btn-success btn-lg" style="margin-top: 10px;margin-bottom: 10px;" href="${createActivityURL}"
+                    <a class="btn btn-success btn-lg" style="margin-bottom: 10px;" href="${createActivityURL}"
                        role="button">
                         <spring:message code="trip.addActivityBtn"/>
                     </a>

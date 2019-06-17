@@ -74,12 +74,12 @@ public class ActivityCreateForm {
         this.placeInput = placeInput;
     }
 
-    public boolean checkDates() {
+    public boolean checkDates(LocalDate tripStart, LocalDate tripEnd) {
         LocalDate sDate = DateManipulation.stringToLocalDate(startDate);
         LocalDate eDate = DateManipulation.stringToLocalDate(endDate);
         LocalDate now = LocalDate.now();
-        System.out.println();
-        return  now.isBefore(sDate) && sDate.isBefore(eDate);
+        return  (sDate.isAfter(tripStart) || sDate.isEqual(tripStart)) && (eDate.isBefore(tripEnd) || eDate.isEqual(tripEnd))
+        && now.isBefore(sDate) && sDate.isBefore(eDate);
     }
 
     public boolean checkTimeline(List<Activity> activities) {
