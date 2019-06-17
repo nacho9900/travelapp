@@ -44,7 +44,7 @@
                         <form:errors path="category" cssClass="alert alert-warning" element="p"/>
                         <spring:message code="createActivity.categoryPh" var="categoryPh"/>
                         <form:select name="category" path="category" cssClass="form-control" cssStyle="margin-bottom: 10px;">
-                            <option disabled selected><spring:message code="createActivity.dropdown"/></option>
+                            <option disabled selected><spring:message code="createActivity.select"/></option>
                             <option value="Cultural"><spring:message code="createActivity.cultural"/></option>
                             <option value="Sports"><spring:message code="createActivity.sports"/></option>
                             <option value="Social"><spring:message code="createActivity.social"/></option>

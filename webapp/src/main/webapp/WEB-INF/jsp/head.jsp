@@ -7,10 +7,10 @@
 <c:url value="/resources/css/site.css" var="siteCss"/>
 <c:url value="https://kit.fontawesome.com/d26b996e46.js" var="fontAWS"/>
 
+<script src="${jquery}" type="text/javascript"></script>
 <link href="${bootstrapCss}" rel="stylesheet">
 <link rel="shortcut icon" href="${iconURL}" type="image/x-icon"/>
 <link href="${siteCss}" rel="stylesheet">
-<script src="${jquery}" type="text/javascript"></script>
 <script src="${bootstrapJs}" type="text/javascript"></script>
 <script src="${fontAWS}"></script>
 

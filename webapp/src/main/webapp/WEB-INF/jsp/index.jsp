@@ -4,7 +4,9 @@
 <html>
 <head>
 	<%@include file="head.jsp"%>
+	<c:url value="/resources/css/index.css" var="indexCSS"/>
 	<c:url value="/signup" var="signUpUrl"/>
+	<link href="${indexCSS}" rel="stylesheet">
 	<title>Meet and Travel</title>
 </head>
 <body>

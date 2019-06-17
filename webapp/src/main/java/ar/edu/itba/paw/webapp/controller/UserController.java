@@ -63,6 +63,7 @@ public class UserController extends MainController{
         return new ModelAndView("index"); }
 
 
+
     @RequestMapping("/home/{pageNum}")
     public ModelAndView home(@ModelAttribute("user") User user, @PathVariable(value = "pageNum") int pageNum) {
         ModelAndView mav = new ModelAndView("home");
