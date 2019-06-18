@@ -86,14 +86,14 @@ activity_id = 4
 trip_place_id = 1
 trip_users_id = 1
 */
-
+/*
 INSERT INTO places(id, google_id, name, latitude, longitude, address)
 values(3,'fake google id','Bahamas',100,100, 'Bahamas address');
-
+*/
 INSERT INTO users (id, firstname, lastname, email, password, nationality, birthday)
 values (1,'felipe','gorostiaga','fgorostiaga@itba.edu.ar', 'password', 'ARG', DATE '1997-06-16');
 
-INSERT INTO trips(id, name, description, start_date, end_date, startplace_id)
+/*INSERT INTO trips(id, name, description, start_date, end_date, startplace_id)
 values(2,'test trip name', 'test trip name', DATE '2019-08-23', DATE '2020-02-01', 3 );
 
 INSERT INTO activities(id, name, category, place_id)
@@ -113,5 +113,5 @@ values(1, 2, NULL);
 
 INSERT INTO user_pictures(id, user_id, image)
 values(1, 1, NULL);
-
+*/
 
