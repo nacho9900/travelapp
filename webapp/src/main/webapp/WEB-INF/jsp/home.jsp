@@ -20,7 +20,7 @@
             <c:url value="/home/trip/${trip.key.key.id}" var = "tripUrl"/>
             <a href="${tripUrl}" class="custom-card">
             <div class="col-auto mb-3">
-                <div class="card" style="width: 30rem;">
+                <div class="card trip-card" style="width: 30rem;">
                     <c:url value="/home/trip/${trip.key.key.id}/image" var="tripImageURL"/>
                     <c:choose>
                         <c:when test="${trip.key.value}">

@@ -11,13 +11,15 @@
     <c:url value="/resources/css/map.css" var="createTripCss"/>
     <c:url value="/resources/js/map.js" var="createTripJs"/>
     <c:url value="/resources/js/preventEnterDefault.js" var="noEnterJs"/>
-    <c:url value="/resources/js/createTripDatepicker.js" var="datePicker"/>
-    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js" var="datepickerJs"/>
-    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" var="datepickerCss"/>
-    <script type="text/javascript" src="${datepickerJs}"></script>
-    <script type="text/javascript" src="${datePicker}"></script>
-    <link rel="stylesheet" href="${datepickerCss}"/>
+    <c:url value="/resources/js/daterangepicker-helper.js" var="datePickerHelperJs"/>
     <link rel="stylesheet" href="${createTripCss}">
+
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <title>
         <spring:message code="createTrip.title"/>
     </title>
@@ -48,27 +50,22 @@
                     <form:textarea class="form-control" type="text" path="description" name="trip_desc"
                                    placeholder="${descriptionPh}"/>
 
-                    <c:if test="${invalidDates}">
-                        <div class="alert alert-warning" style="margin-top: 5px;">
-                            <spring:message code="createTrip.invalidDates"/>
-                        </div>
-                    </c:if>
+                        <form:input class="form-control" type="hidden" placeholder="dd/mm/yyyy" id="startDate" path="startDate" name="startDate"/>
 
-                    <form:errors path="startDate" cssClass="alert alert-warning" element="p"/>
-                    <div class="form-group" style="margin-top: 5px;">
-                        <form:label path="startDate" for="start_date" cssClass="text-white">
-                            <spring:message code="createTrip.startDate"/>
-                        </form:label>
-                        <form:input class="form-control" type="text" placeholder="dd/mm/yyyy" id="startDate" path="startDate" name="startDate"/>
-                    </div>
-                    
-                    <form:errors path="endDate" cssClass="alert alert-warning" element="p"/>
+                        <form:input class="form-control" type="hidden" placeholder="dd/mm/yyyy" path="endDate" name="endDate" id="endDate" />
+
                     <div class="form-group">
-                        <form:label path="endDate" for="end_date" cssClass="text-white">
-                            <spring:message code="createTrip.endDate"/>
-                        </form:label>
-                        <form:input class="form-control" type="text" placeholder="dd/mm/yyyy" path="endDate" name="endDate" id="end_date" />
+                        <label for="datefilter" class="text-white">
+                            <spring:message code="createTrip.date"/>
+                        </label>
+                        <input type="text" id="datefilter" name="datefilter" value="" class="form-control"/>
+                        <c:if test="${invalidDates}">
+                            <div class="alert alert-warning" style="margin-top: 5px;">
+                                <spring:message code="createTrip.invalidDates"/>
+                            </div>
+                        </c:if>
                     </div>
+
 
                     <form:errors path="placeInput" cssClass="alert alert-warning" element="p"/>
                     <spring:message code="createTrip.locationPh" var ="locationPh"/>
@@ -97,6 +94,7 @@
 </div>
 <script src="${noEnterJs}"></script>
 <script src="${createTripJs}"></script>
+<script type="text/javascript" src="${datePickerHelperJs}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap">
 </script>
 </body>

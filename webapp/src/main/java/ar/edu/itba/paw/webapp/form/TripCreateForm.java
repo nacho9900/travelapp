@@ -69,6 +69,9 @@ public class TripCreateForm {
     }
 
     public boolean validateDates() {
+        if(!(DateManipulation.validate(startDate) || DateManipulation.validate(endDate))){
+            return false;
+        }
         LocalDate sDate = DateManipulation.stringToLocalDate(startDate);
         LocalDate eDate = DateManipulation.stringToLocalDate(endDate);
         LocalDate now = LocalDate.now();
