@@ -35,7 +35,7 @@
             <form:errors path="imageUpload" cssClass="alert alert-warning" element="p"/>
             <form:input type="file" path="imageUpload" accept="image/*" />
             <br>
-            <button type="submit" class="btn btn-success text-center justify-content-center" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary text-center justify-content-center" style="margin-top: 10px;">
                 <spring:message code="editP.applyChangesBtn"/>
             </button>
         </form:form>

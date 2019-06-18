@@ -137,16 +137,19 @@ public class UserController extends MainController{
     public ModelAndView profile( @PathVariable(value = "userId") long userProfileId) {
         ModelAndView mav = new ModelAndView("profile");
         Optional<User> profileUser = us.findById(userProfileId);
+
         if(!profileUser.isPresent()) {
             mav.setViewName("404");
             return mav;
         }
+        List<Trip> userTrips = ts.getAllUserTrips(profileUser.get());
         Optional<UserPicture> userPictureOptional = ups.findByUserId(userProfileId);
         if(userPictureOptional.isPresent()) {
             mav.addObject("hasProfilePicture", true);
         }
         String birthday = profileUser.get().getBirthday().format(formatter);
         LOGGER.debug("User profile birthday {}", birthday);
+        mav.addObject("trips", userTrips);
         mav.addObject("birthday", birthday);
         mav.addObject("userProfile", profileUser.get());
         return mav;
@@ -182,7 +185,7 @@ public class UserController extends MainController{
 
 
     @RequestMapping(value = "/home/profile/{userId}/edit", method = {RequestMethod.POST})
-    public ModelAndView profile(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
+    public ModelAndView profileEditPost(@ModelAttribute("user") User user, @PathVariable(value = "userId") long userId,
                                 @Valid @ModelAttribute("editProfileForm") final EditProfileForm form,
                                 final BindingResult errors) {
 
