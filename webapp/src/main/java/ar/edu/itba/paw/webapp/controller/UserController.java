@@ -48,6 +48,9 @@ public class UserController extends MainController{
     private TripService ts;
 
     @Autowired
+    private PlaceService ps;
+
+    @Autowired
     private TripPicturesService tripPicturesService;
 
     @Autowired
@@ -75,9 +78,10 @@ public class UserController extends MainController{
             return mav;
         }
 
-        List<DataPair<Trip, Boolean>> list = new ArrayList<>();
+        List<DataPair<DataPair<Trip, Boolean>, Place>> list = new ArrayList<>();
         for(Trip trip : trips) {
-            list.add(new DataPair<>(trip, tripPicturesService.findByTripId(trip.getId()).isPresent()));
+            Optional<Place> startPlace = ps.findById(trip.getStartPlaceId());
+            list.add(new DataPair<>(new DataPair<>(trip, tripPicturesService.findByTripId(trip.getId()).isPresent()), startPlace.get() ));
         }
         mav.addObject("pages", requiredPages);
         mav.addObject("dateFormat", formatter);

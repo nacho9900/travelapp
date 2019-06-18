@@ -16,15 +16,14 @@
 <div class="container-fluid mt-4">
     <div class="card-deck">
         <div class="row justify-content-center">
-
         <c:forEach items = "${tripList}" var="trip">
-            <c:url value="/home/trip/${trip.key.id}" var = "tripUrl"/>
+            <c:url value="/home/trip/${trip.key.key.id}" var = "tripUrl"/>
             <a href="${tripUrl}" class="custom-card">
             <div class="col-auto mb-3">
                 <div class="card" style="width: 30rem;">
-                    <c:url value="/home/trip/${trip.key.id}/image" var="tripImageURL"/>
+                    <c:url value="/home/trip/${trip.key.key.id}/image" var="tripImageURL"/>
                     <c:choose>
-                        <c:when test="${trip.value}">
+                        <c:when test="${trip.key.value}">
                             <img class="card-img-top" src="${tripImageURL}" height="250" width="400">
                         </c:when>
                         <c:otherwise>
@@ -32,14 +31,15 @@
                         </c:otherwise>
                     </c:choose>
                     <div class="card-body">
-                        <h5 class="card-title"><c:out value="${trip.key.name}"/></h5>
-                        <p class="card-text"><c:out value="${trip.key.description}"/></p>
-                        <p class="card-text">${trip.key.startDate.format(dateFormat)} -
-                                 ${trip.key.endDate.format(dateFormat)}</p>
+                        <h5 class="card-title"><c:out value="${trip.key.key.name}"/></h5>
+                        <p class="card-text"><c:out value="${trip.key.key.description}"/></p>
+                        <p class="card-text"><i class="fas fa-map-marker-alt"></i>  <c:out value="${trip.value.name}"/></p>
+                        <p class="card-text"><i class="far fa-calendar-alt"></i>  ${trip.key.key.startDate.format(dateFormat)} -
+                                 ${trip.key.key.endDate.format(dateFormat)}</p>
                     </div>
                     <div class="card-footer">
                         <i class="fas fa-users"></i><small class="text-muted">
-                        <c:out value="${trip.key.users.size() + 1}"/></small>
+                        <c:out value="${trip.key.key.users.size() + 1}"/></small>
                     </div>
                 </div>
             </div>
