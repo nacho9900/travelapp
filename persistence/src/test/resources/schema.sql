@@ -19,47 +19,42 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS trips (
 									 id IDENTITY PRIMARY KEY,
+									 adminid INTEGER NOT NULL,
 									 name varchar(100) NOT NULL,
 									 description varchar(500),
 									 start_date DATE,
 									 end_date DATE,
-									 startplace_id INTEGER NOT NULL,
-									 FOREIGN KEY (startplace_id) REFERENCES places ON DELETE CASCADE
+									 startplaceid INTEGER NOT NULL,
+									 FOREIGN KEY (startplaceid) REFERENCES places ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS activities (
 										  id IDENTITY PRIMARY KEY,
 										  name varchar(40) NOT NULL,
 										  category varchar(40) NOT NULL,
-										  place_id integer NOT NULL,
+										  start_date DATE NOT NULL,
+										  end_date DATE NOT NULL,
+										  place_id INTEGER NOT NULL,
+										  trip_id INTEGER NOT NULL,
 										  FOREIGN KEY (place_id) REFERENCES places ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS trip_places (
-										   id IDENTITY PRIMARY KEY,
-										   trip_id INTEGER NOT NULL,
-										   place_id INTEGER NOT NULL,
+
+CREATE TABLE IF NOT EXISTS trip_comments (
+    									   id IDENTITY PRIMARY KEY ,
+    									   comment varchar(160) NOT NULL,
+    									   created_on TIMESTAMP NOT NULL,
+    									   trip_id INTEGER NOT NULL,
+										   user_id INTEGER NOT NULL,
 										   FOREIGN KEY (trip_id) REFERENCES trips ON DELETE CASCADE,
-										   FOREIGN KEY (place_id) REFERENCES places ON DELETE CASCADE
+										   FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS trip_activities (
-											   id IDENTITY PRIMARY KEY,
-											   trip_id INTEGER NOT NULL,
-											   place_id INTEGER NOT NULL,
-											   activity_id INTEGER NOT NULL,
-											   FOREIGN KEY (trip_id) REFERENCES trips ON DELETE CASCADE,
-											   FOREIGN KEY (place_id) REFERENCES places ON DELETE CASCADE,
-											   FOREIGN KEY (activity_id) REFERENCES activities ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS trip_users (
-										  id IDENTITY PRIMARY KEY,
-										  trip_id INTEGER NOT NULL,
-										  user_id INTEGER NOT NULL,
-										  user_role varchar(10) NOT NULL,
-										  FOREIGN KEY (trip_id) REFERENCES trips ON DELETE CASCADE,
-										  FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS trips_users (
+										  trips_id INTEGER NOT NULL,
+										  users_id INTEGER NOT NULL,
+										  FOREIGN KEY (trips_id) REFERENCES trips ON DELETE CASCADE,
+										  FOREIGN KEY (users_id) REFERENCES users ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS user_pictures (
@@ -86,32 +81,29 @@ activity_id = 4
 trip_place_id = 1
 trip_users_id = 1
 */
-/*
+
 INSERT INTO places(id, google_id, name, latitude, longitude, address)
-values(3,'fake google id','Bahamas',100,100, 'Bahamas address');
-*/
+values(3, 'google id', 'Bahamas', 100, 100, 'Bahamas address');
+
 INSERT INTO users (id, firstname, lastname, email, password, nationality, birthday)
-values (1,'felipe','gorostiaga','fgorostiaga@itba.edu.ar', 'password', 'ARG', DATE '1997-06-16');
+values (1, 'felipe', 'gorostiaga', 'fgorostiaga@itba.edu.ar', 'password', 'ARG', DATE '1997-06-16');
 
-/*INSERT INTO trips(id, name, description, start_date, end_date, startplace_id)
-values(2,'test trip name', 'test trip name', DATE '2019-08-23', DATE '2020-02-01', 3 );
+INSERT INTO trips(id, name, description, start_date, end_date, startplaceid, adminid)
+values(2,'test name', 'test description', DATE '2019-08-23', DATE '2020-02-01', 3, 1);
 
-INSERT INTO activities(id, name, category, place_id)
-values(4,'Scuba diving','Sports',3);
+INSERT INTO activities(id, name, category, place_id, start_date, end_date, trip_id)
+values(4,'Scuba diving','Sports',3, DATE '2019-09-10', DATE '2019-09-11', 2);
 
-INSERT INTO trip_places(id, trip_id, place_id)
-values (1,2,3);
-
-INSERT INTO trip_users(id, trip_id, user_id, user_role)
-values(1, 2, 1, 'ADMIN');
-
-INSERT INTO trip_activities(id, trip_id, place_id, activity_id)
-values(1, 2, 3, 4);
+INSERT INTO trips_users(trips_id, users_id)
+values(2, 1);
 
 INSERT INTO trip_pictures(id, trip_id, image)
 values(1, 2, NULL);
 
 INSERT INTO user_pictures(id, user_id, image)
 values(1, 1, NULL);
-*/
+
+INSERT INTO trip_comments(id, comment, created_on, trip_id, user_id)
+VALUES (1, 'test comment', CURRENT_TIMESTAMP, 2, 1);
+
 
