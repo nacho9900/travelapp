@@ -12,13 +12,14 @@
     <c:url value="/resources/js/map.js" var="createTripJs"/>
     <c:url value="/resources/js/preventEnterDefault.js" var="noEnterJs"/>
     <c:url value="/resources/js/daterangepicker-helper.js" var="datePickerHelperJs"/>
+    <c:url value="/resources/js/moment.min.js" var="momentJs"/>
+    <c:url value="/resources/js/daterangepicker.min.js" var="daterangepickerJs"/>
+    <c:url value="/resources/css/daterangepicker.css" var="daterangepickerCss"/>
     <link rel="stylesheet" href="${createTripCss}">
 
-
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script type="text/javascript" src="${momentJs}"></script>
+    <script type="text/javascript" src="${daterangepickerJs}"></script>
+    <link rel="stylesheet" type="text/css" href="${daterangepickerCss}"/>
 
     <title>
         <spring:message code="createTrip.title"/>
@@ -38,7 +39,7 @@
                         <spring:message code="createTrip.pageTitle"/>
                     </div>
                 </div>
-                <form:form action="${createTripURL}" method="post" modelAttribute="createTripForm" id="formId">
+                <form:form action="${createTripURL}" method="post" modelAttribute="createTripForm" id="formId" autocomplete="false">
                     <form:errors path="name" cssClass="alert alert-warning" element="p"/>
                     <spring:message code="createTrip.namePh" var="namePh"/>
                     <form:input class="form-control" cssStyle="margin-bottom: 10px" type="text" path="name"
@@ -58,7 +59,7 @@
                         <label for="datefilter" class="text-white">
                             <spring:message code="createTrip.date"/>
                         </label>
-                        <input type="text" id="datefilter" name="datefilter" value="" class="form-control"/>
+                        <input type="text" id="datefilter" name="datefilter" value="" class="form-control" autocomplete="false"/>
                         <c:if test="${invalidDates}">
                             <div class="alert alert-warning" style="margin-top: 5px;">
                                 <spring:message code="createTrip.invalidDates"/>
