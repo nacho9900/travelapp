@@ -17,7 +17,8 @@
 <c:url value="/home/profile/${user.id}" var="profile"/>
 <c:url value="/home/search-trip/" var="searchURL"/>
 <c:url value="/home/advanced-search/" var="advancedSearchURL"/>
-
+<c:url value="/resources/js/header.js" var="headerJs"/>
+<script type="text/javascript" src="${headerJs}"></script>
 <link href="${headerCss}" rel="stylesheet">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <c:choose>
@@ -36,7 +37,8 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <%--id="navbarSupportedContent"--%>
+    <div class="collapse navbar-collapse" id="topheader">
         <ul class="navbar-nav mr-auto">
 
         <c:if test="${user != null}">

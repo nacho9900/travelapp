@@ -1,16 +1,18 @@
-@import url('https://fonts.googleapis.com/css?family=Numans');
+    @import url('https://fonts.googleapis.com/css?family=Numans');
 
 html,body{
-    background-image: url(/resources/icons/aurora-borealis.jpg);
+    background-image: url(/resources/icons/trekkingcouple.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     height: 100%;
-    font-family: 'Numans', sans-serif;
 }
+
+
 
 .container{
     height: 100%;
     align-content: center;
+    font-family: 'Numans', sans-serif;
 }
 
 .card{
@@ -23,9 +25,8 @@ html,body{
 
 .social_icon span{
     font-size: 60px;
-    margin-left: 10px;
-    color: #069d00;
-    /*color: #FFC312;*/
+    margin-left: 13px;
+    color: forestgreen;
 }
 
 .social_icon span:hover{
@@ -39,13 +40,13 @@ html,body{
 
 .social_icon{
     position: absolute;
-    right: 20px;
+/*    right: 20px;*/
     top: -45px;
 }
 
 .input-group-prepend span{
     width: 50px;
-    background-color: #069d00;
+    background-color: forestgreen;
     /*background-color: #FFC312;*/
     color: black;
     border:0 !important;
@@ -72,15 +73,10 @@ input:focus{
 }
 
 .login_btn{
-    color: black;
-    background-color:   #069d00;
+    color: white;
+    background-color:   forestgreen;
     /* background-color: #FFC312;*/
     width: 100px;
-}
-
-.login_btn:hover{
-    color: black;
-    background-color: white;
 }
 
 .links{
@@ -89,13 +85,24 @@ input:focus{
 
 .links a{
     margin-left: 4px;
+    color: seashell;
 }
 
 a:hover {
-    color: #069d00;
+    color: forestgreen;
 }
 
 .myClass {
     color: forestgreen;
 }
+
+label {
+   padding:10px;
+   margin:0 0 10px;
+}
+
+label:hover {
+  cursor:pointer;
+}
+
 
