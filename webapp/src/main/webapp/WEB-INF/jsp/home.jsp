@@ -4,28 +4,47 @@
 
 <html>
 <head>
+    <c:url value="/resources/icons/mountainbg.jpg" var="defaultTP"/>
+    <c:url value="/resources/css/home.css" var="homeCSS"/>
     <%@include file="head.jsp" %>
+    <link href="${homeCSS}" rel="stylesheet">
     <title><spring:message code="home.title"/></title>
 </head>
 <body>
 <%@include file="header.jsp" %>
-<div class="container-fluid" id="main-container">
-    <div class="container">
-        <div class="list-group">
-            <c:forEach items = "${tripList}" var="trip">
-                <c:url value="/home/trip/${trip.key.id}" var = "tripUrl"/>
-                <a href="${tripUrl}" class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1"><c:out value="${trip.key.name}"/></h5>
-                        <small>${trip.key.startDate.format(dateFormat)}</small>
+
+<div class="container-fluid mt-4">
+    <div class="card-deck">
+        <div class="row justify-content-center">
+
+        <c:forEach items = "${tripList}" var="trip">
+            <c:url value="/home/trip/${trip.key.id}" var = "tripUrl"/>
+            <a href="${tripUrl}" class="custom-card">
+            <div class="col-auto mb-3">
+                <div class="card" style="width: 30rem;">
+                    <c:url value="/home/trip/${trip.key.id}/image" var="tripImageURL"/>
+                    <c:choose>
+                        <c:when test="${trip.value}">
+                            <img class="card-img-top" src="${tripImageURL}" height="250" width="400">
+                        </c:when>
+                        <c:otherwise>
+                            <img class="card-img-top" src="${defaultTP}"  height="250" width="400">
+                        </c:otherwise>
+                    </c:choose>
+                    <div class="card-body">
+                        <h5 class="card-title"><c:out value="${trip.key.name}"/></h5>
+                        <p class="card-text"><c:out value="${trip.key.description}"/></p>
+                        <p class="card-text">${trip.key.startDate.format(dateFormat)} -
+                                 ${trip.key.endDate.format(dateFormat)}</p>
                     </div>
-                    <c:if test="${trip.value}">
-                        <c:url value="/home/trip/${trip.key.id}/image" var="tripImageURL"/>
-                        <img class="img-fluid" src="${tripImageURL}" width="205" height="215" >
-                    </c:if>
-                    <p class="mb-1"><c:out value="${trip.key.description}"/></p>
-                </a>
-            </c:forEach>
+                    <div class="card-footer">
+                        <i class="fas fa-users"></i><small class="text-muted">
+                        <c:out value="${trip.key.users.size() + 1}"/></small>
+                    </div>
+                </div>
+            </div>
+            </a>
+        </c:forEach>
         </div>
     </div>
 </div>

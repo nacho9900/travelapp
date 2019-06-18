@@ -56,10 +56,11 @@
                  <a class="nav-link" href="${about}"><spring:message code="header.aboutUs"/> </a>
             </li>
         </ul>
+
+        <c:if test="${user != null}">
         <a class="nav-item" href="${advancedSearchURL}">
             <img src="${searchIMG}" height="38" width="38" style="margin-right: 7px;">
         </a>
-        <c:if test="${user != null}">
         <form action="${searchURL}" method="get" class="form-inline my-2 my-lg-0">
             <input id="nameInput" name="nameInput" class="form-control mr-sm-2" type="search" placeholder="<spring:message code="header.searchMessage"/>"
                    aria-label="Search">
