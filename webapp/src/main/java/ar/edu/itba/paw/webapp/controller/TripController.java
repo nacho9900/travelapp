@@ -89,6 +89,7 @@ public class TripController extends MainController{
                     new DataPair<>(place,tripPictureService.findByTripId(trip.getId()).isPresent())));
         }
         int pageQty = (int)Math.round(userTripsQty / (double) MAX_TRIPS_PAGE);
+        mav.addObject("dateFormat", formatter);
         mav.addObject("pageQty", requiredPages);
         mav.addObject("isEmpty", dataPairList.isEmpty());
         mav.addObject("userTripsList", dataPairList);
@@ -209,7 +210,7 @@ public class TripController extends MainController{
         return mav;
     }
 
-    @RequestMapping("/home/trip/{tripId}/join")
+    @RequestMapping(value = "/home/trip/{tripId}/join", method = {RequestMethod.POST})
     public ModelAndView joinTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ModelAndView mav = new ModelAndView("editTrip");
         ts.addUserToTrip(user.getId(), tripId);
@@ -228,7 +229,7 @@ public class TripController extends MainController{
         return mav;
     }
 
-    @RequestMapping("/home/trip/{tripId}/exit")
+    @RequestMapping(value = "/home/trip/{tripId}/exit", method = {RequestMethod.POST})
     public ModelAndView exitTrip(@ModelAttribute("user") User user, @PathVariable(value = "tripId") long tripId) {
         ts.removeUserFromTrip(user.getId(), tripId);
         Optional<Trip> optionalTrip = ts.findById(tripId);

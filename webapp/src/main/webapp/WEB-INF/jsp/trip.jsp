@@ -98,14 +98,14 @@
                         <c:if test="${user.id != admin.id}">
                             <c:choose>
                                 <c:when test="${!isTravelling}">
-                                    <a class="btn btn-success text-white" style="margin-top: 20px;" href="${joinTripURL}" role="button">
-                                        <spring:message code="trip.joinTripBtn"/>
-                                    </a>
+                                    <form action="${joinTripURL}" method="post" style="margin-top: 20px;">
+                                        <input type="submit" value="<spring:message code="trip.joinTripBtn"/>" class="btn btn-success btn-lg text-white" >
+                                    </form>
                                 </c:when>
                                 <c:otherwise>
-                                    <a class="btn btn-danger text-white" style="margin-top: 20px;" href="${exitTripURL}" role="button">
-                                        <spring:message code="trip.exitTripBtn"/>
-                                    </a>
+                                    <form action="${exitTripURL}" method="post" style="margin-top: 20px;">
+                                        <input type="submit" value="<spring:message code="trip.exitTripBtn"/>" class="btn btn-danger btn-lg text-white" >
+                                    </form>
                                 </c:otherwise>
                             </c:choose>
                         </c:if>
