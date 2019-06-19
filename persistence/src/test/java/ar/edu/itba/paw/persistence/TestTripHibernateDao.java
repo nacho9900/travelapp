@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
 import org.junit.Assert;
@@ -21,8 +20,6 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
 public class TestTripHibernateDao {
-
-
 
     private static final long tripId = 2;
     private static final long userId = 1;
