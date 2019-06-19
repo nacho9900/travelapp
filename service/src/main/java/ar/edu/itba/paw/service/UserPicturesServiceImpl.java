@@ -28,7 +28,7 @@ public class UserPicturesServiceImpl implements UserPicturesService {
     @Autowired
     private UserPicturesDao upd;
 
-    private static final int RESOLUTION = 600;
+    private static final int RESOLUTION = 800;
 
     @Override
     public UserPicture create(User user, byte[] image) {

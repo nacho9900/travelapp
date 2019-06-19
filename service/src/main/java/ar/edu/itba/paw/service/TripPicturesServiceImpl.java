@@ -27,7 +27,7 @@ public class TripPicturesServiceImpl implements TripPicturesService {
     @Autowired
     TripPicturesDao tpd;
 
-    private static final int RESOLUTION = 800;
+    private static final int RESOLUTION = 1000;
 
     @Override
     public TripPicture create(Trip trip, byte[] image) {

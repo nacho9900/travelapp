@@ -54,7 +54,7 @@
                                     </div>
                                 </c:if>
                             </div>
-                            <div class="display-4 p-2"><c:out value="${trip.name}"/></div>
+                            <div class="display-4 "><c:out value="${trip.name}"/></div>
                             <p class="text-justify" style="font-size: 150%;"><c:out value="${trip.description}"/></p>
                             <p >
                                 <spring:message code="trip.start"/>

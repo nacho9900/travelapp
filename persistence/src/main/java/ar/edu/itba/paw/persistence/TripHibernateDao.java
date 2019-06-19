@@ -36,7 +36,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> findByName(String name) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.name like :name", Trip.class);
+        final TypedQuery<Trip> query = em.createQuery("From Trip as t where lower(t.name) like lower(:name)", Trip.class);
         query.setParameter("name", "%" + name + "%");
         query.setMaxResults(MAX_ROWS);
         return query.getResultList();

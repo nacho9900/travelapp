@@ -30,10 +30,10 @@
                             <c:choose>
                                 <c:when test="${hasProfilePicture}">
                                     <c:url value="/home/profile/${userProfile.id}/image" var="profilePictureURL"/>
-                                    <img class="card-img-top" src="${profilePictureURL}" >
+                                    <img class="card-img-top" src="${profilePictureURL}">
                                 </c:when>
                                 <c:otherwise>
-                                    <img class="card-img-top" src="${defaultPP}">
+                                    <img class="card-img-top" src="${defaultPP}" height="700" width="500">
                                 </c:otherwise>
                             </c:choose>
                             <div class="card-header">
