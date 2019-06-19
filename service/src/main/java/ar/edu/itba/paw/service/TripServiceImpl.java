@@ -151,4 +151,9 @@ public class TripServiceImpl implements TripService {
         return comments;
     }
 
+    @Override
+    public List<TripRate> getTripRates(long tripId) {
+        return td.getTripRates(tripId);
+    }
+
 }

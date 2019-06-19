@@ -56,14 +56,10 @@
                             </div>
                             <div class="display-4 "><c:out value="${trip.name}"/></div>
                             <p class="text-justify" style="font-size: 150%;"><c:out value="${trip.description}"/></p>
-                            <p >
-                                <spring:message code="trip.start"/>
-                                <c:out value="${startDate.format(formatter)}"/>
-                            </p>
-                            <p>
-                                <spring:message code="trip.end"/>
-                                <c:out value="${endDate.format(formatter)}"/>
-                            </p>
+                            <div id="rate-bar" class="card-text"style="font-size: 150%; margin-bottom: 15px;"></div>
+
+                            <p class="card-text"><i class="far fa-calendar-alt"></i>  ${startDate.format(formatter)} -
+                                ${endDate.format(formatter)}</p>
                         </div>
 
                         <h3 class="margin-class"><spring:message code="trip.startPlace"/></h3>
@@ -194,4 +190,13 @@
 </body>
 <script src="${showMapJs}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M"></script>
+<c:url value="/resources/js/rater.js" var="raterJs"/>
+<script src="${raterJs}" charset="utf-8"></script>
+<c:url value="/resources/js/rater-helper.js" var="raterHelperJs"/>
+<script src="${raterHelperJs}" type="text/javascript"></script>
+
+<c:url value="/home/trip/${trip.id}/rate/" var="ratePostUrl"/>
+<script>
+    init_rate("${ratePostUrl}", ${rate}, ${isTravelling || user.id == admin.id});
+</script>
 </html>

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
+import ar.edu.itba.paw.model.TripRate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -169,6 +170,13 @@ public class TripHibernateDao implements TripDao {
     @Override
     public List<TripComment> getTripComments(long tripId) {
         final TypedQuery<TripComment> query = em.createQuery("From TripComment as tc where tc.trip.id = :tripId", TripComment.class);
+        query.setParameter("tripId", tripId);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<TripRate> getTripRates(long tripId) {
+        final TypedQuery<TripRate> query = em.createQuery("From TripRate as tr where tr.trip.id = :tripId", TripRate.class);
         query.setParameter("tripId", tripId);
         return query.getResultList();
     }

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
+import ar.edu.itba.paw.model.TripRate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,5 +23,5 @@ public interface TripDao {
     public List<Trip> findByPlace(String placeName);
     public List<Trip> findWithFilters(Map<String,Object> filterMap);
     public List<TripComment> getTripComments(long tripId);
-
+    public List<TripRate> getTripRates(long tripId);
 }

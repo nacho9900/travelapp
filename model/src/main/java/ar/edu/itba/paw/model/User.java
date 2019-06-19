@@ -41,6 +41,9 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripComment> comments;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripComment> rates;
+
     /////////////
 
     @Column(length = 100, nullable = false)

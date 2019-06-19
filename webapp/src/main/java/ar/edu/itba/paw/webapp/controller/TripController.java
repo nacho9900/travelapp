@@ -59,6 +59,9 @@ public class TripController extends MainController{
     @Autowired
     private TripPicturesService tripPictureService;
 
+    @Autowired
+    private TripRateService tripRateService;
+
     @RequestMapping("/home/create-trip")
     public ModelAndView createTripGet(@ModelAttribute("createTripForm") final TripCreateForm form) {
         return new ModelAndView("createTrip");
@@ -376,6 +379,10 @@ public class TripController extends MainController{
         mav.addObject("formatter", formatter);
         mav.addObject("startDate", trip.getStartDate());
         mav.addObject("endDate", trip.getEndDate());
+        mav.addObject("rate", ts.getTripRates(trip.getId()).stream()
+                                                                            .mapToDouble(TripRate::getRate)
+                                                                            .average()
+                                                                            .orElse(3));
         return mav;
     }
 
@@ -401,5 +408,38 @@ public class TripController extends MainController{
         TripComment tripComment = tcs.create(user, trip, tripCommentForm.getComment());
         ts.addCommentToTrip(tripComment.getId(), tripId);
         return mav;
+    }
+
+    @RequestMapping(value = "/home/trip/{tripId}/rate/{rate}", method = {RequestMethod.POST})
+    public @ResponseBody
+    String ajaxTest(@ModelAttribute("user") User user,
+                    @PathVariable("tripId") long tripId,
+                    @PathVariable("rate") int rate){
+
+        Optional<Trip> maybeTrip = ts.findById(tripId);
+        if(!maybeTrip.isPresent()){
+            return "trip doest exist";
+        }
+
+        Trip trip = maybeTrip.get();
+        if(!(trip.getAdminId() == user.getId() || trip.getUsers().contains(user))){
+            return  "Permission Denied";
+        }
+
+        Optional<TripRate> maybeTripRate = tripRateService.findByUserAndTrip(tripId, user.getId());
+        if(maybeTripRate.isPresent()){
+            TripRate tripRate = maybeTripRate.get();
+            if(tripRate.getRate() != rate){
+                tripRate.setRate(rate);
+                tripRateService.update(tripRate);
+                return "updated";
+            }
+            else {
+                return "rate doest change";
+            }
+        } else {
+            tripRateService.create(user, maybeTrip.get(), rate);
+            return "rate created";
+        }
     }
 }

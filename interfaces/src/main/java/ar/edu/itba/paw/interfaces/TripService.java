@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.model.Place;
-import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.TripComment;
-import ar.edu.itba.paw.model.User;
+
+import ar.edu.itba.paw.model.*;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -27,6 +25,5 @@ public interface TripService {
     public List<Trip> findByPlace(String placeName);
     public List<Trip> findWithFilters(Map<String,Object> filterMap);
     public List<TripComment> getTripComments(long tripId);
-
-
+    public List<TripRate> getTripRates(long tripId);
 }
