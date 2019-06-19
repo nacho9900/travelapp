@@ -4,10 +4,6 @@ import ar.edu.itba.paw.interfaces.UserPicturesDao;
 import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import org.imgscalr.Scalr;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +12,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Optional;
@@ -66,11 +61,10 @@ public class UserPicturesServiceImpl implements UserPicturesService {
         g2d.drawImage(imageIcon.getImage(), 0, 0, width, height, null);
         g2d.dispose();
         ByteArrayOutputStream encoderOutputStream = new ByteArrayOutputStream();
-        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(encoderOutputStream);
-        encoder.encode(bufferedResizedImage);
-        byte[] resizedImageByteArray = encoderOutputStream.toByteArray();
-        return resizedImageByteArray;
 
+        ImageIO.write(bufferedResizedImage, "jpeg", encoderOutputStream);
+
+        return  encoderOutputStream.toByteArray();
     }
 
 }
