@@ -4,12 +4,17 @@ import ar.edu.itba.paw.interfaces.UserPicturesDao;
 import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.imgscalr.Scalr;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,22 +28,15 @@ public class UserPicturesServiceImpl implements UserPicturesService {
     @Autowired
     private UserPicturesDao upd;
 
-    private static final int RESOLUTION = 200;
+    private static final int RESOLUTION = 600;
 
     @Override
     public UserPicture create(User user, byte[] image) {
         try {
-            BufferedImage img = ImageIO.read(new ByteArrayInputStream(image));
-            if(img == null || img.getType() == BufferedImage.TYPE_CUSTOM)
-                throw new IllegalArgumentException();
-            img = Scalr.resize(img, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.AUTOMATIC, RESOLUTION, RESOLUTION, Scalr.OP_ANTIALIAS);
-            ByteArrayOutputStream convertedImage = new ByteArrayOutputStream();
-            ImageIO.write(img, "png", convertedImage);
-            img.flush();
-            return upd.create(user, convertedImage.toByteArray());
+            byte[] resizedImage = resizeImageAsJPG(image, RESOLUTION);
+            return upd.create(user, resizedImage);
         }
-        catch (IllegalArgumentException|IOException ex) {
-            //no resizing
+        catch (IOException ex) {
             return upd.create(user, image);
         }
     }
@@ -51,6 +49,28 @@ public class UserPicturesServiceImpl implements UserPicturesService {
     @Override
     public boolean deleteByUserId(long userId) {
         return upd.deleteByUserId(userId);
+    }
+
+    private byte[] resizeImageAsJPG(byte[] pImageData, int pMaxWidth) throws IOException {
+        ImageIcon imageIcon = new ImageIcon(pImageData);
+        int width = imageIcon.getIconWidth();
+        int height = imageIcon.getIconHeight();
+        if (pMaxWidth > 0 && width > pMaxWidth) {
+            double ratio = (double) pMaxWidth / imageIcon.getIconWidth();
+            height = (int) (imageIcon.getIconHeight() * ratio);
+            width = pMaxWidth;
+        }
+        BufferedImage bufferedResizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = bufferedResizedImage.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2d.drawImage(imageIcon.getImage(), 0, 0, width, height, null);
+        g2d.dispose();
+        ByteArrayOutputStream encoderOutputStream = new ByteArrayOutputStream();
+        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(encoderOutputStream);
+        encoder.encode(bufferedResizedImage);
+        byte[] resizedImageByteArray = encoderOutputStream.toByteArray();
+        return resizedImageByteArray;
+
     }
 
 }
