@@ -171,16 +171,24 @@
                             </div>
                         </c:forEach>
 
-                        <form:form action="${commentUrl}" method="post" modelAttribute="tripCommentForm" >
-                            <div class="form-group">
-                                <form:textarea path="comment" cssClass="text-area form-control"/>
-                                <form:errors path="comment" cssClass="alert alert-warning" element="p"/>
-                            </div>
-                            <form:button type="submit" class="btn btn-primary">
-                                <i class="fas fa-paper-plane"></i>
-                            </form:button>
-                        </form:form>
-
+                        <c:choose >
+                            <c:when test="${isTravelling || admin.equals(user)}">
+                                <form:form action="${commentUrl}" method="post" modelAttribute="tripCommentForm" >
+                                    <div class="form-group">
+                                        <form:textarea path="comment" cssClass="text-area form-control"/>
+                                        <form:errors path="comment" cssClass="alert alert-warning" element="p"/>
+                                    </div>
+                                    <form:button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </form:button>
+                                </form:form>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="alert alert-info">
+                                   <spring:message code="trip.cannotComment"/>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
             </div>
