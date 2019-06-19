@@ -26,7 +26,8 @@
             <div class="col-10">
                     <a class="btn btn-primary" style="margin-top: 15px;margin-bottom: 15px;" href="${backURL}"
                        role="button">
-                        <spring:message code="editTrip.back"/>
+                        <i class="fas fa-arrow-circle-left"></i>
+                       <%-- <spring:message code="editTrip.back"/>--%>
                     </a>
 
                     <form action="${deleteTripURL}" method="post">

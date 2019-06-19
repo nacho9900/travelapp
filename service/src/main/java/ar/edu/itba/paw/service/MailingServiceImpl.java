@@ -38,6 +38,7 @@ public class MailingServiceImpl implements MailingService {
     private static final String REGISTER_TEMPLATE = "templates/registerMail.html";
     private static final String JOIN_TRIP_TEMPLATE = "templates/joinTripMail.html";
     private static final String EXIT_TRIP_TEMPLATE = "templates/exitTripMail.html";
+    private static final String DELETE_TRIP_TEMPLATE = "templates/deleteTripMail.html";
 
 
     @Async
@@ -106,6 +107,19 @@ public class MailingServiceImpl implements MailingService {
         sendMail(adminName, emailA, html, subject, ctx);
     }
 
+    @Async
+    @Override
+    public void sendDeleteTripMail(String email, String firstname, String lastname, String tripName, Locale locale) {
+
+        String subject = applicationContext.getMessage("mailDeleteSubject", null, locale);
+        final Context ctx = new Context(locale);
+        ctx.setVariable("email", email);
+        ctx.setVariable("firstname", firstname);
+        ctx.setVariable("lastname", lastname);
+        ctx.setVariable("tripname", tripName);
+        String html = htmlTemplateEngine.process(DELETE_TRIP_TEMPLATE, ctx);
+        sendMail(firstname + " " + lastname, email, html, subject, ctx);
+    }
 
 
 }

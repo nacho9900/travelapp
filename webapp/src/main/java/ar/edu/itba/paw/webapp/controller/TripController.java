@@ -88,7 +88,6 @@ public class TripController extends MainController{
             dataPairList.add(new DataPair<>(trip,
                     new DataPair<>(place,tripPictureService.findByTripId(trip.getId()).isPresent())));
         }
-        int pageQty = (int)Math.round(userTripsQty / (double) MAX_TRIPS_PAGE);
         mav.addObject("dateFormat", formatter);
         mav.addObject("pageQty", requiredPages);
         mav.addObject("isEmpty", dataPairList.isEmpty());
@@ -255,6 +254,9 @@ public class TripController extends MainController{
                 mav.setViewName("403");
                 return mav;
             }
+        }
+        for(User u : optionalTrip.get().getUsers()) {
+            ms.sendDeleteTripMail(u.getEmail(), u.getFirstname(), u.getLastname(), optionalTrip.get().getName(), getLocale());
         }
         ts.deleteTrip(tripId);
         mav.setViewName("redirect:/home/trips/1");

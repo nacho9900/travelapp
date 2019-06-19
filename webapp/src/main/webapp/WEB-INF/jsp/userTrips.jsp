@@ -10,8 +10,7 @@
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-<div class="container-fluid mt-4" id="main-container">
-    <h3 class="display-4 context-menu text-white"><spring:message code="trips.pageTitle"/></h3>
+<div class="container-fluid mt-4" >
     <c:choose>
         <c:when test="${isEmpty}">
             <p class="alert alert-warning">
