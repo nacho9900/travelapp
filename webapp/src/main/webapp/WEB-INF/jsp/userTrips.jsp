@@ -67,5 +67,10 @@
         </c:forEach>
     </ul>
 </div>
+<script>
+    $(document).ready(function () {
+        $('#my-trips-item').addClass('active');
+    });
+</script>
 </body>
 </html>

@@ -11,8 +11,10 @@
     <c:url value="/resources/css/map.css" var="createTripCss"/>
     <c:url value="/resources/js/map.js" var="createTripJs"/>
     <c:url value="/resources/js/createTripDatepicker.js" var="datePicker"/>
-    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js" var="datepickerJs"/>
-    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" var="datepickerCss"/>
+    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"
+           var="datepickerJs"/>
+    <c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"
+           var="datepickerCss"/>
     <script type="text/javascript" src="${datepickerJs}"></script>
     <script type="text/javascript" src="${datePicker}"></script>
     <link rel="stylesheet" href="${datepickerCss}"/>
@@ -43,7 +45,8 @@
                     <div class="form-group">
                         <form:errors path="category" cssClass="alert alert-warning" element="p"/>
                         <spring:message code="createActivity.categoryPh" var="categoryPh"/>
-                        <form:select name="category" path="category" cssClass="form-control" cssStyle="margin-bottom: 10px;">
+                        <form:select name="category" path="category" cssClass="form-control"
+                                     cssStyle="margin-bottom: 10px;">
                             <option disabled selected><spring:message code="createActivity.select"/></option>
                             <option value="Cultural"><spring:message code="createActivity.cultural"/></option>
                             <option value="Sports"><spring:message code="createActivity.sports"/></option>
@@ -73,7 +76,8 @@
                         <form:label path="startDate" for="startDate" cssClass="text-white">
                             <spring:message code="createActivity.startDate"/>
                         </form:label>
-                        <form:input cssClass="form-control" type="text" placeholder="dd/mm/yyyy" name="startDate" id="startDate" path="startDate"/>
+                        <form:input cssClass="form-control" type="text" placeholder="dd/mm/yyyy" name="startDate"
+                                    id="startDate" path="startDate"/>
                     </div>
 
                     <%--END DATE INPUT--%>
@@ -82,13 +86,15 @@
                         <form:label path="endDate" for="endDate" cssClass="text-white">
                             <spring:message code="createActivity.endDate"/>
                         </form:label>
-                        <form:input cssClass="form-control" type="text" placeholder="dd/mm/yyyy" name="endDate" id="endDate" path="endDate"/>
+                        <form:input cssClass="form-control" type="text" placeholder="dd/mm/yyyy" name="endDate"
+                                    id="endDate" path="endDate"/>
                     </div>
 
 
                     <form:errors path="placeInput" cssClass="alert alert-warning" element="p"/>
                     <spring:message code="createActivity.locationPh" var="locationPh"/>
-                    <form:input id="pac-input" type="text" path="placeInput" placeholder="${locationPh}" cssClass="form-control"/>
+                    <form:input id="pac-input" type="text" path="placeInput" placeholder="${locationPh}"
+                                cssClass="form-control"/>
 
                     <c:if test="${errorMap}">
                         <div class="alert alert-danger" role="alert">
@@ -112,7 +118,11 @@
     </div>
 </div>
 <script src="${createTripJs}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap"></script>
+<script>
+    $(document).ready(function () {
+        $('#create-trip-item').addClass('active');
+    });
 </script>
 </body>
 </html>

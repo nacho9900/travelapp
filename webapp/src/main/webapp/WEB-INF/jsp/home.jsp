@@ -63,5 +63,11 @@
         </c:forEach>
     </ul>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#home-item').addClass('active');
+    });
+</script>
 </body>
 </html>

@@ -25,5 +25,10 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('#about-item').addClass('active');
+    });
+</script>
 </body>
 </html>

@@ -98,5 +98,10 @@
 <script type="text/javascript" src="${datePickerHelperJs}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M&libraries=places&callback=initMap">
 </script>
+<script>
+    $(document).ready(function () {
+        $('#create-trip-item').addClass('active');
+    });
+</script>
 </body>
 </html>

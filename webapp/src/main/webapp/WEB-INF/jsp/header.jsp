@@ -42,19 +42,19 @@
         <ul class="navbar-nav mr-auto">
 
         <c:if test="${user != null}">
-            <li class="nav-item active">
+            <li class="nav-item" id="home-item">
             <a class="nav-link" href="${home}"><spring:message code="header.home"/> <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="my-trips-item">
             <a class="nav-link" href="${trips}"><spring:message code="header.myTrips"/></a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="create-trip-item">
             <a class="nav-link" href="${createTrip}"><spring:message code="header.createTrip"/> </a>
             </li>
         </c:if>
-            <li class="nav-item">
+            <li class="nav-item" id="about-item">
                  <a class="nav-link" href="${about}"><spring:message code="header.aboutUs"/> </a>
             </li>
         </ul>
