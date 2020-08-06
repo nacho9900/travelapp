@@ -54,46 +54,72 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- Hibernate -->
+      <!-- Hibernate-java8 -->
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-java8</artifactId>
         <version>${org.hibernate.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-orm</artifactId>
-        <version>${org.springframework.version}</version>
-      </dependency>
+      <!-- Hibernate-Core -->
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
         <version>${org.hibernate.version}</version>
       </dependency>
+      <!-- Hibernate - Entity Manager -->
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-entitymanager</artifactId>
         <version>${org.hibernate.version}</version>
       </dependency>
+      <!-- Hibernate - JPA - API -->
       <dependency>
         <groupId>org.hibernate.javax.persistence</groupId>
         <artifactId>hibernate-jpa-2.1-api</artifactId>
         <version>${org.hibernate.jpa.version}</version>
       </dependency>
+      <!-- Hibernate Validator -->
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${org.hibernate.validator}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <!-- File upload -->
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
         <version>${commons-fileupload-version}</version>
       </dependency>
+
+      <!-- Mailing -->
       <dependency>
       <groupId>org.simplejavamail</groupId>
       <artifactId>simple-java-mail</artifactId>
       <version>${simple-java-mail-version}</version>
       </dependency>
+      <!-- Mail -->
+      <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>mail</artifactId>
+        <version>${java-mail-version}</version>
+      </dependency>
+
+      <!-- Google Places API -->
       <dependency>
         <groupId>se.walkercrou</groupId>
         <artifactId>google-places-api-java</artifactId>
         <version>${google-places-api-java-version}</version>
       </dependency>
+
+      <!-- Logging -->
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
@@ -114,49 +140,84 @@
         <artifactId>jcl-over-slf4j</artifactId>
         <version>${org.slf4j.version}</version>
       </dependency>
+
+      <!-- Spring -->
+      <!-- Spring-orm -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-orm</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <!-- Logback extension for Spring -->
       <dependency>
         <groupId>org.logback-extensions</groupId>
         <artifactId>logback-ext-spring</artifactId>
         <version>${logback-ext-spring.version}</version>
         <scope>runtime</scope>
       </dependency>
+      <!-- Spring Security Core -->
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-core</artifactId>
         <version>${spring-security.version}</version>
       </dependency>
+      <!-- Spring Security Web -->
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-web</artifactId>
         <version>${spring-security.version}</version>
       </dependency>
+      <!-- Spring Security Config -->
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-config</artifactId>
         <version>${spring-security.version}</version>
       </dependency>
-      <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>${javax.validation-api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>${org.hibernate.validator}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
+      <!-- Spring Test -->
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
         <version>${org.springframework.version}</version>
         <scope>test</scope>
       </dependency>
+      <!-- Spring Web MVC -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <!-- Spring Context -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <!-- Spring JDBC -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <!-- Spring Transaction Manager -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-tx</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <!-- Spring mail Integration -->
+      <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-mail</artifactId>
+        <version>${spring-integration-version}</version>
+      </dependency>
+
+      <!-- Validations -->
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>${javax.validation-api.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>org.webjars</groupId>
         <artifactId>bootstrap</artifactId>
@@ -173,37 +234,23 @@
         <version>${org.hsqldb.version}</version>
         <scope>test</scope>
       </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webmvc</artifactId>
-        <version>${org.springframework.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>${org.springframework.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-jdbc</artifactId>
-        <version>${org.springframework.version}</version>
-      </dependency>
+
+      <!-- Postgres Driver -->
       <dependency>
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>${org.postgresql.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-tx</artifactId>
-        <version>${org.springframework.version}</version>
-      </dependency>
+
+      <!-- Mockito -->
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
         <version>${mockito.version}</version>
         <scope>test</scope>
       </dependency>
+
+      <!-- servlet api -->
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
@@ -215,16 +262,7 @@
         <artifactId>jstl</artifactId>
         <version>${jstl.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-mail</artifactId>
-        <version>${spring-integration-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.mail</groupId>
-        <artifactId>mail</artifactId>
-        <version>${java-mail-version}</version>
-      </dependency>
+
       <dependency>
         <groupId>org.thymeleaf</groupId>
         <artifactId>thymeleaf-spring4</artifactId>
