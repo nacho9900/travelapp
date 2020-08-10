@@ -50,7 +50,7 @@ public class Activity implements Comparable<Activity> {
         this.startDate = startDate;
     }
 
-    /* package */ Activity() {
+    protected Activity() {
         // Just for Hibernate
     }
 

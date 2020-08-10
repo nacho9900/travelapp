@@ -27,7 +27,7 @@ public class TripComment implements Comparable<TripComment>{
 
     ////////////
 
-    /* package */ TripComment() {
+    protected TripComment() {
         // Just for Hibernate
     }
 

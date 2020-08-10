@@ -29,7 +29,7 @@ public class TripPicture {
         this.trip = trip;
     }
 
-    /* package */ TripPicture() {
+    protected TripPicture() {
         // Just for Hibernate
     }
 

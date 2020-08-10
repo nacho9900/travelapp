@@ -42,5 +42,9 @@ public class UserServiceImpl implements UserService {
         return userDao.update(user);
     }
 
-
+    @Override
+    public List<User> getAll(int page, int pageSize) {
+        //TODO: Paging
+        return userDao.listUsers(page, pageSize);
+    }
 }

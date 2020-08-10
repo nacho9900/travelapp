@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.controller;
+package ar.edu.itba.paw.webapp.oldController;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.Activity;
@@ -19,7 +19,6 @@ import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
 
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 

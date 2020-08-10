@@ -43,9 +43,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 //.invalidSessionUrl("/")
                 .and().authorizeRequests()
-                .antMatchers("/","/signin", "/signup").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/home/**").authenticated()
+//                .antMatchers("/","/signin", "/signup").permitAll()
+//                .antMatchers("/admin/**").hasRole("ADMIN")
+//                .antMatchers("/home/**")
+                .antMatchers("/**").permitAll() //Public URLs For Jersey testing
                 .and().formLogin()
                 .loginPage("/signin")
                 .defaultSuccessUrl("/home/1", true)

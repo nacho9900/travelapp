@@ -34,7 +34,7 @@ public class TripRate {
 
     ////////////
 
-    /* package */ TripRate() {
+    protected TripRate() {
         // Just for Hibernate
     }
 

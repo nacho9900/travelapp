@@ -32,7 +32,7 @@ public class UserPicture {
         this.user = user;
     }
 
-    /* package */ UserPicture() {
+    protected UserPicture() {
         // Just for Hibernate
     }
 

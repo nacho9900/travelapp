@@ -51,7 +51,7 @@ public class Place {
         this.address = address;
     }
 
-    /* package */ Place() {
+    protected Place() {
         // Just for Hibernate
     }
 

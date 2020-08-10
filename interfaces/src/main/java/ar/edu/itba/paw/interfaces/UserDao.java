@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.User;
 
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserDao {
@@ -13,4 +14,5 @@ public interface UserDao {
     User create(final String firstname, final String lastname, final String email, final String password,
                 LocalDate birthday, final String nationality);
     boolean update(User u);
+    List<User> listUsers( int i, int maxValue );
 }

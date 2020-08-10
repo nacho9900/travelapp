@@ -72,7 +72,7 @@ public class Trip implements Comparable<Trip>{
         this.adminId = adminId;
     }
 
-    /* package */ Trip() {
+    protected Trip() {
         // Just for Hibernate
     }
 

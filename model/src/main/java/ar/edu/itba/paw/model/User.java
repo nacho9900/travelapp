@@ -64,7 +64,7 @@ public class User {
         this.nationality = nationality;
     }
 
-    /* package */ User() {
+    protected User() {
         // Just for Hibernate
     }
 
