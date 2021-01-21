@@ -20,7 +20,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>jersey-servlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
     <context-param>
@@ -62,12 +62,14 @@
     </filter>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/404</location>
-    </error-page>
+
+<!--    <error-page>-->
+<!--        <error-code>404</error-code>-->
+<!--        <location>/404</location>-->
+<!--    </error-page>-->
+
     <!--
     <error-page>
       <error-code>500</error-code>

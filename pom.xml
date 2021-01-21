@@ -46,6 +46,8 @@
         <java-mail-version>1.4.7</java-mail-version>
         <org.imgscalr.version>4.2</org.imgscalr.version>
         <jersey.version>3.0-SNAPSHOT</jersey.version>
+        <org.bitbucket.b_c.jose4j.version>0.7.4</org.bitbucket.b_c.jose4j.version>
+        <com.github.eirslett.frontend-maven-plugin.version>1.11.0</com.github.eirslett.frontend-maven-plugin.version>
     </properties>
 
     <build>
@@ -61,31 +63,53 @@
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <packagingExcludes>**/logback-test.xml</packagingExcludes>
+                <webResources>
+                    <resource>
+                        <directory>frontend/dist</directory>
+                    </resource>
+                </webResources>
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-enforcer-plugin</artifactId>-->
-<!--                <version>3.0.0-M1</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>enforce</id>-->
-<!--                        <configuration>-->
-<!--                            <rules>-->
-<!--                                <dependencyConvergence/>-->
-<!--                            </rules>-->
-<!--                        </configuration>-->
-<!--                        <goals>-->
-<!--                            <goal>enforce</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+
+            <!-- Frontend Plugin -->
+
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>${com.github.eirslett.frontend-maven-plugin.version}</version>
+            </plugin>
+
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-enforcer-plugin</artifactId>-->
+            <!--                <version>3.0.0-M1</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>enforce</id>-->
+            <!--                        <configuration>-->
+            <!--                            <rules>-->
+            <!--                                <dependencyConvergence/>-->
+            <!--                            </rules>-->
+            <!--                        </configuration>-->
+            <!--                        <goals>-->
+            <!--                            <goal>enforce</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 
     <dependencyManagement>
         <dependencies>
+            <!-- JOSE4J JWT -->
+
+            <dependency>
+                <groupId>org.bitbucket.b_c</groupId>
+                <artifactId>jose4j</artifactId>
+                <version>${org.bitbucket.b_c.jose4j.version}</version>
+            </dependency>
+
             <!-- JERSEY -->
 
             <dependency>

@@ -11,53 +11,44 @@ public class UserDto
     private String email;
     private URI userPicture;
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId( Long id )
-    {
+    public void setId( Long id ) {
         this.id = id;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail( String email )
-    {
+    public void setEmail( String email ) {
         this.email = email;
     }
 
-    public UserDto()
-    {
+    public UserDto() {
 
     }
 
-    public static UserDto fromUser( User user, UriInfo uriInfo )
-    {
+    public static UserDto fromUser( User user, UriInfo uriInfo ) {
         UserDto userDto = new UserDto();
 
         userDto.id = user.getId();
         userDto.email = user.getEmail();
-        userDto.userPicture = uriInfo
-                .getAbsolutePathBuilder()
-                .path( String.valueOf( user.getId() ) )
-                .path( "picture" )
-                .build(  );
+        userDto.userPicture = uriInfo.getAbsolutePathBuilder()
+                                     .path( String.valueOf( user.getId() ) )
+                                     .path( "picture" )
+                                     .build();
 
         return userDto;
     }
 
-    public URI getUserPicture()
-    {
+    public URI getUserPicture() {
         return userPicture;
     }
 
-    public void setUserPicture( URI userPicture )
-    {
+    public void setUserPicture( URI userPicture ) {
         this.userPicture = userPicture;
     }
 }

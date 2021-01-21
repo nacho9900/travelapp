@@ -16,20 +16,27 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Component
-public class TravelUserDetailsService implements UserDetailsService {
+public class TravelUserDetailsService implements UserDetailsService
+{
 
     @Autowired
     private UserService us;
 
     @Override
-    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = us.findByUsername(username);
-        if (!userOptional.isPresent()) {
-            throw new UsernameNotFoundException("No user by the name " + username);
+    public UserDetails loadUserByUsername( final String username ) throws UsernameNotFoundException {
+        Optional<User> userOptional = us.findByUsername( username );
+
+        if ( !userOptional.isPresent() )
+        {
+            throw new UsernameNotFoundException( String.format( "No user by the name %s", username ) );
         }
+
         User user = userOptional.get();
-        final Collection<? extends GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
-        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), authorities);
+
+        final Collection<? extends GrantedAuthority> authorities = Arrays.asList(
+                new SimpleGrantedAuthority( "ROLE_USER" ) );
+
+        return new org.springframework.security.core.userdetails.User( username, user.getPassword(), authorities );
     }
 
 }
