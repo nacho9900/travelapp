@@ -16,6 +16,7 @@
 					<v-switch
 						v-model="$vuetify.theme.dark"
 						:label="modeLabel"
+						color="primary"
 					></v-switch>
 				</v-list-item>
 			</v-list>
@@ -27,7 +28,7 @@
 			</v-list>
 		</v-navigation-drawer>
 
-		<v-app-bar app>
+		<v-app-bar color="primary" app>
 			<v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title> TravelApp </v-toolbar-title>
 			<v-spacer></v-spacer>
@@ -46,7 +47,11 @@ export default {
 	data: () => ({
 		drawer: false,
 	}),
-	computed: {},
+	computed: {
+		modeLabel() {
+			return this.$vuetify.theme.dark ? "Modo Oscuro" : "Modo Claro";
+		},
+	},
 	methods: {},
 	created() {
 		// if (this.isAuthenticated && !this.hasUser) {
