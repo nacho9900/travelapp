@@ -4,5 +4,12 @@
     "dataTable": {
       "itemsPerPageText": "Elemetos por página"
     }
+  },
+  "app": {
+    "dark_mode": "modo oscuro",
+    "light_mode": "modo claro" 
+  },
+  "login": {
+    
   }
 }

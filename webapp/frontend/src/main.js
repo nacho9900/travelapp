@@ -4,8 +4,11 @@ import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 import i18n from './i18n/i18n.js';
+import Axios from 'axios';
 
 Vue.config.productionTip = false;
+
+Axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
 
 new Vue({
   router,

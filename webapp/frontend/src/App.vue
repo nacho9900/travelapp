@@ -49,7 +49,9 @@ export default {
 	}),
 	computed: {
 		modeLabel() {
-			return this.$vuetify.theme.dark ? "Modo Oscuro" : "Modo Claro";
+			return this.$vuetify.theme.dark
+				? this.$t("app.dark_mode")
+				: this.$t("app.light_mode");
 		},
 	},
 	methods: {},

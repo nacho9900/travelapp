@@ -1,18 +1,21 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import store from '../store/index.js';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import("views/home/Home.vue")
+    component: () => import("views/home/Home.vue"),
+    meta: { requireAuth: true }
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import("views/authentication/Login.vue")
+    component: () => import("views/authentication/Login.vue"),
+    meta: { requireUnauth: true }
   },
   // {
   //   path: '/about',
@@ -22,12 +25,24 @@ const routes = [
   //   // which is lazy-loaded when the route is visited.
   // component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   // }
-]
+];
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
-})
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+  store.dispatch('tryLogin');
+
+  if (to.meta.requireAuth && !store.getters.isAuth) {
+    next('/login');
+  } else if (to.meta.requireUnauth && store.getters.isAuth) {
+    next('/');
+  } else {
+    next();
+  }
+});
+
+export default router;

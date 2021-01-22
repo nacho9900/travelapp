@@ -1,8 +1,14 @@
 {
-  "message": "hello i18n !!",
   "$vuetify": {
     "dataTable": {
       "itemsPerPageText": "Elements per page"
     }
+  },
+  "app": {
+    "dark_mode": "dark mode",
+    "light_mode": "light mode" 
+  },
+  "login": {
+    
   }
 }
