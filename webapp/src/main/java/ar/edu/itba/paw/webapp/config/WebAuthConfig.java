@@ -48,12 +48,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
 
     @Override
     protected void configure( HttpSecurity http ) throws Exception {
-        http = http.csrf()
-                   .disable();
+        http.csrf()
+            .disable();
 
-        http = http.sessionManagement()
-                   .sessionCreationPolicy( SessionCreationPolicy.STATELESS )
-                   .and();
+        http.sessionManagement()
+            .sessionCreationPolicy( SessionCreationPolicy.STATELESS )
+            .and();
 
         http.authorizeRequests()
             .antMatchers( HttpMethod.OPTIONS, "/**" )
@@ -61,14 +61,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
             .and()
             .authorizeRequests()
             .antMatchers( HttpMethod.POST, "/api/users/login" )
-            .permitAll()
+            .anonymous()
             .and()
             .authorizeRequests()
             .anyRequest()
             .authenticated();
 
-        http
-                .addFilterBefore( jwtTokenFilter, UsernamePasswordAuthenticationFilter.class );
+        http.addFilterBefore( jwtTokenFilter, UsernamePasswordAuthenticationFilter.class );
     }
 
     //    private String getRememberMeKey()
@@ -119,18 +118,18 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
         return super.authenticationManagerBean();
     }
 
-    // Used by spring security if CORS is enabled.
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials( true );
-        config.addAllowedOrigin( "*" );
-        config.addAllowedHeader( "*" );
-        config.addAllowedMethod( "*" );
-        source.registerCorsConfiguration( "/**", config );
-        return new CorsFilter( source );
-    }
+//    // Used by spring security if CORS is enabled.
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowCredentials( true );
+//        config.addAllowedOrigin( "*" );
+//        config.addAllowedHeader( "*" );
+//        config.addAllowedMethod( "*" );
+//        source.registerCorsConfiguration( "/**", config );
+//        return new CorsFilter( source );
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

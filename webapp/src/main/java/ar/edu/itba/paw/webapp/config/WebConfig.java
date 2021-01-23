@@ -20,6 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -128,5 +129,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return templateEngine;
     }
 
-
+    @Override
+    public void addCorsMappings( CorsRegistry registry) {
+        registry.addMapping("/api/**")
+                .allowedOrigins( "*" )
+                .allowedMethods( "*" );
+    }
 }
