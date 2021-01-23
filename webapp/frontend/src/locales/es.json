@@ -1,15 +1,51 @@
 {
-  "message": "Hola!",
-  "$vuetify": {
-    "dataTable": {
-      "itemsPerPageText": "Elemetos por página"
-    }
-  },
-  "app": {
-    "dark_mode": "modo oscuro",
-    "light_mode": "modo claro" 
-  },
-  "login": {
-    
-  }
+	"$vuetify": {
+		"dataTable": {
+			"itemsPerPageText": "Elemetos por página"
+		}
+	},
+	"app": {
+		"dark_mode": "modo oscuro",
+		"light_mode": "modo claro"
+	},
+	"rules": {
+		"email": {
+			"format": "El email es invalido"
+		},
+		"field_required": "El campo es obligatorio",
+		"greater_or_equals_zero": "El campo debe ser mayor o igual a cero",
+		"not_zero": "El campo no puede ser cero",
+		"number_format": "El número no tiene un formato correcto",
+		"password": {
+			"format": "La contraseña debe tener entre 8 y 20 caracteres y debe contener una letra mayúscula",
+			"required": "La contraseña es obligatoria"
+		}
+	},
+	"ui": {
+		"delete_dialog": {
+			"cancel": "cancelar",
+			"delete": "eliminar"
+		},
+		"error_dialog": {
+			"error_ocurred": "Ocurrió un error"
+		},
+		"image_form": {
+			"image_required": "La imagen es requerida",
+			"image_size": "La imagen no puede superar los 5MB",
+			"title": "Subir una imagen",
+			"upload": "subir"
+		}
+	},
+	"views": {
+		"login": {
+			"email_label": "Email",
+			"incorrect_email_password": "El email o la contraseña no son válidos",
+			"login_btn": "Ingresar",
+			"password_forget": "¿Olvidaste tu contraseña?",
+			"password_label": "Contraseña",
+			"signin_btn": "Registrarse",
+			"subtitle": "para ingresar a TravelApp",
+			"title": "Iniciar Sesión"
+		}
+	}
 }

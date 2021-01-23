@@ -53,6 +53,9 @@ export default {
 				? this.$t("app.dark_mode")
 				: this.$t("app.light_mode");
 		},
+		logoPath() {
+			return "./logos/lb.png";
+		},
 	},
 	methods: {},
 	created() {

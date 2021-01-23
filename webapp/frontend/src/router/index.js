@@ -17,6 +17,18 @@ const routes = [
     component: () => import("views/authentication/Login.vue"),
     meta: { requireUnauth: true }
   },
+  {
+    path: '/signin',
+    name: 'SignIn',
+    component: () => import("views/authentication/SignIn.vue"),
+    meta: { requireUnauth: true }
+  },
+  {
+    path: '/recovery',
+    name: 'PasswordRecovery',
+    component: () => import("views/authentication/PasswordRecovery.vue"),
+    meta: { requireUnauth: true }
+  },
   // {
   //   path: '/about',
   //   name: 'About',

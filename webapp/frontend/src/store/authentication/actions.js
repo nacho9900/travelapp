@@ -1,5 +1,7 @@
 import Axios from "axios";
 
+let timer;
+
 export default {
     async login(context, payload) {
         const data = {
@@ -7,7 +9,7 @@ export default {
             password: payload.password
         };
 
-        const response = await Axios.post("/login", data);
+        const response = await Axios.post("/users/login", data);
 
         const auth = response.data;
 
@@ -20,30 +22,44 @@ export default {
         localStorage.setItem('tokenExpiration', expirationDate);
         Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
+        timer = setTimeout(() => {  //Para autologout cuando se acaba el token
+            context.dispatch('logout');
+        }, expiresIn);
+
         context.commit("setToken", { token });
     },
     tryLogin(context) {
         if (!context.getters.isAuth) {
             const token = localStorage.getItem('token');
-            // const userId = localStorage.getItem('userId');
-            // const tokenExpiration = localStorage.getItem('tokenExpiration');
+            const tokenExpiration = localStorage.getItem('tokenExpiration');
 
-            // const expiresIn = +tokenExpiration - new Date().getTime();
-
-            // if (expiresIn < 0) {
-            //     return;
-            // }
-
-            // timer = setTimeout(() => {  //Para autologout cuando se acaba el token
-            //     context.dispatch('autoLogout');
-            // }, expiresIn);
-
-            if (token) {//&& userId) {
-                Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                context.commit('setToken', {
-                    token: token,
-                });
+            if (!token || !tokenExpiration) {
+                return;
             }
+
+            const expiresIn = +tokenExpiration - new Date().getTime();
+
+            if (expiresIn < 0) {
+                return;
+            }
+
+            timer = setTimeout(() => {  //Para autologout cuando se acaba el token
+                context.dispatch('logout');
+            }, expiresIn);
+
+            Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            context.commit('setToken', {
+                token: token,
+            });
         }
     },
+    logout(context) {
+        context.commit('setToken', { token: null });
+        context.commit('setUser', { user: null });
+
+        localStorage.removeItem('token');
+        localStorage.removeItem('tokenExpiration');
+
+        clearTimeout(timer);
+    }
 };
