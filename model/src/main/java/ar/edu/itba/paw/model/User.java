@@ -32,17 +32,14 @@ public class User {
 
     //////////////
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Trip> trips;
-
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     private UserPicture profilePicture;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TripComment> comments;
+    private List<TripJoinRequest> joinRequests;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TripComment> rates;
+    private List<TripMember> members;
 
     /////////////
 
@@ -120,14 +117,6 @@ public class User {
         this.nationality = nationality;
     }
 
-    public List<Trip> getTrips() {
-        return trips;
-    }
-
-    public void setTrips(List<Trip> trips) {
-        this.trips = trips;
-    }
-
     public UserPicture getProfilePicture() {
         return profilePicture;
     }
@@ -168,11 +157,19 @@ public class User {
         this.biography = biography;
     }
 
-    public List<TripComment> getComments() {
-        return comments;
+    public List<TripJoinRequest> getJoinRequests() {
+        return joinRequests;
     }
 
-    public void setComments(List<TripComment> comments) {
-        this.comments = comments;
+    public void setJoinRequests( List<TripJoinRequest> joinRequests ) {
+        this.joinRequests = joinRequests;
+    }
+
+    public List<TripMember> getMembers() {
+        return members;
+    }
+
+    public void setMembers( List<TripMember> members ) {
+        this.members = members;
     }
 }

@@ -17,9 +17,6 @@ public class Trip implements Comparable<Trip>{
     @Column
     private long startPlaceId;
 
-    @Column
-    private long adminId;
-
     @Column(length = 100, nullable = false)
     private String name;
 
@@ -34,9 +31,6 @@ public class Trip implements Comparable<Trip>{
 
     /////////////////
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<User> users = new LinkedList<>();
-
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<Activity> activities = new LinkedList<>();
 
@@ -44,7 +38,10 @@ public class Trip implements Comparable<Trip>{
     private TripPicture profilePicture;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
-    private List<TripComment> comments = new LinkedList<>();
+    private List<TripJoinRequest> joinRequests = new LinkedList<>();
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
+    private List<TripMember> members = new LinkedList<>();
 
     /////////////////
 
@@ -56,20 +53,11 @@ public class Trip implements Comparable<Trip>{
 
     public Trip(long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate) {
         super();
-        this.adminId = adminId;
         this.startPlaceId = startPlaceId;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-
-    public long getAdminId() {
-        return adminId;
-    }
-
-    public void setAdminId(long adminId) {
-        this.adminId = adminId;
     }
 
     protected Trip() {
@@ -121,14 +109,6 @@ public class Trip implements Comparable<Trip>{
         this.endDate = endDate;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
     public List<Activity> getActivities() {
         return activities;
     }
@@ -145,16 +125,16 @@ public class Trip implements Comparable<Trip>{
         this.profilePicture = profilePicture;
     }
 
-    public List<TripComment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<TripComment> comments) {
-        this.comments = comments;
-    }
-
     @Override
     public int compareTo(Trip o) {
         return (this.startDate.isBefore(o.startDate)) ? -1 : 1;
+    }
+
+    public List<TripJoinRequest> getJoinRequests() {
+        return joinRequests;
+    }
+
+    public List<TripMember> getMembers() {
+        return members;
     }
 }

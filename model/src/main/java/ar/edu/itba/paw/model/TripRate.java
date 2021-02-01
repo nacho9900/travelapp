@@ -11,11 +11,11 @@ public class TripRate {
     @SequenceGenerator(sequenceName = "trip_comments_id_seq", name = "trip_comments_id_seq", allocationSize = 1)
     private long id;
 
-    public TripRate(int rate, LocalDateTime createdOn, Trip trip, User user) {
+    public TripRate(int rate, LocalDateTime createdOn, TripMember member)
+    {
         this.rate = rate;
         this.createdOn = createdOn;
-        this.trip = trip;
-        this.user = user;
+        this.member = member;
     }
 
     @Column(nullable = false)
@@ -26,11 +26,8 @@ public class TripRate {
 
     ////////////
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Trip trip;
-
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    private User user;
+    private TripMember member;
 
     ////////////
 
@@ -50,15 +47,11 @@ public class TripRate {
         return createdOn;
     }
 
-    public Trip getTrip() {
-        return trip;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
     public void setRate(int rate) {
         this.rate = rate;
+    }
+
+    public TripMember getMember() {
+        return member;
     }
 }

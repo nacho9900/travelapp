@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.TripCommentsDao;
 import ar.edu.itba.paw.interfaces.TripCommentsService;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
+import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,9 @@ public class TripCommentServiceImpl implements TripCommentsService {
     TripCommentsDao tripCommentsDao;
 
     @Override
-    public TripComment create(User user, Trip trip, String comment) {
+    public TripComment create( TripMember member, String comment) {
 
-        return tripCommentsDao.create(user, trip, comment);
+        return tripCommentsDao.create(member, comment);
     }
 
     @Override

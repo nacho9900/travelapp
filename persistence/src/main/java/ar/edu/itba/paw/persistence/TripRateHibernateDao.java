@@ -2,8 +2,8 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripRateDao;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripRate;
-import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -20,8 +20,8 @@ public class TripRateHibernateDao implements TripRateDao {
     EntityManager em;
 
     @Override
-    public TripRate create(User user, Trip trip, int rate) {
-        TripRate tripRate = new TripRate(rate, LocalDateTime.now(),trip, user   );
+    public TripRate create( TripMember member, int rate) {
+        TripRate tripRate = new TripRate(rate, LocalDateTime.now(), member );
         em.persist(tripRate);
         return tripRate;
     }

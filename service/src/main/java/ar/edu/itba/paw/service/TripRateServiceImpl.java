@@ -2,13 +2,11 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.TripRateDao;
 import ar.edu.itba.paw.interfaces.TripRateService;
-import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripRate;
-import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 
 @Service
@@ -18,8 +16,8 @@ public class TripRateServiceImpl implements TripRateService {
     TripRateDao tripRateDao;
 
     @Override
-    public TripRate create(User user, Trip trip, int rate) {
-        return tripRateDao.create(user, trip, rate);
+    public TripRate create( TripMember member, int rate) {
+        return tripRateDao.create(member, rate);
     }
 
     @Override
