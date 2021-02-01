@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.webapp.dto.AuthDto;
-import org.jose4j.jwt.MalformedClaimException;
-import org.jose4j.jwt.consumer.InvalidJwtException;
+import ar.edu.itba.paw.webapp.dto.authentication.AuthDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

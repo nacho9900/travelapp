@@ -60,7 +60,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
             .permitAll()
             .and()
             .authorizeRequests()
-            .antMatchers( HttpMethod.POST, "/api/users/login" )
+            .antMatchers( HttpMethod.POST, "/api/auth/**" )
             .anonymous()
             .and()
             .authorizeRequests()

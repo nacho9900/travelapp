@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -32,6 +33,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import javax.validation.Validator;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
@@ -134,5 +136,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addMapping("/api/**")
                 .allowedOrigins( "*" )
                 .allowedMethods( "*" );
+    }
+
+    @Bean
+    public Validator validator() {
+        final LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
+        factory.setValidationMessageSource(messageSource());
+        return factory;
     }
 }
