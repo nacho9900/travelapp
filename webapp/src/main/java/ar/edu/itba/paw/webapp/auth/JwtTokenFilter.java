@@ -2,9 +2,11 @@ package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.model.User;
 import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -67,8 +69,10 @@ public class JwtTokenFilter extends OncePerRequestFilter
                 return;
             }
         }
-        catch ( Exception ex )
+        catch ( InvalidJwtException ex )
         {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid Token");
             return;
         }
 

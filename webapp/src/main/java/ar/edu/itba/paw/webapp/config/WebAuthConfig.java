@@ -51,6 +51,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
         http.csrf()
             .disable();
 
+        http.exceptionHandling().authenticationEntryPoint( new RestAuthenticationEntryPoint() );
+
         http.sessionManagement()
             .sessionCreationPolicy( SessionCreationPolicy.STATELESS )
             .and();
