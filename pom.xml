@@ -48,6 +48,10 @@
         <jersey.version>3.0-SNAPSHOT</jersey.version>
         <org.bitbucket.b_c.jose4j.version>0.7.4</org.bitbucket.b_c.jose4j.version>
         <com.github.eirslett.frontend-maven-plugin.version>1.11.0</com.github.eirslett.frontend-maven-plugin.version>
+        <jackson-datatype-jdk8.version>2.12.1</jackson-datatype-jdk8.version>
+        <jackson-datatype-jsr310.version>2.9.5</jackson-datatype-jsr310.version>
+        <jersey-media-json-jackson.version>2.33</jersey-media-json-jackson.version>
+        <jackson-core.version>2.10.2</jackson-core.version>
     </properties>
 
     <build>
@@ -63,11 +67,11 @@
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <packagingExcludes>**/logback-test.xml</packagingExcludes>
-                <webResources>
-                    <resource>
-                        <directory>frontend/dist</directory>
-                    </resource>
-                </webResources>
+                    <webResources>
+                        <resource>
+                            <directory>frontend/dist</directory>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
 
@@ -126,21 +130,42 @@
                 <groupId>org.glassfish.jersey.core</groupId>
                 <artifactId>jersey-server</artifactId>
                 <version>${jersey.version}</version>
-<!--                <exclusions>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>javax.validation</groupId>-->
-<!--                        <artifactId>validation-api</artifactId>-->
-<!--                    </exclusion>-->
-<!--                </exclusions>-->
+                <!--                <exclusions>-->
+                <!--                    <exclusion>-->
+                <!--                        <groupId>javax.validation</groupId>-->
+                <!--                        <artifactId>validation-api</artifactId>-->
+                <!--                    </exclusion>-->
+                <!--                </exclusions>-->
             </dependency>
 
             <!-- JERSEY JSON -->
 
             <dependency>
-                <groupId>org.glassfish.jersey.media</groupId>
-                <artifactId>jersey-media-moxy</artifactId>
-                <version>${jersey.version}</version>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson-core.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-json-jackson</artifactId>
+                <version>${jersey-media-json-jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson-datatype-jsr310.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jdk8</artifactId>
+                <version>${jackson-datatype-jdk8.version}</version>
+            </dependency>
+
+            <!--            <dependency>-->
+            <!--                <groupId>org.glassfish.jersey.media</groupId>-->
+            <!--                <artifactId>jersey-media-moxy</artifactId>-->
+            <!--                <version>${jersey.version}</version>-->
+            <!--            </dependency>-->
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
                 <artifactId>jersey-media-jaxb</artifactId>

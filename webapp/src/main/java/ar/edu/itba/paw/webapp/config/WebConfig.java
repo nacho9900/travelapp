@@ -1,6 +1,11 @@
 package ar.edu.itba.paw.webapp.config;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
@@ -9,6 +14,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -35,6 +43,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Properties;
 
 @EnableTransactionManagement
@@ -143,5 +152,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
         factory.setValidationMessageSource(messageSource());
         return factory;
+    }
+
+    @Override
+    public void configureMessageConverters( List<HttpMessageConverter<?>> converters) {
+        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+
+        objectMapper.setDefaultPropertyInclusion( JsonInclude.Include.NON_NULL );
+        objectMapper.setPropertyNamingStrategy( PropertyNamingStrategy.LOWER_CAMEL_CASE );
+        objectMapper.registerModule( new JavaTimeModule() );
+        objectMapper.registerModule( new Jdk8Module() );
+
+        converters.add( new MappingJackson2HttpMessageConverter(objectMapper) );
     }
 }
