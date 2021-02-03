@@ -5,8 +5,10 @@
       "itemsPerPageText": "Elements per page"
     },
     "datePicker": {
-      "nextMonthAriaLabel": "Next",
-      "prevMonthAriaLabel": "Previous"
+      "nextMonthAriaLabel": "Next month",
+      "prevMonthAriaLabel": "Prev. month",
+      "nextYearAriaLabel": "Next year",
+      "prevYearAriaLabel": "Prev. year"
     }
   },
   "app": {
@@ -53,6 +55,10 @@
       "title": "Login"
     },
     "signup": {
+      "errors": {
+        "422": "The provided email already corresponds to an user.",
+        "default": "There was an error while creating your user. Please, try again later."
+      },
       "firstname": "Firstname",
       "lastname": "Lastname",
       "nationality": "Nationality",
@@ -63,7 +69,10 @@
       "title": "Complete your information",
       "login_btn": "Login",
       "signin_btn": "SingUp",
-      "password_repeat_rule": "Those passwords didn’t match. Try again."
-    }
+      "password_repeat_rule": "Those passwords didn’t match. Try again.",
+      "welcome": "Welcome",
+      "welcome_text": "Your registrations has succesed. You will receive an email in a moment with your user data."
+    },
+    "signup_welcome_continue": "continue"
   }
 }

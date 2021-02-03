@@ -7,6 +7,7 @@
 		:dense="dense"
 		:append-icon="passwordIcon"
 		:rules="rules"
+		:disabled="disabled"
 		@click:append="toggleInputPasswordType"
 	>
 	</v-text-field>
@@ -17,6 +18,7 @@ export default {
 	props: {
 		dense: Boolean,
 		outlined: Boolean,
+		disabled: Boolean,
 		value: String,
 		label: String,
 		rules: Array,

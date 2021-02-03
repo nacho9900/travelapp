@@ -5,8 +5,10 @@
       "itemsPerPageText": "Elemetos por página"
     },
     "datePicker": {
-      "nextMonthAriaLabel": "Siguiente",
-      "prevMonthAriaLabel": "Anterior"
+      "nextMonthAriaLabel": "Siguiente mes",
+      "prevMonthAriaLabel": "Anterior mes",
+      "nextYearAriaLabel": "Siguiente año",
+      "prevYearAriaLabel": "Anterior año"
     }
   },
   "app": {
@@ -53,6 +55,10 @@
       "title": "Iniciar Sesión"
     },
     "signup": {
+      "errors": {
+        "422": "Ya existe un usuario con el email ingresado.",
+        "default": "Ocurrio un error al crear el usuario. Por favor, intente nuevamente más tarde."
+      },
       "firstname": "Nombre",
       "lastname": "Apellido",
       "email": "Email",
@@ -63,7 +69,10 @@
       "title": "Completá tus datos",
       "login_btn": "Iniciar Sesión",
       "signin_btn": "Registrarse",
-      "password_repeat_rule": "Las contraseñas no coinciden. Intente nuevamente."
-    }
+      "password_repeat_rule": "Las contraseñas no coinciden. Intente nuevamente.",
+      "welcome": "!Bienvenido",
+      "welcome_text": "Se registró exitosamente en TravelApp. En unos momentos \t\t\t\t\trecibirá un correo de bienvenda con los datos de su cuenta."
+    },
+    "signup_welcome_continue": "continuar"
   }
 }

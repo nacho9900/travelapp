@@ -1,19 +1,21 @@
 <template>
 	<v-menu
 		v-model="dateMenu"
-		:close-on-content-click="true"
+		:close-on-content-click="false"
+		:disabled="disabled"
 		offset-y
 		max-width="290"
 	>
 		<template v-slot:activator="{ on, attrs }">
 			<v-text-field
+				v-model="dateFormatted"
 				:label="label"
 				:rules="rules"
 				:dense="dense"
 				:outlined="outlined"
+				:disabled="disabled"
 				v-on="on"
 				v-bind="attrs"
-				v-model="dateFormatted"
 				readonly
 				clearable
 			></v-text-field>
@@ -38,6 +40,7 @@ export default {
 		dense: Boolean,
 		outlined: Boolean,
 		rules: Array,
+		disabled: Boolean,
 	},
 	data() {
 		return {
@@ -53,7 +56,9 @@ export default {
 				};
 
 				return this.date
-					? new Date(this.date).toLocaleDateString(getBrowserLocale(), opt)
+					? new Date(this.date).toLocaleDateString(
+							getBrowserLocale(),
+							opt			  )
 					: "";
 			},
 			set(value) {
@@ -68,6 +73,7 @@ export default {
 	},
 	watch: {
 		date() {
+			this.dateMenu = false;
 			this.$emit("input", this.date);
 		},
 	},

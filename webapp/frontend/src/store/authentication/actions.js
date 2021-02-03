@@ -61,5 +61,14 @@ export default {
         localStorage.removeItem('tokenExpiration');
 
         clearTimeout(timer);
+    },
+    async signup(_, payload) {
+        const user = {
+            ...payload
+        };
+
+        const response = await Axios.post("/auth/signup", user);
+        const userCreated = response.data;
+        return userCreated;
     }
 };

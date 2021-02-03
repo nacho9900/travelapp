@@ -73,6 +73,13 @@ public class AuthenticationController
                            .build();
         }
 
+        Optional<User> maybeUser = this.userService.findByUsername( signUpDto.getEmail() );
+
+        if ( maybeUser.isPresent() ) {
+            return Response.status( Response.Status.CONFLICT )
+                           .build();
+        }
+
         User user = userService.create( signUpDto.getFirstname(), signUpDto.getLastname(), signUpDto.getEmail(),
                 signUpDto.getPassword(), signUpDto.getBirthdayLocalDate(), signUpDto.getNationality() );
 
