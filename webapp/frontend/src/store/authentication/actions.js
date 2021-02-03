@@ -9,7 +9,7 @@ export default {
             password: payload.password
         };
 
-        const response = await Axios.post("/users/login", data);
+        const response = await Axios.post("/auth/login", data);
 
         const auth = response.data;
 

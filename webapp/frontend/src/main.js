@@ -11,6 +11,7 @@ import DeleteDialog from 'components/UI/DeleteDialog.vue';
 import LoadingDialog from 'components/UI/LoadingDialog.vue';
 import DatePicker from 'components/UI/DatePicker.vue';
 import ImageForm from 'components/UI/ImageForm.vue';
+import PasswordTextField from 'components/UI/PasswordTextField.vue';
 
 Vue.config.productionTip = false;
 
@@ -29,5 +30,6 @@ Vue.component('delete-dialog', DeleteDialog);
 Vue.component('loading-dialog', LoadingDialog);
 Vue.component('date-picker', DatePicker);
 Vue.component('image-form', ImageForm);
+Vue.component('password-text-field', PasswordTextField);
 
 app.$mount('#app');

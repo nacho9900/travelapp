@@ -1,51 +1,69 @@
 {
-	"$vuetify": {
-		"dataTable": {
-			"itemsPerPageText": "Elements per page"
-		}
-	},
-	"app": {
-		"dark_mode": "dark mode",
-		"light_mode": "light mode"
-	},
-	"rules": {
-		"email": {
-			"format": "The email is invalid"
-		},
-		"field_required": "The field is required",
-		"greater_or_equals_zero": "The field must be greater or equals to zero",
-		"not_zero": "The field must not be zero",
-		"number_format": "The number is invalid",
-		"password": {
-			"format": "The password must contains 8 to 20 characters and a capital letter",
-			"required": "Password is required"
-		}
-	},
-	"ui": {
-		"delete_dialog": {
-			"cancel": "cancel",
-			"delete": "delete"
-		},
-		"error_dialog": {
-			"error_ocurred": "An unexpected error has occurred"
-		},
-		"image_form": {
-			"image_required": "The image is required",
-			"image_size": "The image size cannot be up 5MB",
-			"title": "Upload an image",
-			"upload": "upload"
-		}
-	},
-	"views": {
-		"login": {
-			"email_label": "Email",
-			"incorrect_email_password": "Email or Password are not valid",
-			"login_btn": "Login",
-			"password_forget": "Forget your password?",
-			"password_label": "Password",
-			"signin_btn": "Singin",
-			"subtitle": "to enter TravelApp",
-			"title": "Login"
-		}
-	}
+  "$vuetify": {
+    "noDataText": "Empty data",
+    "dataTable": {
+      "itemsPerPageText": "Elements per page"
+    },
+    "datePicker": {
+      "nextMonthAriaLabel": "Next",
+      "prevMonthAriaLabel": "Previous"
+    }
+  },
+  "app": {
+    "dark_mode": "dark mode",
+    "light_mode": "light mode"
+  },
+  "rules": {
+    "email": {
+      "format": "The email is invalid"
+    },
+    "field_required": "The field is required",
+    "greater_or_equals_zero": "The field must be greater or equals to zero",
+    "not_zero": "The field must not be zero",
+    "number_format": "The number is invalid",
+    "password": {
+      "format": "The password must contains 8 to 20 characters and a capital letter",
+      "required": "Password is required"
+    }
+  },
+  "ui": {
+    "delete_dialog": {
+      "cancel": "cancel",
+      "delete": "delete"
+    },
+    "error_dialog": {
+      "error_ocurred": "An unexpected error has occurred"
+    },
+    "image_form": {
+      "image_required": "The image is required",
+      "image_size": "The image size cannot be up 5MB",
+      "title": "Upload an image",
+      "upload": "upload"
+    }
+  },
+  "views": {
+    "login": {
+      "email_label": "Email",
+      "incorrect_email_password": "Email or Password are not valid",
+      "login_btn": "Login",
+      "password_forget": "Forget your password?",
+      "password_label": "Password",
+      "signin_btn": "SingUp",
+      "subtitle": "to enter TravelApp",
+      "title": "Login"
+    },
+    "signup": {
+      "firstname": "Firstname",
+      "lastname": "Lastname",
+      "nationality": "Nationality",
+      "birthday": "Birthday",
+      "email": "Email",
+      "password": "Password",
+      "password_repeat": "Repeat Password",
+      "title": "Complete your information",
+      "login_btn": "Login",
+      "signin_btn": "SingUp",
+      "password_repeat_rule": "Those passwords didn’t match. Try again."
+    }
+  }
 }

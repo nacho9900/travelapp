@@ -20,7 +20,7 @@ const routes = [
   {
     path: '/signin',
     name: 'SignIn',
-    component: () => import("views/authentication/SignIn.vue"),
+    component: () => import("views/authentication/SignUp.vue"),
     meta: { requireUnauth: true }
   },
   {
