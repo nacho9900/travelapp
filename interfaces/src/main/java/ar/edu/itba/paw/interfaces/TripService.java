@@ -9,6 +9,7 @@ import java.util.*;
 public interface TripService {
 
     public Trip create(long createdBy, long place, String name, String description, LocalDate startDate, LocalDate endDate);
+    public Trip create(Trip trip);
     public Optional<Trip> findById(long id);
     public List<Trip> getAllTrips(int pageNum);
     public List<Trip> findByName(String name);

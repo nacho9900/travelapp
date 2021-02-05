@@ -14,6 +14,7 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.AesKey;
 import org.jose4j.lang.JoseException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -28,13 +29,11 @@ public class JwtTokenUtil
     private final JsonWebSignature jsonWebSignature;
 
     public JwtTokenUtil() {
-        try
-        {
+        try {
             this.rsaJsonWebKey = RsaJwkGenerator.generateJwk( 2048 );
             this.rsaJsonWebKey.setKeyId( "nacho2021" );
         }
-        catch ( JoseException e )
-        {
+        catch ( JoseException e ) {
             e.printStackTrace();
         }
 
@@ -52,23 +51,21 @@ public class JwtTokenUtil
         jsonWebSignature.setAlgorithmHeaderValue( AlgorithmIdentifiers.RSA_USING_SHA256 );
     }
 
-    public String create( String email ) {
+    public String create( UserDetails user ) {
         JwtClaims claims = new JwtClaims();
         claims.setIssuer( "PAW2019a4" );
         claims.setExpirationTimeMinutesInTheFuture( 10 );
         claims.setIssuedAtToNow();
-        claims.setClaim( "email", email );
+        claims.setClaim( "email", user.getUsername() );
 
         jsonWebSignature.setPayload( claims.toJson() );
 
         String jwt = "";
 
-        try
-        {
+        try {
             jwt = jsonWebSignature.getCompactSerialization();
         }
-        catch ( JoseException e )
-        {
+        catch ( JoseException e ) {
             //Do Nothing
         }
 
@@ -76,18 +73,14 @@ public class JwtTokenUtil
     }
 
     public JwtClaims validate( String token ) throws InvalidJwtException {
-        try
-        {
+        try {
             return jwtConsumer.processToClaims( token );
         }
-        catch ( InvalidJwtException ex )
-        {
-            if ( ex.hasExpired() )
-            {
+        catch ( InvalidJwtException ex ) {
+            if ( ex.hasExpired() ) {
                 return null;
             }
-            else
-            {
+            else {
                 throw ex;
             }
         }

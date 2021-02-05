@@ -35,10 +35,19 @@ public class TripComment implements Comparable<TripComment>
         // Just for Hibernate
     }
 
+    public TripComment(long id, TripMember member, String comment, LocalDateTime createdOn) {
+        this(member, comment, createdOn);
+        this.id = id;
+    }
+
     public TripComment( TripMember member, String comment, LocalDateTime createdOn ) {
         this.comment = comment;
         this.member = member;
         this.createdOn = createdOn;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getComment() {
@@ -49,10 +58,6 @@ public class TripComment implements Comparable<TripComment>
         this.comment = comment;
     }
 
-    public long getId() {
-        return id;
-    }
-
     public LocalDateTime getCreatedOn() {
         return createdOn;
     }
@@ -61,8 +66,17 @@ public class TripComment implements Comparable<TripComment>
         this.createdOn = createdOn;
     }
 
+    public TripMember getMember() {
+        return member;
+    }
+
+    public void setMember( TripMember member ) {
+        this.member = member;
+    }
+
     @Override
     public int compareTo( TripComment o ) {
         return this.createdOn.isBefore( o.createdOn ) ? -1 : 1;
     }
+
 }

@@ -31,7 +31,7 @@ public class Activity implements Comparable<Activity> {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Place place;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Trip trip;
 
     ////////////////
@@ -54,7 +54,6 @@ public class Activity implements Comparable<Activity> {
         // Just for Hibernate
     }
 
-
     public Trip getTrip() {
         return trip;
     }
@@ -76,6 +75,7 @@ public class Activity implements Comparable<Activity> {
     }
 
     public void setPlace(Place place) {
+        place.getActivities().add( this );
         this.place = place;
     }
 

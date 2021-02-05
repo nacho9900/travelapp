@@ -8,17 +8,16 @@ import ar.edu.itba.paw.webapp.dto.authentication.SignUpDto;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.dto.users.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import javax.validation.ConstraintViolation;
-import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -46,17 +45,24 @@ public class AuthenticationController
     @POST
     @Path( "/login" )
     @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
     public Response login( @RequestBody AuthRequestDto authRequestDto ) {
         String email = authRequestDto.getEmail();
         String password = authRequestDto.getPassword();
 
-        Optional<AuthDto> maybeAuth = loginHelper.authenticate( email, password );
+        try {
+            Optional<AuthDto> maybeAuth = loginHelper.authenticate( email, password );
 
-        if ( maybeAuth.isPresent() ) {
-            return Response.ok( maybeAuth.get() )
+            if ( !maybeAuth.isPresent() ) {
+                return Response.status( Response.Status.UNAUTHORIZED )
+                               .build();
+            }
+
+            return Response.ok()
+                           .entity( maybeAuth.get() )
                            .build();
         }
-        else {
+        catch ( UsernameNotFoundException ex ) {
             return Response.status( Response.Status.UNAUTHORIZED )
                            .build();
         }
@@ -65,6 +71,7 @@ public class AuthenticationController
     @POST
     @Path( "/signup" )
     @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
     public Response signup( @RequestBody SignUpDto signUpDto ) {
         Set<ConstraintViolation<SignUpDto>> violations = validator.validate( signUpDto );
 
@@ -81,9 +88,10 @@ public class AuthenticationController
         }
 
         User user = userService.create( signUpDto.getFirstname(), signUpDto.getLastname(), signUpDto.getEmail(),
-                signUpDto.getPassword(), signUpDto.getBirthdayLocalDate(), signUpDto.getNationality() );
+                signUpDto.getPassword(), signUpDto.getBirthdayLocalDate(), signUpDto.getNationality(), null );
 
-        return Response.ok( UserDto.fromUser( user, uriInfo ) )
+        return Response.ok()
+                       .entity( UserDto.fromUser( user, uriInfo ) )
                        .build();
     }
 }

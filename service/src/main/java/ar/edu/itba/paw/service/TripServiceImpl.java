@@ -38,6 +38,17 @@ public class TripServiceImpl implements TripService
     }
 
     @Override
+    public Trip create( Trip trip ) {
+        if(trip.getStartDate().isAfter( trip.getEndDate() )) {
+            //trow ex
+        }
+
+        td.create( trip );
+
+        return trip;
+    }
+
+    @Override
     public Optional<Trip> findById( long id ) {
         return td.findById( id );
     }

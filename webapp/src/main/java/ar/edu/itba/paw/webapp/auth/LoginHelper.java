@@ -25,7 +25,7 @@ public class LoginHelper
         UserDetails userDetails = userDetailsService.loadUserByUsername( username );
         if ( passwordEncoder.matches( password, userDetails.getPassword() ) )
         {
-            String token = jwtTokenUtil.create( username );
+            String token = jwtTokenUtil.create( userDetails );
             try
             {
                 long expiresIn = jwtTokenUtil.getExpiresIn(token);

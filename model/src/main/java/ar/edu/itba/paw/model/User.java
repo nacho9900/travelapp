@@ -30,6 +30,9 @@ public class User {
     @Column(length = 500)
     private String biography;
 
+    @Column(length = 100, nullable = false)
+    private String nationality;
+
     //////////////
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
@@ -43,15 +46,12 @@ public class User {
 
     /////////////
 
-    @Column(length = 100, nullable = false)
-    private String nationality;
-
-    public User(long id, String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
-        this(firstname, lastname, email, password, birthday, nationality);
+    public User(long id, String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String biography) {
+        this(firstname, lastname, email, password, birthday, nationality, biography);
         this.id = id;
     }
 
-    public User(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
+    public User(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality,  String biography) {
         super();
         this.firstname = firstname;
         this.lastname = lastname;

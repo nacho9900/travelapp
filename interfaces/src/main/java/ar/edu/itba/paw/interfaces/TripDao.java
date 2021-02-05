@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface TripDao {
-
+    public Trip create(Trip trip);
     public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate);
     public Optional<Trip> findById(long id);
     public List<Trip> findByName(String name);

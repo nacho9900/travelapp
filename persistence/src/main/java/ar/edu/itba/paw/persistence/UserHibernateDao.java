@@ -19,8 +19,8 @@ public class UserHibernateDao implements UserDao {
     private EntityManager em;
 
     @Override
-    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
-       final User user = new User(firstname, lastname, email, password, birthday, nationality);
+    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String biography) {
+       final User user = new User(firstname, lastname, email, password, birthday, nationality, biography);
        em.persist(user);
        return user;
     }
