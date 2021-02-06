@@ -1,13 +1,8 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.model.User;
-import org.jose4j.jwt.JwtClaims;
-import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -20,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -48,8 +43,7 @@ public class JwtTokenFilter extends OncePerRequestFilter
         // Get authorization header and validate
         final String header = request.getHeader( HttpHeaders.AUTHORIZATION );
 
-        if ( isEmpty( header ) || !header.startsWith( "Bearer " ) )
-        {
+        if ( isEmpty( header ) || !header.startsWith( "Bearer " ) ) {
             filterChain.doFilter( request, response );
             return;
         }
@@ -57,27 +51,22 @@ public class JwtTokenFilter extends OncePerRequestFilter
         // Get jwt token and validate
         final String token = header.split( " " )[1].trim();
 
-        JwtClaims claims;
+        Optional<String> maybeUsername = jwtTokenUtil.getUserName( token );
 
-        try
-        {
-            claims = jwtTokenUtil.validate( token );
-
-            if ( claims == null )
-            {
-                filterChain.doFilter( request, response );
-                return;
-            }
+        if ( !maybeUsername.isPresent() ) {
+            response.setStatus( HttpServletResponse.SC_UNAUTHORIZED );
+            ( (HttpServletResponse) response ).sendError( HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token" );
+            return;
         }
-        catch ( InvalidJwtException ex )
-        {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid Token");
+
+        if ( jwtTokenUtil.isExpired( token ) ) {
+            response.setStatus( HttpServletResponse.SC_UNAUTHORIZED );
+            ( (HttpServletResponse) response ).sendError( HttpServletResponse.SC_UNAUTHORIZED, "Token Expired" );
             return;
         }
 
         // Get user identity and set it on the spring security context
-        UserDetails userDetails = userDetailsService.loadUserByUsername( claims.getClaimValueAsString( "email" ) );
+        UserDetails userDetails = userDetailsService.loadUserByUsername( maybeUsername.get() );
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken( userDetails, null,
                 userDetails == null ? new LinkedList<>() : userDetails.getAuthorities() );

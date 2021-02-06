@@ -50,22 +50,16 @@ public class AuthenticationController
         String email = authRequestDto.getEmail();
         String password = authRequestDto.getPassword();
 
-        try {
-            Optional<AuthDto> maybeAuth = loginHelper.authenticate( email, password );
+        Optional<AuthDto> maybeAuth = loginHelper.authenticate( email, password );
 
-            if ( !maybeAuth.isPresent() ) {
-                return Response.status( Response.Status.UNAUTHORIZED )
-                               .build();
-            }
-
-            return Response.ok()
-                           .entity( maybeAuth.get() )
-                           .build();
-        }
-        catch ( UsernameNotFoundException ex ) {
+        if ( !maybeAuth.isPresent() ) {
             return Response.status( Response.Status.UNAUTHORIZED )
                            .build();
         }
+
+        return Response.ok()
+                       .entity( maybeAuth.get() )
+                       .build();
     }
 
     @POST

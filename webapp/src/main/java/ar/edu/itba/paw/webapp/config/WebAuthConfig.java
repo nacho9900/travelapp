@@ -20,17 +20,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 @EnableWebSecurity
 @Configuration
 @ComponentScan( "ar.edu.itba.paw.webapp.auth" )
 public class WebAuthConfig extends WebSecurityConfigurerAdapter
 {
-    @Value( "classpath:rememberme.key" )
-    private Resource key;
+    @Value( "classpath:private_key.der" )
+    private Resource secretKey;
 
     @Autowired
     public PasswordEncoder passwordEncoder;
@@ -45,13 +45,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
         auth.userDetailsService( username -> userDetailsService.loadUserByUsername( username ) );
     }
 
-
     @Override
     protected void configure( HttpSecurity http ) throws Exception {
         http.csrf()
             .disable();
 
-        http.exceptionHandling().authenticationEntryPoint( new RestAuthenticationEntryPoint() );
+        http.exceptionHandling()
+            .authenticationEntryPoint( new RestAuthenticationEntryPoint() );
 
         http.sessionManagement()
             .sessionCreationPolicy( SessionCreationPolicy.STATELESS )
@@ -72,25 +72,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
         http.addFilterBefore( jwtTokenFilter, UsernamePasswordAuthenticationFilter.class );
     }
 
-    //    private String getRememberMeKey()
-    //    {
-    //        final StringWriter writer = new StringWriter();
-    //        try ( Reader reader = new InputStreamReader( key.getInputStream() ) )
-    //        {
-    //            char[] data = new char[1024];
-    //            int len;
-    //            while ( ( len = reader.read( data ) ) != -1 )
-    //            {
-    //                writer.write( data, 0, len );
-    //            }
-    //        }
-    //        catch ( IOException e )
-    //        {
-    //            throw new RuntimeException( e );
-    //        }
-    //        return writer.toString();
-    //    }
-    //
     @Bean
     public DaoAuthenticationProvider getDaoAuth() {
         DaoAuthenticationProvider ap = new DaoAuthenticationProvider();
@@ -99,43 +80,39 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
         return ap;
     }
 
-    //
-    //    @Override
-    //    protected void configure( AuthenticationManagerBuilder auth ) throws Exception
-    //    {
-    //        //auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder); OTRA FORMA
-    //        auth.authenticationProvider( getDaoAuth() );
-    //    }
-    //
-    //    @Override
-    //    public void configure( final WebSecurity web ) throws Exception
-    //    {
-    //        web.ignoring()
-    //                .antMatchers( "/css/**", "/js/**", "/img/**", "/favicon.ico", "/icons/**", "/webjars/**" );
-    //    }
-    //
     @Bean( name = BeanIds.AUTHENTICATION_MANAGER )
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
-//    // Used by spring security if CORS is enabled.
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowCredentials( true );
-//        config.addAllowedOrigin( "*" );
-//        config.addAllowedHeader( "*" );
-//        config.addAllowedMethod( "*" );
-//        source.registerCorsConfiguration( "/**", config );
-//        return new CorsFilter( source );
-//    }
+    //    // Used by spring security if CORS is enabled.
+    //    @Bean
+    //    public CorsFilter corsFilter() {
+    //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //        CorsConfiguration config = new CorsConfiguration();
+    //        config.setAllowCredentials( true );
+    //        config.addAllowedOrigin( "*" );
+    //        config.addAllowedHeader( "*" );
+    //        config.addAllowedMethod( "*" );
+    //        source.registerCorsConfiguration( "/**", config );
+    //        return new CorsFilter( source );
+    //    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public InputStream secretKey() {
+        try {
+            return this.secretKey.getInputStream();
+        }
+        catch ( IOException e ) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
 

@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.webapp.dto.authentication;
 
+import java.util.Date;
+
 public class AuthDto
 {
 
     private String token;
-    private Long expiresIn;
+    private Date expiresIn;
 
-    public AuthDto( String token, Long expiresIn ) {
+    public AuthDto( String token, Date expiresIn ) {
         this.token = token;
         this.expiresIn = expiresIn;
     }
@@ -23,11 +25,11 @@ public class AuthDto
         this.token = token;
     }
 
-    public Long getExpiresIn() {
+    public Date getExpiresIn() {
         return expiresIn;
     }
 
-    public void setExpiresIn( Long expiresIn ) {
+    public void setExpiresIn( Date expiresIn ) {
         this.expiresIn = expiresIn;
     }
 }
