@@ -5,6 +5,7 @@ import store from './store';
 import vuetify from './plugins/vuetify';
 import i18n from './i18n/i18n.js';
 import Axios from 'axios';
+import * as GmapVue from 'gmap-vue';
 
 import ErrorDialog from 'components/UI/ErrorDialog.vue';
 import DeleteDialog from 'components/UI/DeleteDialog.vue';
@@ -16,6 +17,15 @@ import PasswordTextField from 'components/UI/PasswordTextField.vue';
 Vue.config.productionTip = false;
 
 Axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
+
+
+Vue.use(GmapVue, {
+  load: {
+    key: process.env.VUE_APP_MAPS_API_KEY,
+    libraries: 'places',
+    installComponents: true
+  }
+});
 
 const app = new Vue({
   router,

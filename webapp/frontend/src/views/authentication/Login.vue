@@ -49,7 +49,7 @@
 													() =>
 														!unauthorized ||
 														$t(
-															'views.login.views.login.incorrect_email_password'
+															'views.login.incorrect_email_password'
 														),
 												])
 											"

@@ -56,12 +56,21 @@ export default {
 		logoPath() {
 			return "./logos/lb.png";
 		},
+		autologout() {
+			return this.$store.getters.didAutologout;
+		},
 	},
-	methods: {},
 	created() {
 		// if (this.isAuthenticated && !this.hasUser) {
 		// 	this.$store.dispatch("loadUser");
 		// }
+	},
+	watch: {
+		autologout() {
+			if (this.autologout) {
+				this.$router.replace({ name: "Login" });
+			}
+		},
 	},
 };
 </script>

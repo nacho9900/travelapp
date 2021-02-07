@@ -1,3 +1,3 @@
 <template>
-    <p>Hola</p>
+	<v-btn :to="{ name: 'TripNew' }">NUEVO</v-btn>
 </template>

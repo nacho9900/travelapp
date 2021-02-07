@@ -4,5 +4,8 @@ export default {
     },
     setUser(state, payload) {
         state.user = payload.user;
+    },
+    setAutologout(state, payload) {
+        state.autologout = payload.autologout;
     }
 }

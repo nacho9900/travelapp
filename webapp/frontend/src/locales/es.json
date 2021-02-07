@@ -74,5 +74,19 @@
       "welcome_text": "Se registró exitosamente en TravelApp. En unos momentos \t\t\t\t\trecibirá un correo de bienvenda con los datos de su cuenta."
     },
     "signup_welcome_continue": "continuar"
+  },
+  "components": {
+    "trips": {
+      "tripform": {
+        "title": "Vamos a crear un nuevo viaje!",
+        "name": "Nombre",
+        "description": "Descripción",
+        "description_hint": "Describí el viaje para que los demás puedan saber que estás planeado hacer",
+        "start_date": "Fecha desde",
+        "end_date": "Fecha hasta",
+        "create": "Crear",
+        "date_rule": "La fecha desde no puede ser despues de la fecha hasta"
+      }
+    }
   }
 }

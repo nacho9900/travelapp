@@ -46,7 +46,7 @@
   "views": {
     "login": {
       "email_label": "Email",
-      "incorrect_email_password": "Email or Password are not valid",
+      "incorrect_email_password": "Invalid Email or Password",
       "login_btn": "Login",
       "password_forget": "Forget your password?",
       "password_label": "Password",
@@ -74,5 +74,19 @@
       "welcome_text": "Your registrations has succesed. You will receive an email in a moment with your user data."
     },
     "signup_welcome_continue": "continue"
+  },
+  "components": {
+    "trips": {
+      "tripform": {
+        "title": "Let's create a new trip!",
+        "name": "Name",
+        "description": "Description",
+        "description_hint": "Give others a tip of what kind of trip are you planning ",
+        "start_date": "Date from",
+        "end_date": "Date to",
+        "create": "Create",
+        "date_rule": "Date from cannot be after Date to"
+      }
+    }
   }
 }
