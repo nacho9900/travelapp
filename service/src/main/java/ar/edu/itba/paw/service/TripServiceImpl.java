@@ -3,13 +3,11 @@ package ar.edu.itba.paw.service;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -63,17 +61,9 @@ public class TripServiceImpl implements TripService
         return td.getAllTrips( pageNum );
     }
 
-    //TODO: Arregar esto, ahora un miembre tiene el viaje
     @Override
     public List<Trip> getAllUserTrips( User user ) {
-        List<Trip> trips = user.getMembers()
-                               .stream()
-                               .map( TripMember::getTrip )
-                               .collect( Collectors.toList() ); //TODO: Optimizar esto
-        List<Trip> createdTrips = td.findUserCreatedTrips( user.getId() );
-        trips.addAll( createdTrips );
-        Collections.sort( trips );
-        return trips;
+        return td.findUserTrips( user.getId() );
     }
 
     @Override

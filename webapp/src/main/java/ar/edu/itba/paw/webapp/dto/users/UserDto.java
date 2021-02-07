@@ -14,33 +14,36 @@ public class UserDto
     private String email;
     private String firstname;
     private String lastname;
-    private Date birthday;
     private String biography;
     private String nationality;
-    private URI userPicture;
+    private Date birthday;
 
     public Long getId() {
         return id;
-    }
-
-    public void setId( Long id ) {
-        this.id = id;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail( String email ) {
-        this.email = email;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public URI getUserPicture() {
-        return userPicture;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setUserPicture( URI userPicture ) {
-        this.userPicture = userPicture;
+    public String getBiography() {
+        return biography;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public Date getBirthday() {
+        return birthday;
     }
 
     public UserDto() {
@@ -56,7 +59,7 @@ public class UserDto
                 this.biography );
     }
 
-    public static UserDto fromUser( User user, UriInfo uriInfo ) {
+    public static UserDto fromUser( User user ) {
         UserDto userDto = new UserDto();
 
         userDto.id = user.getId();
@@ -65,11 +68,7 @@ public class UserDto
         userDto.lastname = user.getLastname();
         userDto.nationality = user.getNationality();
         userDto.biography = user.getBiography();
-
-        userDto.userPicture = uriInfo.getAbsolutePathBuilder()
-                                     .path( String.valueOf( user.getId() ) )
-                                     .path( "picture" )
-                                     .build();
+        userDto.birthday = java.sql.Date.valueOf( user.getBirthday() );
 
         return userDto;
     }

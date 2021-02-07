@@ -51,14 +51,14 @@ public class JoinRequestDto
                 null, this.user.toUser() );
     }
 
-    public static JoinRequestDto fromTripJoinRequest( TripJoinRequest tripJoinRequest, UriInfo uriInfo ) {
+    public static JoinRequestDto fromTripJoinRequest( TripJoinRequest tripJoinRequest ) {
         JoinRequestDto joinRequestDto = new JoinRequestDto();
         joinRequestDto.id = tripJoinRequest.getId();
         joinRequestDto.createdOn = java.sql.Timestamp.valueOf( tripJoinRequest.getCreatedOn() );
         joinRequestDto.message = tripJoinRequest.getMessage();
         joinRequestDto.status = tripJoinRequest.getStatus()
                                                .name();
-        joinRequestDto.user = UserDto.fromUser( tripJoinRequest.getUser(), uriInfo );
+        joinRequestDto.user = UserDto.fromUser( tripJoinRequest.getUser() );
 
         return joinRequestDto;
 

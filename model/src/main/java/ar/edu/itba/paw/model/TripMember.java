@@ -82,7 +82,7 @@ public class TripMember
         this.comments = comments;
     }
 
-    public TripMember(TripMemberRole role, Boolean isActive, User user) {
+    public TripMember( TripMemberRole role, Boolean isActive, User user ) {
         this.role = role;
         this.isActive = isActive;
         this.user = user;
@@ -142,7 +142,7 @@ public class TripMember
     }
 
     public void setComments( List<TripComment> comments ) {
-        for(TripComment comment : comments) {
+        for ( TripComment comment : comments ) {
             comment.setMember( this );
         }
         this.comments = comments;

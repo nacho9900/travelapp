@@ -85,7 +85,7 @@ public class AuthenticationController
                 signUpDto.getPassword(), signUpDto.getBirthdayLocalDate(), signUpDto.getNationality(), null );
 
         return Response.ok()
-                       .entity( UserDto.fromUser( user, uriInfo ) )
+                       .entity( UserDto.fromUser( user ) )
                        .build();
     }
 }

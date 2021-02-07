@@ -5,20 +5,19 @@ import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripJoinRequest;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.webapp.dto.serializers.CollectionSerializer;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.cglib.core.Local;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@JsonInclude( JsonInclude.Include.NON_NULL)
 public class TripDto
 {
     private Long id;
@@ -34,7 +33,6 @@ public class TripDto
     @NotNull
     @Future
     private Date endDate;
-    private URI tripPicture;
     @JsonSerialize( using = CollectionSerializer.class )
     private List<TripMemberDto> members;
     @JsonSerialize( using = CollectionSerializer.class )
@@ -64,10 +62,6 @@ public class TripDto
 
     public Date getEndDate() {
         return endDate;
-    }
-
-    public URI getTripPicture() {
-        return tripPicture;
     }
 
     public List<TripMemberDto> getMembers() {
@@ -102,10 +96,6 @@ public class TripDto
         this.endDate = endDate;
     }
 
-    public void setTripPicture( URI tripPicture ) {
-        this.tripPicture = tripPicture;
-    }
-
     public void setMembers( List<TripMemberDto> members ) {
         this.members = members;
     }
@@ -129,9 +119,10 @@ public class TripDto
 
         Trip trip;
 
-        if(this.id == null) {
+        if ( this.id == null ) {
             trip = new Trip( 0, this.name, this.description, startDate, endDate );
-        } else {
+        }
+        else {
             trip = new Trip( this.id, 0, this.name, this.description, startDate, endDate );
         }
 
@@ -156,7 +147,7 @@ public class TripDto
         return trip;
     }
 
-    public static TripDto fromTrip( Trip trip, UriInfo uriInfo, boolean includeMembers, boolean includeActivities,
+    public static TripDto fromTrip( Trip trip, boolean includeMembers, boolean includeActivities,
                                     boolean includeJoinRequests ) {
         TripDto tripDto = new TripDto();
         tripDto.id = trip.getId();
@@ -168,7 +159,7 @@ public class TripDto
             List<TripMember> tripMembers = trip.getMembers();
             if ( tripMembers != null ) {
                 tripDto.members = tripMembers.stream()
-                                             .map( x -> TripMemberDto.fromTripMember( x, uriInfo, true, true ) )
+                                             .map( x -> TripMemberDto.fromTripMember( x, true, true ) )
                                              .collect( Collectors.toList() );
             }
         }
@@ -186,7 +177,7 @@ public class TripDto
             List<TripJoinRequest> tripJoinRequests = trip.getJoinRequests();
             if ( tripJoinRequests != null ) {
                 tripDto.joinRequests = tripJoinRequests.stream()
-                                                       .map( x -> JoinRequestDto.fromTripJoinRequest( x, uriInfo ) )
+                                                       .map( JoinRequestDto::fromTripJoinRequest )
                                                        .collect( Collectors.toList() );
             }
         }

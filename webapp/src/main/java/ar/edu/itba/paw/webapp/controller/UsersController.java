@@ -40,7 +40,7 @@ public class UsersController
     public Response listUsers( @QueryParam( "page" ) @DefaultValue( "1" ) int page ) {
         final List<UserDto> users = userService.getAll( page, PAGE_SIZE )
                                                .stream()
-                                               .map( x -> UserDto.fromUser( x, uriInfo ) )
+                                               .map( UserDto::fromUser )
                                                .collect( Collectors.toList() );
 
         return Response.ok( new GenericEntity<List<UserDto>>( users )

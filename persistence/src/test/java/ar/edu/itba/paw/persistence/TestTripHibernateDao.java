@@ -71,7 +71,7 @@ public class TestTripHibernateDao {
 
     @Test
     public void testFindUserCreatedTrips() {
-        List<Trip> trips = td.findUserCreatedTrips(userId);
+        List<Trip> trips = td.findUserTrips(userId);
         Assert.assertNotNull(trips);
         Assert.assertNotEquals(0, trips.size());
         Assert.assertEquals(tripId, trips.get(0).getId());

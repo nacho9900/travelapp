@@ -39,19 +39,16 @@ public class CommentDto
         return createdOn;
     }
 
-    public TripMemberDto getMember() {
-        return member;
-    }
-
     public TripComment toTripComment() {
         LocalDateTime createdOn = this.createdOn.toInstant()
                                                 .atZone( ZoneId.systemDefault() )
                                                 .toLocalDateTime();
 
-        return new TripComment( this.id, this.member.toTripMember(), this.comment, createdOn );
+        return new TripComment( this.id, this.member != null ? this.member.toTripMember() : null, this.comment,
+                createdOn );
     }
 
-    public static CommentDto fromComment( TripComment tripComment, UriInfo uriInfo, boolean includeMember ) {
+    public static CommentDto fromComment( TripComment tripComment, boolean includeMember ) {
         CommentDto commentDto = new CommentDto();
         commentDto.id = tripComment.getId();
         commentDto.comment = tripComment.getComment();
@@ -60,7 +57,7 @@ public class CommentDto
         if ( includeMember ) {
             TripMember tripMember = tripComment.getMember();
             if ( tripMember != null ) {
-                commentDto.member = TripMemberDto.fromTripMember( tripMember, uriInfo, true, false );
+                commentDto.member = TripMemberDto.fromTripMember( tripMember, true, false );
 
             }
         }

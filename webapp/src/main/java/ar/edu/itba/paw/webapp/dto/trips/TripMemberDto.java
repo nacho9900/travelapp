@@ -8,14 +8,13 @@ import ar.edu.itba.paw.webapp.dto.serializers.CollectionSerializer;
 import ar.edu.itba.paw.webapp.dto.users.UserDto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TripMemberDto
 {
     private Long id;
-    private UserDto userDto;
+    private UserDto user;
     private Boolean isActive;
     private String role;
     private RateDto rate;
@@ -30,8 +29,8 @@ public class TripMemberDto
         return id;
     }
 
-    public UserDto getUserDto() {
-        return userDto;
+    public UserDto getUser() {
+        return user;
     }
 
     public Boolean getActive() {
@@ -52,25 +51,24 @@ public class TripMemberDto
 
     public TripMember toTripMember() {
         return new TripMember( this.id, null, TripMemberRole.valueOf( this.role ), this.isActive,
-                this.userDto != null ? this.userDto.toUser() : null, this.rate != null ? this.rate.toTripRate() : null,
+                this.user != null ? this.user.toUser() : null, this.rate != null ? this.rate.toTripRate() : null,
                 this.comments != null ? this.comments.stream()
                                                      .map( CommentDto::toTripComment )
                                                      .collect( Collectors.toList() ) : null );
     }
 
-    public static TripMemberDto fromTripMember( TripMember tripMember, UriInfo uriInfo, boolean includeRate,
-                                                boolean includeComments ) {
+    public static TripMemberDto fromTripMember( TripMember tripMember, boolean includeRate, boolean includeComments ) {
         TripMemberDto tripMemberDto = new TripMemberDto();
         tripMemberDto.id = tripMember.getId();
         tripMemberDto.role = tripMember.getRole()
                                        .name();
         tripMemberDto.isActive = tripMember.getActive();
-        tripMemberDto.userDto = UserDto.fromUser( tripMember.getUser(), uriInfo );
+        tripMemberDto.user = UserDto.fromUser( tripMember.getUser() );
 
         if ( includeRate ) {
             TripRate tripRate = tripMember.getRate();
             if ( tripRate != null ) {
-                tripMemberDto.rate = RateDto.fromTripRate( tripRate, uriInfo, false );
+                tripMemberDto.rate = RateDto.fromTripRate( tripRate, false );
             }
         }
 
@@ -78,7 +76,7 @@ public class TripMemberDto
             List<TripComment> tripComments = tripMember.getComments();
             if ( tripComments != null ) {
                 tripMemberDto.comments = tripComments.stream()
-                                                     .map( x -> CommentDto.fromComment( x, uriInfo, false ) )
+                                                     .map( x -> CommentDto.fromComment( x, false ) )
                                                      .collect( Collectors.toList() );
             }
         }

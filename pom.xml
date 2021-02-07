@@ -52,6 +52,7 @@
         <jackson-datatype-jsr310.version>2.9.5</jackson-datatype-jsr310.version>
         <jersey-media-json-jackson.version>2.33</jersey-media-json-jackson.version>
         <jackson-core.version>2.10.2</jackson-core.version>
+        <google-maps-services.version>0.16.1</google-maps-services.version>
     </properties>
 
     <build>
@@ -254,16 +255,11 @@
             </dependency>
 
             <!-- Google Places API -->
+
             <dependency>
-                <groupId>se.walkercrou</groupId>
-                <artifactId>google-places-api-java</artifactId>
-                <version>${google-places-api-java-version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.jboss.logging</groupId>
-                        <artifactId>jboss-logging</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>com.google.maps</groupId>
+                <artifactId>google-maps-services</artifactId>
+                <version>${google-maps-services.version}</version>
             </dependency>
 
             <!-- Logging -->

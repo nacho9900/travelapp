@@ -80,6 +80,12 @@
             <artifactId>jersey-media-multipart</artifactId>
         </dependency>
 
+        <!-- GOOGLE PLACES API-->
+        <dependency>
+            <groupId>com.google.maps</groupId>
+            <artifactId>google-maps-services</artifactId>
+        </dependency>
+
         <!-- Before Jersey -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -88,10 +94,6 @@
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>se.walkercrou</groupId>
-            <artifactId>google-places-api-java</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

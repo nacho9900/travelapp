@@ -16,7 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class TripHibernateDao implements TripDao {
+public class TripHibernateDao implements TripDao
+{
 
     private static final int MAX_ROWS = 6;
 
@@ -30,142 +31,152 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
-    public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate) {
-        Trip trip = new Trip(userId, startPlaceId, name, description, startDate, endDate);
-        em.persist(trip);
+    public Trip create( long userId, long startPlaceId, String name, String description, LocalDate startDate,
+                        LocalDate endDate ) {
+        Trip trip = new Trip( userId, startPlaceId, name, description, startDate, endDate );
+        em.persist( trip );
         return trip;
     }
 
     @Override
-    public Optional<Trip> findById(long id) {
-        return Optional.of(em.find(Trip.class, id));
+    public Optional<Trip> findById( long id ) {
+        return Optional.of( em.find( Trip.class, id ) );
     }
 
     @Override
-    public List<Trip> findByName(String name) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip as t where lower(t.name) like lower(:name)", Trip.class);
-        query.setParameter("name", "%" + name + "%");
-        query.setMaxResults(MAX_ROWS);
+    public List<Trip> findByName( String name ) {
+        final TypedQuery<Trip> query = em.createQuery( "From Trip as t where lower(t.name) like lower(:name)",
+                Trip.class );
+        query.setParameter( "name", "%" + name + "%" );
+        query.setMaxResults( MAX_ROWS );
         return query.getResultList();
     }
 
     @Override
-    public List<Trip> getAllTrips(int pageNum) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip", Trip.class);
-        query.setFirstResult((pageNum - 1) * MAX_ROWS);
-        query.setMaxResults(MAX_ROWS);
+    public List<Trip> getAllTrips( int pageNum ) {
+        final TypedQuery<Trip> query = em.createQuery( "From Trip", Trip.class );
+        query.setFirstResult( ( pageNum - 1 ) * MAX_ROWS );
+        query.setMaxResults( MAX_ROWS );
         return query.getResultList();
     }
 
     @Override
-    public List<Trip> findUserCreatedTrips(long userId) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.adminId = :userId ", Trip.class);
-        query.setParameter("userId", userId);
+    public List<Trip> findUserTrips( long userId ) {
+        final TypedQuery<Trip> query = em.createQuery(
+                "select t from Trip as t left join t.members as m left join m.user as u where u.id = :userId",
+                Trip.class );
+        query.setParameter( "userId", userId );
         return query.getResultList();
     }
 
     @Override
-    public void deleteTrip(long tripId) {
-        Query tripDelete = em.createQuery("delete Trip as t where t.id = :id");
-        tripDelete.setParameter("id", tripId);
+    public void deleteTrip( long tripId ) {
+        Query tripDelete = em.createQuery( "delete Trip as t where t.id = :id" );
+        tripDelete.setParameter( "id", tripId );
         tripDelete.executeUpdate();
     }
 
     public int countAllTrips() {
-        TypedQuery<Long> query = em.createQuery("select count(*) from Trip", Long.class);
-        return query.getSingleResult().intValue();
+        TypedQuery<Long> query = em.createQuery( "select count(*) from Trip", Long.class );
+        return query.getSingleResult()
+                    .intValue();
     }
 
     @Override
-    public List<Trip> findByCategory(String category) {
-        final TypedQuery<Trip> query = em.createQuery("select t From Trip as t, Activity as a" +
-                " where a.trip.id = t.id and a.category like :category", Trip.class);
-        query.setParameter("category", category);
-        query.setMaxResults(MAX_ROWS);
+    public List<Trip> findByCategory( String category ) {
+        final TypedQuery<Trip> query = em.createQuery(
+                "select t From Trip as t, Activity as a" + " where a.trip.id = t.id and a.category like :category",
+                Trip.class );
+        query.setParameter( "category", category );
+        query.setMaxResults( MAX_ROWS );
         return query.getResultList();
     }
 
     @Override
-    public List<Trip> findByPlace(String placeName) {
-        final TypedQuery<Trip> query = em.createQuery("select t From Trip as t, Place as p" +
-                " where t.startPlaceId = p.id and lower(p.address) like lower(:placeName)", Trip.class);
-        query.setParameter("placeName", "%" + placeName + "%");
-        query.setMaxResults(MAX_ROWS);
+    public List<Trip> findByPlace( String placeName ) {
+        final TypedQuery<Trip> query = em.createQuery(
+                "select t From Trip as t, Place as p" + " where t.startPlaceId = p.id and lower(p.address) like " +
+                        "lower" + "(:placeName)",
+                Trip.class );
+        query.setParameter( "placeName", "%" + placeName + "%" );
+        query.setMaxResults( MAX_ROWS );
         return query.getResultList();
     }
 
     @Override
-    public List<Trip> findWithFilters(Map<String, Object> filterMap) {
-        final TypedQuery<Trip> query = em.createQuery("select distinct t From Trip as t, Place as p " +
-                        filtersQuery(filterMap), Trip.class);
-        setQueryParameters(query, filterMap);
-        query.setMaxResults(MAX_ROWS);
+    public List<Trip> findWithFilters( Map<String, Object> filterMap ) {
+        final TypedQuery<Trip> query = em.createQuery(
+                "select distinct t From Trip as t, Place as p " + filtersQuery( filterMap ), Trip.class );
+        setQueryParameters( query, filterMap );
+        query.setMaxResults( MAX_ROWS );
         return query.getResultList();
     }
 
-    private void setQueryParameters(TypedQuery<Trip> query, Map<String, Object> filterMap) {
-        for(String filter : filterMap.keySet()) {
-            if(filter.equals("placeName")) {
-                query.setParameter(filter, "%" +  filterMap.get(filter) + "%");
+    private void setQueryParameters( TypedQuery<Trip> query, Map<String, Object> filterMap ) {
+        for ( String filter : filterMap.keySet() ) {
+            if ( filter.equals( "placeName" ) ) {
+                query.setParameter( filter, "%" + filterMap.get( filter ) + "%" );
             }
-            else if (filter.equals("category")){
-                query.setParameter(filter, filterMap.get(filter));
+            else if ( filter.equals( "category" ) ) {
+                query.setParameter( filter, filterMap.get( filter ) );
             }
             else {
-                query.setParameter(filter, filterMap.get(filter)) ;
+                query.setParameter( filter, filterMap.get( filter ) );
             }
         }
     }
 
 
-    private String filtersQuery(Map<String, Object> filterMap) {
+    private String filtersQuery( Map<String, Object> filterMap ) {
         int count = 0;
         StringBuilder buffer = new StringBuilder();
-        if(filterMap.containsKey("category") || filterMap.containsKey("placeName")) {
-            buffer.append(", Activity as a ");
+        if ( filterMap.containsKey( "category" ) || filterMap.containsKey( "placeName" ) ) {
+            buffer.append( ", Activity as a " );
         }
-        for(String filter : filterMap.keySet()) {
-            switch(filter) {
+        for ( String filter : filterMap.keySet() ) {
+            switch ( filter ) {
                 case "placeName":
-                    if(count == 0) {
-                        buffer.append(" where ");
+                    if ( count == 0 ) {
+                        buffer.append( " where " );
                     }
                     else {
-                        buffer.append(" and  ");
+                        buffer.append( " and  " );
                     }
-                    buffer.append("((t.startPlaceId = p.id and (lower(p.address) like lower(:placeName) or lower(p.name) like lower(:placeName)) )");
-                    buffer.append("or (a.trip.id = t.id and ( lower(a.place.name) like lower(:placeName) or lower(a.place.address) like lower(:placeName))))");
+                    buffer.append(
+                            "((t.startPlaceId = p.id and (lower(p.address) like lower(:placeName) or lower(p.name) " + "like lower(:placeName)) )" );
+                    buffer.append(
+                            "or (a.trip.id = t.id and ( lower(a.place.name) like lower(:placeName) or lower(a.place" + ".address) like lower(:placeName))))" );
                     count++;
                     break;
 
                 case "startDate":
-                    if(count == 0) {
-                        buffer.append(" where ");
+                    if ( count == 0 ) {
+                        buffer.append( " where " );
                     }
                     else {
-                        buffer.append(" and ");
+                        buffer.append( " and " );
                     }
-                    buffer.append("(t.startDate = :startDate)");
+                    buffer.append( "(t.startDate = :startDate)" );
                     count++;
                     break;
                 case "category":
-                    if(count == 0) {
-                        buffer.append(" where ");
+                    if ( count == 0 ) {
+                        buffer.append( " where " );
                     }
                     else {
-                        buffer.append(" and ");
+                        buffer.append( " and " );
                     }
-                    buffer.append("(a.trip.id = t.id and a.category like :category)");
+                    buffer.append( "(a.trip.id = t.id and a.category like :category)" );
                     count++;
                     break;
                 case "endDate":
-                    if(count == 0) {
-                        buffer.append(" where ");
+                    if ( count == 0 ) {
+                        buffer.append( " where " );
                     }
                     else {
-                        buffer.append(" and ");
+                        buffer.append( " and " );
                     }
-                    buffer.append("(t.endDate = :endDate)");
+                    buffer.append( "(t.endDate = :endDate)" );
                     count++;
                     break;
             }
@@ -174,16 +185,31 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
-    public List<TripComment> getTripComments(long tripId) {
-        final TypedQuery<TripComment> query = em.createQuery("From TripComment as tc where tc.trip.id = :tripId", TripComment.class);
-        query.setParameter("tripId", tripId);
+    public List<TripComment> getTripComments( long tripId ) {
+        final TypedQuery<TripComment> query = em.createQuery( "From TripComment as tc where tc.trip.id = :tripId",
+                TripComment.class );
+        query.setParameter( "tripId", tripId );
         return query.getResultList();
     }
 
     @Override
-    public List<TripRate> getTripRates(long tripId) {
-        final TypedQuery<TripRate> query = em.createQuery("From TripRate as tr where tr.trip.id = :tripId", TripRate.class);
-        query.setParameter("tripId", tripId);
+    public List<TripRate> getTripRates( long tripId ) {
+        final TypedQuery<TripRate> query = em.createQuery( "From TripRate as tr where tr.trip.id = :tripId",
+                TripRate.class );
+        query.setParameter( "tripId", tripId );
         return query.getResultList();
+    }
+
+    @Override
+    public boolean isUserMemberOfATrip( long tripId, long userId ) {
+        final TypedQuery<Trip> query = em.createQuery(
+                "select trip from Trip as trip left join trip.members as member left join member.user as user where " + "trip.id = :tripId and user.id = :userId",
+                Trip.class );
+
+        query.setParameter( "tripId", tripId );
+        query.setParameter( "userId", userId );
+
+        return query.getResultList()
+                    .size() > 0;
     }
 }

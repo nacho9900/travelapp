@@ -7,8 +7,16 @@ import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripMemberRole;
 import ar.edu.itba.paw.model.TripRate;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
+import ar.edu.itba.paw.webapp.dto.trips.ActivityDto;
+import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripDto;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.GeocodingResult;
+import com.google.maps.model.LatLng;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,16 +25,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @Path( "/trip" )
@@ -40,6 +53,9 @@ public class TripController
 
     @Autowired
     private Validator validator;
+
+    @Autowired
+    private GeoApiContext geoApiContext;
 
     @POST
     @Consumes( MediaType.APPLICATION_JSON )
@@ -74,6 +90,75 @@ public class TripController
         trip.setMembers( initialMember );
 
         tripService.create( trip );
+
+        return Response.ok()
+                       .entity( TripDto.fromTrip( trip, true, true, true ) )
+                       .build();
+    }
+
+    @GET
+    @Path( "/{id}" )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response get( @PathParam( "id" ) long id ) {
+        Optional<Trip> maybeTrip = tripService.findById( id );
+
+        String username = SecurityContextHolder.getContext()
+                                               .getAuthentication()
+                                               .getName();
+
+        if ( !maybeTrip.isPresent() || maybeTrip.get()
+                                                .getMembers()
+                                                .stream()
+                                                .noneMatch( x -> x.getUser()
+                                                                  .getEmail()
+                                                                  .equals( username ) ) ) {
+            return Response.status( Response.Status.NOT_FOUND )
+                           .build();
+        }
+
+        return Response.ok()
+                       .entity( TripDto.fromTrip( maybeTrip.get(), true, true, true ) )
+                       .build();
+    }
+
+    @GET
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response getAll() {
+        String username = SecurityContextHolder.getContext()
+                                               .getAuthentication()
+                                               .getName();
+
+        Optional<User> maybeUser = userService.findByUsername( username );
+
+        if ( !maybeUser.isPresent() ) {
+            return Response.status( Response.Status.NOT_FOUND )
+                           .build();
+        }
+
+        List<Trip> trips = tripService.getAllUserTrips( maybeUser.get() );
+
+        return Response.ok()
+                       .entity( trips.stream()
+                                     .map( x -> TripDto.fromTrip( x, false, false, false ) )
+                                     .collect( Collectors.toList() ) )
+                       .build();
+    }
+
+    @PUT
+    @Path( "/{id}/activity" )
+    public Response addActivity( @PathParam( "id" ) long id, @RequestBody ActivityDto activityDto ) {
+        PlaceDto placeDto = activityDto.getPlace();
+
+        try {
+            GeocodingResult[] result = GeocodingApi.reverseGeocode( geoApiContext,
+                    new LatLng( placeDto.getLatitude(), placeDto.getLongitude() ) )
+                                                   .await();
+        }
+        catch ( ApiException | InterruptedException | IOException e ) {
+            return Response.serverError()
+                           .entity( new ErrorDto( "Invalid place" ) )
+                           .build();
+        }
 
         return Response.ok()
                        .build();

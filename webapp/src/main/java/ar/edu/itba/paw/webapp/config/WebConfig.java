@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.maps.GeoApiContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
@@ -26,6 +27,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
@@ -42,20 +44,24 @@ import org.thymeleaf.templatemode.TemplateMode;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.validation.Validator;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 
 @EnableTransactionManagement
 @EnableWebMvc
-@ComponentScan({"ar.edu.itba.paw.webapp.controller","ar.edu.itba.paw.persistence","ar.edu.itba.paw.service"})
+@ComponentScan( {"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.service"} )
 @Configuration
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig extends WebMvcConfigurerAdapter
+{
 
     private ApplicationContext applicationContext;
 
-    @Value("classpath:schema.sql")
-    private Resource schemaSql;
+    @Value( "classpath:places_api.key" )
+    private Resource googleMapsApiKey;
 
     @Bean
     public CommonsMultipartResolver multipartResolver() {
@@ -64,85 +70,89 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Override
-    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+    public void addResourceHandlers( final ResourceHandlerRegistry registry ) {
+        registry.addResourceHandler( "/webjars/**" )
+                .addResourceLocations( "/webjars/" );
+        registry.addResourceHandler( "/resources/**" )
+                .addResourceLocations( "/resources/" );
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public ViewResolver viewResolver(){
+    public ViewResolver viewResolver() {
         final InternalResourceViewResolver vr = new InternalResourceViewResolver();
-        vr.setViewClass(JstlView.class);
-        vr.setPrefix("/WEB-INF/jsp/");
-        vr.setSuffix(".jsp");
+        vr.setViewClass( JstlView.class );
+        vr.setPrefix( "/WEB-INF/jsp/" );
+        vr.setSuffix( ".jsp" );
         return vr;
     }
 
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-        ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("postgres");
-        ds.setPassword("postgres");
+        ds.setDriverClass( org.postgresql.Driver.class );
+        ds.setUrl( "jdbc:postgresql://localhost/paw" );
+        ds.setUsername( "postgres" );
+        ds.setPassword( "postgres" );
         return ds;
     }
 
     @Bean
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:i18n/messages");
-        messageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
-        messageSource.setCacheSeconds(5);
+        messageSource.setBasename( "classpath:i18n/messages" );
+        messageSource.setDefaultEncoding( StandardCharsets.UTF_8.displayName() );
+        messageSource.setCacheSeconds( 5 );
         return messageSource;
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
-        return new JpaTransactionManager(emf);
+    public PlatformTransactionManager transactionManager( final EntityManagerFactory emf ) {
+        return new JpaTransactionManager( emf );
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-        factoryBean.setPackagesToScan("ar.edu.itba.paw.model");
-        factoryBean.setDataSource(dataSource());
+        factoryBean.setPackagesToScan( "ar.edu.itba.paw.model" );
+        factoryBean.setDataSource( dataSource() );
         final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        factoryBean.setJpaVendorAdapter(vendorAdapter);
+        factoryBean.setJpaVendorAdapter( vendorAdapter );
         final Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
-        factoryBean.setJpaProperties(properties);
+        properties.setProperty( "hibernate.SQL", "debug" );
+        properties.setProperty( "hibernate.type", "trace" );
+        properties.setProperty( "hibernate.hbm2ddl.auto", "update" );
+        properties.setProperty( "hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect" );
+        factoryBean.setJpaProperties( properties );
         return factoryBean;
     }
 
     @Bean
-    public SpringResourceTemplateResolver templateResolver(){
+    public SpringResourceTemplateResolver templateResolver() {
         final SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setApplicationContext(this.applicationContext);
-        templateResolver.setPrefix("/WEB-INF/mail/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCacheable(true);
+        templateResolver.setApplicationContext( this.applicationContext );
+        templateResolver.setPrefix( "/WEB-INF/mail/" );
+        templateResolver.setSuffix( ".html" );
+        templateResolver.setTemplateMode( TemplateMode.HTML );
+        templateResolver.setCacheable( true );
         return templateResolver;
     }
 
     @Bean
-    public SpringTemplateEngine templateEngine(){
+    public SpringTemplateEngine templateEngine() {
         final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver());
-        templateEngine.setEnableSpringELCompiler(true);
+        templateEngine.setTemplateResolver( templateResolver() );
+        templateEngine.setEnableSpringELCompiler( true );
         return templateEngine;
     }
 
     @Override
-    public void addCorsMappings( CorsRegistry registry) {
-        registry.addMapping("/api/**")
+    public void addCorsMappings( CorsRegistry registry ) {
+        registry.addMapping( "/api/**" )
                 .allowedOrigins( "*" )
                 .allowedMethods( "*" );
     }
@@ -150,19 +160,36 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public Validator validator() {
         final LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
-        factory.setValidationMessageSource(messageSource());
+        factory.setValidationMessageSource( messageSource() );
         return factory;
     }
 
     @Override
-    public void configureMessageConverters( List<HttpMessageConverter<?>> converters) {
-        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+    public void configureMessageConverters( List<HttpMessageConverter<?>> converters ) {
+        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json()
+                                                               .build();
 
+        objectMapper.setSerializationInclusion( JsonInclude.Include.NON_NULL );
         objectMapper.setDefaultPropertyInclusion( JsonInclude.Include.NON_NULL );
         objectMapper.setPropertyNamingStrategy( PropertyNamingStrategy.LOWER_CAMEL_CASE );
         objectMapper.registerModule( new JavaTimeModule() );
         objectMapper.registerModule( new Jdk8Module() );
 
-        converters.add( new MappingJackson2HttpMessageConverter(objectMapper) );
+        converters.add( new MappingJackson2HttpMessageConverter( objectMapper ) );
+    }
+
+    @Bean
+    public GeoApiContext geoApiContext() {
+        String apiKey;
+
+        try ( Reader reader = new InputStreamReader( googleMapsApiKey.getInputStream(), StandardCharsets.UTF_8 ) ) {
+            apiKey = FileCopyUtils.copyToString( reader );
+        }
+        catch ( IOException ex ) {
+            apiKey = "";
+        }
+
+        return new GeoApiContext.Builder().apiKey( apiKey )
+                                          .build();
     }
 }

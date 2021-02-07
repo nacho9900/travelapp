@@ -27,10 +27,6 @@ public class RateDto
         return createdOn;
     }
 
-    public TripMemberDto getMember() {
-        return member;
-    }
-
     public int getRate() {
         return rate;
     }
@@ -40,10 +36,10 @@ public class RateDto
                                                 .atZone( ZoneId.systemDefault() )
                                                 .toLocalDateTime();
 
-        return new TripRate( this.id, this.rate, createdOn, this.member.toTripMember() );
+        return new TripRate( this.id, this.rate, createdOn, this.member != null ? this.member.toTripMember() : null );
     }
 
-    public static RateDto fromTripRate( TripRate tripRate, UriInfo uriInfo, boolean includeMember ) {
+    public static RateDto fromTripRate( TripRate tripRate, boolean includeMember ) {
         RateDto rateDto = new RateDto();
         rateDto.id = tripRate.getId();
         rateDto.createdOn = java.sql.Timestamp.valueOf( tripRate.getCreatedOn() );
@@ -51,7 +47,7 @@ public class RateDto
         if ( includeMember ) {
             TripMember member = tripRate.getMember();
             if ( member != null ) {
-                rateDto.member = TripMemberDto.fromTripMember( member, uriInfo, false, false );
+                rateDto.member = TripMemberDto.fromTripMember( member, false, false );
             }
         }
 
