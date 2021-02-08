@@ -26,7 +26,8 @@
     "password": {
       "format": "The password must contains 8 to 20 characters and a capital letter",
       "required": "Password is required"
-    }
+    },
+    "future_date_rule": "The date must be in the future."
   },
   "ui": {
     "delete_dialog": {
@@ -73,7 +74,13 @@
       "welcome": "Welcome",
       "welcome_text": "Your registrations has succesed. You will receive an email in a moment with your user data."
     },
-    "signup_welcome_continue": "continue"
+    "signup_welcome_continue": "continue",
+    "trip_new": {
+      "success_title": "Trip successfully created!",
+      "success_text": "Your trip was successfully created, now you'll be able to add activities and some more details.",
+      "success_btn": "Continue",
+      "error": "There was an error creating your trip. Please, try again later."
+    }
   },
   "components": {
     "trips": {

@@ -60,6 +60,8 @@ export default {
         context.commit('setToken', { token: null });
         context.commit('setUser', { user: null });
 
+        delete Axios.defaults.headers.common['Authorization'];
+
         localStorage.removeItem('token');
         localStorage.removeItem('tokenExpiration');
 

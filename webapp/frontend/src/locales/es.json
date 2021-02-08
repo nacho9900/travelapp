@@ -26,7 +26,8 @@
     "password": {
       "format": "La contraseña debe tener entre 8 y 20 caracteres y debe contener una letra mayúscula",
       "required": "La contraseña es obligatoria"
-    }
+    },
+    "future_date_rule": "La fecha debe estar en el futuro."
   },
   "ui": {
     "delete_dialog": {
@@ -73,7 +74,13 @@
       "welcome": "!Bienvenido",
       "welcome_text": "Se registró exitosamente en TravelApp. En unos momentos \t\t\t\t\trecibirá un correo de bienvenda con los datos de su cuenta."
     },
-    "signup_welcome_continue": "continuar"
+    "signup_welcome_continue": "continuar",
+    "trip_new": {
+      "success_title": "!Se creó el viaje!",
+      "success_text": "Su viaje fue creado con éxito, a continuacion podra agregar las actividades y algunos detalles más.",
+      "success_btn": "Continuar",
+      "error": "Ocurrio un error al crear el viaje. Por favor, intente nuevamente más tarde."
+    }
   },
   "components": {
     "trips": {

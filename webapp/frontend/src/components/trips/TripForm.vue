@@ -1,6 +1,6 @@
 <template>
 	<v-form @submit.prevent="submit" ref="form">
-		<v-card>
+		<v-card :loading="loading">
 			<v-card-title>
 				{{ $t("components.trips.tripform.title") }}
 			</v-card-title>
@@ -21,6 +21,7 @@
 								v-model="name"
 								:label="$t('components.trips.tripform.name')"
 								:rules="requiredRule"
+								:disabled="loading"
 							>
 							</v-text-field>
 						</v-col>
@@ -30,7 +31,12 @@
 								:label="
 									$t('components.trips.tripform.start_date')
 								"
-								:rules="requiredRule.concat(datesRule)"
+								:rules="
+									requiredRule
+										.concat(futureDateRule)
+										.concat(datesRule)
+								"
+								:disabled="loading"
 							></date-picker>
 						</v-col>
 						<v-col cols="12" md="6">
@@ -39,7 +45,12 @@
 								:label="
 									$t('components.trips.tripform.end_date')
 								"
-								:rules="requiredRule.concat(datesRule)"
+								:rules="
+									requiredRule
+										.concat(futureDateRule)
+										.concat(datesRule)
+								"
+								:disabled="loading"
 							></date-picker>
 						</v-col>
 						<v-col cols="12">
@@ -54,6 +65,7 @@
 									)
 								"
 								:rules="requiredRule"
+								:disabled="loading"
 							>
 							</v-textarea>
 						</v-col>
@@ -64,7 +76,11 @@
 				<v-container fluid>
 					<v-row justify="end">
 						<v-col cols="6" class="d-flex justify-end">
-							<v-btn color="primary" type="submit">
+							<v-btn
+								color="primary"
+								type="submit"
+								:disabled="loading"
+							>
 								{{ $t("components.trips.tripform.create") }}
 							</v-btn>
 						</v-col>
@@ -76,9 +92,12 @@
 </template>
 
 <script>
-import { requiredRule } from "../../rules.js";
+import { requiredRule, futureDateRule } from "../../rules.js";
 
 export default {
+	props: {
+		loading: Boolean,
+	},
 	data() {
 		return {
 			name: "",
@@ -94,6 +113,7 @@ export default {
 					this.$t("components.trips.tripform.date_rule"),
 			],
 			requiredRule,
+			futureDateRule,
 		};
 	},
 	methods: {
