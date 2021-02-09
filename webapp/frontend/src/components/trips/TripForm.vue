@@ -7,15 +7,6 @@
 			<v-card-text>
 				<v-container fluid>
 					<v-row>
-						<!-- <v-col cols="12">
-							<gmap-map
-								:center="{ lat: 10, lng: 10 }"
-								:zoom="7"
-								style="width: 100%; height: 300px"
-							></gmap-map>
-						</v-col> -->
-					</v-row>
-					<v-row>
 						<v-col cols="12">
 							<v-text-field
 								v-model="name"

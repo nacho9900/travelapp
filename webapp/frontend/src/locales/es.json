@@ -93,6 +93,13 @@
         "end_date": "Fecha hasta",
         "create": "Crear",
         "date_rule": "La fecha desde no puede ser despues de la fecha hasta"
+      },
+      "trip_new_comment_box": {
+        "new_comment": "Ingrese un nuevo comentario"
+      },
+      "trip_activity_card": {
+        "from": "Desde",
+        "to": "hasta el"
       }
     }
   }

@@ -93,6 +93,13 @@
         "end_date": "Date to",
         "create": "Create",
         "date_rule": "Date from cannot be after Date to"
+      },
+      "trip_new_comment_box": {
+        "new_comment": "Enter a new comment"
+      },
+      "trip_activity_card": {
+        "from": "From",
+        "to": "to"
       }
     }
   }
