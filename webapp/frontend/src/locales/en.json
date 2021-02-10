@@ -80,6 +80,12 @@
       "success_text": "Your trip was successfully created, now you'll be able to add activities and some more details.",
       "success_btn": "Continue",
       "error": "There was an error creating your trip. Please, try again later."
+    },
+    "trip": {
+      "trip": "Trip",
+      "activities": "Activities",
+      "members": "Members",
+      "comments": "Comments"
     }
   },
   "components": {
@@ -100,6 +106,16 @@
       "trip_activity_card": {
         "from": "From",
         "to": "to"
+      },
+      "trip_activity_form": {
+        "title": "Create new activity",
+        "name": "Name",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "add": "Add"
+      },
+      "trip_activities": {
+        "new_activity": "new activity"
       }
     }
   }

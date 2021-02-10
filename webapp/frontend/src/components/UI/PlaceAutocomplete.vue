@@ -1,0 +1,77 @@
+<template>
+	<v-autocomplete
+		v-model="address"
+		:search-input.sync="search"
+		:loading="loading"
+		:items="items"
+		:dense="dense"
+		:rules="rules"
+		item-text="address"
+		prepend-icon="mdi-map-marker-outline"
+		return-object
+		clearable
+		no-filter
+	>
+	</v-autocomplete>
+</template>
+
+<script>
+import { gmapApi } from "gmap-vue";
+
+export default {
+	props: {
+		value: Object,
+		dense: Boolean,
+		rules: Array,
+	},
+	data() {
+		return {
+			address: null,
+			search: null,
+			items: [],
+			loading: false,
+		};
+	},
+	computed: {
+		google: gmapApi,
+	},
+	methods: {
+		async googleSearch() {
+			this.loading = true;
+
+			this.$store.dispatch("google/searchPlace", {
+				address: this.search,
+				google: this.google,
+				callback: (places) => {
+					this.items = places;
+					this.loading = false;
+				},
+			});
+		},
+	},
+	watch: {
+		search() {
+			this.googleSearch();
+		},
+		address() {
+			if (this.address != null) {
+				this.loading = true;
+
+				this.$store.dispatch("google/geocode", {
+					...this.address,
+					google: this.google,
+					callback: (latlng) => {
+						this.address.latitude = latlng.latitude;
+						this.address.longitude = latlng.longitude;
+
+						this.$emit("input", this.address);
+						this.loading = false;
+					},
+				});
+			} else {
+				this.$emit("input", null);
+			}
+		},
+	},
+};
+</script>

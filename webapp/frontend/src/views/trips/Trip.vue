@@ -10,9 +10,9 @@
 						fixed-tabs
 						centered
 					>
-						<v-tab>Datos del Viaje</v-tab>
-						<v-tab>Actividades</v-tab>
-						<v-tab>Miembros</v-tab>
+						<v-tab>	{{ $t("views.trip.trip") }}</v-tab>
+						<v-tab>{{ $t("views.trip.activities") }}</v-tab>
+						<v-tab>{{ $t("views.trip.members") }}</v-tab>
 						<v-tabs-slider color="secondary"></v-tabs-slider>
 						<v-tab-item>
 							<v-container fluid>
@@ -44,7 +44,7 @@
 						fixed-tabs
 						centered
 					>
-						<v-tab>Comentarios</v-tab>
+						<v-tab>{{ $t("views.trip.comments") }}</v-tab>
 						<v-tab-item>
 							<v-card-text class="px-2 pb-2">
 								<v-container fluid class="pb-0">

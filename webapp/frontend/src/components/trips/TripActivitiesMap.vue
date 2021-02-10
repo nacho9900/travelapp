@@ -1,14 +1,18 @@
 <template>
 	<v-container fluid>
 		<v-row>
-			<v-col>
+			<v-col cols="12">
 				<gmap-map
-					:center="{ lat: 10, lng: 10 }"
-					:zoom="7"
+					ref="gmap"
+					:center="{
+						lat: -34.61,
+						lng: -58.48,
+					}"
+					:zoom="12"
 					style="width: 100%; height: 300px"
 				>
 					<gmap-marker
-						v-for="activity in activities" 
+						v-for="activity in activities"
 						:key="activity.id"
 						:position="
 							google &&
@@ -18,7 +22,7 @@
 							)
 						"
 					>
-                    </gmap-marker>
+					</gmap-marker>
 				</gmap-map>
 			</v-col>
 		</v-row>
@@ -34,6 +38,36 @@ export default {
 	},
 	computed: {
 		google: gmapApi,
+	},
+	methods: {
+		initialize() {
+			this.$refs.gmap.$mapPromise.then((map) => {
+				if (this.activities && this.activities.length > 0) {
+					var bounds = new this.google.maps.LatLngBounds();
+					for (const index in this.activities) {
+						const activity = this.activities[index];
+						const place = activity.place;
+						bounds.extend({
+							lat: place.latitude,
+							lng: place.longitude,
+						});
+					}
+					map.fitBounds(bounds);
+
+					if (map.getZoom() >= 22) {
+						map.setZoom(16);
+					}
+				}
+			});
+		},
+	},
+	watch: {
+		activities() {
+			this.initialize();
+		},
+	},
+	mounted() {
+		this.initialize();
 	},
 };
 </script>

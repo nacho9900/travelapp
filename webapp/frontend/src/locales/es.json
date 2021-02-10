@@ -80,6 +80,12 @@
       "success_text": "Su viaje fue creado con éxito, a continuacion podra agregar las actividades y algunos detalles más.",
       "success_btn": "Continuar",
       "error": "Ocurrio un error al crear el viaje. Por favor, intente nuevamente más tarde."
+    },
+    "trip": {
+      "trip": "Viaje",
+      "activities": "Actividades",
+      "members": "Miembros",
+      "comments": "Comentarios"
     }
   },
   "components": {
@@ -100,6 +106,16 @@
       "trip_activity_card": {
         "from": "Desde",
         "to": "hasta el"
+      },
+      "trip_activity_form": {
+        "title": "Crear nueva actividad",
+        "name": "Nombre",
+        "start_date": "Fecha de inicio",
+        "end_date": "Fecha de fin",
+        "add": "Agregar"
+      },
+      "trip_activities": {
+        "new_activity": "nueva actividad"
       }
     }
   }
