@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripJoinRequest;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.webapp.dto.serializers.CollectionSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.NotBlank;
@@ -17,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@JsonInclude( JsonInclude.Include.NON_NULL)
+@JsonInclude( JsonInclude.Include.NON_NULL )
 public class TripDto
 {
     private Long id;
@@ -29,9 +30,13 @@ public class TripDto
     private String description;
     @NotNull
     @Future
+    @JsonFormat( shape = JsonFormat.Shape.STRING,
+                 pattern = "yyyy-MM-dd" )
     private Date startDate;
     @NotNull
     @Future
+    @JsonFormat( shape = JsonFormat.Shape.STRING,
+                 pattern = "yyyy-MM-dd" )
     private Date endDate;
     @JsonSerialize( using = CollectionSerializer.class )
     private List<TripMemberDto> members;

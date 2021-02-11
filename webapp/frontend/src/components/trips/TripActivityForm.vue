@@ -15,23 +15,27 @@
 						<v-col cols="12" class="pa-0">
 							<place-autocomplete
 								v-model="place"
+								:disabled="loading"
 								:rules="requiredRule"
 							></place-autocomplete>
 						</v-col>
 						<v-col cols="12" class="pa-0">
 							<v-text-field
 								v-model="name"
+								:disabled="loading"
 								:label="
 									$t(
 										'components.trips.trip_activity_form.name'
 									)
 								"
-								:rules="requiredRule"
+								:rules="requiredRule.concat(nameLengthRule)"
+								counter="40"
 							></v-text-field>
 						</v-col>
 						<v-col cols="6" class="py-0 pl-0">
 							<date-picker
 								v-model="startDate"
+								:disabled="loading"
 								:label="
 									$t(
 										'components.trips.trip_activity_form.start_date'
@@ -43,6 +47,7 @@
 						<v-col cols="6" class="py-0 pr-0">
 							<date-picker
 								v-model="endDate"
+								:disabled="loading"
 								:label="
 									$t(
 										'components.trips.trip_activity_form.end_date'
@@ -87,6 +92,13 @@ export default {
 			startDate: null,
 			endDate: null,
 			requiredRule,
+			nameLengthRule: [
+				(v) =>
+					!v || v.length <= 40 ||
+					this.$t(
+						"components.trips.trip_activity_form.name_length_rule"
+					),
+			],
 			loadingPlace: false,
 			activities: [],
 		};
@@ -115,6 +127,11 @@ export default {
 			if (this.place != null) {
 				this.activity = { id: 1, place: this.place };
 				this.activities = [this.activity];
+			}
+		},
+		loading() {
+			if (!this.loading) {
+				this.$refs.form.reset();
 			}
 		},
 	},

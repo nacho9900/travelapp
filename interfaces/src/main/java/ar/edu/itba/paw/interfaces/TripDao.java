@@ -11,18 +11,19 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface TripDao {
-    public Trip create(Trip trip);
-    public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate);
-    public Optional<Trip> findById(long id);
-    public List<Trip> findByName(String name);
-    public List<Trip> getAllTrips(int pageNum);
-    public List<Trip> findUserTrips( long userId);
-    public void deleteTrip(long tripId);
-    public int countAllTrips();
-    public List<Trip> findByCategory(String category);
-    public List<Trip> findByPlace(String placeName);
-    public List<Trip> findWithFilters(Map<String,Object> filterMap);
-    public List<TripComment> getTripComments(long tripId);
-    public List<TripRate> getTripRates(long tripId);
-    public boolean isUserMemberOfATrip( long tripId, long userId );
+    Trip create( Trip trip );
+    Trip create( long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate );
+    Optional<Trip> findById( long id );
+    List<Trip> findByName( String name );
+    List<Trip> getAllTrips( int pageNum );
+    List<Trip> findUserTrips( long userId );
+    void deleteTrip( long tripId );
+    int countAllTrips();
+    List<Trip> findByCategory( String category );
+    List<Trip> findByPlace( String placeName );
+    List<Trip> findWithFilters( Map<String, Object> filterMap );
+    List<TripComment> getTripComments( long tripId );
+    List<TripRate> getTripRates( long tripId );
+    boolean isUserMember( long tripId, String username );
+    boolean isUserOwnerOrAdmin( long tripId, String username );
 }

@@ -10,7 +10,7 @@
 						fixed-tabs
 						centered
 					>
-						<v-tab>	{{ $t("views.trip.trip") }}</v-tab>
+						<v-tab> {{ $t("views.trip.trip") }}</v-tab>
 						<v-tab>{{ $t("views.trip.activities") }}</v-tab>
 						<v-tab>{{ $t("views.trip.members") }}</v-tab>
 						<v-tabs-slider color="secondary"></v-tabs-slider>
@@ -18,20 +18,13 @@
 							<v-container fluid>
 								<v-row>
 									<v-col cols="12" class="px-0 pt-0">
-										<trip-card
-											:name="trip.name"
-											:description="trip.description"
-											:startDate="trip.startDate"
-											:endDate="trip.endDate"
-										></trip-card>
+										<trip-card :id="id"></trip-card>
 									</v-col>
 								</v-row>
 							</v-container>
 						</v-tab-item>
 						<v-tab-item>
-							<trip-activities
-								:activities="trip.activities"
-							></trip-activities>
+							<trip-activities :tripId="id"></trip-activities>
 						</v-tab-item>
 					</v-tabs>
 				</v-card>
@@ -83,45 +76,10 @@ export default {
 		TripActivities,
 	},
 	props: {
-		id: String,
-	},
-	data() {
-		return {
-			trip: {
-				name: "Viaje a la playa",
-				description:
-					"Nos vamos a la playa todo el fin de semana. vamos a hacer fogones y mirar las estrellas, viaje tranqui, nada loco. El que quiere se suma!!",
-				startDate: "2021-3-20",
-				endDate: "2021-3-30",
-				activities: [
-					{
-						id: 1,
-						name: "Caminata por la playa",
-						category: "Caminata",
-						startDate: "2021-3-21",
-						endDate: "2021-3-22",
-						place: {
-							latitude: -37.32873353039819,
-							longitude: -57.01845585732288,
-							address: "Mar de las Pampas, Buenos Aires Province",
-						},
-					},
-					{
-						id: 2,
-						name: "Cena en restaurant",
-						category: "Cena",
-						startDate: "2021-3-22",
-						endDate: "2021-3-22",
-						place: {
-							latitude: -37.3268539346949,
-							longitude: -57.02356216854637,
-							address:
-								"Av. El Lucero 518, Mar de las Pampas, Provincia de Buenos Aires",
-						},
-					},
-				],
-			},
-		};
+		id: {
+			type: String,
+			required: true,
+		},
 	},
 };
 </script>

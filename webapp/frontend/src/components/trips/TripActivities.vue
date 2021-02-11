@@ -1,7 +1,15 @@
 <template>
 	<v-card>
-		<v-dialog v-model="createDialog" :persistent="loading" width="500" >
-			<trip-activity-form :loading="loading"></trip-activity-form>
+		<error-dialog v-model="showError" :error="error"></error-dialog>
+		<v-dialog
+			v-model="createDialog"
+			:persistent="loadingCreate"
+			width="500"
+		>
+			<trip-activity-form
+				@submit="createActivity"
+				:loading="loadingCreate"
+			></trip-activity-form>
 		</v-dialog>
 		<v-container class="pt-0 px-0" fluid>
 			<v-row>
@@ -19,6 +27,7 @@
 				>
 					<trip-activities-list
 						:activities="activities"
+						:loading="loading"
 					></trip-activities-list>
 				</v-col>
 			</v-row>
@@ -49,13 +58,75 @@ export default {
 		TripActivityForm,
 	},
 	props: {
-		activities: Array,
-		loading: Boolean,
+		tripId: String,
 	},
 	data() {
 		return {
+			activities: [],
 			createDialog: false,
+			loadingCreate: false,
+			loading: true,
+			error: null,
 		};
+	},
+	computed: {
+		showError: {
+			get() {
+				return !!this.error;
+			},
+			set() {
+				this.error = null;
+			},
+		},
+	},
+	methods: {
+		async createActivity(activity) {
+			this.loadingCreate = true;
+
+			try {
+				const activityCreated = await this.$store.dispatch(
+					"activity/create",
+					{
+						tripId: this.tripId,
+						activity: {
+							...activity,
+						},
+					}
+				);
+
+				this.activities.push(activityCreated);
+				this.createDialog = false;
+			} catch (error) {
+				this.error = this.$t(
+					"components.trips.trip_activities.create_error"
+				);
+			}
+
+			this.loadingCreate = false;
+		},
+		async getActivities() {
+			this.loading = true;
+
+			try {
+				const activities = await this.$store.dispatch(
+					"activity/getByTrip",
+					{
+						tripId: this.tripId,
+					}
+				);
+
+				this.activities = activities;
+			} catch (error) {
+				this.error = this.$t(
+					"components.trips.trip_activities.get_activities_error"
+				);
+			}
+
+			this.loading = false;
+		},
+	},
+	created() {
+		this.getActivities();
 	},
 };
 </script>

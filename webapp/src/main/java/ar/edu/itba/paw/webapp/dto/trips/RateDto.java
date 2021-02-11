@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto.trips;
 
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripRate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.ws.rs.core.UriInfo;
 import java.time.LocalDateTime;
@@ -12,6 +13,8 @@ public class RateDto
 {
     private Long id;
     private int rate;
+    @JsonFormat( shape = JsonFormat.Shape.STRING,
+                 pattern = "yyyy-MM-dd hh:MM:ss" )
     private Date createdOn;
     private TripMemberDto member;
 

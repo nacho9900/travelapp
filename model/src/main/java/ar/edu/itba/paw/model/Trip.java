@@ -39,7 +39,7 @@ public class Trip implements Comparable<Trip>
 
     /////////////////
 
-    @OneToMany( fetch = FetchType.EAGER,
+    @OneToMany( fetch = FetchType.LAZY,
                 mappedBy = "trip",
                 cascade = CascadeType.ALL )
     private List<Activity> activities = new LinkedList<>();
@@ -49,11 +49,11 @@ public class Trip implements Comparable<Trip>
                cascade = CascadeType.ALL )
     private TripPicture profilePicture;
 
-    @OneToMany( fetch = FetchType.EAGER,
+    @OneToMany( fetch = FetchType.LAZY,
                 mappedBy = "trip" )
     private List<TripJoinRequest> joinRequests = new LinkedList<>();
 
-    @OneToMany( fetch = FetchType.EAGER,
+    @OneToMany( fetch = FetchType.LAZY,
                 mappedBy = "trip",
                 cascade = CascadeType.ALL )
     private List<TripMember> members = new LinkedList<>();

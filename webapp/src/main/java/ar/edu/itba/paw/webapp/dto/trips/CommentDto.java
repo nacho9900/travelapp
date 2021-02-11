@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto.trips;
 
 import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.TripMember;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -19,6 +20,8 @@ public class CommentDto
     @Length( max = 160 )
     private String comment;
     @NotNull
+    @JsonFormat( shape = JsonFormat.Shape.STRING,
+                 pattern = "yyyy-MM-dd hh:MM:ss" )
     private Date createdOn;
     @NotNull
     private TripMemberDto member;

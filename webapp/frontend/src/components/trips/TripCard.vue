@@ -1,5 +1,8 @@
 <template>
-	<v-card elevation="0" rounded="0">
+	<v-skeleton-loader v-if="loading" type="image, article">
+	</v-skeleton-loader>
+	<v-card elevation="0" rounded="0" v-else>
+		<error-dialog v-model="showError" :error="error"></error-dialog>
 		<v-img
 			class="white--text align-end"
 			height="200px"
@@ -7,7 +10,7 @@
 		>
 			<v-app-bar flat color="rgba(0, 0, 0, 0)">
 				<v-toolbar-title class="white--text">{{
-					name
+					trip.name
 				}}</v-toolbar-title>
 				<v-spacer></v-spacer>
 				<v-btn color="white" icon>
@@ -16,11 +19,11 @@
 			</v-app-bar>
 		</v-img>
 		<v-card-text class="text--primary">
-			<div>{{ description }}</div>
+			<div>{{ trip.description }}</div>
 		</v-card-text>
 		<v-card-text class="text--primary">
-			Desde {{ formatDateString(startDate) }} hasta el
-			{{ formatDateString(endDate) }}
+			Desde {{ formatDateString(trip.startDate) }} hasta el
+			{{ formatDateString(trip.endDate) }}
 		</v-card-text>
 	</v-card>
 </template>
@@ -30,10 +33,27 @@ import getBrowserLocale from "../../i18n/get-user-locale";
 
 export default {
 	props: {
-		name: String,
-		description: String,
-		startDate: String,
-		endDate: String,
+		id: {
+			type: String,
+			required: true,
+		},
+	},
+	data() {
+		return {
+			trip: null,
+			loading: false,
+			error: null,
+		};
+	},
+	computed: {
+		showError: {
+			get() {
+				return !!this.error;
+			},
+			set() {
+				this.error = null;
+			},
+		},
 	},
 	methods: {
 		formatDateString(date) {
@@ -45,6 +65,23 @@ export default {
 				? new Date(date).toLocaleDateString(getBrowserLocale(), opt)
 				: "";
 		},
+		async getTrip() {
+			this.loading = true;
+
+			try {
+				const trip = await this.$store.dispatch("trip/get", {
+					tripId: this.id,
+				});
+				this.trip = trip;
+			} catch (error) {
+				this.error = this.$t("components.trips.trip_card.error");
+			}
+
+			this.loading = false;
+		},
+	},
+	created() {
+		this.getTrip();
 	},
 };
 </script>

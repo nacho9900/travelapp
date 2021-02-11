@@ -27,7 +27,10 @@ public class JwtTokenUtil
 {
     private PrivateKey key;
 
-    private static final int TEN_MINUTES = 10 * 60;
+    private static final int ONE_MINUTE = 60;
+    private static final int ONE_HOUR = 60 * ONE_MINUTE;
+    private static final int ONE_DAY = 24 * ONE_HOUR;
+    private static final int TEN_DAYS = 10 * ONE_DAY;
 
     public JwtTokenUtil( InputStream secretKey ) {
         try {
@@ -47,7 +50,7 @@ public class JwtTokenUtil
                             .setSubject( user.getUsername() );
 
         Date expiresIn = Date.from( Instant.now()
-                                           .plusSeconds( TEN_MINUTES ) );
+                                           .plusSeconds( ONE_DAY ) );
 
         claims.setExpiration( expiresIn );
 

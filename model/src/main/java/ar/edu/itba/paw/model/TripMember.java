@@ -69,17 +69,15 @@ public class TripMember
     }
 
     public TripMember( TripMemberRole role, Boolean isActive, User user, TripRate rate ) {
-        this.role = role;
-        this.isActive = isActive;
-        this.user = user;
-        this.rate = rate;
+        this(role, isActive, user);
+        this.setRate( rate );
     }
 
     public TripMember( Trip trip, TripMemberRole role, Boolean isActive, User user, TripRate rate,
                        List<TripComment> comments ) {
         this( role, isActive, user, rate );
-        this.trip = trip;
-        this.comments = comments;
+        this.setTrip( trip );
+        this.setComments( comments );
     }
 
     public TripMember( TripMemberRole role, Boolean isActive, User user ) {

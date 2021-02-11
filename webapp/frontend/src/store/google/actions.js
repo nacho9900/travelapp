@@ -30,6 +30,7 @@ export default {
         service.getQueryPredictions(query, (predictions) => {
             const places = predictions ? predictions.map(x => {
                 return {
+                    name: x.description,
                     address: x.description,
                     googleId: x.place_id
                 };

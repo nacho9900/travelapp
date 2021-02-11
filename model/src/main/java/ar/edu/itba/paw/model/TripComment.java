@@ -42,8 +42,8 @@ public class TripComment implements Comparable<TripComment>
 
     public TripComment( TripMember member, String comment, LocalDateTime createdOn ) {
         this.comment = comment;
-        this.member = member;
         this.createdOn = createdOn;
+        this.setMember( member );
     }
 
     public long getId() {

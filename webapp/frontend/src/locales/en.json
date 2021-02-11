@@ -112,10 +112,19 @@
         "name": "Name",
         "start_date": "Start date",
         "end_date": "End date",
-        "add": "Add"
+        "add": "Add",
+        "name_length_rule": "The Name cannot be longer than 40 characters."
       },
       "trip_activities": {
-        "new_activity": "new activity"
+        "new_activity": "new activity",
+        "create_error": "There was an error creating a new activity. Please, try again later.",
+        "get_activities_error": "There was an error obteining the activities. Please, try again later."
+      },
+      "trip_card": {
+        "error": "There was an error obteining the trip. Please try again later."
+      },
+      "trip_activities_list": {
+        "no_data": "no activities were found for the trip. Try creating a new one."
       }
     }
   }

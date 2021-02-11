@@ -85,7 +85,8 @@
       "trip": "Viaje",
       "activities": "Actividades",
       "members": "Miembros",
-      "comments": "Comentarios"
+      "comments": "Comentarios",
+      "error": "Ocurrio un error al obtener el viaje. Por favor, intente nuevamente más tarde."
     }
   },
   "components": {
@@ -112,10 +113,19 @@
         "name": "Nombre",
         "start_date": "Fecha de inicio",
         "end_date": "Fecha de fin",
-        "add": "Agregar"
+        "add": "Agregar",
+        "name_length_rule": "El nombre no puede superar los 40 caracteres de largo."
       },
       "trip_activities": {
-        "new_activity": "nueva actividad"
+        "new_activity": "nueva actividad",
+        "create_error": "Ocurrio un error al crear la actividad. Por favor, intente nuevamente más tarde.",
+        "get_activities_error": "Ocurrio un error obteniendo las actividades. Por favor, intente nuevamente más tarde."
+      },
+      "trip_card": {
+        "error": "Ocurrio un error obteniendo el viaje. Por favor, intente nuevamente más tarde."
+      },
+      "trip_activities_list": {
+        "no_data": "No se econtraron actividades para el viaje. Intenta crear una nueva."
       }
     }
   }

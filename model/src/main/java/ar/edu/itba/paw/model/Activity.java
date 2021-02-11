@@ -44,10 +44,10 @@ public class Activity implements Comparable<Activity> {
     public Activity(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.category = category;
-        this.place = place;
         this.trip = trip;
         this.endDate = endDate;
         this.startDate = startDate;
+        this.setPlace( place );
     }
 
     protected Activity() {
@@ -75,7 +75,6 @@ public class Activity implements Comparable<Activity> {
     }
 
     public void setPlace(Place place) {
-        place.getActivities().add( this );
         this.place = place;
     }
 

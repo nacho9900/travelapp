@@ -4,9 +4,11 @@ package ar.edu.itba.paw.webapp.config;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.maps.GeoApiContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
@@ -48,8 +50,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 
 @EnableTransactionManagement
 @EnableWebMvc
@@ -57,6 +61,8 @@ import java.util.Properties;
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter
 {
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private ApplicationContext applicationContext;
 
@@ -164,18 +170,23 @@ public class WebConfig extends WebMvcConfigurerAdapter
         return factory;
     }
 
-    @Override
-    public void configureMessageConverters( List<HttpMessageConverter<?>> converters ) {
+    @Bean
+    public ObjectMapper objectMapper( ) {
         ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json()
                                                                .build();
 
-        objectMapper.setSerializationInclusion( JsonInclude.Include.NON_NULL );
-        objectMapper.setDefaultPropertyInclusion( JsonInclude.Include.NON_NULL );
-        objectMapper.setPropertyNamingStrategy( PropertyNamingStrategy.LOWER_CAMEL_CASE );
-        objectMapper.registerModule( new JavaTimeModule() );
-        objectMapper.registerModule( new Jdk8Module() );
+        SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MM-yyyy hh:mm" );
+        dateFormat.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
 
-        converters.add( new MappingJackson2HttpMessageConverter( objectMapper ) );
+        objectMapper = objectMapper.setSerializationInclusion( JsonInclude.Include.NON_NULL )
+                                   .setDefaultPropertyInclusion( JsonInclude.Include.NON_NULL )
+                                   .setPropertyNamingStrategy( PropertyNamingStrategy.LOWER_CAMEL_CASE )
+                                   .registerModule( new JavaTimeModule() )
+                                   .registerModule( new Jdk8Module() )
+                                   .disable( SerializationFeature.WRITE_DATES_AS_TIMESTAMPS )
+                                   .setDateFormat( dateFormat );
+
+        return objectMapper;
     }
 
     @Bean
@@ -191,5 +202,14 @@ public class WebConfig extends WebMvcConfigurerAdapter
 
         return new GeoApiContext.Builder().apiKey( apiKey )
                                           .build();
+    }
+
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        for (HttpMessageConverter<?> httpConverter : converters) {
+            if (httpConverter instanceof MappingJackson2HttpMessageConverter) {
+                ((MappingJackson2HttpMessageConverter) httpConverter).setObjectMapper(objectMapper);
+            }
+        }
     }
 }

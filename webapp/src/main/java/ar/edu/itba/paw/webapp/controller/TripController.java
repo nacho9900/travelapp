@@ -1,7 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.ActivityService;
+import ar.edu.itba.paw.interfaces.PlaceService;
 import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.Activity;
+import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripMemberRole;
@@ -50,6 +54,12 @@ public class TripController
 
     @Autowired
     private TripService tripService;
+
+    @Autowired
+    private ActivityService activityService;
+
+    @Autowired
+    private PlaceService placeService;
 
     @Autowired
     private Validator validator;
@@ -102,22 +112,13 @@ public class TripController
     public Response get( @PathParam( "id" ) long id ) {
         Optional<Trip> maybeTrip = tripService.findById( id );
 
-        String username = SecurityContextHolder.getContext()
-                                               .getAuthentication()
-                                               .getName();
-
-        if ( !maybeTrip.isPresent() || maybeTrip.get()
-                                                .getMembers()
-                                                .stream()
-                                                .noneMatch( x -> x.getUser()
-                                                                  .getEmail()
-                                                                  .equals( username ) ) ) {
+        if ( !maybeTrip.isPresent() ) {
             return Response.status( Response.Status.NOT_FOUND )
                            .build();
         }
 
         return Response.ok()
-                       .entity( TripDto.fromTrip( maybeTrip.get(), true, true, true ) )
+                       .entity( TripDto.fromTrip( maybeTrip.get(), false, false, false ) )
                        .build();
     }
 
@@ -144,23 +145,75 @@ public class TripController
                        .build();
     }
 
-    @PUT
+    @POST
     @Path( "/{id}/activity" )
-    public Response addActivity( @PathParam( "id" ) long id, @RequestBody ActivityDto activityDto ) {
-        PlaceDto placeDto = activityDto.getPlace();
+    public Response createActivity( @PathParam( "id" ) long id, @RequestBody ActivityDto activityDto ) {
+        Set<ConstraintViolation<ActivityDto>> activityValidation = validator.validate( activityDto );
+        Set<ConstraintViolation<PlaceDto>> placeValidation = validator.validate( activityDto.getPlace() );
 
-        try {
-            GeocodingResult[] result = GeocodingApi.reverseGeocode( geoApiContext,
-                    new LatLng( placeDto.getLatitude(), placeDto.getLongitude() ) )
-                                                   .await();
-        }
-        catch ( ApiException | InterruptedException | IOException e ) {
-            return Response.serverError()
-                           .entity( new ErrorDto( "Invalid place" ) )
+        if ( !activityValidation.isEmpty() || !placeValidation.isEmpty() ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( activityValidation )
+                                             .addConstraintsViolations( placeValidation ) )
                            .build();
         }
 
+        String username = SecurityContextHolder.getContext()
+                                               .getAuthentication()
+                                               .getName();
+
+        Optional<Trip> maybeTrip = tripService.findById( id );
+
+        if ( !tripService.isUserOwnerOrAdmin( id, username ) || !maybeTrip.isPresent() ) {
+            return Response.status( Response.Status.NOT_FOUND )
+                           .entity( new ErrorDto( "Trip not found" ) )
+                           .build();
+        }
+
+        Activity activity = activityDto.toActivity();
+
+        Place place = getOrCreatePlaceIfNotExists( activity.getPlace() );
+
+        activity = activityService.create( activity.getName(), "", place, maybeTrip.get(), activity.getStartDate(),
+                activity.getEndDate() );
+
         return Response.ok()
+                       .entity( ActivityDto.fromActivity( activity ) )
+                       .build();
+    }
+
+    private Place getOrCreatePlaceIfNotExists( Place place ) {
+        Optional<Place> maybePlace = placeService.findByGoogleId( place.getGoogleId() );
+
+        if ( maybePlace.isPresent() ) {
+            place = maybePlace.get();
+        }
+        else {
+            place = placeService.create( place.getGoogleId(), place.getName(), place.getLatitude(),
+                    place.getLongitude(), place.getAddress() );
+        }
+        return place;
+    }
+
+    @GET
+    @Path( "/{id}/activity" )
+    public Response getActivities( @PathParam( "id" ) long id ) {
+        String username = SecurityContextHolder.getContext()
+                                               .getAuthentication()
+                                               .getName();
+
+        if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
+            return Response.status( Response.Status.NOT_FOUND )
+                           .build();
+        }
+
+        List<ActivityDto> activities = activityService.findByTrip( id )
+                                                      .stream()
+                                                      .map( ActivityDto::fromActivity )
+                                                      .collect( Collectors.toList() );
+
+        return Response.ok()
+                       .entity( activities )
                        .build();
     }
 }

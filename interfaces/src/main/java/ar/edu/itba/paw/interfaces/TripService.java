@@ -18,4 +18,6 @@ public interface TripService {
     public List<Trip> findByPlace(String placeName);
     public List<Trip> findWithFilters(Map<String,Object> filterMap);
     public int countAllTrips();
+    boolean isUserOwnerOrAdmin( long tripId, String username );
+    boolean isUserMember(long tripId, String username);
 }

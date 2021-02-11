@@ -6,6 +6,7 @@
 		:items="items"
 		:dense="dense"
 		:rules="rules"
+		:disabled="disabled"
 		item-text="address"
 		prepend-icon="mdi-map-marker-outline"
 		return-object
@@ -22,6 +23,7 @@ export default {
 	props: {
 		value: Object,
 		dense: Boolean,
+		disabled: Boolean,
 		rules: Array,
 	},
 	data() {

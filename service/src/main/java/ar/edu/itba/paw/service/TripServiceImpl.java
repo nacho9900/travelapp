@@ -15,7 +15,7 @@ public class TripServiceImpl implements TripService
 {
 
     @Autowired
-    private TripDao td;
+    private TripDao tripDao;
 
     @Autowired
     private ActivityDao ad;
@@ -32,58 +32,68 @@ public class TripServiceImpl implements TripService
     @Override
     public Trip create( long userId, long startPlaceId, String name, String description, LocalDate startDate,
                         LocalDate endDate ) {
-        return td.create( userId, startPlaceId, name, description, startDate, endDate );
+        return tripDao.create( userId, startPlaceId, name, description, startDate, endDate );
     }
 
     @Override
     public Trip create( Trip trip ) {
-        if(trip.getStartDate().isAfter( trip.getEndDate() )) {
+        if ( trip.getStartDate()
+                 .isAfter( trip.getEndDate() ) ) {
             //trow ex
         }
 
-        td.create( trip );
+        tripDao.create( trip );
 
         return trip;
     }
 
     @Override
     public Optional<Trip> findById( long id ) {
-        return td.findById( id );
+        return tripDao.findById( id );
     }
 
     @Override
     public List<Trip> findByName( String name ) {
-        return td.findByName( name );
+        return tripDao.findByName( name );
     }
 
     @Override
     public List<Trip> getAllTrips( int pageNum ) {
-        return td.getAllTrips( pageNum );
+        return tripDao.getAllTrips( pageNum );
     }
 
     @Override
     public List<Trip> getAllUserTrips( User user ) {
-        return td.findUserTrips( user.getId() );
+        return tripDao.findUserTrips( user.getId() );
     }
 
     @Override
     public int countAllTrips() {
-        return td.countAllTrips();
+        return tripDao.countAllTrips();
     }
 
     @Override
     public List<Trip> findByCategory( String category ) {
-        return td.findByCategory( category );
+        return tripDao.findByCategory( category );
     }
 
     @Override
     public List<Trip> findByPlace( String placeName ) {
-        return td.findByPlace( placeName );
+        return tripDao.findByPlace( placeName );
     }
 
     @Override
     public List<Trip> findWithFilters( Map<String, Object> filterMap ) {
-        return td.findWithFilters( filterMap );
+        return tripDao.findWithFilters( filterMap );
     }
 
+    @Override
+    public boolean isUserOwnerOrAdmin( long tripId, String username ) {
+        return tripDao.isUserOwnerOrAdmin( tripId, username );
+    }
+
+    @Override
+    public boolean isUserMember( long tripId, String username ) {
+        return tripDao.isUserMember( tripId, username );
+    }
 }

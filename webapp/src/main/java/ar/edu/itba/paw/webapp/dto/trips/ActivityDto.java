@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.webapp.dto.trips;
 
 import ar.edu.itba.paw.model.Activity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -9,10 +12,19 @@ import java.util.Date;
 public class ActivityDto
 {
     private Long id;
+    @NotNull
+    @NotBlank
     private String name;
     private String category;
+    @NotNull
+    @JsonFormat( shape = JsonFormat.Shape.STRING,
+                 pattern = "yyyy-MM-dd" )
     private Date startDate;
+    @NotNull
+    @JsonFormat( shape = JsonFormat.Shape.STRING,
+                 pattern = "yyyy-MM-dd" )
     private Date endDate;
+    @NotNull
     private PlaceDto place;
 
     public ActivityDto() {
@@ -21,6 +33,10 @@ public class ActivityDto
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getCategory() {
@@ -47,7 +63,11 @@ public class ActivityDto
                                         .atZone( ZoneId.systemDefault() )
                                         .toLocalDate();
 
-        return new Activity( this.id, this.name, this.category, this.place.toPlace(), null, startDate, endDate );
+        if(this.id != null) {
+            return new Activity( this.id, this.name, this.category, this.place.toPlace(), null, startDate, endDate );
+        } else {
+            return new Activity( this.name, this.category, this.place.toPlace(), null, startDate, endDate );
+        }
     }
 
     public static ActivityDto fromActivity( Activity activity ) {
