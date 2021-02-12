@@ -32,6 +32,7 @@
 
 <script>
 import getBrowserLocale from "../../i18n/get-user-locale";
+import { formatDateString } from "../../utils.js";
 
 export default {
 	props: {
@@ -51,15 +52,7 @@ export default {
 	computed: {
 		dateFormatted: {
 			get() {
-				const opt = {
-					timeZone: "UTC",
-				};
-
-				return this.date
-					? new Date(this.date).toLocaleDateString(
-							getBrowserLocale(),
-							opt			  )
-					: "";
+				return this.date ? formatDateString(this.date) : "";
 			},
 			set(value) {
 				if (!value || value === "") {
@@ -71,11 +64,24 @@ export default {
 			return getBrowserLocale();
 		},
 	},
+	methods: {
+		init() {
+			if (this.value) {
+				this.date = this.value;
+			}
+		},
+	},
 	watch: {
 		date() {
 			this.dateMenu = false;
 			this.$emit("input", this.date);
 		},
+		value() {
+			this.init();
+		},
+	},
+	created() {
+		this.init();
 	},
 };
 </script>

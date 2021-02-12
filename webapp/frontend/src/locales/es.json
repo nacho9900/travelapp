@@ -106,7 +106,9 @@
       },
       "trip_activity_card": {
         "from": "Desde",
-        "to": "hasta el"
+        "to": "hasta el",
+        "edit_activity": "Modificar",
+        "remove": "Eliminar"
       },
       "trip_activity_form": {
         "title": "Crear nueva actividad",
@@ -114,12 +116,17 @@
         "start_date": "Fecha de inicio",
         "end_date": "Fecha de fin",
         "add": "Agregar",
-        "name_length_rule": "El nombre no puede superar los 40 caracteres de largo."
+        "name_length_rule": "El nombre no puede superar los 40 caracteres de largo.",
+        "update": "Actualizar",
+        "title_edit": "Actualizar actividad"
       },
       "trip_activities": {
         "new_activity": "nueva actividad",
         "create_error": "Ocurrio un error al crear la actividad. Por favor, intente nuevamente más tarde.",
-        "get_activities_error": "Ocurrio un error obteniendo las actividades. Por favor, intente nuevamente más tarde."
+        "get_activities_error": "Ocurrio un error obteniendo las actividades. Por favor, intente nuevamente más tarde.",
+        "remove_dialog_title": "Eliminar Actividad",
+        "delete_dialog_message": "¿Esta seguro que desea eliminar la actividad?",
+        "update_error": "Ocurrio un error al actualizar la actividad. Por favor, intente nuevamente más tarde."
       },
       "trip_card": {
         "error": "Ocurrio un error obteniendo el viaje. Por favor, intente nuevamente más tarde."

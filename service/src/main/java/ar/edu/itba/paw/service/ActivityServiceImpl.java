@@ -32,17 +32,22 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
-        return activityDao.create(name, category, place, trip, startDate, endDate);
-    }
-
-    @Override
-    public Optional<Activity> findByCategory(String category) {
-        return activityDao.findByCategory(category);
+    public Activity create(String name, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
+        return activityDao.create(name, place, trip, startDate, endDate);
     }
 
     @Override
     public List<Activity> findByTrip(long tripId) {
         return activityDao.getTripActivities( tripId );
+    }
+
+    @Override
+    public boolean isActivityPartOfTheTrip( long tripId, long activityId ) {
+        return activityDao.isActivityPartOfTheTrip( tripId, activityId );
+    }
+
+    @Override
+    public Activity update( Activity activity ) {
+        return activityDao.update( activity );
     }
 }

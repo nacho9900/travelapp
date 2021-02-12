@@ -1,16 +1,26 @@
 <template>
 	<v-card>
 		<error-dialog v-model="showError" :error="error"></error-dialog>
-		<v-dialog
-			v-model="createDialog"
-			:persistent="loadingCreate"
-			width="500"
-		>
+		<v-dialog v-model="formDialog" :persistent="loadingAction" width="500">
 			<trip-activity-form
-				@submit="createActivity"
-				:loading="loadingCreate"
+				@submit="submitActivityForm"
+				:loading="loadingAction"
+				:edit="editDialog"
+				:name="activityToEdit ? activityToEdit.name : null"
+				:place="activityToEdit ? activityToEdit.place : null"
+				:startDate="activityToEdit ? activityToEdit.startDate : null"
+				:endDate="activityToEdit ? activityToEdit.endDate : null"
 			></trip-activity-form>
 		</v-dialog>
+		<delete-dialog
+			v-model="removeDialog"
+			:title="$t('components.trips.trip_activities.remove_dialog_title')"
+			:message="
+				$t('components.trips.trip_activities.delete_dialog_message')
+			"
+			@cancel="activityToRemove = null"
+			@remove="removeActivity"
+		></delete-dialog>
 		<v-container class="pt-0 px-0" fluid>
 			<v-row>
 				<v-col cols="12" class="pa-0">
@@ -28,6 +38,8 @@
 					<trip-activities-list
 						:activities="activities"
 						:loading="loading"
+						@edit="(activity) => (activityToEdit = activity)"
+						@remove="(activity) => (activityToRemove = activity)"
 					></trip-activities-list>
 				</v-col>
 			</v-row>
@@ -64,9 +76,11 @@ export default {
 		return {
 			activities: [],
 			createDialog: false,
-			loadingCreate: false,
+			loadingAction: false,
 			loading: true,
 			error: null,
+			activityToEdit: null,
+			activityToRemove: null,
 		};
 	},
 	computed: {
@@ -78,11 +92,48 @@ export default {
 				this.error = null;
 			},
 		},
+		editDialog: {
+			get() {
+				return !!this.activityToEdit;
+			},
+			set() {
+				this.activityToEdit = null;
+			},
+		},
+		removeDialog: {
+			get() {
+				return !!this.activityToRemove;
+			},
+			set() {
+				this.activityToRemove = null;
+			},
+		},
+		formDialog: {
+			get() {
+				return this.createDialog || this.editDialog;
+			},
+			set() {
+				if (this.editDialog) {
+					this.editDialog = false;
+				} else {
+					this.createDialog = false;
+				}
+			},
+		},
 	},
 	methods: {
-		async createActivity(activity) {
-			this.loadingCreate = true;
+		async submitActivityForm(activity) {
+			this.loadingAction = true;
 
+			if (this.activityToEdit) {
+				await this.updateActivity(activity);
+			} else {
+				await this.createActivity(activity);
+			}
+
+			this.loadingAction = false;
+		},
+		async createActivity(activity) {
 			try {
 				const activityCreated = await this.$store.dispatch(
 					"activity/create",
@@ -101,9 +152,34 @@ export default {
 					"components.trips.trip_activities.create_error"
 				);
 			}
-
-			this.loadingCreate = false;
 		},
+		async updateActivity(activity) {
+			const activityToUpdate = {
+				...activity,
+				id: this.activityToEdit.id,
+			};
+
+			try {
+				const activityUpdated = await this.$store.dispatch(
+					"activity/update",
+					{
+						tripId: this.tripId,
+						activity: activityToUpdate,
+					}
+				);
+
+				this.activities = this.activities.filter(
+					(x) => x.id !== activityUpdated.id
+				);
+				this.activities.push(activityUpdated);
+				this.activityToEdit = null;
+			} catch (error) {
+				this.error = this.$t(
+					"components.trips.trip_activities.update_error"
+				);
+			}
+		},
+		async removeActivity() {},
 		async getActivities() {
 			this.loading = true;
 

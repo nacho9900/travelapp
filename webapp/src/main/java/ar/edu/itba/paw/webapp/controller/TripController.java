@@ -174,25 +174,12 @@ public class TripController
 
         Place place = getOrCreatePlaceIfNotExists( activity.getPlace() );
 
-        activity = activityService.create( activity.getName(), "", place, maybeTrip.get(), activity.getStartDate(),
+        activity = activityService.create( activity.getName(), place, maybeTrip.get(), activity.getStartDate(),
                 activity.getEndDate() );
 
         return Response.ok()
                        .entity( ActivityDto.fromActivity( activity ) )
                        .build();
-    }
-
-    private Place getOrCreatePlaceIfNotExists( Place place ) {
-        Optional<Place> maybePlace = placeService.findByGoogleId( place.getGoogleId() );
-
-        if ( maybePlace.isPresent() ) {
-            place = maybePlace.get();
-        }
-        else {
-            place = placeService.create( place.getGoogleId(), place.getName(), place.getLatitude(),
-                    place.getLongitude(), place.getAddress() );
-        }
-        return place;
     }
 
     @GET
@@ -215,5 +202,64 @@ public class TripController
         return Response.ok()
                        .entity( activities )
                        .build();
+    }
+
+    @PUT
+    @Path( "/{id}/activity" )
+    public Response updateActivity( @PathParam( "id" ) long id, @RequestBody ActivityDto activityDto ) {
+        Set<ConstraintViolation<ActivityDto>> activityValidation = validator.validate( activityDto );
+        Set<ConstraintViolation<PlaceDto>> placeValidation = validator.validate( activityDto.getPlace() );
+
+        if ( !activityValidation.isEmpty() || !placeValidation.isEmpty() ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( activityValidation )
+                                             .addConstraintsViolations( placeValidation ) )
+                           .build();
+        }
+
+        if ( activityDto.getId() == null ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "the activity does not contains id", "id" ) )
+                           .build();
+        }
+
+        String username = SecurityContextHolder.getContext()
+                                               .getAuthentication()
+                                               .getName();
+
+        Optional<Trip> maybeTrip = tripService.findById( id );
+
+        if ( !tripService.isUserOwnerOrAdmin( id,
+                username ) || !maybeTrip.isPresent() || !activityService.isActivityPartOfTheTrip( maybeTrip.get()
+                                                                                                           .getId(),
+                activityDto.getId() ) ) {
+            return Response.status( Response.Status.NOT_FOUND )
+                           .entity( new ErrorDto( "Trip not found" ) )
+                           .build();
+        }
+
+        Activity activity = activityDto.toActivity();
+        Place place = getOrCreatePlaceIfNotExists( activityDto.getPlace()
+                                                              .toPlace() );
+        activity.setPlace( place );
+        activity.setTrip( maybeTrip.get() );
+        activity = activityService.update( activity );
+
+        return Response.ok()
+                       .entity( ActivityDto.fromActivity( activity ) )
+                       .build();
+    }
+
+    private Place getOrCreatePlaceIfNotExists( Place place ) {
+        Optional<Place> maybePlace = placeService.findByGoogleId( place.getGoogleId() );
+
+        if ( maybePlace.isPresent() ) {
+            place = maybePlace.get();
+        }
+        else {
+            place = placeService.create( place.getGoogleId(), place.getName(), place.getLatitude(),
+                    place.getLongitude(), place.getAddress() );
+        }
+        return place;
     }
 }

@@ -15,5 +15,14 @@ export default {
         const response = await Axios.post(`/trip/${tripId}/activity`, activity);
         const activityCreated = response.data;
         return activityCreated;
+    },
+    async update(_, payload) {
+        const tripId = payload.tripId;
+        const activity = {
+            ...payload.activity
+        };
+        const response = await Axios.put(`/trip/${tripId}/activity`, activity);
+        const activityUpdated = response.data;
+        return activityUpdated;
     }
 };

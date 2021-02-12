@@ -15,6 +15,8 @@
 					:category="activity.category"
 					:endDate="activity.endDate"
 					:startDate="activity.startDate"
+					@edit="edit"
+					@remove="remove"
 				></trip-activity-card>
 			</v-col>
 		</v-row>
@@ -38,6 +40,18 @@ export default {
 	props: {
 		activities: Array,
 		loading: Boolean,
+	},
+	methods: {
+		edit(data) {
+			this.emitActivity(data.id, "edit");
+		},
+		remove(data) {
+			this.emitActivity(data.id, "remove");
+		},
+		emitActivity(id, action) {
+			const activity = this.activities.find((x) => x.id === id);
+			this.$emit(action, activity);
+		},
 	},
 };
 </script>

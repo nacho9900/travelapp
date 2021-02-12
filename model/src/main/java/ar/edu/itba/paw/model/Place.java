@@ -132,13 +132,11 @@ public class Place
             return false;
         }
         Place place = (Place) o;
-        return id == place.id && Double.compare( place.latitude, latitude ) == 0 && Double.compare( place.longitude,
-                longitude ) == 0 && Objects.equals( googleId, place.googleId ) && Objects.equals( name,
-                place.name ) && Objects.equals( address, place.address );
+        return id == place.id && googleId.equals( place.googleId );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( id, googleId, name, latitude, longitude, address );
+        return Objects.hash( id, googleId );
     }
 }

@@ -64,9 +64,9 @@ public class ActivityDto
                                         .toLocalDate();
 
         if(this.id != null) {
-            return new Activity( this.id, this.name, this.category, this.place.toPlace(), null, startDate, endDate );
+            return new Activity( this.id, this.name, this.place.toPlace(), null, startDate, endDate );
         } else {
-            return new Activity( this.name, this.category, this.place.toPlace(), null, startDate, endDate );
+            return new Activity( this.name, this.place.toPlace(), null, startDate, endDate );
         }
     }
 
@@ -74,7 +74,6 @@ public class ActivityDto
         ActivityDto activityDto = new ActivityDto();
         activityDto.id = activity.getId();
         activityDto.name = activity.getName();
-        activityDto.category = activity.getCategory();
         activityDto.startDate = java.sql.Date.valueOf( activity.getStartDate() );
         activityDto.endDate = java.sql.Date.valueOf( activity.getEndDate() );
         activityDto.place = PlaceDto.fromPlace( activity.getPlace() );

@@ -2,7 +2,7 @@
 	<v-form @submit.prevent="submit" ref="form">
 		<v-card :loading="loading">
 			<v-card-title>
-				{{ $t("components.trips.trip_activity_form.title") }}
+				{{ title }}
 			</v-card-title>
 			<v-card-text class="px-0">
 				<trip-activities-map
@@ -14,14 +14,14 @@
 					<v-row>
 						<v-col cols="12" class="pa-0">
 							<place-autocomplete
-								v-model="place"
+								v-model="placeSelected"
 								:disabled="loading"
 								:rules="requiredRule"
 							></place-autocomplete>
 						</v-col>
 						<v-col cols="12" class="pa-0">
 							<v-text-field
-								v-model="name"
+								v-model="nameEntered"
 								:disabled="loading"
 								:label="
 									$t(
@@ -34,7 +34,7 @@
 						</v-col>
 						<v-col cols="6" class="py-0 pl-0">
 							<date-picker
-								v-model="startDate"
+								v-model="startDateEntered"
 								:disabled="loading"
 								:label="
 									$t(
@@ -46,7 +46,7 @@
 						</v-col>
 						<v-col cols="6" class="py-0 pr-0">
 							<date-picker
-								v-model="endDate"
+								v-model="endDateEntered"
 								:disabled="loading"
 								:label="
 									$t(
@@ -64,7 +64,7 @@
 					<v-row justify="end">
 						<v-col cols="6" class="px-3 pt-0 d-flex justify-end">
 							<v-btn color="primary" type="submit">{{
-								$t("components.trips.trip_activity_form.add")
+								buttonText
 							}}</v-btn>
 						</v-col>
 					</v-row>
@@ -82,40 +82,69 @@ import { requiredRule } from "../../rules.js";
 export default {
 	components: { TripActivitiesMap },
 	props: {
+		name: String,
+		place: Object,
+		startDate: String,
+		endDate: String,
 		loading: Boolean,
+		edit: Boolean,
 	},
 	data() {
 		return {
-			name: "",
-			place: null,
-			activity: null,
-			startDate: null,
-			endDate: null,
+			nameEntered: "",
+			placeSelected: null,
+			startDateEntered: null,
+			endDateEntered: null,
 			requiredRule,
 			nameLengthRule: [
 				(v) =>
-					!v || v.length <= 40 ||
+					!v ||
+					v.length <= 40 ||
 					this.$t(
 						"components.trips.trip_activity_form.name_length_rule"
 					),
 			],
-			loadingPlace: false,
-			activities: [],
 		};
 	},
 	computed: {
 		google: gmapApi,
+		activities() {
+			if (this.placeSelected) {
+				const activity = { id: 1, place: this.placeSelected };
+				return [activity];
+			} else {
+				return [];
+			}
+		},
+		buttonText() {
+			return this.edit
+				? this.$t("components.trips.trip_activity_form.update")
+				: this.$t("components.trips.trip_activity_form.add");
+		},
+		title() {
+			return this.edit
+				? this.$t("components.trips.trip_activity_form.title_edit")
+				: this.$t("components.trips.trip_activity_form.title");
+		},
 	},
 	methods: {
+		init() {
+			if (this.edit) {
+				this.nameEntered = this.name;
+				this.startDateEntered = this.startDate;
+				this.endDateEntered = this.endDate;
+				this.placeSelected = this.place;
+			}
+		},
 		submit() {
 			if (this.$refs.form.validate()) {
 				const activity = {
 					place: {
-						...this.place,
+						...this.placeSelected,
 					},
-					name: this.name,
-					startDate: this.startDate,
-					endDate: this.endDate,
+					name: this.nameEntered,
+					startDate: this.startDateEntered,
+					endDate: this.endDateEntered,
 				};
 
 				this.$emit("submit", activity);
@@ -123,17 +152,20 @@ export default {
 		},
 	},
 	watch: {
-		place() {
-			if (this.place != null) {
-				this.activity = { id: 1, place: this.place };
-				this.activities = [this.activity];
-			}
-		},
 		loading() {
 			if (!this.loading) {
 				this.$refs.form.reset();
 			}
 		},
+		edit() {
+			if (this.edit) {
+				this.init();
+			}
+		},
+	},
+	created() {
+		console.log(this.edit);
+		this.init();
 	},
 };
 </script>

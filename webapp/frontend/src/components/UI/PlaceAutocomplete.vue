@@ -50,6 +50,12 @@ export default {
 				},
 			});
 		},
+		init() {
+			if (this.value) {
+				this.items = [this.value];
+				this.address = this.value;
+			}
+		},
 	},
 	watch: {
 		search() {
@@ -74,6 +80,12 @@ export default {
 				this.$emit("input", null);
 			}
 		},
+		value() {
+			this.init();
+		},
+	},
+	created() {
+		this.init();
 	},
 };
 </script>

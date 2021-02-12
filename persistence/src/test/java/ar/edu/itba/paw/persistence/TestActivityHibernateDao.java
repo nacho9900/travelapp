@@ -21,12 +21,9 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
 public class TestActivityHibernateDao {
-
     private static final long tripId = 2;
     private static final long ID = 4;
     private static final String NAME ="Scuba diving";
-    private static final String CATEGORY = "Sports";
-
 
     @Autowired
     private ActivityDao ad;
@@ -37,8 +34,6 @@ public class TestActivityHibernateDao {
         Optional<Activity> activity = ad.findById(ID);
         Assert.assertTrue(activity.isPresent());
         Assert.assertEquals(NAME, activity.get().getName());
-        Assert.assertEquals(CATEGORY, activity.get().getCategory());
-
     }
 
     @Test
@@ -46,13 +41,6 @@ public class TestActivityHibernateDao {
         Optional<Activity> activity = ad.findByName(NAME);
         Assert.assertTrue(activity.isPresent());
         Assert.assertEquals(NAME, activity.get().getName());
-    }
-
-    @Test
-    public void testfindByCategory(){
-        Optional<Activity> activity = ad.findByCategory(CATEGORY);
-        Assert.assertTrue(activity.isPresent());
-        Assert.assertEquals(CATEGORY, activity.get().getCategory());
     }
 
     @Test

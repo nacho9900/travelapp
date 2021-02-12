@@ -105,7 +105,9 @@
       },
       "trip_activity_card": {
         "from": "From",
-        "to": "to"
+        "to": "to",
+        "edit_activity": "Edit",
+        "remove": "Delete"
       },
       "trip_activity_form": {
         "title": "Create new activity",
@@ -113,12 +115,17 @@
         "start_date": "Start date",
         "end_date": "End date",
         "add": "Add",
-        "name_length_rule": "The Name cannot be longer than 40 characters."
+        "name_length_rule": "The Name cannot be longer than 40 characters.",
+        "update": "Update",
+        "title_edit": "Update Activity"
       },
       "trip_activities": {
         "new_activity": "new activity",
         "create_error": "There was an error creating a new activity. Please, try again later.",
-        "get_activities_error": "There was an error obteining the activities. Please, try again later."
+        "get_activities_error": "There was an error obteining the activities. Please, try again later.",
+        "remove_dialog_title": "Delete Activity",
+        "delete_dialog_message": "Are you sure that you want to delete the activity?",
+        "update_error": "There was an error updating the activity. Please, try again later."
       },
       "trip_card": {
         "error": "There was an error obteining the trip. Please try again later."
