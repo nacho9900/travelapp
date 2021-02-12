@@ -13,21 +13,8 @@ import java.util.*;
 @Transactional
 public class TripServiceImpl implements TripService
 {
-
     @Autowired
     private TripDao tripDao;
-
-    @Autowired
-    private ActivityDao ad;
-
-    @Autowired
-    private TripCommentsDao tcd;
-
-    @Autowired
-    private TripPicturesDao tpd;
-
-    @Autowired
-    private UserDao ud;
 
     @Override
     public Trip create( long userId, long startPlaceId, String name, String description, LocalDate startDate,

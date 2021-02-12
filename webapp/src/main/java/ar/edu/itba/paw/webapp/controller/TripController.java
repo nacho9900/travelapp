@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ActivityService;
 import ar.edu.itba.paw.interfaces.PlaceService;
+import ar.edu.itba.paw.interfaces.TripMemberService;
 import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Activity;
@@ -16,11 +17,9 @@ import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
 import ar.edu.itba.paw.webapp.dto.trips.ActivityDto;
 import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripDto;
+import ar.edu.itba.paw.webapp.dto.trips.TripMemberDto;
+import ar.edu.itba.paw.webapp.dto.trips.TripMemberUpdateDto;
 import com.google.maps.GeoApiContext;
-import com.google.maps.GeocodingApi;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.GeocodingResult;
-import com.google.maps.model.LatLng;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -38,7 +37,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
+import java.lang.reflect.Member;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,6 +67,11 @@ public class TripController
     @Autowired
     private GeoApiContext geoApiContext;
 
+    @Autowired
+    private TripMemberService tripMemberService;
+
+    //region trip
+
     @POST
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
@@ -87,8 +91,7 @@ public class TripController
                                                                                 .getName() );
 
         if ( !owner.isPresent() ) {
-            return Response.serverError()
-                           .build();
+            return Response.serverError().build();
         }
 
         List<TripMember> initialMember = new LinkedList<>();
@@ -102,9 +105,7 @@ public class TripController
 
         tripService.create( trip );
 
-        return Response.ok()
-                       .entity( TripDto.fromTrip( trip, true, true, true ) )
-                       .build();
+        return Response.ok().entity( TripDto.fromTrip( trip, true, true, true ) ).build();
     }
 
     @GET
@@ -114,27 +115,21 @@ public class TripController
         Optional<Trip> maybeTrip = tripService.findById( id );
 
         if ( !maybeTrip.isPresent() ) {
-            return Response.status( Response.Status.NOT_FOUND )
-                           .build();
+            return Response.status( Response.Status.NOT_FOUND ).build();
         }
 
-        return Response.ok()
-                       .entity( TripDto.fromTrip( maybeTrip.get(), false, false, false ) )
-                       .build();
+        return Response.ok().entity( TripDto.fromTrip( maybeTrip.get(), false, false, false ) ).build();
     }
 
     @GET
     @Produces( MediaType.APPLICATION_JSON )
     public Response getAll() {
-        String username = SecurityContextHolder.getContext()
-                                               .getAuthentication()
-                                               .getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Optional<User> maybeUser = userService.findByUsername( username );
 
         if ( !maybeUser.isPresent() ) {
-            return Response.status( Response.Status.NOT_FOUND )
-                           .build();
+            return Response.status( Response.Status.NOT_FOUND ).build();
         }
 
         List<Trip> trips = tripService.getAllUserTrips( maybeUser.get() );
@@ -145,6 +140,10 @@ public class TripController
                                      .collect( Collectors.toList() ) )
                        .build();
     }
+
+    //endregion
+
+    //region activity
 
     @POST
     @Path( "/{id}/activity" )
@@ -159,40 +158,31 @@ public class TripController
                            .build();
         }
 
-        String username = SecurityContextHolder.getContext()
-                                               .getAuthentication()
-                                               .getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Optional<Trip> maybeTrip = tripService.findById( id );
 
         if ( !tripService.isUserOwnerOrAdmin( id, username ) || !maybeTrip.isPresent() ) {
-            return Response.status( Response.Status.NOT_FOUND )
-                           .entity( new ErrorDto( "Trip not found" ) )
-                           .build();
+            return TripNotFound();
         }
 
         Activity activity = activityDto.toActivity();
 
         Place place = getOrCreatePlaceIfNotExists( activity.getPlace() );
 
-        activity = activityService.create( activity.getName(), place, maybeTrip.get(), activity.getStartDate(),
-                                           activity.getEndDate() );
+        activity = activityService.create( activity.getName(), place, maybeTrip.get(), activity.getStartDate(), activity
+                .getEndDate() );
 
-        return Response.ok()
-                       .entity( ActivityDto.fromActivity( activity ) )
-                       .build();
+        return Response.ok().entity( ActivityDto.fromActivity( activity ) ).build();
     }
 
     @GET
     @Path( "/{id}/activity" )
     public Response getActivities( @PathParam( "id" ) long id ) {
-        String username = SecurityContextHolder.getContext()
-                                               .getAuthentication()
-                                               .getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
-            return Response.status( Response.Status.NOT_FOUND )
-                           .build();
+            return Response.status( Response.Status.NOT_FOUND ).build();
         }
 
         List<ActivityDto> activities = activityService.findByTrip( id )
@@ -200,9 +190,7 @@ public class TripController
                                                       .map( ActivityDto::fromActivity )
                                                       .collect( Collectors.toList() );
 
-        return Response.ok()
-                       .entity( activities )
-                       .build();
+        return Response.ok().entity( activities ).build();
     }
 
     @PUT
@@ -224,54 +212,40 @@ public class TripController
                            .build();
         }
 
-        String username = SecurityContextHolder.getContext()
-                                               .getAuthentication()
-                                               .getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Optional<Trip> maybeTrip = tripService.findById( id );
 
         if ( !tripService.isUserOwnerOrAdmin( id, username ) || !maybeTrip.isPresent() ||
-             !activityService.isActivityPartOfTheTrip( maybeTrip.get()
-                                                                .getId(), activityDto.getId() ) ) {
-            return Response.status( Response.Status.NOT_FOUND )
-                           .entity( new ErrorDto( "Trip not found" ) )
-                           .build();
+             !activityService.isActivityPartOfTheTrip( maybeTrip.get().getId(), activityDto.getId() ) ) {
+            return TripNotFound();
         }
 
         Activity activity = activityDto.toActivity();
-        Place place = getOrCreatePlaceIfNotExists( activityDto.getPlace()
-                                                              .toPlace() );
+        Place place = getOrCreatePlaceIfNotExists( activityDto.getPlace().toPlace() );
         activity.setPlace( place );
         activity.setTrip( maybeTrip.get() );
         activity = activityService.update( activity );
 
-        return Response.ok()
-                       .entity( ActivityDto.fromActivity( activity ) )
-                       .build();
+        return Response.ok().entity( ActivityDto.fromActivity( activity ) ).build();
     }
 
     @DELETE
     @Path( "/{id}/activity/{activityId}" )
     public Response deleteActivity( @PathParam( "id" ) long id, @PathParam( "activityId" ) long activityId ) {
-        String username = SecurityContextHolder.getContext()
-                                               .getAuthentication()
-                                               .getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Optional<Trip> maybeTrip = tripService.findById( id );
         Optional<Activity> maybeActivity = activityService.findById( activityId );
 
         if ( !tripService.isUserOwnerOrAdmin( id, username ) || !maybeTrip.isPresent() || !maybeActivity.isPresent() ||
-             !activityService.isActivityPartOfTheTrip( maybeTrip.get()
-                                                                .getId(), maybeActivity.get()
-                                                                                       .getId() ) ) {
-            return Response.status( Response.Status.NO_CONTENT )
-                           .build();
+             !activityService.isActivityPartOfTheTrip( maybeTrip.get().getId(), maybeActivity.get().getId() ) ) {
+            return Response.status( Response.Status.NO_CONTENT ).build();
         }
 
         activityService.delete( activityId );
 
-        return Response.ok()
-                       .build();
+        return Response.ok().build();
     }
 
 
@@ -283,8 +257,98 @@ public class TripController
         }
         else {
             place = placeService.create( place.getGoogleId(), place.getName(), place.getLatitude(),
-                                         place.getLongitude(), place.getAddress() );
+                                         place.getLongitude(), place
+                    .getAddress() );
         }
         return place;
+    }
+
+    //endregion
+
+    //region member
+
+    @GET
+    @Path( "/{id}/member" )
+    public Response getAllMembers( @PathParam( "id" ) long id ) {
+        Optional<Trip> maybeTrip = tripService.findById( id );
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if ( !maybeTrip.isPresent() || !tripService.isUserMember( id, username ) ) {
+            return TripNotFound();
+        }
+
+        return Response.ok()
+                       .entity( tripMemberService.getAllByTripId( id )
+                                                 .stream()
+                                                 .map( x -> TripMemberDto.fromTripMember( x, true, false ) ) )
+                       .build();
+    }
+
+    @DELETE
+    @Path( "/{id}/member/{memberId}" )
+    public Response deleteMember( @PathParam( "id" ) long id, @PathParam( "memberId" ) long memberId ) {
+        Optional<Trip> maybeTrip = tripService.findById( id );
+        Optional<TripMember> maybeMember = tripMemberService.findById( memberId );
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( username, id );
+
+        if ( !maybeTrip.isPresent() || !maybeMember.isPresent() || !maybeLoggedMember.isPresent() ||
+             !tripMemberService.memberBelongsToTheTrip( memberId, id ) ) {
+            return Response.status( Response.Status.NO_CONTENT ).build();
+        }
+
+        if ( maybeLoggedMember.get().getRole() == TripMemberRole.MEMBER ||
+             maybeMember.get().getRole() == TripMemberRole.OWNER ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        tripMemberService.delete( memberId );
+
+        return Response.ok().build();
+    }
+
+    @PUT
+    @Path( "/{id}/member/{memberId}" )
+    public Response updateMember(
+            @PathParam( "id" ) long id,
+            @PathParam( "memberId" ) long memberId, @RequestBody TripMemberUpdateDto tripMemberUpdateDto ) {
+        Optional<Trip> maybeTrip = tripService.findById( id );
+        Optional<TripMember> maybeMember = tripMemberService.findById( memberId );
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( username, id );
+
+        if ( !maybeTrip.isPresent() || !maybeMember.isPresent() || !maybeLoggedMember.isPresent() ||
+             !tripMemberService.memberBelongsToTheTrip( memberId, id ) ) {
+            return TripNotFound();
+        }
+
+        Set<ConstraintViolation<TripMemberUpdateDto>> violations = validator.validate( tripMemberUpdateDto );
+
+        if ( !violations.isEmpty() ) {
+            Response.status( Response.Status.BAD_REQUEST )
+                    .entity( ErrorsDto.fromConstraintsViolations( violations ) )
+                    .build();
+        }
+
+        TripMemberRole newRole = TripMemberRole.valueOf( tripMemberUpdateDto.getRole() );
+
+        if ( maybeLoggedMember.get().getRole() == TripMemberRole.MEMBER ||
+             maybeMember.get().getRole() == TripMemberRole.OWNER || newRole == TripMemberRole.OWNER ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        TripMember member = maybeMember.get();
+
+        if ( newRole != member.getRole() ) {
+            member = tripMemberService.update( member );
+        }
+
+        return Response.ok().entity( TripMemberDto.fromTripMember( member, true, false ) ).build();
+    }
+
+    //endregion
+
+    private static Response TripNotFound() {
+        return Response.status( Response.Status.NOT_FOUND ).entity( new ErrorDto( "Trip not Found" ) ).build();
     }
 }
