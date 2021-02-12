@@ -87,6 +87,12 @@
       "members": "Miembros",
       "comments": "Comentarios",
       "error": "Ocurrio un error al obtener el viaje. Por favor, intente nuevamente más tarde."
+    },
+    "trips": {
+      "trip_not_found": {
+        "message": "Ups... El viaje que estás buscando no existe.",
+        "redirect": "Intentá visitar la página principal y ingresar a otro viaje."
+      }
     }
   },
   "components": {
@@ -126,7 +132,8 @@
         "get_activities_error": "Ocurrio un error obteniendo las actividades. Por favor, intente nuevamente más tarde.",
         "remove_dialog_title": "Eliminar Actividad",
         "delete_dialog_message": "¿Esta seguro que desea eliminar la actividad?",
-        "update_error": "Ocurrio un error al actualizar la actividad. Por favor, intente nuevamente más tarde."
+        "update_error": "Ocurrio un error al actualizar la actividad. Por favor, intente nuevamente más tarde.",
+        "delete_error": "Ocurrio un error al eliminar la actividad. Por favor, intente nuevamente más tarde."
       },
       "trip_card": {
         "error": "Ocurrio un error obteniendo el viaje. Por favor, intente nuevamente más tarde."

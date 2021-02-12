@@ -40,7 +40,7 @@ public class TripHibernateDao implements TripDao
 
     @Override
     public Optional<Trip> findById( long id ) {
-        return Optional.of( em.find( Trip.class, id ) );
+        return Optional.ofNullable( em.find( Trip.class, id ) );
     }
 
     @Override

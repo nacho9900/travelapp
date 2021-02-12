@@ -27,7 +27,7 @@ public class TripCommentHibernateDao implements TripCommentsDao {
 
     @Override
     public Optional<TripComment> findById(long id) {
-        return Optional.of(em.find(TripComment.class, id));
+        return Optional.ofNullable(em.find(TripComment.class, id));
     }
 
     @Override

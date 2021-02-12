@@ -28,7 +28,7 @@ public class TripRateHibernateDao implements TripRateDao {
 
     @Override
     public Optional<TripRate> findById(long id)  {
-        return Optional.of(em.find(TripRate.class, id));
+        return Optional.ofNullable(em.find(TripRate.class, id));
     }
 
     @Override

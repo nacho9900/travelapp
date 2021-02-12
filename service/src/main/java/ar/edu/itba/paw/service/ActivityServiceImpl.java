@@ -50,4 +50,9 @@ public class ActivityServiceImpl implements ActivityService {
     public Activity update( Activity activity ) {
         return activityDao.update( activity );
     }
+
+    @Override
+    public void delete( long id ) {
+        activityDao.deleteActivity( id );
+    }
 }

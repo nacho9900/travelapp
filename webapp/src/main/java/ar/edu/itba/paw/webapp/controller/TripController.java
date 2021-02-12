@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -175,7 +176,7 @@ public class TripController
         Place place = getOrCreatePlaceIfNotExists( activity.getPlace() );
 
         activity = activityService.create( activity.getName(), place, maybeTrip.get(), activity.getStartDate(),
-                activity.getEndDate() );
+                                           activity.getEndDate() );
 
         return Response.ok()
                        .entity( ActivityDto.fromActivity( activity ) )
@@ -229,10 +230,9 @@ public class TripController
 
         Optional<Trip> maybeTrip = tripService.findById( id );
 
-        if ( !tripService.isUserOwnerOrAdmin( id,
-                username ) || !maybeTrip.isPresent() || !activityService.isActivityPartOfTheTrip( maybeTrip.get()
-                                                                                                           .getId(),
-                activityDto.getId() ) ) {
+        if ( !tripService.isUserOwnerOrAdmin( id, username ) || !maybeTrip.isPresent() ||
+             !activityService.isActivityPartOfTheTrip( maybeTrip.get()
+                                                                .getId(), activityDto.getId() ) ) {
             return Response.status( Response.Status.NOT_FOUND )
                            .entity( new ErrorDto( "Trip not found" ) )
                            .build();
@@ -250,6 +250,31 @@ public class TripController
                        .build();
     }
 
+    @DELETE
+    @Path( "/{id}/activity/{activityId}" )
+    public Response deleteActivity( @PathParam( "id" ) long id, @PathParam( "activityId" ) long activityId ) {
+        String username = SecurityContextHolder.getContext()
+                                               .getAuthentication()
+                                               .getName();
+
+        Optional<Trip> maybeTrip = tripService.findById( id );
+        Optional<Activity> maybeActivity = activityService.findById( activityId );
+
+        if ( !tripService.isUserOwnerOrAdmin( id, username ) || !maybeTrip.isPresent() || !maybeActivity.isPresent() ||
+             !activityService.isActivityPartOfTheTrip( maybeTrip.get()
+                                                                .getId(), maybeActivity.get()
+                                                                                       .getId() ) ) {
+            return Response.status( Response.Status.NO_CONTENT )
+                           .build();
+        }
+
+        activityService.delete( activityId );
+
+        return Response.ok()
+                       .build();
+    }
+
+
     private Place getOrCreatePlaceIfNotExists( Place place ) {
         Optional<Place> maybePlace = placeService.findByGoogleId( place.getGoogleId() );
 
@@ -258,7 +283,7 @@ public class TripController
         }
         else {
             place = placeService.create( place.getGoogleId(), place.getName(), place.getLatitude(),
-                    place.getLongitude(), place.getAddress() );
+                                         place.getLongitude(), place.getAddress() );
         }
         return place;
     }

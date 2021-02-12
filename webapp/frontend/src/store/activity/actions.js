@@ -24,5 +24,14 @@ export default {
         const response = await Axios.put(`/trip/${tripId}/activity`, activity);
         const activityUpdated = response.data;
         return activityUpdated;
+    },
+    async delete(_, payload) {
+        const tripId = payload.tripId;
+        const activityId = payload.activity.id;
+        const response = await Axios.delete(`/trip/${tripId}/activity/${activityId}`);
+
+        if (response.status !== 200) {
+            throw new Error();
+        }
     }
 };

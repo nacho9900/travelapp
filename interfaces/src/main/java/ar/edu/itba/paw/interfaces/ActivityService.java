@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.Activity;
-import ar.edu.itba.paw.model.DataPair;
 import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
 
@@ -16,4 +15,6 @@ public interface ActivityService {
     List<Activity> findByTrip( long tripId );
     boolean isActivityPartOfTheTrip(long tripId, long activityId);
     Activity update(Activity activity);
+
+    void delete( long id );
 }

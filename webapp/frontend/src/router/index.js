@@ -25,6 +25,12 @@ const routes = [
     meta: { requireAuth: true }
   },
   {
+    path: '/trip-not-found',
+    name: 'TripNotFound',
+    component: () => import("views/trips/TripNotFound.vue"),
+    meta: { requireAuth: true }
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import("views/authentication/Login.vue"),

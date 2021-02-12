@@ -18,7 +18,14 @@
 							<v-container fluid>
 								<v-row>
 									<v-col cols="12" class="px-0 pt-0">
-										<trip-card :id="id"></trip-card>
+										<trip-card
+											:id="id"
+											@notFound="
+												$router.replace({
+													name: 'TripNotFound',
+												})
+											"
+										></trip-card>
 									</v-col>
 								</v-row>
 							</v-container>

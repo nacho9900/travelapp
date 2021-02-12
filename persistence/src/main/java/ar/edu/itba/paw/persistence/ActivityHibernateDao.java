@@ -24,7 +24,7 @@ public class ActivityHibernateDao implements ActivityDao
 
     @Override
     public Optional<Activity> findById( long id ) {
-        return Optional.of( em.find( Activity.class, id ) );
+        return Optional.ofNullable( em.find( Activity.class, id ) );
     }
 
     @Override

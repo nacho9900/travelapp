@@ -86,6 +86,12 @@
       "activities": "Activities",
       "members": "Members",
       "comments": "Comments"
+    },
+    "trips": {
+      "trip_not_found": {
+        "message": "Ups... The trip you are looking for does't not exists.",
+        "redirect": "Try visiting the home page and search for another trip."
+      }
     }
   },
   "components": {
@@ -125,7 +131,8 @@
         "get_activities_error": "There was an error obteining the activities. Please, try again later.",
         "remove_dialog_title": "Delete Activity",
         "delete_dialog_message": "Are you sure that you want to delete the activity?",
-        "update_error": "There was an error updating the activity. Please, try again later."
+        "update_error": "There was an error updating the activity. Please, try again later.",
+        "delete_error": "There was an error deleting the activity. Please, try again later."
       },
       "trip_card": {
         "error": "There was an error obteining the trip. Please try again later."

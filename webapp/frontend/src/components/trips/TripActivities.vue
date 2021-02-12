@@ -18,6 +18,7 @@
 			:message="
 				$t('components.trips.trip_activities.delete_dialog_message')
 			"
+			:loading="loadingDelete"
 			@cancel="activityToRemove = null"
 			@remove="removeActivity"
 		></delete-dialog>
@@ -77,6 +78,7 @@ export default {
 			activities: [],
 			createDialog: false,
 			loadingAction: false,
+			loadingDelete: false,
 			loading: true,
 			error: null,
 			activityToEdit: null,
@@ -179,7 +181,27 @@ export default {
 				);
 			}
 		},
-		async removeActivity() {},
+		async removeActivity() {
+			this.loadingDelete = true;
+
+			try {
+				await this.$store.dispatch("activity/delete", {
+					tripId: this.tripId,
+					activity: this.activityToRemove,
+				});
+
+				this.activities = this.activities.filter(
+					(x) => x.id !== this.activityToRemove.id
+				);
+				this.activityToRemove = false;
+			} catch (error) {
+				this.error = this.$t(
+					"components.trips.trip_activities.delete_error"
+				);
+			}
+
+			this.loadingDelete = false;
+		},
 		async getActivities() {
 			this.loading = true;
 
