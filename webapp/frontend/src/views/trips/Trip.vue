@@ -25,6 +25,7 @@
 													name: 'TripNotFound',
 												})
 											"
+											:actions="true"
 										></trip-card>
 									</v-col>
 								</v-row>

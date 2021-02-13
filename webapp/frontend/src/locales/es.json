@@ -105,7 +105,9 @@
         "start_date": "Fecha desde",
         "end_date": "Fecha hasta",
         "create": "Crear",
-        "date_rule": "La fecha desde no puede ser despues de la fecha hasta"
+        "date_rule": "La fecha desde no puede ser despues de la fecha hasta",
+        "title_edit": "Editar información del viaje",
+        "edit": "modificar"
       },
       "trip_new_comment_box": {
         "new_comment": "Ingrese un nuevo comentario"
@@ -136,7 +138,9 @@
         "delete_error": "Ocurrio un error al eliminar la actividad. Por favor, intente nuevamente más tarde."
       },
       "trip_card": {
-        "error": "Ocurrio un error obteniendo el viaje. Por favor, intente nuevamente más tarde."
+        "error": "Ocurrio un error obteniendo el viaje. Por favor, intente nuevamente más tarde.",
+        "edit": "Editar",
+        "error_update": "Ocurrio un error al actualizar el viaje. Por favor, intente nuevamente más tarde."
       },
       "trip_activities_list": {
         "no_data": "No se econtraron actividades para el viaje. Intenta crear una nueva."

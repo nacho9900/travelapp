@@ -38,7 +38,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.Member;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,16 +79,14 @@ public class TripController
         Set<ConstraintViolation<TripDto>> violations = validator.validate( tripDto );
 
         if ( !violations.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST )
-                           .entity( ErrorsDto.fromConstraintsViolations( violations ) )
-                           .build();
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
         }
 
         Trip trip = tripDto.toTrip();
 
-        Optional<User> owner = userService.findByUsername( SecurityContextHolder.getContext()
-                                                                                .getAuthentication()
-                                                                                .getName() );
+        Optional<User> owner = userService.findByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName() );
 
         if ( !owner.isPresent() ) {
             return Response.serverError().build();
@@ -106,7 +103,7 @@ public class TripController
 
         tripService.create( trip );
 
-        return Response.ok().entity( TripDto.fromTrip( trip, true, true, true ) ).build();
+        return Response.ok().entity( TripDto.fromTrip( trip ) ).build();
     }
 
     @GET
@@ -119,7 +116,7 @@ public class TripController
             return Response.status( Response.Status.NOT_FOUND ).build();
         }
 
-        return Response.ok().entity( TripDto.fromTrip( maybeTrip.get(), false, false, false ) ).build();
+        return Response.ok().entity( TripDto.fromTrip( maybeTrip.get() ) ).build();
     }
 
     @GET
@@ -135,11 +132,45 @@ public class TripController
 
         List<Trip> trips = tripService.getAllUserTrips( maybeUser.get() );
 
-        return Response.ok()
-                       .entity( trips.stream()
-                                     .map( x -> TripDto.fromTrip( x, false, false, false ) )
-                                     .collect( Collectors.toList() ) )
-                       .build();
+        return Response.ok().entity( trips.stream().map( TripDto::fromTrip ).collect( Collectors.toList() ) ).build();
+    }
+
+    @PUT
+    @Path( "/{id}" )
+    public Response update( @PathParam( "id" ) long id, @RequestBody TripDto tripDto ) {
+        Set<ConstraintViolation<TripDto>> violations = validator.validate( tripDto );
+
+        if ( !violations.isEmpty() ) {
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+        }
+
+        if ( tripDto.getId() == null || id != tripDto.getId() ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "Invalid Trip id", "id" ) )
+                           .build();
+        }
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( username, id );
+
+        if ( !maybeLoggedMember.isPresent() || maybeLoggedMember.get().getRole() == TripMemberRole.MEMBER ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        Optional<Trip> maybeTrip = tripService.findById( id );
+        Trip tripUpdates = tripDto.toTrip();
+
+        if ( !maybeTrip.isPresent() ) {
+            return TripNotFound();
+        }
+
+        Trip trip = maybeTrip.get();
+
+        trip = tripService.update( trip, tripUpdates.getName(), tripUpdates.getDescription(),
+                                   tripUpdates.getStartDate(), tripUpdates.getEndDate() );
+
+        return Response.ok().entity( TripDto.fromTrip( trip ) ).build();
     }
 
     //endregion
@@ -153,10 +184,9 @@ public class TripController
         Set<ConstraintViolation<PlaceDto>> placeValidation = validator.validate( activityDto.getPlace() );
 
         if ( !activityValidation.isEmpty() || !placeValidation.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST )
-                           .entity( ErrorsDto.fromConstraintsViolations( activityValidation )
-                                             .addConstraintsViolations( placeValidation ) )
-                           .build();
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    ErrorsDto.fromConstraintsViolations( activityValidation )
+                             .addConstraintsViolations( placeValidation ) ).build();
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -171,8 +201,8 @@ public class TripController
 
         Place place = getOrCreatePlaceIfNotExists( activity.getPlace() );
 
-        activity = activityService.create( activity.getName(), place, maybeTrip.get(), activity.getStartDate(), activity
-                .getEndDate() );
+        activity = activityService.create( activity.getName(), place, maybeTrip.get(), activity.getStartDate(),
+                                           activity.getEndDate() );
 
         return Response.ok().entity( ActivityDto.fromActivity( activity ) ).build();
     }
@@ -201,16 +231,14 @@ public class TripController
         Set<ConstraintViolation<PlaceDto>> placeValidation = validator.validate( activityDto.getPlace() );
 
         if ( !activityValidation.isEmpty() || !placeValidation.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST )
-                           .entity( ErrorsDto.fromConstraintsViolations( activityValidation )
-                                             .addConstraintsViolations( placeValidation ) )
-                           .build();
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    ErrorsDto.fromConstraintsViolations( activityValidation )
+                             .addConstraintsViolations( placeValidation ) ).build();
         }
 
         if ( activityDto.getId() == null ) {
-            return Response.status( Response.Status.BAD_REQUEST )
-                           .entity( new ErrorDto( "the activity does not contains id", "id" ) )
-                           .build();
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    new ErrorDto( "the activity does not contains id", "id" ) ).build();
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -258,8 +286,7 @@ public class TripController
         }
         else {
             place = placeService.create( place.getGoogleId(), place.getName(), place.getLatitude(),
-                                         place.getLongitude(), place
-                    .getAddress() );
+                                         place.getLongitude(), place.getAddress() );
         }
         return place;
     }

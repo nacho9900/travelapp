@@ -24,8 +24,7 @@ public class TripServiceImpl implements TripService
 
     @Override
     public Trip create( Trip trip ) {
-        if ( trip.getStartDate()
-                 .isAfter( trip.getEndDate() ) ) {
+        if ( trip.getStartDate().isAfter( trip.getEndDate() ) ) {
             //trow ex
         }
 
@@ -82,5 +81,15 @@ public class TripServiceImpl implements TripService
     @Override
     public boolean isUserMember( long tripId, String username ) {
         return tripDao.isUserMember( tripId, username );
+    }
+
+    @Override
+    public Trip update( Trip trip, String name, String description, LocalDate startDate, LocalDate endDate ) {
+        trip.setName( name );
+        trip.setDescription( description );
+        trip.setStartDate( startDate );
+        trip.setEndDate( endDate );
+
+        return tripDao.update(trip);
     }
 }

@@ -18,7 +18,6 @@ import java.util.Optional;
 @Repository
 public class TripHibernateDao implements TripDao
 {
-
     private static final int MAX_ROWS = 6;
 
     @PersistenceContext
@@ -62,8 +61,9 @@ public class TripHibernateDao implements TripDao
 
     @Override
     public List<Trip> findUserTrips( long userId ) {
-        final TypedQuery<Trip> query = em.createQuery( "select t from Trip as t left join t.members as m left join m" +
-                                                       ".user as u where u.id = :userId", Trip.class );
+        final TypedQuery<Trip> query = em.createQuery(
+                "select t from Trip as t left join t.members as m left join m" + ".user as u where u.id = :userId",
+                Trip.class );
         query.setParameter( "userId", userId );
         return query.getResultList();
     }
@@ -82,9 +82,9 @@ public class TripHibernateDao implements TripDao
 
     @Override
     public List<Trip> findByCategory( String category ) {
-        final TypedQuery<Trip> query = em.createQuery( "select t From Trip as t, Activity as a" +
-                                                       " where a.trip.id = t.id and a.category like :category",
-                                                       Trip.class );
+        final TypedQuery<Trip> query = em.createQuery(
+                "select t From Trip as t, Activity as a" + " where a.trip.id = t.id and a.category like :category",
+                Trip.class );
         query.setParameter( "category", category );
         query.setMaxResults( MAX_ROWS );
         return query.getResultList();
@@ -221,5 +221,10 @@ public class TripHibernateDao implements TripDao
         query.setParameter( "username", username );
 
         return query.getResultList().size() > 0;
+    }
+
+    @Override
+    public Trip update( Trip trip ) {
+        return em.merge( trip );
     }
 }

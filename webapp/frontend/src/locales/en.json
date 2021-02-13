@@ -104,7 +104,9 @@
         "start_date": "Date from",
         "end_date": "Date to",
         "create": "Create",
-        "date_rule": "Date from cannot be after Date to"
+        "date_rule": "Date from cannot be after Date to",
+        "title_edit": "Edit trip information",
+        "edit": "update"
       },
       "trip_new_comment_box": {
         "new_comment": "Enter a new comment"
@@ -135,7 +137,9 @@
         "delete_error": "There was an error deleting the activity. Please, try again later."
       },
       "trip_card": {
-        "error": "There was an error obteining the trip. Please try again later."
+        "error": "There was an error trying to obtain the trip. Please try again later.",
+        "edit": "Edit",
+        "error_update": "There was an error updating the trip. Please try again later."
       },
       "trip_activities_list": {
         "no_data": "no activities were found for the trip. Try creating a new one."

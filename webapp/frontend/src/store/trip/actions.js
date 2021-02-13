@@ -11,5 +11,11 @@ export default {
         const response = await Axios.get(`/trip/${tripId}`);
         const trip = response.data;
         return trip;
+    },
+    async update(_, payload) {
+        const tripId = payload.id;
+        const response = await Axios.put(`/trip/${tripId}`, payload);
+        const trip = response.data;
+        return trip;
     }
 };

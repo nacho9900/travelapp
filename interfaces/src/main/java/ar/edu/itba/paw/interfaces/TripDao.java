@@ -26,4 +26,5 @@ public interface TripDao {
     List<TripRate> getTripRates( long tripId );
     boolean isUserMember( long tripId, String username );
     boolean isUserOwnerOrAdmin( long tripId, String username );
+    Trip update( Trip trip );
 }

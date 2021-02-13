@@ -2,14 +2,14 @@
 	<v-form @submit.prevent="submit" ref="form">
 		<v-card :loading="loading">
 			<v-card-title>
-				{{ $t("components.trips.tripform.title") }}
+				{{ title }}
 			</v-card-title>
 			<v-card-text>
 				<v-container fluid>
 					<v-row>
 						<v-col cols="12">
 							<v-text-field
-								v-model="name"
+								v-model.trim="nameEntered"
 								:label="$t('components.trips.tripform.name')"
 								:rules="requiredRule"
 								:disabled="loading"
@@ -18,7 +18,7 @@
 						</v-col>
 						<v-col cols="12" md="6">
 							<date-picker
-								v-model="startDate"
+								v-model="startDateEntered"
 								:label="
 									$t('components.trips.tripform.start_date')
 								"
@@ -32,7 +32,7 @@
 						</v-col>
 						<v-col cols="12" md="6">
 							<date-picker
-								v-model="endDate"
+								v-model="endDateEntered"
 								:label="
 									$t('components.trips.tripform.end_date')
 								"
@@ -46,7 +46,7 @@
 						</v-col>
 						<v-col cols="12">
 							<v-textarea
-								v-model="description"
+								v-model.trim="descriptionEntered"
 								:label="
 									$t('components.trips.tripform.description')
 								"
@@ -72,7 +72,7 @@
 								type="submit"
 								:disabled="loading"
 							>
-								{{ $t("components.trips.tripform.create") }}
+								{{ buttonText }}
 							</v-btn>
 						</v-col>
 					</v-row>
@@ -87,39 +87,67 @@ import { requiredRule, futureDateRule } from "../../rules.js";
 
 export default {
 	props: {
+		name: String,
+		description: String,
+		startDate: String,
+		endDate: String,
 		loading: Boolean,
+		edit: Boolean,
 	},
 	data() {
 		return {
-			name: "",
-			startDate: null,
-			endDate: null,
-			description: "",
+			nameEntered: "",
+			startDateEntered: null,
+			endDateEntered: null,
+			descriptionEntered: "",
 			datesRule: [
 				() =>
-					!this.startDate ||
-					!this.endDate ||
-					new Date(this.startDate).getTime() <=
-						new Date(this.endDate).getTime() ||
+					!this.startDateEntered ||
+					!this.endDateEntered ||
+					new Date(this.startDateEntered).getTime() <=
+						new Date(this.endDateEntered).getTime() ||
 					this.$t("components.trips.tripform.date_rule"),
 			],
 			requiredRule,
 			futureDateRule,
 		};
 	},
+	computed: {
+		title() {
+			return this.edit
+				? this.$t("components.trips.tripform.title_edit")
+				: this.$t("components.trips.tripform.title");
+		},
+		buttonText() {
+			return this.edit
+				? this.$t("components.trips.tripform.edit")
+				: this.$t("components.trips.tripform.create");
+		},
+	},
 	methods: {
+		init() {
+			if (this.edit) {
+				this.nameEntered = this.name;
+				this.descriptionEntered = this.description;
+				this.startDateEntered = this.startDate;
+				this.endDateEntered = this.endDate;
+			}
+		},
 		submit() {
 			if (this.$refs.form.validate()) {
 				const trip = {
-					name: this.name,
-					description: this.description,
-					startDate: this.startDate,
-					endDate: this.endDate,
+					name: this.nameEntered,
+					description: this.descriptionEntered,
+					startDate: this.startDateEntered,
+					endDate: this.endDateEntered,
 				};
 
 				this.$emit("submit", trip);
 			}
 		},
+	},
+	created() {
+		this.init();
 	},
 };
 </script>
