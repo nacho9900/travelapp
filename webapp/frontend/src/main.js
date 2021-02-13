@@ -14,6 +14,7 @@ import DatePicker from 'components/UI/DatePicker.vue';
 import ImageForm from 'components/UI/ImageForm.vue';
 import PasswordTextField from 'components/UI/PasswordTextField.vue';
 import PlaceAutocomplete from 'components/UI/PlaceAutocomplete.vue';
+import SimpleErrorDialog from 'components/UI/SimpleErrorDialog.vue';
 
 Vue.config.productionTip = false;
 
@@ -43,5 +44,6 @@ Vue.component('date-picker', DatePicker);
 Vue.component('image-form', ImageForm);
 Vue.component('password-text-field', PasswordTextField);
 Vue.component('place-autocomplete', PlaceAutocomplete);
+Vue.component('simple-error-dialog', SimpleErrorDialog);
 
 app.$mount('#app');

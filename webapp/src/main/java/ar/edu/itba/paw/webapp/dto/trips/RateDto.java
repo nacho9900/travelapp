@@ -3,12 +3,14 @@ package ar.edu.itba.paw.webapp.dto.trips;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripRate;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.ws.rs.core.UriInfo;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+@JsonInclude( JsonInclude.Include.NON_NULL )
 public class RateDto
 {
     private Long id;

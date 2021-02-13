@@ -16,6 +16,7 @@ import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
 import ar.edu.itba.paw.webapp.dto.trips.ActivityDto;
 import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
+import ar.edu.itba.paw.webapp.dto.trips.RateDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberUpdateDto;
@@ -344,6 +345,29 @@ public class TripController
         }
 
         return Response.ok().entity( TripMemberDto.fromTripMember( member, true, false ) ).build();
+    }
+
+    @PUT
+    @Path( "/{id}/rate/{rate}" )
+    public Response changeRate( @PathParam( "id" ) long id, @PathParam( "rate" ) int rate ) {
+        Optional<Trip> maybeTrip = tripService.findById( id );
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( username, id );
+
+        if ( !maybeTrip.isPresent() || !maybeLoggedMember.isPresent() ) {
+            return TripNotFound();
+        }
+
+        if ( rate < 1 || rate > 5 ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "Invalid Rate Value" ) )
+                           .build();
+        }
+
+        TripRate rateEntity = maybeLoggedMember.get().getRate();
+        rateEntity.setRate( rate );
+        rateEntity = tripMemberService.update( maybeLoggedMember.get() ).getRate();
+        return Response.ok().entity( RateDto.fromTripRate( rateEntity, false ) ).build();
     }
 
     //endregion

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.TripJoinRequest;
 import ar.edu.itba.paw.model.TripJoinRequestStatus;
 import ar.edu.itba.paw.webapp.dto.users.UserDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.ws.rs.core.UriInfo;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+@JsonInclude( JsonInclude.Include.NON_NULL )
 public class JoinRequestDto
 {
     private Long id;

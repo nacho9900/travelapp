@@ -46,7 +46,7 @@ public class TripHibernateDao implements TripDao
     @Override
     public List<Trip> findByName( String name ) {
         final TypedQuery<Trip> query = em.createQuery( "From Trip as t where lower(t.name) like lower(:name)",
-                Trip.class );
+                                                       Trip.class );
         query.setParameter( "name", "%" + name + "%" );
         query.setMaxResults( MAX_ROWS );
         return query.getResultList();
@@ -62,9 +62,8 @@ public class TripHibernateDao implements TripDao
 
     @Override
     public List<Trip> findUserTrips( long userId ) {
-        final TypedQuery<Trip> query = em.createQuery(
-                "select t from Trip as t left join t.members as m left join m.user as u where u.id = :userId",
-                Trip.class );
+        final TypedQuery<Trip> query = em.createQuery( "select t from Trip as t left join t.members as m left join m" +
+                                                       ".user as u where u.id = :userId", Trip.class );
         query.setParameter( "userId", userId );
         return query.getResultList();
     }
@@ -78,15 +77,14 @@ public class TripHibernateDao implements TripDao
 
     public int countAllTrips() {
         TypedQuery<Long> query = em.createQuery( "select count(*) from Trip", Long.class );
-        return query.getSingleResult()
-                    .intValue();
+        return query.getSingleResult().intValue();
     }
 
     @Override
     public List<Trip> findByCategory( String category ) {
-        final TypedQuery<Trip> query = em.createQuery(
-                "select t From Trip as t, Activity as a" + " where a.trip.id = t.id and a.category like :category",
-                Trip.class );
+        final TypedQuery<Trip> query = em.createQuery( "select t From Trip as t, Activity as a" +
+                                                       " where a.trip.id = t.id and a.category like :category",
+                                                       Trip.class );
         query.setParameter( "category", category );
         query.setMaxResults( MAX_ROWS );
         return query.getResultList();
@@ -96,8 +94,7 @@ public class TripHibernateDao implements TripDao
     public List<Trip> findByPlace( String placeName ) {
         final TypedQuery<Trip> query = em.createQuery(
                 "select t From Trip as t, Place as p" + " where t.startPlaceId = p.id and lower(p.address) like " +
-                        "lower" + "(:placeName)",
-                Trip.class );
+                "lower" + "(:placeName)", Trip.class );
         query.setParameter( "placeName", "%" + placeName + "%" );
         query.setMaxResults( MAX_ROWS );
         return query.getResultList();
@@ -143,9 +140,11 @@ public class TripHibernateDao implements TripDao
                         buffer.append( " and  " );
                     }
                     buffer.append(
-                            "((t.startPlaceId = p.id and (lower(p.address) like lower(:placeName) or lower(p.name) " + "like lower(:placeName)) )" );
+                            "((t.startPlaceId = p.id and (lower(p.address) like lower(:placeName) or lower(p.name) " +
+                            "like lower(:placeName)) )" );
                     buffer.append(
-                            "or (a.trip.id = t.id and ( lower(a.place.name) like lower(:placeName) or lower(a.place" + ".address) like lower(:placeName))))" );
+                            "or (a.trip.id = t.id and ( lower(a.place.name) like lower(:placeName) or lower(a.place" +
+                            ".address) like lower(:placeName))))" );
                     count++;
                     break;
 
@@ -187,7 +186,7 @@ public class TripHibernateDao implements TripDao
     @Override
     public List<TripComment> getTripComments( long tripId ) {
         final TypedQuery<TripComment> query = em.createQuery( "From TripComment as tc where tc.trip.id = :tripId",
-                TripComment.class );
+                                                              TripComment.class );
         query.setParameter( "tripId", tripId );
         return query.getResultList();
     }
@@ -195,36 +194,32 @@ public class TripHibernateDao implements TripDao
     @Override
     public List<TripRate> getTripRates( long tripId ) {
         final TypedQuery<TripRate> query = em.createQuery( "From TripRate as tr where tr.trip.id = :tripId",
-                TripRate.class );
+                                                           TripRate.class );
         query.setParameter( "tripId", tripId );
         return query.getResultList();
     }
 
     @Override
     public boolean isUserMember( long tripId, String username ) {
-        final TypedQuery<Trip> query = em.createQuery(
-                "select trip from Trip as trip left join trip.members as member left join member.user as user where " + "trip.id = :tripId and user.email = :username",
-                Trip.class );
+        final TypedQuery<Trip> query = em.createQuery( "select trip from Trip as trip left join trip.members as m " +
+                                                       "left join m.user as user where trip.id = :tripId and user" +
+                                                       ".email = :username", Trip.class );
 
         query.setParameter( "tripId", tripId );
         query.setParameter( "username", username );
 
-        return query.getResultList()
-                    .size() > 0;
+        return query.getResultList().size() > 0;
     }
 
     @Override
     public boolean isUserOwnerOrAdmin( long tripId, String username ) {
         final TypedQuery<Trip> query = em.createQuery(
-                "select trip " +
-                        "from Trip as trip left join trip.members as m left join m.user as user " +
-                        "where trip.id = :tripId and user.email like :username and m.role in ('ADMIN', 'OWNER')",
-                Trip.class );
+                "select trip " + "from Trip as trip left join trip.members as m left join m.user as user " +
+                "where trip.id = :tripId and user.email like :username and m.role in ('ADMIN', 'OWNER')", Trip.class );
 
         query.setParameter( "tripId", tripId );
         query.setParameter( "username", username );
 
-        return query.getResultList()
-                    .size() > 0;
+        return query.getResultList().size() > 0;
     }
 }

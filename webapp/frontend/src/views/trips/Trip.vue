@@ -33,6 +33,9 @@
 						<v-tab-item>
 							<trip-activities :tripId="id"></trip-activities>
 						</v-tab-item>
+						<v-tab-item>
+							<trip-members :tripId="id"></trip-members>
+						</v-tab-item>
 					</v-tabs>
 				</v-card>
 			</v-col>
@@ -74,6 +77,7 @@ import TripCard from "components/trips/TripCard.vue";
 import TripCommentsTimeline from "components/trips/TripCommentsTimeline.vue";
 import TripNewCommentBox from "components/trips/TripNewCommentBox.vue";
 import TripActivities from "components/trips/TripActivities.vue";
+import TripMembers from "components/trips/TripMembers.vue";
 
 export default {
 	components: {
@@ -81,6 +85,7 @@ export default {
 		TripCommentsTimeline,
 		TripNewCommentBox,
 		TripActivities,
+		TripMembers,
 	},
 	props: {
 		id: {

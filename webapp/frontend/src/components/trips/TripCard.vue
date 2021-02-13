@@ -75,7 +75,6 @@ export default {
 				this.trip = trip;
 			} catch (error) {
 				if (error?.response?.status === 404) {
-					console.log("not found");
 					this.$emit("notFound");
 				}
 

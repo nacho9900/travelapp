@@ -140,7 +140,17 @@
       },
       "trip_activities_list": {
         "no_data": "No se econtraron actividades para el viaje. Intenta crear una nueva."
+      },
+      "trip_members": {
+        "get_error": "Ocurrio un error al querer obtener los miembros del viaje. Por favor, intente nuevamente más tarde."
       }
+    }
+  },
+  "enums": {
+    "member_roles": {
+      "owner": "Propietario",
+      "admin": "Admin",
+      "member": "Miembro"
     }
   }
 }

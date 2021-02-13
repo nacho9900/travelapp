@@ -7,12 +7,14 @@ import ar.edu.itba.paw.model.TripRate;
 import ar.edu.itba.paw.webapp.dto.serializers.CollectionSerializer;
 import ar.edu.itba.paw.webapp.dto.users.UserDto;
 import ar.edu.itba.paw.webapp.dto.validators.StringEnumConstraint;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@JsonInclude( JsonInclude.Include.NON_NULL )
 public class TripMemberDto
 {
     private Long id;
