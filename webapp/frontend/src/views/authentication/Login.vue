@@ -1,6 +1,6 @@
 <template>
 	<v-container>
-		<error-dialog :error="error" v-model="showError"></error-dialog>
+		<simple-error-dialog v-model="error"></simple-error-dialog>
 		<v-row justify="center">
 			<v-col cols="12" md="6" class="d-flex justify-center">
 				<v-form @submit.prevent="login" ref="form">
@@ -131,7 +131,6 @@ export default {
 			email: "",
 			password: "",
 			error: null,
-			showError: false,
 			unauthorized: false,
 			requiredRule,
 		};
@@ -164,8 +163,7 @@ export default {
 						this.$refs.form.validate();
 					} else {
 						this.error =
-							"Ocurrio un error al iniciar sesión, intente más tarde.";
-						this.showError = true;
+							this.$t("views.login.error");
 					}
 				}
 				this.loading = false;

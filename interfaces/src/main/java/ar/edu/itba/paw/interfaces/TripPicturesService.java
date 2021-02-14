@@ -7,8 +7,18 @@ import java.util.Optional;
 
 public interface TripPicturesService {
 
-    public TripPicture create(Trip trip, byte[] image);
-    public Optional<TripPicture> findByTripId(long tripId);
-    public boolean deleteByTripId(long tripId);
+    TripPicture create( Trip trip, String name, byte[] image );
+    TripPicture create( Trip trip, String name, String imageBase64 );
 
+    TripPicture update( TripPicture tripPicture, Trip trip, String name, String imageBase64 );
+
+    TripPicture update( TripPicture tripPicture, Trip trip, String name, byte[] image );
+
+    Optional<TripPicture> findByTripId( long tripId );
+
+    byte[] resize( byte[] image, int width, int height );
+
+    byte[] resizeHeight( byte[] image, int height );
+
+    byte[] resizeWidth( byte[] image, int width );
 }

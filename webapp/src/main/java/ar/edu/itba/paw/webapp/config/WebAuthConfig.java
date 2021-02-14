@@ -47,15 +47,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
 
     @Override
     protected void configure( HttpSecurity http ) throws Exception {
-        http.csrf()
-            .disable();
+        http.csrf().disable();
 
-        http.exceptionHandling()
-            .authenticationEntryPoint( new RestAuthenticationEntryPoint() );
+        http.exceptionHandling().authenticationEntryPoint( new RestAuthenticationEntryPoint() );
 
-        http.sessionManagement()
-            .sessionCreationPolicy( SessionCreationPolicy.STATELESS )
-            .and();
+        http.sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS ).and();
 
         http.authorizeRequests()
             .antMatchers( HttpMethod.OPTIONS, "/**" )
@@ -63,6 +59,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
             .and()
             .authorizeRequests()
             .antMatchers( HttpMethod.POST, "/api/auth/**" )
+            .anonymous()
+            .and()
+            .authorizeRequests()
+            .antMatchers( HttpMethod.GET, "/api/**/picture" )
             .anonymous()
             .and()
             .authorizeRequests()

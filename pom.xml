@@ -107,6 +107,14 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- IMAGE SCALE -->
+
+            <dependency>
+                <groupId>org.imgscalr</groupId>
+                <artifactId>imgscalr-lib</artifactId>
+                <version>${org.imgscalr.version}</version>
+            </dependency>
+
             <!-- JWT -->
 
             <dependency>
@@ -416,11 +424,6 @@
                         <artifactId>jboss-logging</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.imgscalr</groupId>
-                <artifactId>imgscalr-lib</artifactId>
-                <version>${org.imgscalr.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

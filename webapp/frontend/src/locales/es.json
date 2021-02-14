@@ -53,7 +53,8 @@
       "password_label": "Contraseña",
       "signin_btn": "Registrarse",
       "subtitle": "para ingresar a TravelApp",
-      "title": "Iniciar Sesión"
+      "title": "Iniciar Sesión",
+      "error": "Ocurrio un error al iniciar sesión. Por favor, intente nuevamente más tarde."
     },
     "signup": {
       "errors": {
@@ -140,7 +141,9 @@
       "trip_card": {
         "error": "Ocurrio un error obteniendo el viaje. Por favor, intente nuevamente más tarde.",
         "edit": "Editar",
-        "error_update": "Ocurrio un error al actualizar el viaje. Por favor, intente nuevamente más tarde."
+        "error_update": "Ocurrio un error al actualizar el viaje. Por favor, intente nuevamente más tarde.",
+        "change_image": "Subir una nueva portada",
+        "change_image_error": "Ocurrió un error al cambiar la portada del viaje. Por favor, intente nuevamente más tarde."
       },
       "trip_activities_list": {
         "no_data": "No se econtraron actividades para el viaje. Intenta crear una nueva."

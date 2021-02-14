@@ -53,7 +53,8 @@
       "password_label": "Password",
       "signin_btn": "SingUp",
       "subtitle": "to enter TravelApp",
-      "title": "Login"
+      "title": "Login",
+      "error": "There was an error trying to login to TravelApp. Please, try again later."
     },
     "signup": {
       "errors": {
@@ -139,7 +140,9 @@
       "trip_card": {
         "error": "There was an error trying to obtain the trip. Please try again later.",
         "edit": "Edit",
-        "error_update": "There was an error updating the trip. Please try again later."
+        "error_update": "There was an error updating the trip. Please try again later.",
+        "change_image": "Upload a new portrait",
+        "change_image_error": "There was an error uploading the trip portrait. Please try again later."
       },
       "trip_activities_list": {
         "no_data": "no activities were found for the trip. Try creating a new one."

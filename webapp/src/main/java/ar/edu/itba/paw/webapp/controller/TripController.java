@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.ActivityService;
 import ar.edu.itba.paw.interfaces.PlaceService;
 import ar.edu.itba.paw.interfaces.TripMemberService;
+import ar.edu.itba.paw.interfaces.TripPicturesService;
 import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Activity;
@@ -10,11 +11,13 @@ import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripMemberRole;
+import ar.edu.itba.paw.model.TripPicture;
 import ar.edu.itba.paw.model.TripRate;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
 import ar.edu.itba.paw.webapp.dto.trips.ActivityDto;
+import ar.edu.itba.paw.webapp.dto.trips.FileDto;
 import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.trips.RateDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripDto;
@@ -26,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.imageio.ImageIO;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
@@ -36,8 +40,13 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,6 +71,9 @@ public class TripController
     private PlaceService placeService;
 
     @Autowired
+    private TripPicturesService tripPicturesService;
+
+    @Autowired
     private Validator validator;
 
     @Autowired
@@ -69,6 +81,9 @@ public class TripController
 
     @Autowired
     private TripMemberService tripMemberService;
+
+    @Context
+    private UriInfo uriInfo;
 
     //region trip
 
@@ -171,6 +186,81 @@ public class TripController
                                    tripUpdates.getStartDate(), tripUpdates.getEndDate() );
 
         return Response.ok().entity( TripDto.fromTrip( trip ) ).build();
+    }
+
+    //endregion
+
+    //region picture
+
+    @PUT
+    @Path( "/{id}/picture" )
+    public Response createOrUpdatePicture( @PathParam( "id" ) long id, @RequestBody FileDto fileDto ) {
+        Set<ConstraintViolation<FileDto>> violations = validator.validate( fileDto );
+
+        if ( !violations.isEmpty() ) {
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+        }
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( username, id );
+
+        if ( !maybeLoggedMember.isPresent() || maybeLoggedMember.get().getRole() == TripMemberRole.MEMBER ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        Optional<Trip> maybeTrip = tripService.findById( id );
+
+        if ( !maybeTrip.isPresent() ) {
+            return TripNotFound();
+        }
+
+        Optional<TripPicture> maybeTripPicture = tripPicturesService.findByTripId( id );
+
+        TripPicture tripPicture;
+
+        if ( !maybeTripPicture.isPresent() ) {
+            tripPicture = tripPicturesService.create( maybeTrip.get(), fileDto.getFilename(), fileDto.getFileBase64() );
+        }
+        else {
+            tripPicture = tripPicturesService.update( maybeTripPicture.get(), maybeTrip.get(), fileDto.getFilename(),
+                                                      fileDto.getFileBase64() );
+        }
+
+        if ( tripPicture == null ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "Invalid Image format" ) )
+                           .build();
+        }
+
+        return Response.created( uriInfo.getAbsolutePathBuilder().path( String.format( "/%d/picture", id ) ).build() )
+                       .build();
+    }
+
+    @GET
+    @Path( "/{id}/picture" )
+    @Produces( "image/png" )
+    public Response getPicture(
+            @PathParam( "id" ) long id, @QueryParam( "width" ) Integer width, @QueryParam( "height" ) Integer height ) {
+        Optional<TripPicture> maybeTripPicture = tripPicturesService.findByTripId( id );
+
+        if ( !maybeTripPicture.isPresent() ) {
+            return Response.status( Response.Status.NOT_FOUND ).build();
+        }
+
+        TripPicture tripPicture = maybeTripPicture.get();
+
+        if ( width != null && height != null ) {
+            tripPicture.setPicture( tripPicturesService.resize( tripPicture.getPicture(), width, height ) );
+        }
+        else if ( width != null ) {
+            tripPicture.setPicture( tripPicturesService.resizeWidth( tripPicture.getPicture(), width ) );
+        }
+        else if ( height != null ) {
+            tripPicture.setPicture( tripPicturesService.resizeHeight( tripPicture.getPicture(), height ) );
+        }
+
+        return Response.ok( new ByteArrayInputStream( tripPicture.getPicture() ) ).build();
     }
 
     //endregion

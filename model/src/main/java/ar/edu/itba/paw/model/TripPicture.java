@@ -19,14 +19,17 @@ public class TripPicture {
     @JoinColumn(name="trip_id")
     private Trip trip;
 
-    public TripPicture(long id, byte[] picture, Trip trip) {
-        this(picture, trip);
-        this.id = id;
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    public TripPicture( Trip trip, String name, byte[] picture ) {
+        this(name, picture);
+        this.trip = trip;
     }
 
-    public TripPicture(byte[] picture, Trip trip) {
+    public TripPicture(String name, byte[] picture) {
         this.picture = picture;
-        this.trip = trip;
+        this.name = name;
     }
 
     protected TripPicture() {
@@ -51,5 +54,13 @@ public class TripPicture {
 
     public void setTrip(Trip trip) {
         this.trip = trip;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName( String name ) {
+        this.name = name;
     }
 }

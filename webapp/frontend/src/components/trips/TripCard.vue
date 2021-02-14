@@ -14,10 +14,20 @@
 				@submit="update"
 			></trip-form>
 		</v-dialog>
+		<v-dialog
+			v-model="imageFormDialog"
+			:persistent="loadingImage"
+			width="400"
+		>
+			<image-form
+				@submit="uploadImage"
+				:loading="loadingImage"
+			></image-form>
+		</v-dialog>
 		<v-img
-			class="white--text align-end"
+			class="white--text align-end" 
 			height="200px"
-			src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+			:src="imageUrl"
 		>
 			<v-app-bar flat color="rgba(0, 0, 0, 0)">
 				<v-toolbar-title class="white--text">{{
@@ -36,6 +46,15 @@
 							<v-list-item-title>{{
 								$t("components.trips.trip_card.edit")
 							}}</v-list-item-title>
+						</v-list-item>
+						<v-list-item @click="imageFormDialog = true">
+							<v-list-item-title>
+								{{
+									$t(
+										"components.trips.trip_card.change_image"
+									)
+								}}
+							</v-list-item-title>
 						</v-list-item>
 					</v-list>
 				</v-menu>
@@ -69,9 +88,17 @@ export default {
 			trip: null,
 			loading: false,
 			error: null,
-			loadingEdit: false,
 			formDialog: false,
+			loadingEdit: false,
+			imageFormDialog: false,
+			loadingImage: false,
+			imageCacheBreaker: new Date().getTime(),
 		};
+	},
+	computed: {
+		imageUrl() {
+			return process.env.VUE_APP_API_BASE_URL + `/trip/${this.id}/picture?height=200&${this.imageCacheBreaker}`;
+		}
 	},
 	methods: {
 		formatDateString(date) {
@@ -114,6 +141,25 @@ export default {
 			}
 
 			this.loadingEdit = false;
+		},
+		async uploadImage(image) {
+			this.loadingImage = true;
+
+			try {
+				await this.$store.dispatch(
+					"trip/uploadImage",
+					{
+						image: image,
+						id: this.id,
+					}
+				);
+				this.imageFormDialog = false;
+				this.imageCacheBreaker = new Date().getTime();
+			} catch (error) {
+				this.error = this.$t("components.trips.trip_card.change_image_error");
+			}
+
+			this.loadingImage = false;
 		},
 	},
 	created() {

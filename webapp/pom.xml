@@ -16,6 +16,12 @@
     <url>http://www.example.com</url>
 
     <dependencies>
+        <!-- IMAGE SCALE -->
+        <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+        </dependency>
+
         <!-- JWT -->
 
         <dependency>

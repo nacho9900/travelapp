@@ -17,5 +17,12 @@ export default {
         const response = await Axios.put(`/trip/${tripId}`, payload);
         const trip = response.data;
         return trip;
-    }
+    },
+    async uploadImage(_, payload) {
+        const tripId = payload.id;
+        const image = payload.image;
+        const response = await Axios.put(`/trip/${tripId}/picture`, image);
+        const location = response.data;
+        return location;
+    },
 };

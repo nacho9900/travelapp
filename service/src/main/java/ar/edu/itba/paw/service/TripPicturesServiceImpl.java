@@ -4,65 +4,114 @@ import ar.edu.itba.paw.interfaces.TripPicturesDao;
 import ar.edu.itba.paw.interfaces.TripPicturesService;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripPicture;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.net.URLConnection;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class TripPicturesServiceImpl implements TripPicturesService {
-
+public class TripPicturesServiceImpl extends ImageAbstractService implements TripPicturesService
+{
     @Autowired
-    TripPicturesDao tpd;
+    TripPicturesDao tripPicturesDao;
 
-    private static final int RESOLUTION = 1000;
+    private final int MAX_PICTURE_SIZE = 5000000; //5MB
 
     @Override
-    public TripPicture create(Trip trip, byte[] image) {
+    public TripPicture create( Trip trip, String name, byte[] image ) {
+        if ( image.length > MAX_PICTURE_SIZE ) {
+            return null;
+        }
 
+        return tripPicturesDao.create( trip, name, image );
+    }
+
+    @Override
+    public TripPicture create( Trip trip, String name, String imageBase64 ) {
         try {
-            byte[] resizedImage = resizeImageAsJPG(image, RESOLUTION);
-            return tpd.create(trip, resizedImage);
-        } catch (IOException e) {
-            return tpd.create(trip, image);
+            byte[] image = Base64.getDecoder().decode( imageBase64 );
+
+            if ( !isContentTypeImage( name ) ) {
+                return null;
+            }
+
+            return create( trip, name, image );
+        }
+        catch ( IllegalArgumentException e ) {
+            return null;
+        }
+    }
+
+
+    @Override
+    public TripPicture update( TripPicture tripPicture, Trip trip, String name, String imageBase64 ) {
+        try {
+            byte[] image = Base64.getDecoder().decode( imageBase64 );
+
+            if ( !isContentTypeImage( name ) ) {
+                return null;
+            }
+
+            return update( tripPicture, trip, name, image );
+        }
+        catch ( IllegalArgumentException e ) {
+            return null;
         }
     }
 
     @Override
-    public Optional<TripPicture> findByTripId(long tripId) {
-        return tpd.findByTripId(tripId);
+    public TripPicture update( TripPicture tripPicture, Trip trip, String name, byte[] image ) {
+        if(!isContentTypeImage( name ) || image.length > MAX_PICTURE_SIZE) {
+            return null;
+        }
+
+        tripPicture.setName( name );
+        tripPicture.setPicture( image );
+        tripPicture.setTrip( trip );
+        return tripPicturesDao.update( tripPicture );
     }
 
     @Override
-    public boolean deleteByTripId(long tripId) {
-        return tpd.deleteByTripId(tripId);
+    public Optional<TripPicture> findByTripId( long tripId ) {
+        return tripPicturesDao.findByTripId( tripId );
     }
 
-    private byte[] resizeImageAsJPG(byte[] pImageData, int pMaxWidth) throws IOException {
-        ImageIcon imageIcon = new ImageIcon(pImageData);
-        int width = imageIcon.getIconWidth();
-        int height = imageIcon.getIconHeight();
-        if (pMaxWidth > 0 && width > pMaxWidth) {
-            double ratio = (double) pMaxWidth / imageIcon.getIconWidth();
-            height = (int) (imageIcon.getIconHeight() * ratio);
-            width = pMaxWidth;
-        }
-        BufferedImage bufferedResizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2d = bufferedResizedImage.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        g2d.drawImage(imageIcon.getImage(), 0, 0, width, height, null);
-        g2d.dispose();
-        ByteArrayOutputStream encoderOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(bufferedResizedImage, "jpeg", encoderOutputStream);
+    @Override
+    public byte[] resize( byte[] image, int width, int height ) {
+        BufferedImage bufferedImage = createImageFromBytes( image );
 
-        return encoderOutputStream.toByteArray();
+        bufferedImage = Scalr.resize( bufferedImage, width, height );
+
+        return imageToByteArray( bufferedImage, "png" );
+    }
+
+    @Override
+    public byte[] resizeHeight( byte[] image, int height ) {
+        return resizeOneDimension( image, height, Scalr.Mode.FIT_TO_HEIGHT );
+    }
+
+    @Override
+    public byte[] resizeWidth( byte[] image, int width ) {
+        return resizeOneDimension( image, width, Scalr.Mode.FIT_TO_WIDTH );
+    }
+
+    private byte[] resizeOneDimension( byte[] image, int size, Scalr.Mode mode ) {
+        BufferedImage bufferedImage = createImageFromBytes( image );
+
+        bufferedImage = Scalr.resize( bufferedImage, mode, size );
+
+        return imageToByteArray( bufferedImage, "png" );
+    }
+
+    private boolean isContentTypeImage( String name ) {
+        String contentType = URLConnection.guessContentTypeFromName( name );
+
+        return contentType.startsWith( "image/" );
     }
 }
