@@ -1,6 +1,17 @@
 <template>
 	<v-container fluid>
-		<v-row>
+		<v-row v-if="loading">
+			<v-col cols="12">
+				<v-skeleton-loader type="sentences"></v-skeleton-loader>
+			</v-col>
+			<v-col cols="12">
+				<v-skeleton-loader type="sentences"></v-skeleton-loader>
+			</v-col>
+			<v-col cols="12">
+				<v-skeleton-loader type="sentences"></v-skeleton-loader>
+			</v-col>
+		</v-row>
+		<v-row v-else>
 			<v-col cols="12" v-for="member in members" :key="member.id">
 				<trip-member-card
 					:id="member.id"

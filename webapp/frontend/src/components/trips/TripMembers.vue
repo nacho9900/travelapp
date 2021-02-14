@@ -2,8 +2,8 @@
 	<v-container fluid>
 		<simple-error-dialog v-model="error"></simple-error-dialog>
 		<v-row>
-			<v-col>
-				<trip-member-list :members="members"></trip-member-list>
+			<v-col cols="12">
+				<trip-member-list :members="members" :loading="loading"></trip-member-list>
 			</v-col>
 		</v-row>
 	</v-container>
