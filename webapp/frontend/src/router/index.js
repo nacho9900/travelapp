@@ -54,6 +54,10 @@ const routes = [
     component: () => import("views/authentication/PasswordRecovery.vue"),
     meta: { requireUnauth: true }
   },
+  {
+    path: '/:notFound(.*)',
+    component: () => import("views/error/PageNotFound.vue"),
+  }
 ];
 
 const router = new VueRouter({

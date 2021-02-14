@@ -1,15 +1,15 @@
 <template>
-	<v-container fluid>
+	<v-container>
 		<simple-error-dialog v-model="error"></simple-error-dialog>
 		<v-row justify="center">
-			<v-col cols="12" lg="6" md="9" class="pt-10">
+			<v-col cols="12" class="pt-10">
 				<h2 class="font-weight-regular">
 					{{ $t("views.user_account.title") }}
 				</h2>
 			</v-col>
 		</v-row>
 		<v-row justify="center">
-			<v-col cols="12" lg="6" md="9" class="pt-5">
+			<v-col cols="12" md="6" class="pt-5">
 				<v-skeleton-loader
 					v-if="!hasUser"
 					type="card"
@@ -27,9 +27,7 @@
 					v-else
 				></user-form>
 			</v-col>
-		</v-row>
-		<v-row justify="center">
-			<v-col cols="12" lg="6" md="9" class="pt-5">
+			<v-col cols="12" md="6" class="pt-5">
 				<change-password-form
 					:loading="loadingChangePassword"
 					@submit="changePassword"

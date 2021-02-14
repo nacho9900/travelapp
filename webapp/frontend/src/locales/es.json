@@ -102,6 +102,12 @@
       "error_update": "Ocurrio un error al actuaizar la información de su cuenta. Por favor, intente nuevamente más tarde.",
       "error_passwords_match": "La contraseña ingresada no coincide con su contraseña actual.",
       "error_change_password": "Ocurrio un error al cambiar la contraseña. Por favor, intente nuevamente más tarde."
+    },
+    "error": {
+      "page_not_found": {
+        "message": "Lo sentimos, no pudimos encontrar esa página",
+        "redirect": "Intentá visitando la página principal y buscando por un viaje que te pueda gustar. "
+      }
     }
   },
   "components": {

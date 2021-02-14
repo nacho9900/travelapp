@@ -101,6 +101,12 @@
       "error_update": "There was an error updating your account information. Please try again later.",
       "error_passwords_match": "The entered password didn't match with your current password.",
       "error_change_password": "There was an error changing your password. Please try again later."
+    },
+    "error": {
+      "page_not_found": {
+        "message": "Sorry, we couldn't find that page",
+        "redirect": "Try visiting the home page and search for a trip you may enjoy."
+      }
     }
   },
   "components": {
