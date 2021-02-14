@@ -24,11 +24,7 @@
 				:loading="loadingImage"
 			></image-form>
 		</v-dialog>
-		<v-img
-			class="white--text align-end" 
-			height="200px"
-			:src="imageUrl"
-		>
+		<v-img class="white--text align-end" height="200px" :src="imageUrl">
 			<v-app-bar flat color="rgba(0, 0, 0, 0)">
 				<v-toolbar-title class="white--text">{{
 					trip.name
@@ -73,6 +69,7 @@
 <script>
 import getBrowserLocale from "../../i18n/get-user-locale";
 import TripForm from "./TripForm.vue";
+import { memberRoles } from "../../enums.js";
 
 export default {
 	components: { TripForm },
@@ -86,6 +83,7 @@ export default {
 	data() {
 		return {
 			trip: null,
+			role: null,
 			loading: false,
 			error: null,
 			formDialog: false,
@@ -97,8 +95,11 @@ export default {
 	},
 	computed: {
 		imageUrl() {
-			return process.env.VUE_APP_API_BASE_URL + `/trip/${this.id}/picture?height=200&${this.imageCacheBreaker}`;
-		}
+			return (
+				process.env.VUE_APP_API_BASE_URL +
+				`/trip/${this.id}/picture?height=200&${this.imageCacheBreaker}`
+			);
+		},
 	},
 	methods: {
 		formatDateString(date) {
@@ -118,6 +119,7 @@ export default {
 					tripId: this.id,
 				});
 				this.trip = trip;
+				this.setRole(trip.role);
 			} catch (error) {
 				if (error?.response?.status === 404) {
 					this.$emit("notFound");
@@ -127,6 +129,11 @@ export default {
 			}
 
 			this.loading = false;
+		},
+		setRole(role) {
+			if (role) {
+				this.role = memberRoles.find((x) => x.value === role);
+			}
 		},
 		async update(tripUpdates) {
 			this.loadingEdit = true;
@@ -146,17 +153,16 @@ export default {
 			this.loadingImage = true;
 
 			try {
-				await this.$store.dispatch(
-					"trip/uploadImage",
-					{
-						image: image,
-						id: this.id,
-					}
-				);
+				await this.$store.dispatch("trip/uploadImage", {
+					image: image,
+					id: this.id,
+				});
 				this.imageFormDialog = false;
 				this.imageCacheBreaker = new Date().getTime();
 			} catch (error) {
-				this.error = this.$t("components.trips.trip_card.change_image_error");
+				this.error = this.$t(
+					"components.trips.trip_card.change_image_error"
+				);
 			}
 
 			this.loadingImage = false;

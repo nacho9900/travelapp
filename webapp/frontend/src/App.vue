@@ -1,13 +1,9 @@
 <template>
 	<v-app id="inspire">
 		<v-navigation-drawer v-model="drawer" temporary fixed>
-			<v-list>
-				<v-list-item>
-					<v-list-item-avatar>
-						<v-img
-							src="https://randomuser.me/api/portraits/men/1.jpg"
-						></v-img>
-					</v-list-item-avatar>
+			<v-list nav dense>
+				<v-list-item :to="{ name: 'Home' }" link>
+					<v-list-item-title>Home</v-list-item-title>
 				</v-list-item>
 			</v-list>
 			<v-divider></v-divider>
@@ -17,13 +13,8 @@
 						v-model="$vuetify.theme.dark"
 						:label="modeLabel"
 						color="primary"
+						dense
 					></v-switch>
-				</v-list-item>
-			</v-list>
-			<v-divider></v-divider>
-			<v-list nav dense>
-				<v-list-item :to="{ name: 'Home' }" link>
-					<v-list-item-title>Home</v-list-item-title>
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>

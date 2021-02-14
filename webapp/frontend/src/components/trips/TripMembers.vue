@@ -3,7 +3,10 @@
 		<simple-error-dialog v-model="error"></simple-error-dialog>
 		<v-row>
 			<v-col cols="12">
-				<trip-member-list :members="members" :loading="loading"></trip-member-list>
+				<trip-member-list
+					:members="members"
+					:loading="loading"
+				></trip-member-list>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -26,6 +29,7 @@ export default {
 	data() {
 		return {
 			members: [],
+			role: null,
 			loading: false,
 			error: null,
 			memberRoles,
@@ -36,15 +40,23 @@ export default {
 			this.loading = true;
 
 			try {
-				this.members = await this.$store.dispatch("member/getAll", {
+				const members = await this.$store.dispatch("member/getAll", {
 					tripId: this.tripId,
 				});
+				this.members = members.members;
+				const role = members.role;
+				this.setRole(role);
 			} catch (error) {
 				this.error = this.$t("components.trips.trip_members.get_error");
 			}
 
 			this.loading = false;
 		},
+		setRole(role) {
+			if(role) {
+				this.role = memberRoles.find(x => x.value === role);
+			}
+		}
 	},
 	created() {
 		this.getMembers();

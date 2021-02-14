@@ -17,11 +17,13 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
 import ar.edu.itba.paw.webapp.dto.trips.ActivityDto;
+import ar.edu.itba.paw.webapp.dto.trips.ActivityListDto;
 import ar.edu.itba.paw.webapp.dto.trips.FileDto;
 import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.trips.RateDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberDto;
+import ar.edu.itba.paw.webapp.dto.trips.TripMemberListDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberUpdateDto;
 import com.google.maps.GeoApiContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.imageio.ImageIO;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
@@ -46,7 +47,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -126,12 +126,18 @@ public class TripController
     @Produces( MediaType.APPLICATION_JSON )
     public Response get( @PathParam( "id" ) long id ) {
         Optional<Trip> maybeTrip = tripService.findById( id );
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if ( !maybeTrip.isPresent() ) {
             return Response.status( Response.Status.NOT_FOUND ).build();
         }
 
-        return Response.ok().entity( TripDto.fromTrip( maybeTrip.get() ) ).build();
+        TripDto tripDto = TripDto.fromTrip( maybeTrip.get() );
+
+        tripMemberService.findByTripIdAndUsername( username, id ).ifPresent(
+                tripMember -> tripDto.setRole( tripMember.getRole().name() ) );
+
+        return Response.ok().entity( tripDto ).build();
     }
 
     @GET
@@ -302,14 +308,10 @@ public class TripController
     public Response getActivities( @PathParam( "id" ) long id ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
-            return Response.status( Response.Status.NOT_FOUND ).build();
-        }
+        ActivityListDto activities = ActivityListDto.fromActivityList( activityService.findByTrip( id ) );
 
-        List<ActivityDto> activities = activityService.findByTrip( id )
-                                                      .stream()
-                                                      .map( ActivityDto::fromActivity )
-                                                      .collect( Collectors.toList() );
+        tripMemberService.findByTripIdAndUsername( username, id ).ifPresent(
+                tripMember -> activities.setRole( tripMember.getRole().name() ) );
 
         return Response.ok().entity( activities ).build();
     }
@@ -395,11 +397,13 @@ public class TripController
             return TripNotFound();
         }
 
-        return Response.ok()
-                       .entity( tripMemberService.getAllByTripId( id )
-                                                 .stream()
-                                                 .map( x -> TripMemberDto.fromTripMember( x, true, false ) ) )
-                       .build();
+        TripMemberListDto tripMemberListDto = TripMemberListDto.fromMembersList(
+                tripMemberService.getAllByTripId( id ) );
+
+        tripMemberService.findByTripIdAndUsername( username, id ).ifPresent(
+                tripMember -> tripMemberListDto.setRole( tripMember.getRole().name() ) );
+
+        return Response.ok().entity( tripMemberListDto ).build();
     }
 
     @DELETE

@@ -63,6 +63,7 @@
 import TripActivitiesMap from "./TripActivitiesMap.vue";
 import TripActivitiesList from "./TripActivitiesList.vue";
 import TripActivityForm from "./TripActivityForm.vue";
+import { memberRoles } from "../../enums.js";
 
 export default {
 	components: {
@@ -76,6 +77,7 @@ export default {
 	data() {
 		return {
 			activities: [],
+			role: null,
 			createDialog: false,
 			loadingAction: false,
 			loadingDelete: false,
@@ -213,7 +215,9 @@ export default {
 					}
 				);
 
-				this.activities = activities;
+				this.activities = activities.activities;
+				const role = activities.role;
+				this.setRole(role);
 			} catch (error) {
 				this.error = this.$t(
 					"components.trips.trip_activities.get_activities_error"
@@ -221,6 +225,11 @@ export default {
 			}
 
 			this.loading = false;
+		},
+		setRole(role) {
+			if (role) {
+				this.role = memberRoles.find((x) => x.value === role);
+			}
 		},
 	},
 	created() {

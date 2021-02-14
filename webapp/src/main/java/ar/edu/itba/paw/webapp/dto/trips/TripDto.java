@@ -21,6 +21,7 @@ public class TripDto
     private String name;
     @NotBlank
     private String description;
+    private String role;
     @NotNull
     @Future
     @JsonFormat( shape = JsonFormat.Shape.STRING,
@@ -54,6 +55,14 @@ public class TripDto
 
     public Date getEndDate() {
         return endDate;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole( String role ) {
+        this.role = role;
     }
 
     public void setId( Long id ) {
