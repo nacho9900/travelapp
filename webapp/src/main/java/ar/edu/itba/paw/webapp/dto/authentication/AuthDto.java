@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.webapp.dto.authentication;
 
+import ar.edu.itba.paw.webapp.dto.users.UserDto;
+
 import java.util.Date;
 
 public class AuthDto
 {
-
+    private UserDto user;
     private String token;
     private Date expiresIn;
 
@@ -23,6 +25,14 @@ public class AuthDto
 
     public void setToken( String token ) {
         this.token = token;
+    }
+
+    public UserDto getUser() {
+        return user;
+    }
+
+    public void setUser( UserDto user ) {
+        this.user = user;
     }
 
     public Date getExpiresIn() {

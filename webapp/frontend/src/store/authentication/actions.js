@@ -15,6 +15,7 @@ export default {
 
         const expirationDate = auth.expiresIn;
         const expiresIn = expirationDate - new Date().getTime();
+        const user = auth.user;
 
         const token = auth.token;
 
@@ -27,6 +28,7 @@ export default {
         }, expiresIn);
 
         context.commit("setToken", { token });
+        context.commit("setUser", { user: user });
     },
     tryLogin(context) {
         if (!context.getters.isAuth) {
@@ -50,6 +52,7 @@ export default {
             Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             context.commit('setToken', { token: token });
             context.commit('setAutologout', { autologout: true });
+            context.dispatch("loadUser");
         }
     },
     autologout(context) {
@@ -75,5 +78,24 @@ export default {
         const response = await Axios.post("/auth/signup", user);
         const userCreated = response.data;
         return userCreated;
+    },
+    async loadUser(context) {
+        const response = await Axios.get("/users/current");
+        const user = response.data;
+        context.commit("setUser", user);
+    },
+    async updateUser(context, payload) {
+        const user = { ...payload };
+        console.log(user);
+        const response = await Axios.put("/users/current", user);
+        const userUpdated = response.data;
+        context.commit('setUser', userUpdated);
+        return userUpdated;
+    },
+    async changePassword(_, payload) {
+        const passwords = {
+            ...payload
+        };
+        await Axios.post("users/change-password", passwords);
     }
 };

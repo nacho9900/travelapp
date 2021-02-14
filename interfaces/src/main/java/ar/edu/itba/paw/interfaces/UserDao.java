@@ -13,6 +13,6 @@ public interface UserDao {
     Optional<User> findByUsername(final String email);
     User create(final String firstname, final String lastname, final String email, final String password,
                 LocalDate birthday, final String nationality, final String biography);
-    boolean update(User u);
+    User update( User u);
     List<User> listUsers( int i, int maxValue );
 }

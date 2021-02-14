@@ -53,13 +53,12 @@ public class AuthenticationController
         Optional<AuthDto> maybeAuth = loginHelper.authenticate( email, password );
 
         if ( !maybeAuth.isPresent() ) {
-            return Response.status( Response.Status.UNAUTHORIZED )
-                           .build();
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
         }
 
-        return Response.ok()
-                       .entity( maybeAuth.get() )
-                       .build();
+        userService.findByUsername( email ).ifPresent( user -> maybeAuth.get().setUser( UserDto.fromUser( user ) ) );
+
+        return Response.ok().entity( maybeAuth.get() ).build();
     }
 
     @POST
@@ -70,22 +69,19 @@ public class AuthenticationController
         Set<ConstraintViolation<SignUpDto>> violations = validator.validate( signUpDto );
 
         if ( !violations.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST )
-                           .build();
+            return Response.status( Response.Status.BAD_REQUEST ).build();
         }
 
         Optional<User> maybeUser = this.userService.findByUsername( signUpDto.getEmail() );
 
         if ( maybeUser.isPresent() ) {
-            return Response.status( Response.Status.CONFLICT )
-                           .build();
+            return Response.status( Response.Status.CONFLICT ).build();
         }
 
         User user = userService.create( signUpDto.getFirstname(), signUpDto.getLastname(), signUpDto.getEmail(),
-                signUpDto.getPassword(), signUpDto.getBirthdayLocalDate(), signUpDto.getNationality(), null );
+                                        signUpDto.getPassword(), signUpDto.getBirthdayLocalDate(),
+                                        signUpDto.getNationality(), null );
 
-        return Response.ok()
-                       .entity( UserDto.fromUser( user ) )
-                       .build();
+        return Response.ok().entity( UserDto.fromUser( user ) ).build();
     }
 }

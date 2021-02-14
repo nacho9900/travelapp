@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
@@ -26,8 +25,8 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public boolean update(User u) {
-        return em.merge(u) != null;
+    public User update( User u) {
+        return em.merge(u);
     }
 
     @Override

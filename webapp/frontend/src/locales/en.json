@@ -13,7 +13,9 @@
   },
   "app": {
     "dark_mode": "dark mode",
-    "light_mode": "light mode"
+    "light_mode": "light mode",
+    "home": "Home",
+    "account": "My Account"
   },
   "rules": {
     "email": {
@@ -93,6 +95,12 @@
         "message": "Ups... The trip you are looking for does't not exists.",
         "redirect": "Try visiting the home page and search for another trip."
       }
+    },
+    "user_account": {
+      "title": "My Account Information",
+      "error_update": "There was an error updating your account information. Please try again later.",
+      "error_passwords_match": "The entered password didn't match with your current password.",
+      "error_change_password": "There was an error changing your password. Please try again later."
     }
   },
   "components": {
@@ -149,6 +157,26 @@
       },
       "trip_members": {
         "get_error": "There was an error trying to obtain the trip membes. Please, try again later."
+      }
+    },
+    "user": {
+      "user_form": {
+        "title": "Change Account Information",
+        "firstname": "Firstname",
+        "lastname": "Lastname",
+        "birthday": "Birthday",
+        "nationality": "Nationality",
+        "biography": "Biography",
+        "save": "Save Changes",
+        "biography_size_rule": "The biography must be shorter than 500 characters long."
+      },
+      "change_password_form": {
+        "title": "Change Password",
+        "current_password": "Current Password",
+        "new_password": "New Password",
+        "repeat_password": "Repeat New Password",
+        "repeat_password_rule": "New passwords didn't match.",
+        "change_password": "Change password"
       }
     }
   },

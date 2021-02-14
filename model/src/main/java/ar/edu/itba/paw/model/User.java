@@ -59,6 +59,7 @@ public class User {
         this.password = password;
         this.birthday = birthday;
         this.nationality = nationality;
+        this.biography = biography;
     }
 
     protected User() {

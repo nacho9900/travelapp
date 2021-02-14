@@ -13,7 +13,9 @@
   },
   "app": {
     "dark_mode": "modo oscuro",
-    "light_mode": "modo claro"
+    "light_mode": "modo claro",
+    "home": "Página Principal",
+    "account": "Mi Cuenta"
   },
   "rules": {
     "email": {
@@ -94,6 +96,12 @@
         "message": "Ups... El viaje que estás buscando no existe.",
         "redirect": "Intentá visitar la página principal y ingresar a otro viaje."
       }
+    },
+    "user_account": {
+      "title": "Información de Mi Cuenta",
+      "error_update": "Ocurrio un error al actuaizar la información de su cuenta. Por favor, intente nuevamente más tarde.",
+      "error_passwords_match": "La contraseña ingresada no coincide con su contraseña actual.",
+      "error_change_password": "Ocurrio un error al cambiar la contraseña. Por favor, intente nuevamente más tarde."
     }
   },
   "components": {
@@ -150,6 +158,26 @@
       },
       "trip_members": {
         "get_error": "Ocurrio un error al querer obtener los miembros del viaje. Por favor, intente nuevamente más tarde."
+      }
+    },
+    "user": {
+      "user_form": {
+        "title": "Cambiar Información de mi Cuenta",
+        "firstname": "Nombre",
+        "lastname": "Apellido",
+        "birthday": "Fecha de Nacimiento",
+        "nationality": "Nacionalidad",
+        "biography": "Biografía",
+        "save": "Guardar Cambios",
+        "biography_size_rule": "La biografía no puede exeder los 500 caracteres de largo."
+      },
+      "change_password_form": {
+        "title": "Cambiar Contraseña",
+        "current_password": "Contraseña Actual",
+        "repeat_password": "Repita la nueva Contraseña",
+        "new_password": "Nueva Contraseña",
+        "repeat_password_rule": "Las contraseñas nuevas no coinciden",
+        "change_password": "Cambiar contraseña"
       }
     }
   },

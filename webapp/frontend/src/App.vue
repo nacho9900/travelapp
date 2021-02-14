@@ -2,8 +2,19 @@
 	<v-app id="inspire">
 		<v-navigation-drawer v-model="drawer" temporary fixed>
 			<v-list nav dense>
-				<v-list-item :to="{ name: 'Home' }" link>
-					<v-list-item-title>Home</v-list-item-title>
+				<v-list-item :to="{ name: 'Home' }">
+					<v-list-item-icon>
+						<v-icon>mdi-home</v-icon>
+					</v-list-item-icon>
+					<v-list-item-title>{{ $t("app.home") }}</v-list-item-title>
+				</v-list-item>
+				<v-list-item :to="{ name: 'Account' }">
+					<v-list-item-icon>
+						<v-icon>mdi-account</v-icon>
+					</v-list-item-icon>
+					<v-list-item-title>{{
+						$t("app.account")
+					}}</v-list-item-title>
 				</v-list-item>
 			</v-list>
 			<v-divider></v-divider>

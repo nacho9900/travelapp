@@ -152,7 +152,7 @@ export default {
 						password: this.password,
 					});
 
-					this.$router.replace("/");
+					this.$router.replace({ name: "Home" });
 				} catch (err) {
 					if (
 						err.response &&
@@ -162,8 +162,7 @@ export default {
 						this.unauthorized = true;
 						this.$refs.form.validate();
 					} else {
-						this.error =
-							this.$t("views.login.error");
+						this.error = this.$t("views.login.error");
 					}
 				}
 				this.loading = false;
