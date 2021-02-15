@@ -17,6 +17,7 @@
 					:id="member.id"
 					:firstname="member.user.firstname"
 					:lastname="member.user.lastname"
+					:biography="member.user.biography"
 					:role="member.role"
 				></trip-member-card>
 			</v-col>

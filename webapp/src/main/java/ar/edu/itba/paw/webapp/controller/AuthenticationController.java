@@ -1,14 +1,19 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.MailingService;
+import ar.edu.itba.paw.interfaces.PasswordRecoveryTokenService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.PasswordRecoveryToken;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.auth.LoginHelper;
 import ar.edu.itba.paw.webapp.dto.authentication.AuthDto;
 import ar.edu.itba.paw.webapp.dto.authentication.AuthRequestDto;
+import ar.edu.itba.paw.webapp.dto.authentication.PasswordRecoveryDto;
 import ar.edu.itba.paw.webapp.dto.authentication.SignUpDto;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
+import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
 import ar.edu.itba.paw.webapp.dto.users.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -25,10 +30,9 @@ import javax.ws.rs.core.UriInfo;
 import java.util.Optional;
 import java.util.Set;
 
-
 @Component
 @Path( "/auth" )
-public class AuthenticationController
+public class AuthenticationController extends BaseController
 {
     @Autowired
     private UserService userService;
@@ -38,6 +42,12 @@ public class AuthenticationController
 
     @Autowired
     private Validator validator;
+
+    @Autowired
+    private MailingService mailingService;
+
+    @Autowired
+    private PasswordRecoveryTokenService passwordRecoveryTokenService;
 
     @Context
     private UriInfo uriInfo;
@@ -83,5 +93,31 @@ public class AuthenticationController
                                         signUpDto.getNationality(), null );
 
         return Response.ok().entity( UserDto.fromUser( user ) ).build();
+    }
+
+    @POST
+    @Path( "/password-recovery" )
+    public Response passwordRecovery( @RequestBody PasswordRecoveryDto passwordRecoveryDto ) {
+        Set<ConstraintViolation<PasswordRecoveryDto>> violations = validator.validate( passwordRecoveryDto );
+
+        if ( !violations.isEmpty() ) {
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+        }
+
+        Optional<User> maybeUser = userService.findByUsername( passwordRecoveryDto.getEmail() );
+
+        if ( !maybeUser.isPresent() ) {
+            return Response.status( Response.Status.NOT_FOUND ).entity( new ErrorDto( "User not found" ) ).build();
+        }
+
+        User user = maybeUser.get();
+
+        PasswordRecoveryToken token = passwordRecoveryTokenService.createOrUpdate( user );
+
+        mailingService.sendPasswordRecoveryEmail( user.getFirstname() + "" + user.getLastname(), user.getEmail(),
+                                                  token.getToken().toString(), getFrontendUrl() );
+
+        return Response.ok().build();
     }
 }

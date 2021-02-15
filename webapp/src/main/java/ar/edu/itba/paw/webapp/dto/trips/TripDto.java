@@ -32,6 +32,7 @@ public class TripDto
     @JsonFormat( shape = JsonFormat.Shape.STRING,
                  pattern = "yyyy-MM-dd" )
     private Date endDate;
+    private TripJoinRequestDto userJoinRequest;
 
     public TripDto() {
         //For Jackson
@@ -55,6 +56,14 @@ public class TripDto
 
     public Date getEndDate() {
         return endDate;
+    }
+
+    public TripJoinRequestDto getUserJoinRequest() {
+        return userJoinRequest;
+    }
+
+    public void setUserJoinRequest( TripJoinRequestDto userJoinRequest ) {
+        this.userJoinRequest = userJoinRequest;
     }
 
     public String getRole() {

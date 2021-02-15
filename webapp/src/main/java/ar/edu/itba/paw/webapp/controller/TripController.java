@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ActivityService;
 import ar.edu.itba.paw.interfaces.PlaceService;
+import ar.edu.itba.paw.interfaces.TripJoinRequestService;
 import ar.edu.itba.paw.interfaces.TripMemberService;
 import ar.edu.itba.paw.interfaces.TripPicturesService;
 import ar.edu.itba.paw.interfaces.TripService;
@@ -22,6 +23,7 @@ import ar.edu.itba.paw.webapp.dto.trips.FileDto;
 import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.trips.RateDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripDto;
+import ar.edu.itba.paw.webapp.dto.trips.TripJoinRequestDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberListDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberUpdateDto;
@@ -56,7 +58,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Path( "/trip" )
-public class TripController
+public class TripController extends BaseController
 {
     @Autowired
     private UserService userService;
@@ -82,8 +84,8 @@ public class TripController
     @Autowired
     private TripMemberService tripMemberService;
 
-    @Context
-    private UriInfo uriInfo;
+    @Autowired
+    private TripJoinRequestService tripJoinRequestService;
 
     //region trip
 
@@ -136,6 +138,12 @@ public class TripController
 
         tripMemberService.findByTripIdAndUsername( username, id ).ifPresent(
                 tripMember -> tripDto.setRole( tripMember.getRole().name() ) );
+
+        if ( tripDto.getRole() == null ) {
+            tripJoinRequestService.getLastByTripIdAndUsername( id, username ).ifPresent(
+                    tripJoinRequest -> tripDto.setUserJoinRequest(
+                            TripJoinRequestDto.fromTripJoinRequest( tripJoinRequest, false ) ) );
+        }
 
         return Response.ok().entity( tripDto ).build();
     }

@@ -11,33 +11,42 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "trip_join_requests")
+@Table( name = "trip_join_requests" )
 public class TripJoinRequest
 {
     @Id
-    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "trip_join_requests_id_seq")
-    @SequenceGenerator( sequenceName = "trip_join_requests_id_seq", name = "trip_join_requests_id_seq", allocationSize = 1)
+    @GeneratedValue( strategy = GenerationType.SEQUENCE,
+                     generator = "trip_join_requests_id_seq" )
+    @SequenceGenerator( sequenceName = "trip_join_requests_id_seq",
+                        name = "trip_join_requests_id_seq",
+                        allocationSize = 1 )
     private long id;
 
-    @Column( name = "created_on", nullable = false)
+    @Column( name = "created_on",
+             nullable = false )
     private LocalDateTime createdOn;
 
-    @Column(name ="message", nullable = true)
+    @Column( name = "message",
+             nullable = true )
     private String message;
 
-    @Enumerated( EnumType.STRING)
-    @Column(name="status", nullable = false)
+    @Enumerated( EnumType.STRING )
+    @Column( name = "status",
+             nullable = false )
     private TripJoinRequestStatus status;
 
     ////////////
 
-    @ManyToOne( fetch = FetchType.LAZY, optional = false)
+    @ManyToOne( fetch = FetchType.LAZY,
+                optional = false )
     private Trip trip;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne( fetch = FetchType.EAGER,
+                optional = false )
     private User user;
 
     ////////////
@@ -54,6 +63,15 @@ public class TripJoinRequest
         this.status = status;
         this.trip = trip;
         this.user = user;
+    }
+
+    public TripJoinRequest( User user, Trip trip, String message, LocalDateTime createdOn,
+                            TripJoinRequestStatus status ) {
+        setUser( user );
+        setTrip( trip );
+        this.createdOn = createdOn;
+        this.status = status;
+        this.message = message;
     }
 
     public long getId() {

@@ -1,19 +1,14 @@
 package ar.edu.itba.paw.webapp.dto.trips;
 
 import ar.edu.itba.paw.model.TripJoinRequest;
-import ar.edu.itba.paw.model.TripJoinRequestStatus;
 import ar.edu.itba.paw.webapp.dto.users.UserDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import javax.ws.rs.core.UriInfo;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 
 @JsonInclude( JsonInclude.Include.NON_NULL )
-public class JoinRequestDto
+public class TripJoinRequestDto
 {
     private Long id;
     @JsonFormat( shape = JsonFormat.Shape.STRING,
@@ -23,7 +18,7 @@ public class JoinRequestDto
     private String status;
     private UserDto user;
 
-    public JoinRequestDto() {
+    public TripJoinRequestDto() {
         //For Jackson
     }
 
@@ -47,23 +42,16 @@ public class JoinRequestDto
         return user;
     }
 
-    public TripJoinRequest toTripJoinRequest() {
-        LocalDateTime createdOn = this.createdOn.toInstant()
-                                                .atZone( ZoneId.systemDefault() )
-                                                .toLocalDateTime();
-
-        return new TripJoinRequest( this.id, createdOn, this.message, TripJoinRequestStatus.valueOf( this.status ),
-                null, this.user.toUser() );
-    }
-
-    public static JoinRequestDto fromTripJoinRequest( TripJoinRequest tripJoinRequest ) {
-        JoinRequestDto joinRequestDto = new JoinRequestDto();
+    public static TripJoinRequestDto fromTripJoinRequest( TripJoinRequest tripJoinRequest, boolean includeUser ) {
+        TripJoinRequestDto joinRequestDto = new TripJoinRequestDto();
         joinRequestDto.id = tripJoinRequest.getId();
         joinRequestDto.createdOn = java.sql.Timestamp.valueOf( tripJoinRequest.getCreatedOn() );
         joinRequestDto.message = tripJoinRequest.getMessage();
-        joinRequestDto.status = tripJoinRequest.getStatus()
-                                               .name();
-        joinRequestDto.user = UserDto.fromUser( tripJoinRequest.getUser() );
+        joinRequestDto.status = tripJoinRequest.getStatus().name();
+
+        if ( tripJoinRequest.getUser() != null && includeUser ) {
+            joinRequestDto.user = UserDto.fromUser( tripJoinRequest.getUser() );
+        }
 
         return joinRequestDto;
 

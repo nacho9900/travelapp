@@ -192,6 +192,11 @@
       "owner": "Propietario",
       "admin": "Admin",
       "member": "Miembro"
+    },
+    "join_request_statuses": {
+      "pending": "Confirmación Pendiente",
+      "accepted": "Aceptado",
+      "rejected": "Rechazado"
     }
   }
 }

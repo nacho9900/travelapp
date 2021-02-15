@@ -9,7 +9,6 @@ import java.util.List;
 @Table( name = "trips" )
 public class Trip implements Comparable<Trip>
 {
-
     @Id
     @GeneratedValue( strategy = GenerationType.SEQUENCE,
                      generator = "trip_id_seq" )
@@ -90,7 +89,6 @@ public class Trip implements Comparable<Trip>
     public long getId() {
         return id;
     }
-
 
     public String getName() {
         return name;

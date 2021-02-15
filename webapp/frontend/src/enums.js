@@ -1,5 +1,20 @@
 import i18n from './i18n/i18n.js';
 
+export const joinRequestStatuses = [
+    {
+        value: "PENDING",
+        text: i18n.$t("enums.join_request_statuses.pending"),
+    },
+    {
+        value: "ACCEPTED",
+        text: i18n.$t("enums.join_request_statuses.accepted")
+    },
+    {
+        value: "REJECTED",
+        text: i18n.$t("enums.join_request_statuses.rejected")
+    }
+]
+
 export const memberRoles = [
     {
         value: "OWNER",

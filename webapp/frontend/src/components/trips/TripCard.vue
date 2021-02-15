@@ -69,7 +69,7 @@
 <script>
 import getBrowserLocale from "../../i18n/get-user-locale";
 import TripForm from "./TripForm.vue";
-import { memberRoles } from "../../enums.js";
+import { memberRoles, joinRequestStatuses } from "../../enums.js";
 
 export default {
 	components: { TripForm },
@@ -99,6 +99,21 @@ export default {
 				process.env.VUE_APP_API_BASE_URL +
 				`/trip/${this.id}/picture?height=200&${this.imageCacheBreaker}`
 			);
+		},
+		isMember() {
+			return !!this.role;
+		},
+		hasPendingRequest() {
+			return (
+				!!this.trip?.userJoinRequest &&
+				this.trip.userJoinRequest === "PENDING"
+			);
+		},
+		requestStatus() {
+			const status = joinRequestStatuses.find(
+				(x) => x.value === this.trip.userJoinRequest.status
+			);
+			return status.text;
 		},
 	},
 	methods: {
