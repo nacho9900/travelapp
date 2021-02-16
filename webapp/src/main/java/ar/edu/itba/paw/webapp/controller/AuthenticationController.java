@@ -91,7 +91,7 @@ public class AuthenticationController extends BaseController
         }
 
         User user = userService.create( signUpDto.getFirstname(), signUpDto.getLastname(), signUpDto.getEmail(),
-                                        signUpDto.getPassword(), signUpDto.getBirthdayLocalDate(),
+                                        signUpDto.getPassword(), signUpDto.getBirthday(),
                                         signUpDto.getNationality(), null );
 
         return Response.ok().entity( UserDto.fromUser( user ) ).build();

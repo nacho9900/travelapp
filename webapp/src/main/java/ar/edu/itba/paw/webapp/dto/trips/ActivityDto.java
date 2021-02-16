@@ -1,14 +1,13 @@
 package ar.edu.itba.paw.webapp.dto.trips;
 
 import ar.edu.itba.paw.model.Activity;
+import ar.edu.itba.paw.webapp.dto.validators.Future;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 @JsonInclude( JsonInclude.Include.NON_NULL )
 public class ActivityDto
@@ -19,13 +18,15 @@ public class ActivityDto
     private String name;
     private String category;
     @NotNull
+    @Future
     @JsonFormat( shape = JsonFormat.Shape.STRING,
                  pattern = "yyyy-MM-dd" )
-    private Date startDate;
+    private LocalDate startDate;
     @NotNull
+    @Future
     @JsonFormat( shape = JsonFormat.Shape.STRING,
                  pattern = "yyyy-MM-dd" )
-    private Date endDate;
+    private LocalDate endDate;
     @NotNull
     private PlaceDto place;
 
@@ -45,11 +46,11 @@ public class ActivityDto
         return category;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
@@ -58,12 +59,8 @@ public class ActivityDto
     }
 
     public Activity toActivity() {
-        LocalDate startDate = this.startDate.toInstant()
-                                            .atZone( ZoneId.systemDefault() )
-                                            .toLocalDate();
-        LocalDate endDate = this.endDate.toInstant()
-                                        .atZone( ZoneId.systemDefault() )
-                                        .toLocalDate();
+        LocalDate startDate = this.startDate;
+        LocalDate endDate = this.endDate;
 
         if(this.id != null) {
             return new Activity( this.id, this.name, this.place.toPlace(), null, startDate, endDate );
@@ -76,8 +73,8 @@ public class ActivityDto
         ActivityDto activityDto = new ActivityDto();
         activityDto.id = activity.getId();
         activityDto.name = activity.getName();
-        activityDto.startDate = java.sql.Date.valueOf( activity.getStartDate() );
-        activityDto.endDate = java.sql.Date.valueOf( activity.getEndDate() );
+        activityDto.startDate = activity.getStartDate();
+        activityDto.endDate = activity.getEndDate();
         activityDto.place = PlaceDto.fromPlace( activity.getPlace() );
 
         return activityDto;

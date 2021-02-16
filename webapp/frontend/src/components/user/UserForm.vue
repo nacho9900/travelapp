@@ -1,6 +1,6 @@
 <template>
 	<v-form @submit.prevent="submit" ref="form">
-		<v-card>
+		<v-card :loading="loading">
 			<v-card-title class="font-weight-regular">{{
 				$t("components.user.user_form.title")
 			}}</v-card-title>

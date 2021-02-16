@@ -1,18 +1,13 @@
 package ar.edu.itba.paw.webapp.dto.users;
 
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.webapp.dto.validators.Past;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 public class UserDto
 {
@@ -34,7 +29,7 @@ public class UserDto
                  pattern = "yyyy-MM-dd" )
     @NotNull
     @Past
-    private Date birthday;
+    private LocalDate birthday;
 
     public Long getId() {
         return id;
@@ -60,7 +55,7 @@ public class UserDto
         return nationality;
     }
 
-    public Date getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
@@ -69,7 +64,7 @@ public class UserDto
     }
 
     public User toUser() {
-        LocalDate birthday = this.birthday.toInstant().atZone( ZoneId.systemDefault() ).toLocalDate();
+        LocalDate birthday = this.birthday;
 
         return new User( this.id, this.firstname, this.lastname, this.email, null, birthday, this.nationality,
                          this.biography );
@@ -84,7 +79,7 @@ public class UserDto
         userDto.lastname = user.getLastname();
         userDto.nationality = user.getNationality();
         userDto.biography = user.getBiography();
-        userDto.birthday = java.sql.Date.valueOf( user.getBirthday() );
+        userDto.birthday = user.getBirthday();
 
         return userDto;
     }

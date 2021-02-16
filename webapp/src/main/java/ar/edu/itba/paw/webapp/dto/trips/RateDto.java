@@ -17,7 +17,7 @@ public class RateDto
     private int rate;
     @JsonFormat( shape = JsonFormat.Shape.STRING,
                  pattern = "yyyy-MM-dd hh:MM:ss" )
-    private Date createdOn;
+    private LocalDateTime createdOn;
     private TripMemberDto member;
 
     public RateDto() {
@@ -28,7 +28,7 @@ public class RateDto
         return id;
     }
 
-    public Date getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
@@ -37,9 +37,7 @@ public class RateDto
     }
 
     public TripRate toTripRate() {
-        LocalDateTime createdOn = this.createdOn.toInstant()
-                                                .atZone( ZoneId.systemDefault() )
-                                                .toLocalDateTime();
+        LocalDateTime createdOn = this.createdOn;
 
         return new TripRate( this.id, this.rate, createdOn, this.member != null ? this.member.toTripMember() : null );
     }
@@ -47,7 +45,7 @@ public class RateDto
     public static RateDto fromTripRate( TripRate tripRate, boolean includeMember ) {
         RateDto rateDto = new RateDto();
         rateDto.id = tripRate.getId();
-        rateDto.createdOn = java.sql.Timestamp.valueOf( tripRate.getCreatedOn() );
+        rateDto.createdOn = tripRate.getCreatedOn();
 
         if ( includeMember ) {
             TripMember member = tripRate.getMember();

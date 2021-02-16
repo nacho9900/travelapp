@@ -86,7 +86,6 @@ export default {
     },
     async updateUser(context, payload) {
         const user = { ...payload };
-        console.log(user);
         const response = await Axios.put("/users/current", user);
         const userUpdated = response.data;
         context.commit('setUser', userUpdated);

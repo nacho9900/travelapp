@@ -5,6 +5,7 @@ import ar.edu.itba.paw.webapp.dto.users.UserDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @JsonInclude( JsonInclude.Include.NON_NULL )
@@ -13,7 +14,7 @@ public class TripJoinRequestDto
     private Long id;
     @JsonFormat( shape = JsonFormat.Shape.STRING,
                  pattern = "yyyy-MM-dd hh:MM:ss" )
-    private Date createdOn;
+    private LocalDateTime createdOn;
     private String message;
     private String status;
     private UserDto user;
@@ -26,7 +27,7 @@ public class TripJoinRequestDto
         return id;
     }
 
-    public Date getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
@@ -45,7 +46,7 @@ public class TripJoinRequestDto
     public static TripJoinRequestDto fromTripJoinRequest( TripJoinRequest tripJoinRequest, boolean includeUser ) {
         TripJoinRequestDto joinRequestDto = new TripJoinRequestDto();
         joinRequestDto.id = tripJoinRequest.getId();
-        joinRequestDto.createdOn = java.sql.Timestamp.valueOf( tripJoinRequest.getCreatedOn() );
+        joinRequestDto.createdOn = tripJoinRequest.getCreatedOn();
         joinRequestDto.message = tripJoinRequest.getMessage();
         joinRequestDto.status = tripJoinRequest.getStatus().name();
 

@@ -31,7 +31,7 @@ public class SignUpDto
     private String nationality;
     @NotNull
     @Past
-    private Date birthday;
+    private LocalDate birthday;
 
     public SignUpDto() {
         //For JSON
@@ -77,17 +77,11 @@ public class SignUpDto
         this.nationality = nationality;
     }
 
-    public Date getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public LocalDate getBirthdayLocalDate() {
-        return getBirthday().toInstant()
-                            .atZone( ZoneId.systemDefault() )
-                            .toLocalDate();
-    }
-
-    public void setBirthday( Date birthday ) {
+    public void setBirthday( LocalDate birthday ) {
         this.birthday = birthday;
     }
 }

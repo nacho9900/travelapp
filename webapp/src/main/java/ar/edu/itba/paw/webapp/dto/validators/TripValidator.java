@@ -15,7 +15,7 @@ public class TripValidator implements ConstraintValidator<TripConstraint, TripDt
 
     @Override
     public boolean isValid( TripDto value, ConstraintValidatorContext context ) {
-        if ( value.getStartDate() != null && value.getEndDate() != null && value.getStartDate().after(
+        if ( value.getStartDate() != null && value.getEndDate() != null && value.getStartDate().isAfter(
                 value.getEndDate() ) ) {
             return false;
         }

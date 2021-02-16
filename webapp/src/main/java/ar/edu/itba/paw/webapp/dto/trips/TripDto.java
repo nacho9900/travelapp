@@ -1,16 +1,14 @@
 package ar.edu.itba.paw.webapp.dto.trips;
 
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.webapp.dto.validators.Future;
 import ar.edu.itba.paw.webapp.dto.validators.TripConstraint;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 @TripConstraint
 @JsonInclude( JsonInclude.Include.NON_NULL )
@@ -26,12 +24,12 @@ public class TripDto
     @Future
     @JsonFormat( shape = JsonFormat.Shape.STRING,
                  pattern = "yyyy-MM-dd" )
-    private Date startDate;
+    private LocalDate startDate;
     @NotNull
     @Future
     @JsonFormat( shape = JsonFormat.Shape.STRING,
                  pattern = "yyyy-MM-dd" )
-    private Date endDate;
+    private LocalDate endDate;
     private TripJoinRequestDto userJoinRequest;
 
     public TripDto() {
@@ -50,11 +48,11 @@ public class TripDto
         return description;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
@@ -86,18 +84,18 @@ public class TripDto
         this.description = description;
     }
 
-    public void setStartDate( Date startDate ) {
+    public void setStartDate( LocalDate startDate ) {
         this.startDate = startDate;
     }
 
-    public void setEndDate( Date endDate ) {
+    public void setEndDate( LocalDate endDate ) {
         this.endDate = endDate;
     }
 
     public Trip toTrip() {
-        LocalDate startDate = this.startDate.toInstant().atZone( ZoneId.systemDefault() ).toLocalDate();
+        LocalDate startDate = this.startDate;
 
-        LocalDate endDate = this.endDate.toInstant().atZone( ZoneId.systemDefault() ).toLocalDate();
+        LocalDate endDate = this.endDate;
 
         Trip trip;
 
@@ -115,8 +113,8 @@ public class TripDto
         TripDto tripDto = new TripDto();
         tripDto.id = trip.getId();
         tripDto.name = trip.getName();
-        tripDto.startDate = java.sql.Date.valueOf( trip.getStartDate() );
-        tripDto.endDate = java.sql.Date.valueOf( trip.getEndDate() );
+        tripDto.startDate = trip.getStartDate();
+        tripDto.endDate = trip.getEndDate();
         tripDto.description = trip.getDescription();
 
         return tripDto;

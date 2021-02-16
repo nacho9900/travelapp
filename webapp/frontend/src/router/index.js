@@ -78,15 +78,17 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  store.dispatch('tryLogin');
-
-  if (to.meta.requireAuth && !store.getters.isAuth) {
-    next('/login');
-  } else if (to.meta.requireUnauth && store.getters.isAuth) {
-    next('/');
-  } else {
-    next();
-  }
+  store.dispatch('tryLogin').then(
+    () => {
+      if (to.meta.requireAuth && !store.getters.isAuth) {
+        next('/login');
+      } else if (to.meta.requireUnauth && store.getters.isAuth) {
+        next('/');
+      } else {
+        next();
+      }
+    }
+  );
 });
 
 export default router;
