@@ -18,6 +18,7 @@
 				v-bind="attrs"
 				readonly
 				clearable
+				@focus="dateMenu = true"
 			></v-text-field>
 		</template>
 		<template default>

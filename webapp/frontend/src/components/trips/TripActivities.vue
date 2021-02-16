@@ -39,16 +39,17 @@
 					<trip-activities-list
 						:activities="activities"
 						:loading="loading"
+						:actions="showActions"
 						@edit="(activity) => (activityToEdit = activity)"
 						@remove="(activity) => (activityToRemove = activity)"
 					></trip-activities-list>
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-card-actions>
+		<v-card-actions v-if="showActions">
 			<v-container class="pt-0 px-0" fluid>
-				<v-row justify="end">
-					<v-col cols="6" class="d-flex justify-end px-4">
+				<v-row>
+					<v-col cols="6" class="px-4">
 						<v-btn color="primary" @click="createDialog = true">{{
 							$t("components.trips.trip_activities.new_activity")
 						}}</v-btn>
@@ -124,6 +125,9 @@ export default {
 				}
 			},
 		},
+		showActions() {
+			return !!this.role && this.role.canEditActivity;
+		}
 	},
 	methods: {
 		async submitActivityForm(activity) {

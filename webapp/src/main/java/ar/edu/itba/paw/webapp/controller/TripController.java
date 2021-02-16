@@ -10,6 +10,8 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripJoinRequest;
+import ar.edu.itba.paw.model.TripJoinRequestStatus;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripMemberRole;
 import ar.edu.itba.paw.model.TripPicture;
@@ -20,6 +22,7 @@ import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
 import ar.edu.itba.paw.webapp.dto.trips.ActivityDto;
 import ar.edu.itba.paw.webapp.dto.trips.ActivityListDto;
 import ar.edu.itba.paw.webapp.dto.trips.FileDto;
+import ar.edu.itba.paw.webapp.dto.trips.JoinTripDto;
 import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.trips.RateDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripDto;
@@ -44,10 +47,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -497,6 +498,69 @@ public class TripController extends BaseController
         rateEntity.setRate( rate );
         rateEntity = tripMemberService.update( maybeLoggedMember.get() ).getRate();
         return Response.ok().entity( RateDto.fromTripRate( rateEntity, false ) ).build();
+    }
+
+    @POST
+    @Path( "/{id}/exit" )
+    public Response exitTrip( @PathParam( "id" ) long id ) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Optional<TripMember> maybeMember = tripMemberService.findByTripIdAndUsername( username, id );
+
+        if ( !maybeMember.isPresent() ) {
+            return TripNotFound();
+        }
+
+        TripMember member = maybeMember.get();
+
+        if ( member.getRole().equals( TripMemberRole.OWNER ) ) {
+            return Response.status( Response.Status.CONFLICT ).entity(
+                    new ErrorDto( "the owner of the trip cannot exit" ) ).build();
+        }
+
+        tripMemberService.delete( member.getId() );
+
+        return Response.ok().build();
+    }
+
+    //endregion
+
+    //region joinrequest
+
+    @POST
+    @Path( "/{id}/join" )
+    public Response joinTrip( @PathParam( "id" ) long id, @RequestBody JoinTripDto joinTripDto ) {
+        Set<ConstraintViolation<JoinTripDto>> violations = validator.validate( joinTripDto );
+
+        if ( !violations.isEmpty() ) {
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+        }
+
+        Optional<Trip> maybeTrip = tripService.findById( id );
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if ( !maybeTrip.isPresent() ) {
+            return TripNotFound();
+        }
+
+        Optional<User> maybeUser = userService.findByUsername( username );
+
+        if ( tripService.isUserMember( id, username ) || !maybeUser.isPresent() ) {
+            return Response.status( Response.Status.CONFLICT ).entity( new ErrorDto( "already member" ) ).build();
+        }
+
+        Optional<TripJoinRequest> maybeRequest = tripJoinRequestService.getLastByTripIdAndUsername( id, username );
+
+        if ( maybeRequest.isPresent() && maybeRequest.get().getStatus().equals( TripJoinRequestStatus.PENDING ) ) {
+            return Response.status( Response.Status.CONFLICT ).entity(
+                    new ErrorDto( "already have a pending join request" ) ).build();
+        }
+
+        TripJoinRequest request = tripJoinRequestService.create( maybeUser.get(), maybeTrip.get(),
+                                                                 joinTripDto.getMessage() );
+
+        return Response.ok().entity( TripJoinRequestDto.fromTripJoinRequest( request, false ) ).build();
     }
 
     //endregion

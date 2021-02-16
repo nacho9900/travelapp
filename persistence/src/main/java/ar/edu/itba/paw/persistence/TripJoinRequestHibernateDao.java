@@ -49,8 +49,8 @@ public class TripJoinRequestHibernateDao implements TripJoinRequestDao
         TypedQuery<TripJoinRequest> query = em.createQuery(
                 "select r from Trip as t inner join t.joinRequests as r inner join r.user as u where t.id = :tripId " +
                 "and u.email = :username " +
-                "and r.createdOn >= ALL(select r2.created_on from TripJoinRequest as r2 where r.trip_id = r2.trip_id " +
-                "and r.user_id = r2.user_id)", TripJoinRequest.class );
+                "and r.createdOn >= ALL(select r2.createdOn from TripJoinRequest as r2 where r.trip = r2.trip " +
+                "and r.user = r2.user)", TripJoinRequest.class );
         query.setParameter( "tripId", tripId );
         query.setParameter( "username", username );
         return query.getResultList().stream().findFirst();

@@ -4,7 +4,7 @@
 			<v-toolbar-title>{{ fullname }}</v-toolbar-title>
 			<v-spacer></v-spacer>
 			<v-chip :color="roleObj.color">{{ roleObj.text }}</v-chip>
-			<v-menu bottom right>
+			<v-menu v-if="actions" bottom right>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn color="primary" icon v-bind="attrs" v-on="on">
 						<v-icon>mdi-dots-vertical</v-icon>

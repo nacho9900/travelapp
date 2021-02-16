@@ -1,8 +1,8 @@
 <template>
 	<v-container>
 		<simple-error-dialog v-model="error"></simple-error-dialog>
-		<v-row justify="center">
-			<v-col cols="12" class="pt-10">
+		<v-row justify="center" class="pt-10">
+			<v-col cols="12">
 				<h2 class="font-weight-regular">
 					{{ $t("views.user_account.title") }}
 				</h2>

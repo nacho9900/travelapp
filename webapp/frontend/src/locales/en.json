@@ -15,7 +15,9 @@
     "dark_mode": "dark mode",
     "light_mode": "light mode",
     "home": "Home",
-    "account": "My Account"
+    "account": "My Account",
+    "view_options": "View Options",
+    "my_stuff": "My Stuff"
   },
   "rules": {
     "email": {
@@ -100,7 +102,8 @@
       "title": "My Account Information",
       "error_update": "There was an error updating your account information. Please try again later.",
       "error_passwords_match": "The entered password didn't match with your current password.",
-      "error_change_password": "There was an error changing your password. Please try again later."
+      "error_change_password": "There was an error changing your password. Please try again later.",
+      "sign_out": "Sign out"
     },
     "error": {
       "page_not_found": {
@@ -162,7 +165,21 @@
         "no_data": "no activities were found for the trip. Try creating a new one."
       },
       "trip_members": {
-        "get_error": "There was an error trying to obtain the trip membes. Please, try again later."
+        "get_error": "There was an error trying to obtain the trip membes. Please, try again later.",
+        "not_members": "You must be a member to see the other members of the trip."
+      },
+      "trip_join_button": {
+        "exit_trip": "Exit trip",
+        "join": "JOIN TRIP",
+        "join_dialog_title": "Send a member join request",
+        "join_dialog_message": "You can write a message so that the trip administrators understand why you are interested in joining the trip",
+        "join_dialog_message_label": "Message",
+        "join_dialog_btn": "Send",
+        "pending": "Pending Confirmation"
+      },
+      "trip_join_form": {
+        "message_size_rule": "the length of the message must be less than 255 characters",
+        "error": "There was an error trying to send your join request. Please, try again later."
       }
     },
     "user": {
@@ -183,6 +200,9 @@
         "repeat_password": "Repeat New Password",
         "repeat_password_rule": "New passwords didn't match.",
         "change_password": "Change password"
+      },
+      "user_menu": {
+        "sign_out": "Sign Out"
       }
     }
   },

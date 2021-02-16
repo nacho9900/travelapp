@@ -15,7 +15,9 @@
     "dark_mode": "modo oscuro",
     "light_mode": "modo claro",
     "home": "Página Principal",
-    "account": "Mi Cuenta"
+    "account": "Mi Cuenta",
+    "view_options": "Opciones de Vista",
+    "my_stuff": "Mis Cosas"
   },
   "rules": {
     "email": {
@@ -101,7 +103,8 @@
       "title": "Información de Mi Cuenta",
       "error_update": "Ocurrio un error al actuaizar la información de su cuenta. Por favor, intente nuevamente más tarde.",
       "error_passwords_match": "La contraseña ingresada no coincide con su contraseña actual.",
-      "error_change_password": "Ocurrio un error al cambiar la contraseña. Por favor, intente nuevamente más tarde."
+      "error_change_password": "Ocurrio un error al cambiar la contraseña. Por favor, intente nuevamente más tarde.",
+      "sign_out": "Cerrar sesión"
     },
     "error": {
       "page_not_found": {
@@ -160,10 +163,24 @@
         "change_image_error": "Ocurrió un error al cambiar la portada del viaje. Por favor, intente nuevamente más tarde."
       },
       "trip_activities_list": {
-        "no_data": "No se econtraron actividades para el viaje. Intenta crear una nueva."
+        "no_data": "No se econtraron actividades para el viaje. Si eres administrador, intenta crear una nueva con el botón debajo.."
       },
       "trip_members": {
-        "get_error": "Ocurrio un error al querer obtener los miembros del viaje. Por favor, intente nuevamente más tarde."
+        "get_error": "Ocurrio un error al querer obtener los miembros del viaje. Por favor, intente nuevamente más tarde.",
+        "not_members": "Debes ser un miembre para ver los demas miembros del viaje"
+      },
+      "trip_join_button": {
+        "exit_trip": "Abondanar viaje",
+        "join": "UNIRSE AL VIAJE",
+        "join_dialog_title": "Enviar una solicitud de miembro",
+        "join_dialog_message": "puedes escribir un mensaje para que los administradores del viaje entiendan porque estás interesado en unirte al viaje",
+        "join_dialog_message_label": "Mensaje",
+        "join_dialog_btn": "Enviar",
+        "pending": "Confirmación pendiente"
+      },
+      "trip_join_form": {
+        "message_size_rule": "el largo del mensaje no puede ser superior a 255 caracteres",
+        "error": "Ocurrió un error al intentar enviar su solicitud de miembro. Por favor, intente nuevamente más tarde."
       }
     },
     "user": {
@@ -184,6 +201,9 @@
         "new_password": "Nueva Contraseña",
         "repeat_password_rule": "Las contraseñas nuevas no coinciden",
         "change_password": "Cambiar contraseña"
+      },
+      "user_menu": {
+        "sign_out": "Cerrar Sesión"
       }
     }
   },

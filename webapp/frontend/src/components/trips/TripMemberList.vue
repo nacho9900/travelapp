@@ -19,6 +19,7 @@
 					:lastname="member.user.lastname"
 					:biography="member.user.biography"
 					:role="member.role"
+					:actions="actions"
 				></trip-member-card>
 			</v-col>
 		</v-row>
@@ -35,6 +36,7 @@ export default {
 	props: {
 		members: Array,
 		loading: Boolean,
+		actions: Boolean,
 	},
 };
 </script>

@@ -15,6 +15,7 @@
 					:category="activity.category"
 					:endDate="activity.endDate"
 					:startDate="activity.startDate"
+					:actions="actions"
 					@edit="edit"
 					@remove="remove"
 				></trip-activity-card>
@@ -22,7 +23,7 @@
 		</v-row>
 		<v-row v-else>
 			<v-col cols="12" class="d-flex justify-center">
-				<v-alert color="secondary" dense>
+				<v-alert type="info" text dense>
 					{{ $t("components.trips.trip_activities_list.no_data") }}
 				</v-alert>
 			</v-col>
@@ -40,6 +41,7 @@ export default {
 	props: {
 		activities: Array,
 		loading: Boolean,
+		actions: Boolean,
 	},
 	methods: {
 		edit(data) {

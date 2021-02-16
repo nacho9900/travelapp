@@ -25,54 +25,58 @@
 			></image-form>
 		</v-dialog>
 		<v-img class="white--text align-end" height="200px" :src="imageUrl">
-			<v-app-bar flat color="rgba(0, 0, 0, 0)">
-				<v-toolbar-title class="white--text">{{
-					trip.name
-				}}</v-toolbar-title>
-				<v-spacer></v-spacer>
-				<v-menu bottom right v-if="actions">
-					<template v-slot:activator="{ on, attrs }">
-						<v-btn color="white" icon v-bind="attrs" v-on="on">
-							<v-icon>mdi-dots-vertical</v-icon>
-						</v-btn>
-					</template>
-
-					<v-list>
-						<v-list-item @click="formDialog = true">
-							<v-list-item-title>{{
-								$t("components.trips.trip_card.edit")
-							}}</v-list-item-title>
-						</v-list-item>
-						<v-list-item @click="imageFormDialog = true">
-							<v-list-item-title>
-								{{
-									$t(
-										"components.trips.trip_card.change_image"
-									)
-								}}
-							</v-list-item-title>
-						</v-list-item>
-					</v-list>
-				</v-menu>
-			</v-app-bar>
 		</v-img>
-		<v-card-text class="text--primary">
+		<v-app-bar flat color="white">
+			<v-toolbar-title>{{ trip.name }}</v-toolbar-title>
+			<v-spacer></v-spacer>
+
+			<v-menu bottom right v-if="showActions">
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn icon v-bind="attrs" v-on="on">
+						<v-icon>mdi-dots-vertical</v-icon>
+					</v-btn>
+				</template>
+
+				<v-list>
+					<v-list-item @click="formDialog = true">
+						<v-list-item-title>{{
+							$t("components.trips.trip_card.edit")
+						}}</v-list-item-title>
+					</v-list-item>
+					<v-list-item @click="imageFormDialog = true">
+						<v-list-item-title>
+							{{ $t("components.trips.trip_card.change_image") }}
+						</v-list-item-title>
+					</v-list-item>
+				</v-list>
+			</v-menu>
+		</v-app-bar>
+		<v-card-text class="text--primary pt-0">
 			<div>{{ trip.description }}</div>
 		</v-card-text>
 		<v-card-text class="text--primary">
 			Desde {{ formatDateString(trip.startDate) }} hasta el
 			{{ formatDateString(trip.endDate) }}
 		</v-card-text>
+		<v-card-actions v-if="showJoinButton" class="pt-0 px-4">
+			<trip-join-button
+				:id="trip.id"
+				:member="isMember"
+				:status="requestStatus"
+				@joined="joined"
+			></trip-join-button>
+		</v-card-actions>
 	</v-card>
 </template>
 
 <script>
 import getBrowserLocale from "../../i18n/get-user-locale";
 import TripForm from "./TripForm.vue";
-import { memberRoles, joinRequestStatuses } from "../../enums.js";
+import { memberRoles } from "../../enums.js";
+import TripJoinButton from "./TripJoinButton.vue";
 
 export default {
-	components: { TripForm },
+	components: { TripForm, TripJoinButton },
 	props: {
 		id: {
 			type: String,
@@ -110,11 +114,14 @@ export default {
 			);
 		},
 		requestStatus() {
-			const status = joinRequestStatuses.find(
-				(x) => x.value === this.trip.userJoinRequest.status
-			);
-			return status.text;
+			return this.trip?.userJoinRequest?.status;
 		},
+		showJoinButton() {
+			return  !this.isMember || this.role.canExitTrip;
+		},
+		showActions() {
+			return this.isMember && this.actions && this.role.canEditTrip;
+		}
 	},
 	methods: {
 		formatDateString(date) {
@@ -181,6 +188,11 @@ export default {
 			}
 
 			this.loadingImage = false;
+		},
+		joined(request) {
+			this.trip.userJoinRequest = {
+				...request,
+			};
 		},
 	},
 	created() {

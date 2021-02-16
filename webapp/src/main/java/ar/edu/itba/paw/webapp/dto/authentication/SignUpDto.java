@@ -1,14 +1,12 @@
 package ar.edu.itba.paw.webapp.dto.authentication;
 
 import ar.edu.itba.paw.webapp.dto.validators.PasswordConstraint;
+import ar.edu.itba.paw.webapp.dto.validators.Past;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 public class SignUpDto
 {

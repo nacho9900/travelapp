@@ -2,12 +2,17 @@
 	<v-app id="inspire">
 		<v-navigation-drawer v-if="isAuth" v-model="drawer" temporary fixed>
 			<v-list nav dense>
+				<v-subheader>TravelApp</v-subheader>
 				<v-list-item :to="{ name: 'Home' }">
 					<v-list-item-icon>
 						<v-icon>mdi-home</v-icon>
 					</v-list-item-icon>
 					<v-list-item-title>{{ $t("app.home") }}</v-list-item-title>
 				</v-list-item>
+			</v-list>
+
+			<v-list nav dense>
+				<v-subheader>{{ $t("app.my_stuff") }}</v-subheader>
 				<v-list-item :to="{ name: 'Account' }">
 					<v-list-item-icon>
 						<v-icon>mdi-account</v-icon>
@@ -17,8 +22,11 @@
 					}}</v-list-item-title>
 				</v-list-item>
 			</v-list>
-			<v-divider></v-divider>
-			<v-list>
+
+			<v-list nav dense>
+				<v-subheader>
+					{{ $t("app.view_options") }}
+				</v-subheader>
 				<v-list-item>
 					<v-switch
 						v-model="$vuetify.theme.dark"
@@ -31,9 +39,13 @@
 		</v-navigation-drawer>
 
 		<v-app-bar color="primary" app>
-			<v-app-bar-nav-icon v-if="isAuth" @click="drawer = !drawer"></v-app-bar-nav-icon>
+			<v-app-bar-nav-icon
+				v-if="isAuth"
+				@click="drawer = !drawer"
+			></v-app-bar-nav-icon>
 			<v-toolbar-title> TravelApp </v-toolbar-title>
 			<v-spacer></v-spacer>
+			<user-menu v-if="isAuth"></user-menu>
 		</v-app-bar>
 
 		<v-main>
@@ -45,7 +57,12 @@
 </template>
 
 <script>
+import UserMenu from "components/user/UserMenu.vue";
+
 export default {
+	components: {
+		UserMenu,
+	},
 	data: () => ({
 		drawer: false,
 	}),
@@ -63,7 +80,7 @@ export default {
 		},
 		isAuth() {
 			return this.$store.getters.isAuth;
-		}
+		},
 	},
 	created() {
 		// if (this.isAuthenticated && !this.hasUser) {
