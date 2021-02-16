@@ -97,5 +97,8 @@ export default {
             ...payload
         };
         await Axios.post("users/change-password", passwords);
+    },
+    async passwordRecovery(_, payload) {
+        await Axios.post("/auth/password-recovery", payload);    
     }
 };

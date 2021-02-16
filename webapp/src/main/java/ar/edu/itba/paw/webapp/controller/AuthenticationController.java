@@ -108,7 +108,7 @@ public class AuthenticationController extends BaseController
         Optional<User> maybeUser = userService.findByUsername( passwordRecoveryDto.getEmail() );
 
         if ( !maybeUser.isPresent() ) {
-            return Response.status( Response.Status.NOT_FOUND ).entity( new ErrorDto( "User not found" ) ).build();
+            return Response.ok().build();
         }
 
         User user = maybeUser.get();

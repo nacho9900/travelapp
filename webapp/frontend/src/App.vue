@@ -1,6 +1,6 @@
 <template>
 	<v-app id="inspire">
-		<v-navigation-drawer v-model="drawer" temporary fixed>
+		<v-navigation-drawer v-if="isAuth" v-model="drawer" temporary fixed>
 			<v-list nav dense>
 				<v-list-item :to="{ name: 'Home' }">
 					<v-list-item-icon>
@@ -31,7 +31,7 @@
 		</v-navigation-drawer>
 
 		<v-app-bar color="primary" app>
-			<v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+			<v-app-bar-nav-icon v-if="isAuth" @click="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title> TravelApp </v-toolbar-title>
 			<v-spacer></v-spacer>
 		</v-app-bar>
@@ -61,6 +61,9 @@ export default {
 		autologout() {
 			return this.$store.getters.didAutologout;
 		},
+		isAuth() {
+			return this.$store.getters.isAuth;
+		}
 	},
 	created() {
 		// if (this.isAuthenticated && !this.hasUser) {

@@ -197,5 +197,17 @@
       "accepted": "Accepted",
       "rejected": "Rejected"
     }
+  },
+  "view": {
+    "password_recovery": {
+      "title": "Recover your TravelApp password",
+      "email": "Email",
+      "subtitle": "Tell us the email address associated with your TravelApp account, and we’ll send you an email with a link to reset your password",
+      "continue": "Continue",
+      "success_title": "Password recovery started",
+      "success": " Thanks! If your TravelApp email address match, you'll get an email with a link to reset your password shortly. ",
+      "error": "There was an error processing the information. Please try again later.",
+      "login": "Click here to go to login page."
+    }
   }
 }

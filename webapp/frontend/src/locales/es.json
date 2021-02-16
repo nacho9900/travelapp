@@ -198,5 +198,16 @@
       "accepted": "Aceptado",
       "rejected": "Rechazado"
     }
+  },
+  "view": {
+    "password_recovery": {
+      "title": "Recupera tu contraseña de TravelApp",
+      "email": "Email",
+      "subtitle": "Completando esta información, recibirás un correo indicando los pasos a seguir para recuperar tu contraseña",
+      "continue": "Continuar",
+      "success": "Gracias! si tu email coincide con una cuenta de TravelApp, recibirás un email con un link para reiniciar tu contraseña a la brevedad.",
+      "error": "Ocurrio un error al procesar la informacion. Por favor, intente nuevamente más tarde.",
+      "login": "Haga click aqui para ir al inicio de sesion"
+    }
   }
 }
