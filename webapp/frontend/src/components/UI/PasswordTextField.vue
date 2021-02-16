@@ -9,6 +9,7 @@
 		:rules="rules"
 		:disabled="disabled"
 		@click:append="toggleInputPasswordType"
+		validate-on-blur
 	>
 	</v-text-field>
 </template>

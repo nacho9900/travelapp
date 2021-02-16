@@ -208,6 +208,11 @@
       "success": "Gracias! si tu email coincide con una cuenta de TravelApp, recibirás un email con un link para reiniciar tu contraseña a la brevedad.",
       "error": "Ocurrio un error al procesar la informacion. Por favor, intente nuevamente más tarde.",
       "login": "Haga click aqui para ir al inicio de sesion"
+    },
+    "change_password": {
+      "success": "Su contraseña fue modificada con éxito.",
+      "not_found_or_expired": "Su proceso de recuperación de contraseña a expirado o usted ingreso una url incorrecta.",
+      "error": "Ocurrió un error al cambiar su contraseña. Por favor, intente nuevamente más tarde."
     }
   }
 }

@@ -208,6 +208,11 @@
       "success": " Thanks! If your TravelApp email address match, you'll get an email with a link to reset your password shortly. ",
       "error": "There was an error processing the information. Please try again later.",
       "login": "Click here to go to login page."
+    },
+    "change_password": {
+      "success": "Your password has been changed successfully.",
+      "not_found_or_expired": "Your password recovery process has expired or you enter a wrong url.",
+      "error": "There was an error changing your password. Please, try again later."
     }
   }
 }

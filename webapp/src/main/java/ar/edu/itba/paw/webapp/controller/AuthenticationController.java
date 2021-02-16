@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.dto.authentication.AuthDto;
 import ar.edu.itba.paw.webapp.dto.authentication.AuthRequestDto;
 import ar.edu.itba.paw.webapp.dto.authentication.PasswordRecoveryDto;
 import ar.edu.itba.paw.webapp.dto.authentication.SignUpDto;
+import ar.edu.itba.paw.webapp.dto.authentication.TokenPasswordDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
 import ar.edu.itba.paw.webapp.dto.users.UserDto;
@@ -27,6 +28,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
@@ -117,6 +119,33 @@ public class AuthenticationController extends BaseController
 
         mailingService.sendPasswordRecoveryEmail( user.getFirstname() + "" + user.getLastname(), user.getEmail(),
                                                   token.getToken().toString(), getFrontendUrl() );
+
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path( "/change-password" )
+    public Response changePassword( @RequestBody TokenPasswordDto tokenPasswordDto ) {
+        Set<ConstraintViolation<TokenPasswordDto>> violations = validator.validate( tokenPasswordDto );
+
+        if ( !violations.isEmpty() ) {
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+        }
+
+        Optional<PasswordRecoveryToken> maybeToken = passwordRecoveryTokenService.findByToken(
+                tokenPasswordDto.getToken() );
+
+        if ( !maybeToken.isPresent() || maybeToken.get().getExpiresIn().isBefore( LocalDateTime.now() ) ||
+             maybeToken.get().isUsed() ) {
+            return Response.status( Response.Status.NOT_FOUND ).build();
+        }
+
+        passwordRecoveryTokenService.markAsUsed(maybeToken.get());
+
+        User user = maybeToken.get().getUser();
+
+        userService.changePassword( user, tokenPasswordDto.getPassword() );
 
         return Response.ok().build();
     }

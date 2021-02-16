@@ -14,4 +14,6 @@ public interface PasswordRecoveryTokenDao
     PasswordRecoveryToken update( PasswordRecoveryToken token );
 
     PasswordRecoveryToken create( UUID token, LocalDateTime expiresIn, User user );
+
+    Optional<PasswordRecoveryToken> findByToken( UUID token );
 }

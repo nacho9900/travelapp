@@ -6,6 +6,10 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: '/',
+    redirect: { name: 'Home' }
+  },
+  {
     path: '/home',
     name: 'Home',
     component: () => import("views/home/Home.vue"),
@@ -53,6 +57,13 @@ const routes = [
     name: 'PasswordRecovery',
     component: () => import("views/authentication/PasswordRecovery.vue"),
     meta: { requireUnauth: true }
+  },
+  {
+    path: '/recovery/:token',
+    name: 'ChangePassword',
+    component: () => import("views/authentication/ChangePassword.vue"),
+    meta: { requireUnauth: true },
+    props: true,
   },
   {
     path: '/:notFound(.*)',

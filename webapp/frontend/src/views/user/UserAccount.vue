@@ -31,6 +31,7 @@
 				<change-password-form
 					:loading="loadingChangePassword"
 					@submit="changePassword"
+					current
 				></change-password-form>
 			</v-col>
 		</v-row>

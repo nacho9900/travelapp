@@ -34,8 +34,17 @@ public class PasswordRecoveryTokenHibernateDao implements PasswordRecoveryTokenD
 
     @Override
     public PasswordRecoveryToken create( UUID token, LocalDateTime expiresIn, User user ) {
-        PasswordRecoveryToken passwordRecoveryToken = new PasswordRecoveryToken(token, expiresIn, user);
+        PasswordRecoveryToken passwordRecoveryToken = new PasswordRecoveryToken( token, expiresIn, user );
         em.persist( passwordRecoveryToken );
         return passwordRecoveryToken;
+    }
+
+    @Override
+    public Optional<PasswordRecoveryToken> findByToken( UUID token ) {
+        final TypedQuery<PasswordRecoveryToken> query = em.createQuery(
+                "select t from PasswordRecoveryToken as t inner join fetch t.user as u where t.token = :token",
+                PasswordRecoveryToken.class );
+        query.setParameter( "token", token );
+        return query.getResultList().stream().findFirst();
     }
 }

@@ -19,6 +19,7 @@ public class PasswordRecoveryTokenServiceImpl implements PasswordRecoveryTokenSe
     @Autowired
     private PasswordRecoveryTokenDao passwordRecoveryTokenDao;
 
+    @Override
     public Optional<PasswordRecoveryToken> findByUserId( long userId ) {
         return passwordRecoveryTokenDao.findByUserId( userId );
     }
@@ -36,6 +37,17 @@ public class PasswordRecoveryTokenServiceImpl implements PasswordRecoveryTokenSe
         else {
             return passwordRecoveryTokenDao.create( UUID.randomUUID(), LocalDateTime.now().plusHours( 3 ), user );
         }
+    }
+
+    @Override
+    public Optional<PasswordRecoveryToken> findByToken( UUID token ) {
+        return passwordRecoveryTokenDao.findByToken(token);
+    }
+
+    @Override
+    public void markAsUsed( PasswordRecoveryToken token ) {
+        token.setUsed( true );
+        update( token );
     }
 
     private PasswordRecoveryToken update( PasswordRecoveryToken token ) {

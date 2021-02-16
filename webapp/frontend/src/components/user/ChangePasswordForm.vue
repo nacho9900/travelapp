@@ -6,7 +6,7 @@
 			}}</v-card-title>
 			<v-card-text>
 				<v-container fluid>
-					<v-col cols="12">
+					<v-col cols="12" v-if="current">
 						<password-text-field
 							v-model="passwordCurrent"
 							:label="
@@ -15,7 +15,7 @@
 								)
 							"
 							:rules="requiredRule"
-							:disabled="loading"
+							:disabled="loading || success"
 							dense
 						>
 						</password-text-field>
@@ -33,7 +33,7 @@
 									.concat(passwordRules)
 									.concat(repeatPasswordRule)
 							"
-							:disabled="loading"
+							:disabled="loading || success"
 							dense
 						>
 						</password-text-field>
@@ -51,20 +51,23 @@
 									.concat(passwordRules)
 									.concat(repeatPasswordRule)
 							"
-							:disabled="loading"
+							:disabled="loading || success"
 							dense
 						>
 						</password-text-field>
 					</v-col>
 				</v-container>
 			</v-card-text>
+			<v-card-subtitle v-if="success" class="pt-0">
+				<slot name="success"></slot>
+			</v-card-subtitle>
 			<v-card-actions>
 				<v-container class="pt-0" fluid>
 					<v-col cols="6" class="pt-0">
 						<v-btn
 							color="primary"
 							type="submit"
-							:disabled="loading"
+							:disabled="loading || success"
 							>{{
 								$t(
 									"components.user.change_password_form.change_password"
@@ -84,6 +87,8 @@ import { requiredRule, passwordRules } from "../../rules.js";
 export default {
 	props: {
 		loading: Boolean,
+		current: Boolean,
+		success: Boolean,
 	},
 	data() {
 		return {
@@ -104,10 +109,15 @@ export default {
 	methods: {
 		submit() {
 			if (this.$refs.form.validate()) {
-				this.$emit("submit", {
+				const data = {
 					passwordNew: this.passwordNew,
-					passwordCurrent: this.passwordCurrent,
-				});
+				};
+
+				if (this.current) {
+					data.passwordCurrent = this.passwordCurrent;
+				}
+
+				this.$emit("submit", data);
 			}
 		},
 	},

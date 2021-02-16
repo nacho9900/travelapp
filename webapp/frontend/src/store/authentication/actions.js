@@ -100,5 +100,8 @@ export default {
     },
     async passwordRecovery(_, payload) {
         await Axios.post("/auth/password-recovery", payload);    
+    },
+    async changePasswordRecovery(_, payload) {
+        await Axios.post("/auth/change-password", payload);
     }
 };

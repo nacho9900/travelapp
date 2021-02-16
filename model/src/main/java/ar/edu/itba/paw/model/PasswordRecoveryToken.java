@@ -27,6 +27,8 @@ public class PasswordRecoveryToken
     private UUID token;
     @Column( nullable = false )
     private LocalDateTime expiresIn;
+    @Column( nullable = false )
+    private boolean used;
 
     /////////////////
 
@@ -62,6 +64,14 @@ public class PasswordRecoveryToken
 
     public void setUser( User user ) {
         this.user = user;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed( boolean used ) {
+        this.used = used;
     }
 
     public PasswordRecoveryToken() {
