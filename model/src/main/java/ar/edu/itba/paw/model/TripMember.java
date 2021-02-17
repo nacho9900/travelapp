@@ -51,7 +51,7 @@ public class TripMember
                cascade = CascadeType.ALL )
     private TripRate rate;
 
-    @OneToMany( fetch = FetchType.EAGER,
+    @OneToMany( fetch = FetchType.LAZY,
                 mappedBy = "member",
                 cascade = CascadeType.ALL )
     private List<TripComment> comments = new LinkedList<>();
@@ -80,10 +80,15 @@ public class TripMember
         this.setComments( comments );
     }
 
+    public TripMember(Trip trip, TripMemberRole role, Boolean isActive, User user) {
+        this(role, isActive, user);
+        this.setTrip( trip );
+    }
+
     public TripMember( TripMemberRole role, Boolean isActive, User user ) {
         this.role = role;
         this.isActive = isActive;
-        this.user = user;
+        setUser( user );
     }
 
     public long getId() {

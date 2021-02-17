@@ -563,6 +563,79 @@ public class TripController extends BaseController
         return Response.ok().entity( TripJoinRequestDto.fromTripJoinRequest( request, false ) ).build();
     }
 
+    @GET
+    @Path( "/{id}/join" )
+    public Response getAllJoinRequest( @PathParam( "id" ) long id ) {
+        Optional<Trip> maybeTrip = tripService.findById( id );
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if ( !maybeTrip.isPresent() ) {
+            return TripNotFound();
+        }
+
+        if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        List<TripJoinRequest> joinRequests = tripJoinRequestService.getAllPendingByTripId( id );
+
+        return Response.ok().entity(
+                joinRequests.stream().map( x -> TripJoinRequestDto.fromTripJoinRequest( x, true ) ) ).build();
+    }
+
+    @POST
+    @Path( "/{id}/join/{requestId}/accept" )
+    public Response acceptRequest( @PathParam( "id" ) long id, @PathParam( "requestId" ) long requestId ) {
+        Optional<Trip> maybeTrip = tripService.findById( id );
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if ( !maybeTrip.isPresent() ) {
+            return TripNotFound();
+        }
+
+        if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        Optional<TripJoinRequest> maybeJoinRequest = tripJoinRequestService.findById( requestId );
+
+        if ( !maybeJoinRequest.isPresent() ) {
+            return Response.status( Response.Status.NOT_FOUND )
+                           .entity( new ErrorDto( "Join Request not found" ) )
+                           .build();
+        }
+
+        TripMember tripMember = tripJoinRequestService.accept( maybeJoinRequest.get() );
+
+        return Response.ok().entity( TripMemberDto.fromTripMember( tripMember, false, false ) ).build();
+    }
+
+    @POST
+    @Path( "/{id}/join/{requestId}/reject" )
+    public Response rejectRequest( @PathParam( "id" ) long id, @PathParam( "requestId" ) long requestId ) {
+        Optional<Trip> maybeTrip = tripService.findById( id );
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if ( !maybeTrip.isPresent() ) {
+            return TripNotFound();
+        }
+
+        if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        Optional<TripJoinRequest> maybeJoinRequest = tripJoinRequestService.findById( requestId );
+
+        if ( !maybeJoinRequest.isPresent() ) {
+            return Response.status( Response.Status.NOT_FOUND )
+                           .entity( new ErrorDto( "Join Request not found" ) )
+                           .build();
+        }
+
+        tripJoinRequestService.reject( maybeJoinRequest.get() );
+
+        return Response.ok().build();
+    }
     //endregion
 
     private static Response TripNotFound() {

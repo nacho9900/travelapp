@@ -2,7 +2,10 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.TripMemberDao;
 import ar.edu.itba.paw.interfaces.TripMemberService;
+import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripMember;
+import ar.edu.itba.paw.model.TripMemberRole;
+import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +46,12 @@ public class TripMemberServiceImpl implements TripMemberService
     }
 
     @Override
-    public TripMember update(TripMember tripMember) {
+    public TripMember update( TripMember tripMember ) {
         return tripMemberDao.update( tripMember );
+    }
+
+    @Override
+    public TripMember create( Trip trip, User user ) {
+        return tripMemberDao.create( trip, user, TripMemberRole.MEMBER, true );
     }
 }

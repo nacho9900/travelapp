@@ -1,12 +1,17 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripMemberDao;
+import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripMember;
+import ar.edu.itba.paw.model.TripMemberRole;
+import ar.edu.itba.paw.model.TripRate;
+import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,5 +63,14 @@ public class TripMemberHibernateDao implements TripMemberDao
     @Override
     public TripMember update(TripMember tripMember) {
         return em.merge( tripMember );
+    }
+
+    @Override
+    public TripMember create( Trip trip, User user, TripMemberRole role, boolean active ) {
+        TripMember member = new TripMember( trip, role, active, user );
+        TripRate rate = new TripRate( 0, LocalDateTime.now() );
+        member.setRate( rate );
+        em.persist( member );
+        return member;
     }
 }

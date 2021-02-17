@@ -166,7 +166,10 @@
       },
       "trip_members": {
         "get_error": "There was an error trying to obtain the trip membes. Please, try again later.",
-        "not_members": "You must be a member to see the other members of the trip."
+        "not_members": "You must be a member to see the other members of the trip.",
+        "members": "Active Members",
+        "join_request": "Join Requests",
+        "get_requests_error": "There was an error trying to obtain the join requests. Please, try again later."
       },
       "trip_join_button": {
         "exit_trip": "Exit trip",
@@ -180,6 +183,11 @@
       "trip_join_form": {
         "message_size_rule": "the length of the message must be less than 255 characters",
         "error": "There was an error trying to send your join request. Please, try again later."
+      },
+      "trip_join_request_card": {
+        "accept": "Accept",
+        "reject": "Reject",
+        "accept_error": "There was an error accepting the join request. Please, try again later."
       }
     },
     "user": {

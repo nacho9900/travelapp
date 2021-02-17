@@ -37,10 +37,11 @@ public class TripJoinRequestHibernateDao implements TripJoinRequestDao
     @Override
     public List<TripJoinRequest> getAllByTripIdAndStatus( long tripId, TripJoinRequestStatus status ) {
         TypedQuery<TripJoinRequest> query = em.createQuery(
-                "from Trip as t inner join t.joinRequests as r where t.id = :tripId and r.status = :status",
+                "select r from TripJoinRequest as r inner join fetch r.user as u inner join r.trip as t where t.id = " +
+                ":tripId and r.status = :status",
                 TripJoinRequest.class );
         query.setParameter( "tripId", tripId );
-        query.setParameter( "status", status.name() );
+        query.setParameter( "status", status );
         return query.getResultList();
     }
 

@@ -1,9 +1,9 @@
 <template>
 	<v-card>
 		<v-app-bar flat color="rgba(0, 0, 0, 0)">
-			<v-toolbar-title>{{ fullname }}</v-toolbar-title>
+			<v-toolbar-title class="font-weight-regular">{{ fullname }}</v-toolbar-title>
 			<v-spacer></v-spacer>
-			<v-chip :color="roleObj.color">{{ roleObj.text }}</v-chip>
+			<v-chip class="black--text" :color="roleObj.color">{{ roleObj.text }}</v-chip>
 			<v-menu v-if="actions" bottom right>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn color="primary" icon v-bind="attrs" v-on="on">

@@ -41,36 +41,38 @@ export default {
 	},
 	computed: {
 		buttonText() {
-			if (this.member) {
+			if (this.hasMember) {
 				return this.$t("components.trips.trip_join_button.exit_trip");
-			} else if (!this.status) {
+			} else if (this.canJoin) {
 				return this.$t("components.trips.trip_join_button.join");
-			} else if (this.status === "PENDING") {
+			} else {
 				return this.$t("components.trips.trip_join_button.pending");
 			}
-
-			return "";
 		},
 		buttonColor() {
-			if (this.member) {
+			if (this.hasMember) {
 				return "error";
 			}
 
 			return "primary";
 		},
 		buttonDisabled() {
-			return !this.member && !!this.status;
+			return !this.hasMember && !this.canJoin;
 		},
 		buttonIcon() {
-			if (this.member) {
+			if (this.hasMember) {
 				return "mdi-logout";
-			} else if (!this.status) {
+			} else if (this.canJoin) {
 				return "mdi-account-plus";
-			} else if (this.status === "PENDING") {
+			} else {
 				return "mdi-account-clock";
 			}
-
-			return "";
+		},
+		hasMember() {
+			return !!this.member;
+		},
+		canJoin() {
+			return !this.status || this.status !== "PENDING";
 		},
 	},
 	methods: {

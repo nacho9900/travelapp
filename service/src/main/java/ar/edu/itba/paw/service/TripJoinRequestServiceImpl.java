@@ -2,9 +2,11 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.TripJoinRequestDao;
 import ar.edu.itba.paw.interfaces.TripJoinRequestService;
+import ar.edu.itba.paw.interfaces.TripMemberService;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripJoinRequest;
 import ar.edu.itba.paw.model.TripJoinRequestStatus;
+import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,14 @@ public class TripJoinRequestServiceImpl implements TripJoinRequestService
     @Autowired
     TripJoinRequestDao tripJoinRequestDao;
 
+    @Autowired
+    TripMemberService tripMemberService;
+
     @Override
-    public TripJoinRequest accept( TripJoinRequest tripJoinRequest ) {
-        return updateStatus( tripJoinRequest, TripJoinRequestStatus.ACCEPTED );
+    public TripMember accept( TripJoinRequest tripJoinRequest ) {
+        TripMember member = tripMemberService.create( tripJoinRequest.getTrip(), tripJoinRequest.getUser() );
+        updateStatus( tripJoinRequest, TripJoinRequestStatus.ACCEPTED );
+        return member;
     }
 
     @Override

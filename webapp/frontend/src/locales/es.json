@@ -167,7 +167,10 @@
       },
       "trip_members": {
         "get_error": "Ocurrio un error al querer obtener los miembros del viaje. Por favor, intente nuevamente más tarde.",
-        "not_members": "Debes ser un miembre para ver los demas miembros del viaje"
+        "not_members": "Debes ser un miembre para ver los demas miembros del viaje",
+        "members": "Miembros Activos",
+        "join_request": "Solicitudes de Miembro",
+        "get_requests_error": "Ocurrio un error al querer obtener las solicitudes de miembro. Por favor, intente nuevamente más tarde."
       },
       "trip_join_button": {
         "exit_trip": "Abondanar viaje",
@@ -181,6 +184,11 @@
       "trip_join_form": {
         "message_size_rule": "el largo del mensaje no puede ser superior a 255 caracteres",
         "error": "Ocurrió un error al intentar enviar su solicitud de miembro. Por favor, intente nuevamente más tarde."
+      },
+      "trip_join_request_card": {
+        "accept": "Aceptar",
+        "reject": "Rechazar",
+        "accept_error": "Ocurrió un error al aceptar la solicitud de miembro. Por favor, intente nuevamente más tarde."
       }
     },
     "user": {
