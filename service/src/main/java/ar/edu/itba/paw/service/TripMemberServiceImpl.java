@@ -36,7 +36,7 @@ public class TripMemberServiceImpl implements TripMemberService
     }
 
     @Override
-    public Optional<TripMember> findByTripIdAndUsername( String username, long tripId ) {
+    public Optional<TripMember> findByTripIdAndUsername( long tripId, String username ) {
         return tripMemberDao.findByTripIdAndUsername( username, tripId );
     }
 

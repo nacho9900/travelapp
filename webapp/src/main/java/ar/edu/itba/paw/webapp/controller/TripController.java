@@ -2,14 +2,15 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ActivityService;
 import ar.edu.itba.paw.interfaces.PlaceService;
+import ar.edu.itba.paw.interfaces.TripCommentsService;
 import ar.edu.itba.paw.interfaces.TripJoinRequestService;
 import ar.edu.itba.paw.interfaces.TripMemberService;
 import ar.edu.itba.paw.interfaces.TripPicturesService;
 import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Activity;
-import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.TripJoinRequest;
 import ar.edu.itba.paw.model.TripJoinRequestStatus;
 import ar.edu.itba.paw.model.TripMember;
@@ -21,6 +22,8 @@ import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
 import ar.edu.itba.paw.webapp.dto.trips.ActivityDto;
 import ar.edu.itba.paw.webapp.dto.trips.ActivityListDto;
+import ar.edu.itba.paw.webapp.dto.trips.CommentDto;
+import ar.edu.itba.paw.webapp.dto.trips.CommentListDto;
 import ar.edu.itba.paw.webapp.dto.trips.FileDto;
 import ar.edu.itba.paw.webapp.dto.trips.JoinTripDto;
 import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
@@ -88,6 +91,9 @@ public class TripController extends BaseController
     @Autowired
     private TripJoinRequestService tripJoinRequestService;
 
+    @Autowired
+    private TripCommentsService tripCommentsService;
+
     //region trip
 
     @POST
@@ -137,7 +143,7 @@ public class TripController extends BaseController
 
         TripDto tripDto = TripDto.fromTrip( maybeTrip.get() );
 
-        tripMemberService.findByTripIdAndUsername( username, id ).ifPresent(
+        tripMemberService.findByTripIdAndUsername( id, username ).ifPresent(
                 tripMember -> tripDto.setRole( tripMember.getRole().name() ) );
 
         if ( tripDto.getRole() == null ) {
@@ -182,7 +188,7 @@ public class TripController extends BaseController
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( username, id );
+        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username );
 
         if ( !maybeLoggedMember.isPresent() || maybeLoggedMember.get().getRole() == TripMemberRole.MEMBER ) {
             return Response.status( Response.Status.UNAUTHORIZED ).build();
@@ -218,7 +224,7 @@ public class TripController extends BaseController
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( username, id );
+        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username );
 
         if ( !maybeLoggedMember.isPresent() || maybeLoggedMember.get().getRole() == TripMemberRole.MEMBER ) {
             return Response.status( Response.Status.UNAUTHORIZED ).build();
@@ -302,12 +308,8 @@ public class TripController extends BaseController
             return TripNotFound();
         }
 
-        Activity activity = activityDto.toActivity();
-
-        Place place = getOrCreatePlaceIfNotExists( activity.getPlace() );
-
-        activity = activityService.create( activity.getName(), place, maybeTrip.get(), activity.getStartDate(),
-                                           activity.getEndDate() );
+        Activity activity = activityService.create( activityDto.getName(), maybeTrip.get(), activityDto.getStartDate(),
+                                                    activityDto.getEndDate(), activityDto.getPlace().toPlace() );
 
         return Response.ok().entity( ActivityDto.fromActivity( activity ) ).build();
     }
@@ -319,7 +321,7 @@ public class TripController extends BaseController
 
         ActivityListDto activities = ActivityListDto.fromActivityList( activityService.findByTrip( id ) );
 
-        tripMemberService.findByTripIdAndUsername( username, id ).ifPresent(
+        tripMemberService.findByTripIdAndUsername( id, username ).ifPresent(
                 tripMember -> activities.setRole( tripMember.getRole().name() ) );
 
         return Response.ok().entity( activities ).build();
@@ -352,8 +354,6 @@ public class TripController extends BaseController
         }
 
         Activity activity = activityDto.toActivity();
-        Place place = getOrCreatePlaceIfNotExists( activityDto.getPlace().toPlace() );
-        activity.setPlace( place );
         activity.setTrip( maybeTrip.get() );
         activity = activityService.update( activity );
 
@@ -378,20 +378,6 @@ public class TripController extends BaseController
         return Response.ok().build();
     }
 
-
-    private Place getOrCreatePlaceIfNotExists( Place place ) {
-        Optional<Place> maybePlace = placeService.findByGoogleId( place.getGoogleId() );
-
-        if ( maybePlace.isPresent() ) {
-            place = maybePlace.get();
-        }
-        else {
-            place = placeService.create( place.getGoogleId(), place.getName(), place.getLatitude(),
-                                         place.getLongitude(), place.getAddress() );
-        }
-        return place;
-    }
-
     //endregion
 
     //region member
@@ -409,7 +395,7 @@ public class TripController extends BaseController
         TripMemberListDto tripMemberListDto = TripMemberListDto.fromMembersList(
                 tripMemberService.getAllByTripId( id ) );
 
-        tripMemberService.findByTripIdAndUsername( username, id ).ifPresent(
+        tripMemberService.findByTripIdAndUsername( id, username ).ifPresent(
                 tripMember -> tripMemberListDto.setRole( tripMember.getRole().name() ) );
 
         return Response.ok().entity( tripMemberListDto ).build();
@@ -421,7 +407,7 @@ public class TripController extends BaseController
         Optional<Trip> maybeTrip = tripService.findById( id );
         Optional<TripMember> maybeMember = tripMemberService.findById( memberId );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( username, id );
+        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username );
 
         if ( !maybeTrip.isPresent() || !maybeMember.isPresent() || !maybeLoggedMember.isPresent() ||
              !tripMemberService.memberBelongsToTheTrip( memberId, id ) ) {
@@ -446,7 +432,7 @@ public class TripController extends BaseController
         Optional<Trip> maybeTrip = tripService.findById( id );
         Optional<TripMember> maybeMember = tripMemberService.findById( memberId );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( username, id );
+        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username );
 
         if ( !maybeTrip.isPresent() || !maybeMember.isPresent() || !maybeLoggedMember.isPresent() ||
              !tripMemberService.memberBelongsToTheTrip( memberId, id ) ) {
@@ -482,7 +468,7 @@ public class TripController extends BaseController
     public Response changeRate( @PathParam( "id" ) long id, @PathParam( "rate" ) int rate ) {
         Optional<Trip> maybeTrip = tripService.findById( id );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( username, id );
+        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username );
 
         if ( !maybeTrip.isPresent() || !maybeLoggedMember.isPresent() ) {
             return TripNotFound();
@@ -505,7 +491,7 @@ public class TripController extends BaseController
     public Response exitTrip( @PathParam( "id" ) long id ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<TripMember> maybeMember = tripMemberService.findByTripIdAndUsername( username, id );
+        Optional<TripMember> maybeMember = tripMemberService.findByTripIdAndUsername( id, username );
 
         if ( !maybeMember.isPresent() ) {
             return TripNotFound();
@@ -636,6 +622,44 @@ public class TripController extends BaseController
 
         return Response.ok().build();
     }
+
+    //endregion
+
+    //region comments
+
+    @POST
+    @Path( "/{id}/comment" )
+    public Response createComment( @PathParam( "id" ) long id, @RequestBody CommentDto commentDto ) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Optional<TripMember> maybeMember = tripMemberService.findByTripIdAndUsername( id, username );
+
+        if ( !maybeMember.isPresent() ) {
+            return Response.status( Response.Status.NOT_FOUND ).entity(
+                    new ErrorDto( "trip not found or user not member" ) ).build();
+        }
+
+        TripComment comment = tripCommentsService.create( maybeMember.get(), commentDto.getComment() );
+
+        return Response.ok().entity( CommentDto.fromComment( comment, true ) ).build();
+    }
+
+    @GET
+    @Path( "/{id}/comment" )
+    public Response getAllComments( @PathParam( "id" ) long id ) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Optional<TripMember> member = tripMemberService.findByTripIdAndUsername( id, username );
+
+        if ( !member.isPresent() ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        List<TripComment> comments = tripCommentsService.getAllByTripId( id );
+
+        return Response.ok().entity( CommentListDto.fromMemberAndComments( member.get(), comments ) ).build();
+    }
+
     //endregion
 
     private static Response TripNotFound() {

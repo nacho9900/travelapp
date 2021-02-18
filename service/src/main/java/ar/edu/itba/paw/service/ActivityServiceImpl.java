@@ -3,6 +3,7 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.ActivityDao;
 import ar.edu.itba.paw.interfaces.ActivityService;
+import ar.edu.itba.paw.interfaces.PlaceService;
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
@@ -21,6 +22,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     ActivityDao activityDao;
 
+    @Autowired
+    PlaceService placeService;
+
     @Override
     public Optional<Activity> findById(long id) {
         return activityDao.findById(id);
@@ -32,8 +36,12 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Activity create(String name, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
-        return activityDao.create(name, place, trip, startDate, endDate);
+    public Activity create( String name, Trip trip, LocalDate startDate, LocalDate endDate, Place place ) {
+        place = placeService.createIfNotExists( place.getGoogleId(), place.getName(),
+                                                place.getLatitude(), place.getLongitude(),
+                                                place.getAddress() );
+
+        return activityDao.create( name, trip, startDate, endDate, place );
     }
 
     @Override
@@ -48,6 +56,11 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public Activity update( Activity activity ) {
+        Place place = activity.getPlace();
+        place = placeService.createIfNotExists( place.getGoogleId(), place.getName(),
+                                                place.getLatitude(), place.getLongitude(),
+                                                place.getAddress() );
+        activity.setPlace( place );
         return activityDao.update( activity );
     }
 

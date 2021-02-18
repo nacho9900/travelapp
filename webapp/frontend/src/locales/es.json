@@ -189,6 +189,9 @@
         "accept": "Aceptar",
         "reject": "Rechazar",
         "accept_error": "Ocurrió un error al aceptar la solicitud de miembro. Por favor, intente nuevamente más tarde."
+      },
+      "trip_commments": {
+        "get_error": "Ocurrio un error al obtener los comentarios. Por favor, intente nuevamente más tarde."
       }
     },
     "user": {

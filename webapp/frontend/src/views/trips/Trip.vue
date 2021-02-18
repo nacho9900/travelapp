@@ -50,21 +50,7 @@
 					>
 						<v-tab>{{ $t("views.trip.comments") }}</v-tab>
 						<v-tab-item>
-							<v-card-text class="px-2 pb-2">
-								<v-container fluid class="pb-0">
-									<v-row>
-										<v-col cols="12" class="px-0">
-											<trip-comments-timeline>
-											</trip-comments-timeline>
-										</v-col>
-									</v-row>
-									<v-row>
-										<v-col cols="12" class="px-0">
-											<trip-new-comment-box></trip-new-comment-box>
-										</v-col>
-									</v-row>
-								</v-container>
-							</v-card-text>
+							<trip-comments :id="id"></trip-comments>
 						</v-tab-item>
 					</v-tabs>
 				</v-card>
@@ -75,18 +61,16 @@
 
 <script>
 import TripCard from "components/trips/TripCard.vue";
-import TripCommentsTimeline from "components/trips/TripCommentsTimeline.vue";
-import TripNewCommentBox from "components/trips/TripNewCommentBox.vue";
 import TripActivities from "components/trips/TripActivities.vue";
 import TripMembers from "components/trips/TripMembers.vue";
+import TripComments from "components/trips/TripComments.vue";
 
 export default {
 	components: {
 		TripCard,
-		TripCommentsTimeline,
-		TripNewCommentBox,
 		TripActivities,
 		TripMembers,
+		TripComments,
 	},
 	props: {
 		id: {

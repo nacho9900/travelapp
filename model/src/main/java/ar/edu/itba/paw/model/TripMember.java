@@ -46,7 +46,7 @@ public class TripMember
                 optional = false )
     private User user;
 
-    @OneToOne( fetch = FetchType.EAGER,
+    @OneToOne( fetch = FetchType.LAZY,
                mappedBy = "member",
                cascade = CascadeType.ALL )
     private TripRate rate;

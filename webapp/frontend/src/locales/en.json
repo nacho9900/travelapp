@@ -188,6 +188,9 @@
         "accept": "Accept",
         "reject": "Reject",
         "accept_error": "There was an error accepting the join request. Please, try again later."
+      },
+      "trip_commments": {
+        "get_error": "There was an error obteining the trip comments. Please, try again later."
       }
     },
     "user": {

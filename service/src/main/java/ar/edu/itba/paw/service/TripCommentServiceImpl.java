@@ -10,25 +10,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class TripCommentServiceImpl implements TripCommentsService {
-
+public class TripCommentServiceImpl implements TripCommentsService
+{
     @Autowired
     TripCommentsDao tripCommentsDao;
 
     @Override
-    public TripComment create( TripMember member, String comment) {
-
-        return tripCommentsDao.create(member, comment);
+    public TripComment create( TripMember member, String comment ) {
+        return tripCommentsDao.create( member, comment );
     }
 
     @Override
-    public Optional<TripComment> getById(long id) {
-        return tripCommentsDao.findById(id);
+    public Optional<TripComment> getById( long id ) {
+        return tripCommentsDao.findById( id );
     }
 
-
+    @Override
+    public List<TripComment> getAllByTripId( long tripId ) {
+        return tripCommentsDao.getAllByTripId( tripId );
+    }
 }

@@ -6,13 +6,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.cglib.core.Local;
 
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.UriInfo;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 
 @JsonInclude( JsonInclude.Include.NON_NULL )
 public class CommentDto
@@ -22,11 +18,9 @@ public class CommentDto
     @NotBlank
     @Length( max = 160 )
     private String comment;
-    @NotNull
     @JsonFormat( shape = JsonFormat.Shape.STRING,
                  pattern = "yyyy-MM-dd hh:MM:ss" )
     private LocalDateTime createdOn;
-    @NotNull
     private TripMemberDto member;
 
     public CommentDto() {
@@ -45,6 +39,10 @@ public class CommentDto
         return createdOn;
     }
 
+    public TripMemberDto getMember() {
+        return member;
+    }
+
     public TripComment toTripComment() {
         LocalDateTime createdOn = this.createdOn;
 
@@ -61,11 +59,9 @@ public class CommentDto
         if ( includeMember ) {
             TripMember tripMember = tripComment.getMember();
             if ( tripMember != null ) {
-                commentDto.member = TripMemberDto.fromTripMember( tripMember, true, false );
-
+                commentDto.member = TripMemberDto.fromTripMember( tripMember, false, false );
             }
         }
-
 
         return commentDto;
     }

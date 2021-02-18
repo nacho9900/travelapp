@@ -12,7 +12,7 @@ public interface TripMemberService
     Optional<TripMember> findById( long id);
     List<TripMember> getAllByTripId( long tripId);
     boolean memberBelongsToTheTrip( long id, long tripId );
-    Optional<TripMember> findByTripIdAndUsername( String username, long tripId );
+    Optional<TripMember> findByTripIdAndUsername( long tripId, String username );
     void delete(long id);
     TripMember update( TripMember tripMember );
 

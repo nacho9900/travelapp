@@ -39,9 +39,9 @@ public class ActivityHibernateDao implements ActivityDao
     }
 
     @Override
-    public Activity create( String name, Place place, Trip trip, LocalDate startDate,
-                            LocalDate endDate ) {
+    public Activity create( String name, Trip trip, LocalDate startDate, LocalDate endDate, Place place ) {
         Activity activity = new Activity( name, place, trip, startDate, endDate );
+        activity.setPlace( place );
         em.persist( activity );
         return activity;
     }

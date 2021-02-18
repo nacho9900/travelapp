@@ -6,6 +6,7 @@ import googleModule from './google/index.js';
 import activityModule from './activity/index.js';
 import memberModule from './member/index.js';
 import requestModule from './request/index.js';
+import commentModule from './comment/index.js';
 
 Vue.use(Vuex);
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
     google: googleModule,
     activity: activityModule,
     member: memberModule,
-    request: requestModule
+    request: requestModule,
+    comment: commentModule
   }
 });
