@@ -14,11 +14,12 @@
 				:dense="dense"
 				:outlined="outlined"
 				:disabled="disabled"
+				:hide-details="hideDetails"
+				:solo="solo"
 				v-on="on"
 				v-bind="attrs"
 				readonly
 				clearable
-				@focus="dateMenu = true"
 			></v-text-field>
 		</template>
 		<template default>
@@ -43,6 +44,8 @@ export default {
 		outlined: Boolean,
 		rules: Array,
 		disabled: Boolean,
+		solo: Boolean,
+		hideDetails: Boolean,
 	},
 	data() {
 		return {

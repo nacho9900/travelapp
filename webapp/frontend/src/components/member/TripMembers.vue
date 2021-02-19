@@ -71,9 +71,9 @@
 </template>
 
 <script>
+import TripMemberList from "components/member/TripMemberList.vue";
+import TripJoinRequestList from "components/request/TripJoinRequestList.vue";
 import { memberRoles } from "../../enums.js";
-import TripMemberList from "./TripMemberList.vue";
-import TripJoinRequestList from "./TripJoinRequestList.vue";
 
 export default {
 	components: {

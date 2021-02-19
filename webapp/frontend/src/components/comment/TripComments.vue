@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import TripCommentsTimeline from "components/trips/TripCommentsTimeline.vue";
-import TripNewCommentBox from "components/trips/TripNewCommentBox.vue";
+import TripCommentsTimeline from "components/comment/TripCommentsTimeline.vue";
+import TripNewCommentBox from "components/comment/TripNewCommentBox.vue";
 
 export default {
 	props: {

@@ -21,6 +21,20 @@ public class ErrorsDto
         return errors;
     }
 
+    public ErrorsDto addError(String message, String field) {
+        this.errors.add( new ErrorDto(message, field) );
+        return this;
+    }
+
+    public ErrorsDto addError(String message) {
+        this.errors.add( new ErrorDto(message) );
+        return this;
+    }
+
+    public boolean isEmpty() {
+        return this.errors.isEmpty();
+    }
+
     public <T> ErrorsDto addConstraintsViolations( Set<ConstraintViolation<T>> violations ) {
         this.errors.addAll( violations.stream()
                                       .map( ErrorDto::fromConstraintViolation )

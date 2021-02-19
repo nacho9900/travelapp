@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripDao;
+import ar.edu.itba.paw.model.PaginatedResult;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.TripRate;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @Repository
 public class TripHibernateDao implements TripDao
 {
-    private static final int MAX_ROWS = 6;
+    private static final int MAX_ROWS = 12;
 
     @PersistenceContext
     EntityManager em;
@@ -226,5 +227,58 @@ public class TripHibernateDao implements TripDao
     @Override
     public Trip update( Trip trip ) {
         return em.merge( trip );
+    }
+
+    @Override
+    public PaginatedResult<Trip> searchByTextAndNear( String text, Double latitude, Double longitude, LocalDate from,
+                                                      LocalDate to, int page ) {
+        StringBuilder queryString = new StringBuilder(
+                "from Trip as t inner join t.activities as a inner join a.place as p " + "where 1=1 " );
+
+        if ( latitude != null && longitude != null ) {
+            queryString.append( "and 10 < (2 * atan2(sqrt((power(sin(abs((p.latitude - :latitude) * pi()/180)/2),2)" +
+                                "+ cos(p.latitude * pi()/180) * cos(:latitude * pi()/180)" +
+                                "* power(sin((abs(p.longitude - :longitude) * pi()/180)/2) ,2))), " +
+                                "sqrt(1 - ((power(sin(abs((p.latitude - :latitude) * pi()/180)/2),2)" +
+                                "+ cos(p.latitude * pi()/180) * cos(:latitude * pi()/180)" +
+                                "* power(sin((abs(p.longitude - :longitude) * pi()/180)/2) , 2))))) * 6371) " );
+        }
+
+        if ( from != null ) {
+            queryString.append( "and t.startDate >= :from " );
+        }
+
+        if ( to != null ) {
+            queryString.append( "and t.endDate <= :to " );
+        }
+
+        TypedQuery<Trip> query = em.createQuery( "select distinct t " + queryString.toString(), Trip.class );
+        Query queryCount = em.createQuery( "select count( distinct t) " + queryString.toString() );
+
+        if ( latitude != null && longitude != null ) {
+            query.setParameter( "latitude", latitude );
+            query.setParameter( "longitude", longitude );
+            queryCount.setParameter( "latitude", latitude );
+            queryCount.setParameter( "longitude", longitude );
+        }
+
+        if ( from != null ) {
+            query.setParameter( "from", from );
+            queryCount.setParameter( "from", from );
+        }
+
+        if ( to != null ) {
+            query.setParameter( "to", to );
+            queryCount.setParameter( "to", to );
+        }
+
+        int firstResults = ( page - 1 ) * MAX_ROWS;
+
+        query.setFirstResult( firstResults );
+        query.setMaxResults( MAX_ROWS );
+
+        List<Trip> results = query.getResultList();
+        Long total = (Long) queryCount.getSingleResult();
+        return new PaginatedResult<>( results, total, MAX_ROWS, total != 0 && firstResults >= total );
     }
 }

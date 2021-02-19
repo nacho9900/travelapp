@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import TripJoinForm from "./TripJoinForm.vue";
+import TripJoinForm from "components/request/TripJoinForm.vue";
 
 export default {
 	components: {

@@ -61,9 +61,9 @@
 
 <script>
 import TripCard from "components/trips/TripCard.vue";
-import TripActivities from "components/trips/TripActivities.vue";
-import TripMembers from "components/trips/TripMembers.vue";
-import TripComments from "components/trips/TripComments.vue";
+import TripActivities from "components/activity/TripActivities.vue";
+import TripMembers from "components/member/TripMembers.vue";
+import TripComments from "components/comment/TripComments.vue";
 
 export default {
 	components: {

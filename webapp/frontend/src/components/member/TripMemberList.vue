@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import TripMemberCard from "./TripMemberCard.vue";
+import TripMemberCard from "components/member/TripMemberCard.vue";
 
 export default {
 	components: {

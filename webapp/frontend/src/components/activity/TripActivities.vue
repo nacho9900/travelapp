@@ -61,9 +61,9 @@
 </template>
 
 <script>
-import TripActivitiesMap from "./TripActivitiesMap.vue";
-import TripActivitiesList from "./TripActivitiesList.vue";
-import TripActivityForm from "./TripActivityForm.vue";
+import TripActivitiesMap from "components/activity/TripActivitiesMap.vue";
+import TripActivitiesList from "components/activity/TripActivitiesList.vue";
+import TripActivityForm from "components/activity/TripActivityForm.vue";
 import { memberRoles } from "../../enums.js";
 
 export default {
@@ -127,7 +127,7 @@ export default {
 		},
 		showActions() {
 			return !!this.role && this.role.canEditActivity;
-		}
+		},
 	},
 	methods: {
 		async submitActivityForm(activity) {

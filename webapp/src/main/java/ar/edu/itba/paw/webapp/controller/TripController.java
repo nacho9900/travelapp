@@ -9,6 +9,7 @@ import ar.edu.itba.paw.interfaces.TripPicturesService;
 import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Activity;
+import ar.edu.itba.paw.model.PaginatedResult;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.TripJoinRequest;
@@ -30,6 +31,7 @@ import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.trips.RateDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripJoinRequestDto;
+import ar.edu.itba.paw.webapp.dto.trips.TripListDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberListDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberUpdateDto;
@@ -43,6 +45,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -53,7 +56,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -207,6 +212,59 @@ public class TripController extends BaseController
                                    tripUpdates.getStartDate(), tripUpdates.getEndDate() );
 
         return Response.ok().entity( TripDto.fromTrip( trip ) ).build();
+    }
+
+    @GET
+    @Path( "/search" )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response search(
+            @QueryParam( "text" ) String text,
+            @QueryParam( "latitude" ) Double latitude,
+            @QueryParam( "longitude" ) Double longitude,
+            @QueryParam( "from" ) String fromString,
+            @QueryParam( "to" ) String toString, @QueryParam( "page" ) @DefaultValue( "1" ) int page ) {
+        ErrorsDto errors = new ErrorsDto();
+
+        LocalDate from = null;
+        LocalDate to = null;
+
+        if ( fromString != null ) {
+            try {
+                from = LocalDate.parse( fromString );
+            }
+            catch ( DateTimeParseException e ) {
+                errors.addError( "invalid from date format", "from" );
+            }
+        }
+
+        if ( toString != null ) {
+            try {
+                to = LocalDate.parse( toString );
+            }
+            catch ( DateTimeParseException e ) {
+                errors.addError( "invalid to date format", "to" );
+            }
+        }
+
+        if ( page <= 0 ) {
+            errors.addError( "invalid page number", "page" );
+        }
+
+        if ( latitude != null && ( latitude < -90 || latitude > 90 ) ) {
+            errors.addError( "invalid latitude", "latitude" );
+        }
+
+        if ( longitude != null && ( longitude < -180 || longitude > 180 ) ) {
+            errors.addError( "invalid longitude", "longitude" );
+        }
+
+        if ( !errors.isEmpty() ) {
+            return Response.status( Response.Status.BAD_REQUEST ).entity( errors ).build();
+        }
+
+        PaginatedResult<Trip> results = tripService.search( text, latitude, longitude, from, to, page );
+
+        return Response.ok().entity( TripListDto.fromPaginatedResult( results ) ).build();
     }
 
     //endregion

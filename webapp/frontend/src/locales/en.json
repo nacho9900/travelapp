@@ -159,7 +159,9 @@
         "edit": "Edit",
         "error_update": "There was an error updating the trip. Please try again later.",
         "change_image": "Upload a new portrait",
-        "change_image_error": "There was an error uploading the trip portrait. Please try again later."
+        "change_image_error": "There was an error uploading the trip portrait. Please try again later.",
+        "from": "From",
+        "to": "to"
       },
       "trip_activities_list": {
         "no_data": "no activities were found for the trip. Try creating a new one."
@@ -191,6 +193,15 @@
       },
       "trip_commments": {
         "get_error": "There was an error obteining the trip comments. Please, try again later."
+      },
+      "trip_search_bar": {
+        "title": "Search for a trip",
+        "location": "Location",
+        "start": "From",
+        "end": "To"
+      },
+      "trip_paginated_list": {
+        "no_results": "No matching trips found, try creating a new one!"
       }
     },
     "user": {

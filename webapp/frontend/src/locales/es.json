@@ -160,7 +160,9 @@
         "edit": "Editar",
         "error_update": "Ocurrio un error al actualizar el viaje. Por favor, intente nuevamente más tarde.",
         "change_image": "Subir una nueva portada",
-        "change_image_error": "Ocurrió un error al cambiar la portada del viaje. Por favor, intente nuevamente más tarde."
+        "change_image_error": "Ocurrió un error al cambiar la portada del viaje. Por favor, intente nuevamente más tarde.",
+        "from": "Desde el",
+        "to": "hasta el"
       },
       "trip_activities_list": {
         "no_data": "No se econtraron actividades para el viaje. Si eres administrador, intenta crear una nueva con el botón debajo.."
@@ -192,6 +194,15 @@
       },
       "trip_commments": {
         "get_error": "Ocurrio un error al obtener los comentarios. Por favor, intente nuevamente más tarde."
+      },
+      "trip_search_bar": {
+        "title": "Busca un viaje",
+        "location": "Ubicación",
+        "start": "Desde",
+        "end": "Hasta"
+      },
+      "trip_paginated_list": {
+        "no_results": "No se encontraron viajes que coincidan con la busqueda, intenta crear uno nuevo!"
       }
     },
     "user": {

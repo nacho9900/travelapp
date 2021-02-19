@@ -25,4 +25,18 @@ export default {
         const location = response.data;
         return location;
     },
+    async search(_, payload) {
+        const data = {
+            params: {
+                text: payload.text,
+                from: payload.from,
+                to: payload.to,
+                latitude: payload.location?.latitude,
+                longitude: payload.location?.longitude,
+            }
+        };
+        const response = await Axios.get("/trip/search", data);
+        const result = response.data;
+        return result;
+    }
 };

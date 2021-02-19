@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import TripJoinRequestCard from "./TripJoinRequestCard.vue";
+import TripJoinRequestCard from "components/request/TripJoinRequestCard.vue";
 export default {
 	components: { TripJoinRequestCard },
 	props: {

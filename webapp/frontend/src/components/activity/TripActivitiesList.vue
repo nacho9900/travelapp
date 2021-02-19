@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import TripActivityCard from "./TripActivityCard.vue";
+import TripActivityCard from "components/activity/TripActivityCard.vue";
 
 export default {
 	components: {

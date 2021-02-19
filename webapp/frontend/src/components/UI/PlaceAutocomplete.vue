@@ -7,8 +7,11 @@
 		:dense="dense"
 		:rules="rules"
 		:disabled="disabled"
+		:solo="solo"
+		:label="label"
+		:hide-details="hideDetails"
 		item-text="address"
-		prepend-icon="mdi-map-marker-outline"
+		prepend-inner-icon="mdi-map-marker-outline"
 		return-object
 		clearable
 		no-filter
@@ -25,6 +28,9 @@ export default {
 		dense: Boolean,
 		disabled: Boolean,
 		rules: Array,
+		solo: Boolean,
+		label: String,
+		hideDetails: Boolean,
 	},
 	data() {
 		return {
@@ -40,6 +46,8 @@ export default {
 	methods: {
 		async googleSearch() {
 			this.loading = true;
+
+			await this.$gmapApiPromiseLazy();
 
 			this.$store.dispatch("google/searchPlace", {
 				address: this.search,

@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import TripActivitiesMap from "./TripActivitiesMap.vue";
+import TripActivitiesMap from "components/activity/TripActivitiesMap.vue";
 import { gmapApi } from "gmap-vue";
 import { requiredRule } from "../../rules.js";
 
