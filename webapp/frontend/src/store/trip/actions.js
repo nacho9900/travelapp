@@ -33,6 +33,7 @@ export default {
                 to: payload.to,
                 latitude: payload.location?.latitude,
                 longitude: payload.location?.longitude,
+                page: payload.page
             }
         };
         const response = await Axios.get("/trip/search", data);

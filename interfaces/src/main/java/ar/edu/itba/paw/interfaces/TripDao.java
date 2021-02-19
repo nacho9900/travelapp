@@ -46,5 +46,5 @@ public interface TripDao
 
     Trip update( Trip trip );
 
-    PaginatedResult<Trip> searchByTextAndNear( String text, Double latitude, Double longitude, LocalDate from, LocalDate to, int page );
+    PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to, int page );
 }

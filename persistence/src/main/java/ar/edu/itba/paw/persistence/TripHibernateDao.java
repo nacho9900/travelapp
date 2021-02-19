@@ -230,8 +230,8 @@ public class TripHibernateDao implements TripDao
     }
 
     @Override
-    public PaginatedResult<Trip> searchByTextAndNear( String text, Double latitude, Double longitude, LocalDate from,
-                                                      LocalDate to, int page ) {
+    public PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to
+            , int page ) {
         StringBuilder queryString = new StringBuilder(
                 "from Trip as t inner join t.activities as a inner join a.place as p " + "where 1=1 " );
 

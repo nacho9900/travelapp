@@ -95,6 +95,6 @@ public class TripServiceImpl implements TripService
 
     @Override
     public PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to, int page ) {
-        return tripDao.searchByTextAndNear( text, latitude, longitude, from, to, page );
+        return tripDao.search( text, latitude, longitude, from, to, page );
     }
 }
