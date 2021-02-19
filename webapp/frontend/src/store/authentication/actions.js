@@ -28,7 +28,7 @@ export default {
         }, expiresIn);
 
         context.commit("setToken", { token });
-        context.commit("setUser", { user: user });
+        context.commit("setUser", user);
     },
     tryLogin(context) {
         if (!context.getters.isAuth) {
@@ -61,7 +61,7 @@ export default {
     },
     logout(context) {
         context.commit('setToken', { token: null });
-        context.commit('setUser', { user: null });
+        context.commit('setUser', null);
 
         delete Axios.defaults.headers.common['Authorization'];
 
@@ -98,7 +98,7 @@ export default {
         await Axios.post("users/change-password", passwords);
     },
     async passwordRecovery(_, payload) {
-        await Axios.post("/auth/password-recovery", payload);    
+        await Axios.post("/auth/password-recovery", payload);
     },
     async changePasswordRecovery(_, payload) {
         await Axios.post("/auth/change-password", payload);

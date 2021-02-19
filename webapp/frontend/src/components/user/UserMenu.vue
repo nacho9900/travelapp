@@ -1,7 +1,9 @@
 <template>
 	<v-menu transition="slide-y-transition" bottom>
 		<template v-slot:activator="{ on, attrs }">
-			<v-avatar color="secondary" v-bind="attrs" v-on="on"> IN </v-avatar>
+			<v-avatar color="secondary" v-bind="attrs" v-on="on">
+				{{ initials }}
+			</v-avatar>
 		</template>
 
 		<v-list>
@@ -19,6 +21,18 @@
 
 <script>
 export default {
+	props: {
+		firstname: String,
+		lastname: String,
+	},
+	computed: {
+		initials() {
+			return this.firstname
+				? this.firstname.split(" ")[0][0] +
+						this.lastname.split(" ")[0][0]
+				: "";
+		},
+	},
 	methods: {
 		signOut() {
 			this.$store.dispatch("logout");

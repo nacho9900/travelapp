@@ -45,7 +45,11 @@
 			></v-app-bar-nav-icon>
 			<v-toolbar-title> TravelApp </v-toolbar-title>
 			<v-spacer></v-spacer>
-			<user-menu v-if="isAuth"></user-menu>
+			<user-menu
+				v-if="isAuth && hasUser"
+				:firstname="user.firstname"
+				:lastname="user.lastname"
+			></user-menu>
 		</v-app-bar>
 
 		<v-main>
@@ -53,6 +57,23 @@
 				<router-view> </router-view>
 			</transition>
 		</v-main>
+
+		<v-footer padless>
+			<v-card
+				flat
+				tile
+				color="primary"
+				class="text-center"
+				style="width: 100%"
+			>
+				<v-card-text>
+					{{ $t("app.made_by") }} Ignacio Negro Caino (57509)
+				</v-card-text>
+				<v-card-text>
+					<b>TravelApp — 2021</b>
+				</v-card-text>
+			</v-card>
+		</v-footer>
 	</v-app>
 </template>
 
@@ -80,6 +101,12 @@ export default {
 		},
 		isAuth() {
 			return this.$store.getters.isAuth;
+		},
+		hasUser() {
+			return this.$store.getters.hasUser;
+		},
+		user() {
+			return this.$store.getters.user;
 		},
 	},
 	created() {

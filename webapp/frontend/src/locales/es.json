@@ -17,7 +17,8 @@
     "home": "Página Principal",
     "account": "Mi Cuenta",
     "view_options": "Opciones de Vista",
-    "my_stuff": "Mis Cosas"
+    "my_stuff": "Mis Cosas",
+    "made_by": "Version de la app hecha por"
   },
   "rules": {
     "email": {

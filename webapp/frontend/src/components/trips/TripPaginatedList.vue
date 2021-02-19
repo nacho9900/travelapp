@@ -6,7 +6,7 @@
 			</v-col>
 		</v-row>
 		<v-row justify="center" class="mt-16">
-			<v-col cols="12">
+			<v-col v-if="!welcome" cols="12">
 				<v-alert v-if="noResults" type="info">
 					{{ $t("components.trips.trip_paginated_list.no_results") }}
 				</v-alert>
@@ -20,6 +20,8 @@
 					:page="page"
 					v-else
 				></trip-data-iterator>
+			</v-col>
+			<v-col cols="12" v-else>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -44,6 +46,7 @@ export default {
 			searchData: null,
 			loading: false,
 			noResults: false,
+			welcome: true,
 		};
 	},
 	computed: {
@@ -53,6 +56,7 @@ export default {
 	},
 	methods: {
 		async search(data) {
+			this.welcome = false;
 			this.noResults = false;
 			this.loading = true;
 			this.searchData = data;

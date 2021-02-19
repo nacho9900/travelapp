@@ -17,7 +17,8 @@
     "home": "Home",
     "account": "My Account",
     "view_options": "View Options",
-    "my_stuff": "My Stuff"
+    "my_stuff": "My Stuff",
+    "made_by": "App version made by"
   },
   "rules": {
     "email": {
