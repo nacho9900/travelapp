@@ -48,12 +48,14 @@ public class TripMember
 
     @OneToOne( fetch = FetchType.LAZY,
                mappedBy = "member",
-               cascade = CascadeType.ALL )
+               cascade = CascadeType.ALL,
+               orphanRemoval = true)
     private TripRate rate;
 
     @OneToMany( fetch = FetchType.LAZY,
                 mappedBy = "member",
-                cascade = CascadeType.ALL )
+                cascade = CascadeType.ALL,
+                orphanRemoval = true)
     private List<TripComment> comments = new LinkedList<>();
 
     ////////////

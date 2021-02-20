@@ -39,4 +39,9 @@ public class TripRateServiceImpl implements TripRateService {
     public Optional<TripRate> findByUserAndTrip(long tripId, long userId) {
         return tripRateDao.findByUserAndTrip(tripId, userId);
     }
+
+    @Override
+    public void deleteByMemberId( long memberId ) {
+        tripRateDao.deleteByMemberId( memberId );
+    }
 }

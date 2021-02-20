@@ -15,4 +15,6 @@ public interface TripRateService {
     void update(TripRate id);
 
     Optional<TripRate> findByUserAndTrip(long tripId, long userId);
+
+    void deleteByMemberId( long memberId );
 }

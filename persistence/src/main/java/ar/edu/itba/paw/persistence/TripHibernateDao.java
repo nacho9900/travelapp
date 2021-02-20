@@ -11,10 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -32,8 +30,8 @@ public class TripHibernateDao implements TripDao
     }
 
     @Override
-    public Trip create( long userId, String name, String description, LocalDate startDate, LocalDate endDate ) {
-        Trip trip = new Trip( userId, name, description, startDate, endDate );
+    public Trip create( String name, String description, LocalDate startDate, LocalDate endDate ) {
+        Trip trip = new Trip( name, description, startDate, endDate );
         em.persist( trip );
         return trip;
     }

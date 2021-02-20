@@ -2,10 +2,8 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.TripCommentsDao;
 import ar.edu.itba.paw.interfaces.TripCommentsService;
-import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.TripMember;
-import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,5 +31,10 @@ public class TripCommentServiceImpl implements TripCommentsService
     @Override
     public List<TripComment> getAllByTripId( long tripId ) {
         return tripCommentsDao.getAllByTripId( tripId );
+    }
+
+    @Override
+    public void deleteAllByMemberId(long memberId) {
+        tripCommentsDao.deleteAllByMemberId( memberId );
     }
 }

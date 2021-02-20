@@ -17,4 +17,6 @@ public interface TripMemberService
     TripMember update( TripMember tripMember );
 
     TripMember create( Trip trip, User user );
+
+    TripMember createOwner( Trip trip, User user );
 }

@@ -8,9 +8,7 @@ import java.util.*;
 
 public interface TripService
 {
-    Trip create( long createdBy, long place, String name, String description, LocalDate startDate, LocalDate endDate );
-
-    Trip create( Trip trip );
+    Trip create( User owner, String name, String description, LocalDate startDate, LocalDate endDate );
 
     Optional<Trip> findById( long id );
 

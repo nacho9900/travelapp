@@ -1,9 +1,15 @@
 <template>
 	<v-container>
 		<v-row>
-			<v-col cols="12">
+			<v-col cols="12" v-if="loading">
+				<v-skeleton-loader type="sentences" class="py-5 px-5"></v-skeleton-loader>
+				<v-skeleton-loader type="sentences" class="py-5 px-5"></v-skeleton-loader>
+				<v-skeleton-loader type="sentences" class="py-5 px-5"></v-skeleton-loader>
+				<v-skeleton-loader type="sentences" class="py-5 px-5"></v-skeleton-loader>
+			</v-col>
+			<v-col cols="12" v-else>
 				<v-virtual-scroll
-					height="400" 
+					height="400"
 					:items="comments"
 					item-height="130"
 					bench="1"
@@ -30,6 +36,7 @@ export default {
 	components: { TripCommentCard },
 	props: {
 		comments: Array,
+		loading: Boolean,
 	},
 };
 </script>

@@ -37,21 +37,26 @@ public class Trip implements Comparable<Trip>
 
     @OneToMany( fetch = FetchType.LAZY,
                 mappedBy = "trip",
-                cascade = CascadeType.ALL )
+                cascade = {CascadeType.REMOVE, CascadeType.ALL},
+                orphanRemoval = true )
     private List<Activity> activities = new LinkedList<>();
 
     @OneToOne( fetch = FetchType.LAZY,
                mappedBy = "trip",
-               cascade = CascadeType.ALL )
+               cascade = CascadeType.ALL,
+               orphanRemoval = true )
     private TripPicture profilePicture;
 
     @OneToMany( fetch = FetchType.LAZY,
-                mappedBy = "trip" )
+                cascade = CascadeType.ALL,
+                mappedBy = "trip",
+                orphanRemoval = true )
     private List<TripJoinRequest> joinRequests = new LinkedList<>();
 
     @OneToMany( fetch = FetchType.LAZY,
                 mappedBy = "trip",
-                cascade = CascadeType.ALL )
+                cascade = CascadeType.ALL,
+                orphanRemoval = true )
     private List<TripMember> members = new LinkedList<>();
 
     /////////////////
@@ -62,7 +67,7 @@ public class Trip implements Comparable<Trip>
         this.id = id;
     }
 
-    public Trip(String name, String description, LocalDate startDate, LocalDate endDate ) {
+    public Trip( String name, String description, LocalDate startDate, LocalDate endDate ) {
         super();
         this.name = name;
         this.description = description;

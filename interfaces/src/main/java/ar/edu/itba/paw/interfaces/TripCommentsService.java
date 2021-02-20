@@ -13,4 +13,6 @@ public interface TripCommentsService
     Optional<TripComment> getById( long id );
 
     List<TripComment> getAllByTripId( long tripId );
+
+    void deleteAllByMemberId( long memberId );
 }

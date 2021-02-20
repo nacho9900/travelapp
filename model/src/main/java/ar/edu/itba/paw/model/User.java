@@ -47,12 +47,15 @@ public class User
     //////////////
 
     @OneToOne( fetch = FetchType.LAZY,
-               mappedBy = "user" )
+               mappedBy = "user",
+               cascade = CascadeType.ALL,
+               orphanRemoval = true)
     private UserPicture profilePicture;
 
     @OneToOne( fetch = FetchType.LAZY,
                mappedBy = "user",
-               cascade = CascadeType.ALL )
+               cascade = CascadeType.ALL,
+               orphanRemoval = true)
     private PasswordRecoveryToken passwordRecoveryToken;
 
     @OneToMany( fetch = FetchType.LAZY,

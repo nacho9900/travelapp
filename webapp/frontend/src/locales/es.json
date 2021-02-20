@@ -181,7 +181,8 @@
         "not_members": "Debes ser un miembre para ver los demas miembros del viaje",
         "members": "Miembros Activos",
         "join_request": "Solicitudes de Miembro",
-        "get_requests_error": "Ocurrio un error al querer obtener las solicitudes de miembro. Por favor, intente nuevamente más tarde."
+        "get_requests_error": "Ocurrio un error al querer obtener las solicitudes de miembro. Por favor, intente nuevamente más tarde.",
+        "not_admin": "Debes ser el propietario del viaje o administrador para ver las solicitudes de miembro del viaje"
       },
       "trip_join_button": {
         "exit_trip": "Abondanar viaje",
@@ -190,7 +191,10 @@
         "join_dialog_message": "puedes escribir un mensaje para que los administradores del viaje entiendan porque estás interesado en unirte al viaje",
         "join_dialog_message_label": "Mensaje",
         "join_dialog_btn": "Enviar",
-        "pending": "Confirmación pendiente"
+        "pending": "Confirmación pendiente",
+        "exit_dialog_title": "¿Estás seguro que deseas salir del viaje?",
+        "exit_dialog_btn": "Salir del viaje",
+        "exit_error": "Ocurrio un error al salir del viaje. Por favor, intente nuevamente más tarde."
       },
       "trip_join_form": {
         "message_size_rule": "el largo del mensaje no puede ser superior a 255 caracteres",
@@ -202,7 +206,8 @@
         "accept_error": "Ocurrió un error al aceptar la solicitud de miembro. Por favor, intente nuevamente más tarde."
       },
       "trip_commments": {
-        "get_error": "Ocurrio un error al obtener los comentarios. Por favor, intente nuevamente más tarde."
+        "get_error": "Ocurrio un error al obtener los comentarios. Por favor, intente nuevamente más tarde.",
+        "unauthorized": "debes ser miembro para comentar y leer los comentarios de los demás miembros"
       },
       "trip_search_bar": {
         "title": "Busca un viaje",

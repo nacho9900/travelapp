@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.TripCommentsService;
 import ar.edu.itba.paw.interfaces.TripMemberDao;
 import ar.edu.itba.paw.interfaces.TripMemberService;
+import ar.edu.itba.paw.interfaces.TripRateService;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripMemberRole;
@@ -19,6 +21,12 @@ public class TripMemberServiceImpl implements TripMemberService
 {
     @Autowired
     private TripMemberDao tripMemberDao;
+
+    @Autowired
+    private TripRateService tripRateService;
+
+    @Autowired
+    private TripCommentsService tripCommentsService;
 
     @Override
     public Optional<TripMember> findById( long id ) {
@@ -42,6 +50,8 @@ public class TripMemberServiceImpl implements TripMemberService
 
     @Override
     public void delete( long id ) {
+        tripRateService.deleteByMemberId( id );
+        tripCommentsService.deleteAllByMemberId( id );
         tripMemberDao.delete( id );
     }
 
@@ -53,5 +63,10 @@ public class TripMemberServiceImpl implements TripMemberService
     @Override
     public TripMember create( Trip trip, User user ) {
         return tripMemberDao.create( trip, user, TripMemberRole.MEMBER, true );
+    }
+
+    @Override
+    public TripMember createOwner( Trip trip, User user ) {
+        return tripMemberDao.create( trip, user, TripMemberRole.OWNER, true );
     }
 }

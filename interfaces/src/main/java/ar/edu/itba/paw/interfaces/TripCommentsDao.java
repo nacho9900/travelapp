@@ -14,7 +14,7 @@ public interface TripCommentsDao
 
     Optional<TripComment> findById( long id );
 
-    void deleteComments( long tripId );
+    void deleteAllByMemberId( long memberId );
 
     List<TripComment> getAllByTripId( long tripId );
 }

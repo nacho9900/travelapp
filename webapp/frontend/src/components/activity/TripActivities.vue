@@ -235,6 +235,9 @@ export default {
 				this.role = memberRoles.find((x) => x.value === role);
 			}
 		},
+		exit() {
+			this.getActivities();
+		},
 	},
 	created() {
 		this.getActivities();

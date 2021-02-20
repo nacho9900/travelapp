@@ -19,12 +19,13 @@
 								<v-row>
 									<v-col cols="12" class="px-0 pt-0">
 										<trip-card
-											:id="id"
+											:id="tripId"
 											@notFound="
 												$router.replace({
 													name: 'TripNotFound',
 												})
 											"
+											@exit="exit"
 											:actions="true"
 										></trip-card>
 									</v-col>
@@ -32,10 +33,16 @@
 							</v-container>
 						</v-tab-item>
 						<v-tab-item>
-							<trip-activities :tripId="id"></trip-activities>
+							<trip-activities
+								:tripId="tripId"
+								ref="activities"
+							></trip-activities>
 						</v-tab-item>
 						<v-tab-item>
-							<trip-members :tripId="id"></trip-members>
+							<trip-members
+								:tripId="tripId"
+								ref="members"
+							></trip-members>
 						</v-tab-item>
 					</v-tabs>
 				</v-card>
@@ -50,7 +57,10 @@
 					>
 						<v-tab>{{ $t("views.trip.comments") }}</v-tab>
 						<v-tab-item>
-							<trip-comments :id="id"></trip-comments>
+							<trip-comments
+								ref="comments"
+								:id="tripId"
+							></trip-comments>
 						</v-tab-item>
 					</v-tabs>
 				</v-card>
@@ -76,6 +86,26 @@ export default {
 		id: {
 			type: String,
 			required: true,
+		},
+	},
+	data() {
+		return {
+			tripId: this.id,
+		};
+	},
+	methods: {
+		exit() {
+			if (this.$refs.comments) {
+				this.$refs.comments.exit();
+			}
+
+			if (this.$refs.activities) {
+				this.$refs.activities.exit();
+			}
+
+			if (this.$refs.members) {
+				this.$refs.members.exit();
+			}
 		},
 	},
 };

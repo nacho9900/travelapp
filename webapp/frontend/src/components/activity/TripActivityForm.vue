@@ -164,7 +164,6 @@ export default {
 		},
 	},
 	created() {
-		console.log(this.edit);
 		this.init();
 	},
 };

@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 @Repository
@@ -21,7 +22,7 @@ public class TripRateHibernateDao implements TripRateDao {
 
     @Override
     public TripRate create( TripMember member, int rate) {
-        TripRate tripRate = new TripRate(rate, LocalDateTime.now(), member );
+        TripRate tripRate = new TripRate( rate, LocalDateTime.now( ZoneOffset.UTC), member );
         em.persist(tripRate);
         return tripRate;
     }
@@ -49,5 +50,12 @@ public class TripRateHibernateDao implements TripRateDao {
         query.setParameter("tripId", tripId);
         query.setParameter("userId", userId);
         return query.getResultList().stream().findAny();
+    }
+
+    @Override
+    public void deleteByMemberId( long memberId ) {
+        Query query = em.createQuery( "delete TripRate as tr where tr.member.id = :memberId" );
+        query.setParameter( "memberId", memberId );
+        query.executeUpdate();
     }
 }

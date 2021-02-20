@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,7 @@ public class TripCommentHibernateDao implements TripCommentsDao
 
     @Override
     public TripComment create( TripMember member, String comment ) {
-        TripComment tc = new TripComment( member, comment, LocalDateTime.now() );
+        TripComment tc = new TripComment( member, comment, LocalDateTime.now( ZoneOffset.UTC) );
         em.persist( tc );
         return tc;
     }
@@ -34,9 +35,9 @@ public class TripCommentHibernateDao implements TripCommentsDao
     }
 
     @Override
-    public void deleteComments( long tripId ) {
-        Query commentDelete = em.createQuery( "delete TripComment as tp where tp.trip.id = :tripId" );
-        commentDelete.setParameter( "tripId", tripId );
+    public void deleteAllByMemberId( long memberId ) {
+        Query commentDelete = em.createQuery( "delete TripComment as tc where tc.member.id = :memberId" );
+        commentDelete.setParameter( "memberId", memberId );
         commentDelete.executeUpdate();
     }
 

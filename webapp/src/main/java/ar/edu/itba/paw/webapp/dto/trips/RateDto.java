@@ -16,7 +16,7 @@ public class RateDto
     private Long id;
     private int rate;
     @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd hh:MM:ss" )
+                 pattern = "yyyy-MM-dd HH:MM:ss" )
     private LocalDateTime createdOn;
     private TripMemberDto member;
 

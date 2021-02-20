@@ -22,13 +22,7 @@
 								:loading="loading"
 								:actions="showActions"
 							></trip-member-list>
-							<v-alert
-								class="mt-10"
-								type="info"
-								text
-								dense
-								v-else
-							>
+							<v-alert class="mt-10" type="info" v-else>
 								{{
 									$t(
 										"components.trips.trip_members.not_members"
@@ -49,19 +43,27 @@
 									indeterminate
 								>
 								</v-progress-circular>
-								<v-chip v-else color="error">
+								<v-chip v-else color="warning">
 									{{ requests.length }}
 								</v-chip>
 							</template>
 						</v-expansion-panel-header>
 						<v-expansion-panel-content>
 							<trip-join-request-list
+								v-if="canEditMember"
 								:tripId="tripId"
 								:requests="requests"
 								:loading="loadingRequests"
 								@accept="accept"
 								@reject="reject"
 							></trip-join-request-list>
+							<v-alert class="mt-10" type="info" v-else>
+								{{
+									$t(
+										"components.trips.trip_members.not_admin"
+									)
+								}}
+							</v-alert>
 						</v-expansion-panel-content>
 					</v-expansion-panel>
 				</v-expansion-panels>
@@ -103,6 +105,9 @@ export default {
 		},
 		showActions() {
 			return this.isMember && this.role.canEditMember;
+		},
+		canEditMember() {
+			return !!this.role && this.role.canEditMember;
 		},
 	},
 	methods: {
@@ -158,6 +163,10 @@ export default {
 		reject(data) {
 			const id = data.id;
 			this.requests = this.requests.filter((x) => x.id !== id);
+		},
+		exit() {
+			this.getMembers();
+			this.getJoinRequests();
 		},
 	},
 	created() {

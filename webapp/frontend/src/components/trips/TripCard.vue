@@ -70,7 +70,9 @@
 					<div>{{ trip.description }}</div>
 				</v-card-text>
 				<v-card-text class="text--primary">
-					{{$t("components.trips.trip_card.from")}} {{ formatDateString(trip.startDate) }} {{$t("components.trips.trip_card.to")}}
+					{{ $t("components.trips.trip_card.from") }}
+					{{ formatDateString(trip.startDate) }}
+					{{ $t("components.trips.trip_card.to") }}
 					{{ formatDateString(trip.endDate) }}
 				</v-card-text>
 				<v-card-actions v-if="showJoinButton" class="pt-0 px-4">
@@ -79,6 +81,7 @@
 						:member="isMember"
 						:status="requestStatus"
 						@joined="joined"
+						@exit="exit"
 					></trip-join-button>
 				</v-card-actions>
 			</v-card>
@@ -212,6 +215,10 @@ export default {
 			this.trip.userJoinRequest = {
 				...request,
 			};
+		},
+		exit() {
+			this.role = null;
+			this.$emit("exit");
 		},
 	},
 	created() {

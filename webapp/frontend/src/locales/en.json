@@ -181,7 +181,8 @@
         "not_members": "You must be a member to see the other members of the trip.",
         "members": "Active Members",
         "join_request": "Join Requests",
-        "get_requests_error": "There was an error trying to obtain the join requests. Please, try again later."
+        "get_requests_error": "There was an error trying to obtain the join requests. Please, try again later.",
+        "not_admin": "You must be the trip owner or an administrator to see the trip join requests"
       },
       "trip_join_button": {
         "exit_trip": "Exit trip",
@@ -190,7 +191,10 @@
         "join_dialog_message": "You can write a message so that the trip administrators understand why you are interested in joining the trip",
         "join_dialog_message_label": "Message",
         "join_dialog_btn": "Send",
-        "pending": "Pending Confirmation"
+        "pending": "Pending Confirmation",
+        "exit_dialog_title": "Are you sure you want to exit the trip?",
+        "exit_dialog_btn": "Exit trip",
+        "exit_error": "There was an error leaving the trip. Please, try again later."
       },
       "trip_join_form": {
         "message_size_rule": "the length of the message must be less than 255 characters",
@@ -202,7 +206,8 @@
         "accept_error": "There was an error accepting the join request. Please, try again later."
       },
       "trip_commments": {
-        "get_error": "There was an error obteining the trip comments. Please, try again later."
+        "get_error": "There was an error obteining the trip comments. Please, try again later.",
+        "unauthorized": "You must be a member to comment and read comments of other members"
       },
       "trip_search_bar": {
         "title": "Search for a trip",

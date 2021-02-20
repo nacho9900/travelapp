@@ -10,8 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +38,9 @@ public class TripMemberHibernateDao implements TripMemberDao
 
     @Override
     public boolean memberBelongsToTheTrip( long id, long tripId ) {
-        TypedQuery<TripMember> query = em.createQuery( "select m from Trip as t inner join t.members as m where t.id " +
-                                                       "= :tripId and m.id = :id ", TripMember.class );
+        TypedQuery<TripMember> query = em.createQuery(
+                "select m from Trip as t inner join t.members as m where t.id " + "= :tripId and m.id = :id ",
+                TripMember.class );
         query.setParameter( "tripId", tripId );
         query.setParameter( "id", id );
         return query.getResultList().size() > 0;
@@ -55,20 +58,20 @@ public class TripMemberHibernateDao implements TripMemberDao
 
     @Override
     public void delete( long id ) {
-        TypedQuery<TripMember> query = em.createQuery( "delete TripMember as m where m.id = :id", TripMember.class );
+        Query query = em.createQuery( "delete TripMember as m where m.id = :id" );
         query.setParameter( "id", id );
         query.executeUpdate();
     }
 
     @Override
-    public TripMember update(TripMember tripMember) {
+    public TripMember update( TripMember tripMember ) {
         return em.merge( tripMember );
     }
 
     @Override
     public TripMember create( Trip trip, User user, TripMemberRole role, boolean active ) {
         TripMember member = new TripMember( trip, role, active, user );
-        TripRate rate = new TripRate( 0, LocalDateTime.now() );
+        TripRate rate = new TripRate( 0, LocalDateTime.now( ZoneOffset.UTC) );
         member.setRate( rate );
         em.persist( member );
         return member;

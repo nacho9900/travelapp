@@ -16,20 +16,13 @@ public class TripServiceImpl implements TripService
     @Autowired
     private TripDao tripDao;
 
-    @Override
-    public Trip create( long userId, long startPlaceId, String name, String description, LocalDate startDate,
-                        LocalDate endDate ) {
-        return tripDao.create( userId, name, description, startDate, endDate );
-    }
+    @Autowired
+    private TripMemberService tripMemberService;
 
     @Override
-    public Trip create( Trip trip ) {
-        if ( trip.getStartDate().isAfter( trip.getEndDate() ) ) {
-            //trow ex
-        }
-
-        tripDao.create( trip );
-
+    public Trip create( User ownerUser, String name, String description, LocalDate startDate, LocalDate endDate ) {
+        Trip trip = tripDao.create( name, description, startDate, endDate );
+        tripMemberService.createOwner( trip, ownerUser );
         return trip;
     }
 

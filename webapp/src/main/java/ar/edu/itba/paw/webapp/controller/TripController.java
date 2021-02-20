@@ -20,11 +20,11 @@ import ar.edu.itba.paw.model.TripRate;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
+import ar.edu.itba.paw.webapp.dto.general.FileDto;
 import ar.edu.itba.paw.webapp.dto.trips.ActivityDto;
 import ar.edu.itba.paw.webapp.dto.trips.ActivityListDto;
 import ar.edu.itba.paw.webapp.dto.trips.CommentDto;
 import ar.edu.itba.paw.webapp.dto.trips.CommentListDto;
-import ar.edu.itba.paw.webapp.dto.general.FileDto;
 import ar.edu.itba.paw.webapp.dto.trips.JoinTripDto;
 import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.trips.RateDto;
@@ -56,13 +56,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @Path( "/trip" )
@@ -109,25 +106,17 @@ public class TripController extends BaseController
                     ErrorsDto.fromConstraintsViolations( violations ) ).build();
         }
 
-        Trip trip = tripDto.toTrip();
+        tripDto.toTrip();
 
-        Optional<User> owner = userService.findByUsername(
+        Optional<User> maybeOwner = userService.findByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName() );
 
-        if ( !owner.isPresent() ) {
+        if ( !maybeOwner.isPresent() ) {
             return Response.serverError().build();
         }
 
-        List<TripMember> initialMember = new LinkedList<>();
-        TripRate rate = new TripRate( 3, LocalDateTime.now() );
-        TripMember member = new TripMember( trip, TripMemberRole.OWNER, true, owner.get(), rate, new LinkedList<>() );
-        member.setRate( rate );
-
-        initialMember.add( member );
-
-        trip.setMembers( initialMember );
-
-        tripService.create( trip );
+        Trip trip = tripService.create( maybeOwner.get(), tripDto.getName(), tripDto.getDescription(),
+                                        tripDto.getStartDate(), tripDto.getEndDate() );
 
         return Response.ok().entity( TripDto.fromTrip( trip ) ).build();
     }
@@ -174,7 +163,7 @@ public class TripController extends BaseController
             return Response.status( Response.Status.NOT_FOUND ).build();
         }
 
-        PaginatedResult<Trip> result = tripService.getAllUserTrips( maybeUser.get(), page);
+        PaginatedResult<Trip> result = tripService.getAllUserTrips( maybeUser.get(), page );
 
         return Response.ok().entity( TripListDto.fromPaginatedResult( result ) ).build();
     }

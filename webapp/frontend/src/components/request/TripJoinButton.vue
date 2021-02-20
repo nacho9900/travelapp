@@ -7,6 +7,16 @@
 				@submit="submitJoin"
 			></trip-join-form>
 		</v-dialog>
+		<delete-dialog
+			v-model="exitDialog"
+			:title="$t('components.trips.trip_join_button.exit_dialog_title')"
+			:delete-btn-text="
+				$t('components.trips.trip_join_button.exit_dialog_btn')
+			"
+			:loading="loadingExit"
+			@remove="exitTrip"
+			@cancel="exitDialog = false"
+		></delete-dialog>
 		<v-btn
 			:color="buttonColor"
 			:disabled="buttonDisabled"
@@ -36,6 +46,8 @@ export default {
 		return {
 			joinDialog: false,
 			loadingJoin: false,
+			exitDialog: false,
+			loadingExit: false,
 			error: null,
 		};
 	},
@@ -78,7 +90,7 @@ export default {
 	methods: {
 		click() {
 			if (this.member) {
-				//exit
+				this.exitDialog = true;
 			} else {
 				this.joinDialog = true;
 			}
@@ -97,13 +109,29 @@ export default {
 					payload
 				);
 				this.$emit("joined", joinRequest);
-				console.log(joinRequest);
 				this.joinDialog = false;
 			} catch (error) {
 				this.error = this.$t("components.trips.trip_join_form.error");
 			}
 
 			this.loadingJoin = false;
+		},
+		async exitTrip() {
+			this.loadingExit = true;
+
+			try {
+				await this.$store.dispatch("member/exit", {
+					tripId: this.id,
+				});
+				this.$emit("exit");
+			} catch (error) {
+				this.error = this.$t(
+					"components.trips.trip_join_button.exit_error"
+				);
+			}
+
+			this.exitDialog = false;
+			this.loadingExit = false;
 		},
 	},
 };

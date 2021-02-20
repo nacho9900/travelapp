@@ -8,14 +8,13 @@ import ar.edu.itba.paw.model.TripRate;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface TripDao
 {
     Trip create( Trip trip );
 
-    Trip create( long userId, String name, String description, LocalDate startDate, LocalDate endDate );
+    Trip create( String name, String description, LocalDate startDate, LocalDate endDate );
 
     Optional<Trip> findById( long id );
 

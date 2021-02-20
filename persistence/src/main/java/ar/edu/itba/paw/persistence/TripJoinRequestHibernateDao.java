@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +65,7 @@ public class TripJoinRequestHibernateDao implements TripJoinRequestDao
 
     @Override
     public TripJoinRequest create( User user, Trip trip, String message ) {
-        TripJoinRequest tripJoinRequest = new TripJoinRequest( user, trip, message, LocalDateTime.now(),
+        TripJoinRequest tripJoinRequest = new TripJoinRequest( user, trip, message, LocalDateTime.now( ZoneOffset.UTC ),
                                                                TripJoinRequestStatus.PENDING );
         em.persist( tripJoinRequest );
         return tripJoinRequest;

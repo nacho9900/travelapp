@@ -40,7 +40,7 @@ public class TestTripHibernateDao {
 
     @Test
     public void testCreate() {
-        Trip trip = td.create( userId, NAME, DESC, START_DATE, END_DATE);
+        Trip trip = td.create( NAME, DESC, START_DATE, END_DATE);
         Assert.assertNotNull(trip);
         Assert.assertEquals(NAME, trip.getName());
         Assert.assertEquals(DESC, trip.getDescription());

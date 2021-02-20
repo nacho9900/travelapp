@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,17 +32,18 @@ public class PasswordRecoveryTokenServiceImpl implements PasswordRecoveryTokenSe
         if ( maybeToken.isPresent() ) {
             PasswordRecoveryToken token = maybeToken.get();
             token.setToken( UUID.randomUUID() );
-            token.setExpiresIn( LocalDateTime.now().plusHours( 3 ) );
+            token.setExpiresIn( LocalDateTime.now( ZoneOffset.UTC ).plusHours( 3 ) );
             return update( token );
         }
         else {
-            return passwordRecoveryTokenDao.create( UUID.randomUUID(), LocalDateTime.now().plusHours( 3 ), user );
+            return passwordRecoveryTokenDao.create( UUID.randomUUID(),
+                                                    LocalDateTime.now( ZoneOffset.UTC ).plusHours( 3 ), user );
         }
     }
 
     @Override
     public Optional<PasswordRecoveryToken> findByToken( UUID token ) {
-        return passwordRecoveryTokenDao.findByToken(token);
+        return passwordRecoveryTokenDao.findByToken( token );
     }
 
     @Override

@@ -13,7 +13,7 @@ public class TripJoinRequestDto
 {
     private Long id;
     @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd hh:MM:ss" )
+                 pattern = "yyyy-MM-dd HH:MM:ss" )
     private LocalDateTime createdOn;
     private String message;
     private String status;

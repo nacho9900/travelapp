@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.Set;
 
@@ -136,7 +137,8 @@ public class AuthenticationController extends BaseController
         Optional<PasswordRecoveryToken> maybeToken = passwordRecoveryTokenService.findByToken(
                 tokenPasswordDto.getToken() );
 
-        if ( !maybeToken.isPresent() || maybeToken.get().getExpiresIn().isBefore( LocalDateTime.now() ) ||
+        if ( !maybeToken.isPresent() || maybeToken.get().getExpiresIn().isBefore( LocalDateTime.now(
+                ZoneOffset.UTC) ) ||
              maybeToken.get().isUsed() ) {
             return Response.status( Response.Status.NOT_FOUND ).build();
         }

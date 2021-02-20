@@ -19,7 +19,7 @@ public class CommentDto
     @Length( max = 160 )
     private String comment;
     @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd hh:MM:ss" )
+                 pattern = "yyyy-MM-dd HH:MM:ss" )
     private LocalDateTime createdOn;
     private TripMemberDto member;
 
@@ -47,7 +47,7 @@ public class CommentDto
         LocalDateTime createdOn = this.createdOn;
 
         return new TripComment( this.id, this.member != null ? this.member.toTripMember() : null, this.comment,
-                createdOn );
+                                createdOn );
     }
 
     public static CommentDto fromComment( TripComment tripComment, boolean includeMember ) {

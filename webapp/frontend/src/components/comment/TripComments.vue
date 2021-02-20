@@ -1,19 +1,27 @@
 <template>
-	<v-container fluid class="pb-0">
-		<v-row>
+	<v-container  fluid class="pb-0">
+		<v-row v-if="!unauthorized">
 			<v-col cols="12" class="px-0">
 				<trip-comments-timeline
 					:comments="comments"
+					:loading="loading"
 				></trip-comments-timeline>
 			</v-col>
 		</v-row>
-		<v-row>
+		<v-row v-if="!unauthorized">
 			<v-col cols="12" class="py-5">
 				<trip-new-comment-box
 					:tripId="id"
 					@created="addComment"
 				></trip-new-comment-box>
 			</v-col>
+		</v-row>
+		<v-row v-if="unauthorized">
+			<v-col cols="12">
+				<v-alert type="info">
+						{{ $t("components.trips.trip_commments.unauthorized")}}
+					</v-alert>	
+			</v-col>	
 		</v-row>
 	</v-container>
 </template>
@@ -38,9 +46,13 @@ export default {
 			unauthorized: false,
 		};
 	},
+	computed: {
+		hasMember() {
+			return !!this.member;
+		},
+	},
 	methods: {
 		addComment(comment) {
-			console.log(comment);
 			this.comments.push(comment);
 		},
 		async getAll() {
@@ -53,7 +65,7 @@ export default {
 				this.comments = data.comments;
 				this.member = data.member;
 			} catch (error) {
-				if (!error?.response?.status !== 401) {
+				if (error?.response?.status !== 401) {
 					this.error = this.$t(
 						"components.trips.trip_commments.get_error"
 					);
@@ -64,6 +76,9 @@ export default {
 
 			this.loading = false;
 		},
+		exit() {
+			this.getAll();
+		}
 	},
 	components: {
 		TripCommentsTimeline,
