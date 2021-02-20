@@ -15,8 +15,7 @@ public interface TripDao
 {
     Trip create( Trip trip );
 
-    Trip create( long userId, long startPlaceId, String name, String description, LocalDate startDate,
-                 LocalDate endDate );
+    Trip create( long userId, String name, String description, LocalDate startDate, LocalDate endDate );
 
     Optional<Trip> findById( long id );
 

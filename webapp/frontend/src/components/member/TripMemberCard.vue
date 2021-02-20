@@ -1,9 +1,21 @@
 <template>
 	<v-card>
 		<v-app-bar flat color="rgba(0, 0, 0, 0)">
-			<v-toolbar-title class="font-weight-regular">{{ fullname }}</v-toolbar-title>
+			<v-toolbar-title class="font-weight-regular">
+				<user-avatar
+					:color="roleObj.color"
+					:id="userId"
+					:firstname="firstname"
+					:lastname="lastname"
+				>
+				</user-avatar>
+
+				{{ fullname }}</v-toolbar-title
+			>
 			<v-spacer></v-spacer>
-			<v-chip class="black--text" :color="roleObj.color">{{ roleObj.text }}</v-chip>
+			<v-chip class="black--text" :color="roleObj.color">{{
+				roleObj.text
+			}}</v-chip>
 			<v-menu v-if="actions" bottom right>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn color="primary" icon v-bind="attrs" v-on="on">
@@ -34,16 +46,21 @@
 </template>
 
 <script>
+import UserAvatar from "components/user/UserAvatar.vue";
 import { memberRoles } from "../../enums.js";
 
 export default {
 	props: {
 		id: Number,
+		userId: Number,
 		firstname: String,
 		lastname: String,
 		biography: String,
 		role: String,
 		actions: Boolean,
+	},
+	components: {
+		UserAvatar,
 	},
 	data() {
 		return {

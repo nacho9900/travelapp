@@ -6,11 +6,11 @@ import ar.edu.itba.paw.model.UserPicture;
 import java.util.Optional;
 
 public interface UserPicturesDao {
+    UserPicture create( User user, String name, byte[] image );
 
-    public UserPicture create(User user, byte[] image);
+    Optional<UserPicture> findByUserId( long userId );
 
-    public Optional<UserPicture> findByUserId(long userId);
+    boolean deleteByUserId( long userId );
 
-    public boolean deleteByUserId(long userId);
-
+    UserPicture update(UserPicture userPicture);
 }

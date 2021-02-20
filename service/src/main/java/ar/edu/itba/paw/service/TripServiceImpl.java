@@ -19,7 +19,7 @@ public class TripServiceImpl implements TripService
     @Override
     public Trip create( long userId, long startPlaceId, String name, String description, LocalDate startDate,
                         LocalDate endDate ) {
-        return tripDao.create( userId, startPlaceId, name, description, startDate, endDate );
+        return tripDao.create( userId, name, description, startDate, endDate );
     }
 
     @Override

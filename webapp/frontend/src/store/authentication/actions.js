@@ -102,5 +102,9 @@ export default {
     },
     async changePasswordRecovery(_, payload) {
         await Axios.post("/auth/change-password", payload);
+    },
+    async changeAvatar(_, payload) {
+        const image = payload.image;
+        await Axios.put(`/users/current/picture`, image);
     }
 };

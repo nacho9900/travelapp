@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.trips;
+package ar.edu.itba.paw.webapp.dto.general;
 
 import org.hibernate.validator.constraints.NotBlank;
 

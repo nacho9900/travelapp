@@ -17,9 +17,6 @@ public class Trip implements Comparable<Trip>
                         allocationSize = 1 )
     private long id;
 
-    @Column
-    private long startPlaceId;
-
     @Column( length = 100,
              nullable = false )
     private String name;
@@ -60,14 +57,13 @@ public class Trip implements Comparable<Trip>
     /////////////////
 
 
-    public Trip( long id, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate ) {
-        this( startPlaceId, name, description, startDate, endDate );
+    public Trip( long id, String name, String description, LocalDate startDate, LocalDate endDate ) {
+        this( name, description, startDate, endDate );
         this.id = id;
     }
 
-    public Trip( long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate ) {
+    public Trip(String name, String description, LocalDate startDate, LocalDate endDate ) {
         super();
-        this.startPlaceId = startPlaceId;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
@@ -76,14 +72,6 @@ public class Trip implements Comparable<Trip>
 
     protected Trip() {
         // Just for Hibernate
-    }
-
-    public long getStartPlaceId() {
-        return startPlaceId;
-    }
-
-    public void setStartPlaceId( long startPlaceId ) {
-        this.startPlaceId = startPlaceId;
     }
 
     public long getId() {

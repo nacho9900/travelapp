@@ -12,9 +12,15 @@
 			</v-col>
 		</v-row>
 		<v-row class="overflow-y-auto" style="max-height: 300px" v-else>
-			<v-col cols="12" class="py-2 px-2" v-for="member in members" :key="member.id">
+			<v-col
+				cols="12"
+				class="py-2 px-2"
+				v-for="member in members"
+				:key="member.id"
+			>
 				<trip-member-card
 					:id="member.id"
+					:user-id="member.user.id"
 					:firstname="member.user.firstname"
 					:lastname="member.user.lastname"
 					:biography="member.user.biography"

@@ -37,7 +37,7 @@
 					@error="imageError = true"
 				>
 				</v-img>
-				<v-app-bar flat color="white">
+				<v-app-bar flat>
 					<v-toolbar-title>{{ trip.name }}</v-toolbar-title>
 					<v-spacer></v-spacer>
 

@@ -225,7 +225,9 @@
         "change_password": "Change password"
       },
       "user_menu": {
-        "sign_out": "Sign Out"
+        "sign_out": "Sign Out",
+        "change_avatar": "Change Avatar",
+        "change_avatar_error": "There was an error changing your avatar. Please, try again later."
       }
     }
   },

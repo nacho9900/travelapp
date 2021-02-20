@@ -47,6 +47,7 @@
 			<v-spacer></v-spacer>
 			<user-menu
 				v-if="isAuth && hasUser"
+				:id="user.id"
 				:firstname="user.firstname"
 				:lastname="user.lastname"
 			></user-menu>

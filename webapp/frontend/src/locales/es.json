@@ -226,7 +226,9 @@
         "change_password": "Cambiar contraseña"
       },
       "user_menu": {
-        "sign_out": "Cerrar Sesión"
+        "sign_out": "Cerrar Sesión",
+        "change_avatar": "Cambiar Avatar",
+        "change_avatar_error": "Ocurrio un error al cambiar el avatar. Por favor, intente nuevamente más tarde."
       }
     }
   },

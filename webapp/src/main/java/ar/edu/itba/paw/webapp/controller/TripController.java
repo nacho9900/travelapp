@@ -25,7 +25,7 @@ import ar.edu.itba.paw.webapp.dto.trips.ActivityDto;
 import ar.edu.itba.paw.webapp.dto.trips.ActivityListDto;
 import ar.edu.itba.paw.webapp.dto.trips.CommentDto;
 import ar.edu.itba.paw.webapp.dto.trips.CommentListDto;
-import ar.edu.itba.paw.webapp.dto.trips.FileDto;
+import ar.edu.itba.paw.webapp.dto.general.FileDto;
 import ar.edu.itba.paw.webapp.dto.trips.JoinTripDto;
 import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.trips.RateDto;
@@ -78,8 +78,6 @@ public class TripController extends BaseController
     @Autowired
     private ActivityService activityService;
 
-    @Autowired
-    private PlaceService placeService;
 
     @Autowired
     private TripPicturesService tripPicturesService;

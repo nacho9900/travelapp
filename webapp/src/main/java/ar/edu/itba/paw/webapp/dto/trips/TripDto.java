@@ -103,7 +103,7 @@ public class TripDto
             trip = new Trip( 0, this.name, this.description, startDate, endDate );
         }
         else {
-            trip = new Trip( this.id, 0, this.name, this.description, startDate, endDate );
+            trip = new Trip( this.id, this.name, this.description, startDate, endDate );
         }
 
         return trip;

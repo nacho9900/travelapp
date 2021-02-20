@@ -5,9 +5,10 @@ import ar.edu.itba.paw.model.TripPicture;
 
 import java.util.Optional;
 
-public interface TripPicturesService {
-
+public interface TripPicturesService
+{
     TripPicture create( Trip trip, String name, byte[] image );
+
     TripPicture create( Trip trip, String name, String imageBase64 );
 
     TripPicture update( TripPicture tripPicture, Trip trip, String name, String imageBase64 );
