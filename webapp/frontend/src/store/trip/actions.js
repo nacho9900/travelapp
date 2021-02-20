@@ -39,5 +39,16 @@ export default {
         const response = await Axios.get("/trip/search", data);
         const result = response.data;
         return result;
+    },
+    async getUserTrips(_, payload) {
+        const data = {
+            params: {
+                page: payload.page,
+            }
+        };
+
+        const response = await Axios.get("/trip", data);
+        const result = response.data;
+        return result;
     }
 };

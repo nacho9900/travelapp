@@ -23,7 +23,8 @@
 					v-else
 				></trip-data-iterator>
 			</v-col>
-			<v-col cols="12" v-else> </v-col>
+			<v-col cols="12" v-else>
+			</v-col>
 		</v-row>
 	</v-container>
 </template>
@@ -43,7 +44,6 @@ export default {
 			total: 0,
 			page: 1,
 			itemsPerPage: 12,
-			hasNextPage: false,
 			searchCriteria: null,
 			loading: false,
 			noResults: false,

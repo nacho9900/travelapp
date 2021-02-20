@@ -18,15 +18,11 @@ public interface TripService
 
     List<Trip> findByName( String name );
 
-    List<Trip> getAllUserTrips( User user );
+    PaginatedResult<Trip> getAllUserTrips( User user, int page );
 
     List<Trip> findByCategory( String category );
 
     List<Trip> findByPlace( String placeName );
-
-    List<Trip> findWithFilters( Map<String, Object> filterMap );
-
-    int countAllTrips();
 
     boolean isUserOwnerOrAdmin( long tripId, String username );
 

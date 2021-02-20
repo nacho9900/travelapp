@@ -18,7 +18,8 @@
     "account": "Mi Cuenta",
     "view_options": "Opciones de Vista",
     "my_stuff": "Mis Cosas",
-    "made_by": "Version de la app hecha por"
+    "made_by": "Version de la app hecha por",
+    "my_trips": "Mis Viajes"
   },
   "rules": {
     "email": {
@@ -112,6 +113,13 @@
         "message": "Lo sentimos, no pudimos encontrar esa página",
         "redirect": "Intentá visitando la página principal y buscando por un viaje que te pueda gustar. "
       }
+    },
+    "user_trips": {
+      "no_trips": "Aun no tienes ningún viaje",
+      "or": "o",
+      "create_a_new_one": "empieza a planear uno nuevo.",
+      "error": "Ocurrió un error buscando sus viajes. Por favor, intente nuevamente más tarde.",
+      "title": "Mis Viajes"
     }
   },
   "components": {

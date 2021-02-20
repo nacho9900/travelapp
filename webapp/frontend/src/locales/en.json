@@ -18,7 +18,8 @@
     "account": "My Account",
     "view_options": "View Options",
     "my_stuff": "My Stuff",
-    "made_by": "App version made by"
+    "made_by": "App version made by",
+    "my_trips": "My Trips"
   },
   "rules": {
     "email": {
@@ -111,6 +112,14 @@
         "message": "Sorry, we couldn't find that page",
         "redirect": "Try visiting the home page and search for a trip you may enjoy."
       }
+    },
+    "user_trips": {
+      "no_trips": "You don't have any trips yet, ",
+      "search": "search for a trip that you might like",
+      "or": "or",
+      "create_a_new_one": "start planning a new one.",
+      "error": "There was an error finding your trips. Please, try again later.",
+      "title": "My Trips"
     }
   },
   "components": {

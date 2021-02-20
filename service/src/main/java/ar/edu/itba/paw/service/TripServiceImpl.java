@@ -49,13 +49,8 @@ public class TripServiceImpl implements TripService
     }
 
     @Override
-    public List<Trip> getAllUserTrips( User user ) {
-        return tripDao.findUserTrips( user.getId() );
-    }
-
-    @Override
-    public int countAllTrips() {
-        return tripDao.countAllTrips();
+    public PaginatedResult<Trip> getAllUserTrips( User user, int page ) {
+        return tripDao.findUserTrips( user.getId(), page );
     }
 
     @Override
@@ -66,11 +61,6 @@ public class TripServiceImpl implements TripService
     @Override
     public List<Trip> findByPlace( String placeName ) {
         return tripDao.findByPlace( placeName );
-    }
-
-    @Override
-    public List<Trip> findWithFilters( Map<String, Object> filterMap ) {
-        return tripDao.findWithFilters( filterMap );
     }
 
     @Override
@@ -90,11 +80,12 @@ public class TripServiceImpl implements TripService
         trip.setStartDate( startDate );
         trip.setEndDate( endDate );
 
-        return tripDao.update(trip);
+        return tripDao.update( trip );
     }
 
     @Override
-    public PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to, int page ) {
+    public PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to
+            , int page ) {
         return tripDao.search( text, latitude, longitude, from, to, page );
     }
 }

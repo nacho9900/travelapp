@@ -21,6 +21,14 @@
 						$t("app.account")
 					}}</v-list-item-title>
 				</v-list-item>
+				<v-list-item :to="{ name: 'UserTrips' }">
+					<v-list-item-icon
+						><v-icon>mdi-earth</v-icon></v-list-item-icon
+					>
+					<v-list-item-title>
+						{{ $t("app.my_trips") }}
+					</v-list-item-title>
+				</v-list-item>
 			</v-list>
 
 			<v-list nav dense>

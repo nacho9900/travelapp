@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ActivityService;
-import ar.edu.itba.paw.interfaces.PlaceService;
 import ar.edu.itba.paw.interfaces.TripCommentsService;
 import ar.edu.itba.paw.interfaces.TripJoinRequestService;
 import ar.edu.itba.paw.interfaces.TripMemberService;
@@ -160,7 +159,13 @@ public class TripController extends BaseController
 
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getAll() {
+    public Response getAll( @QueryParam( "page" ) int page ) {
+        if ( page <= 0 ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "invalid page", "page" ) )
+                           .build();
+        }
+
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Optional<User> maybeUser = userService.findByUsername( username );
@@ -169,9 +174,9 @@ public class TripController extends BaseController
             return Response.status( Response.Status.NOT_FOUND ).build();
         }
 
-        List<Trip> trips = tripService.getAllUserTrips( maybeUser.get() );
+        PaginatedResult<Trip> result = tripService.getAllUserTrips( maybeUser.get(), page);
 
-        return Response.ok().entity( trips.stream().map( TripDto::fromTrip ).collect( Collectors.toList() ) ).build();
+        return Response.ok().entity( TripListDto.fromPaginatedResult( result ) ).build();
     }
 
     @PUT

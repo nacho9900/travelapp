@@ -23,17 +23,13 @@ public interface TripDao
 
     List<Trip> getAllTrips( int pageNum );
 
-    List<Trip> findUserTrips( long userId );
+    PaginatedResult<Trip> findUserTrips( long userId, int page );
 
     void deleteTrip( long tripId );
-
-    int countAllTrips();
 
     List<Trip> findByCategory( String category );
 
     List<Trip> findByPlace( String placeName );
-
-    List<Trip> findWithFilters( Map<String, Object> filterMap );
 
     List<TripComment> getTripComments( long tripId );
 

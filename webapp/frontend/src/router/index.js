@@ -23,9 +23,15 @@ const routes = [
     props: true,
   },
   {
-    path: '/trip',
+    path: '/trip/new',
     name: 'TripNew',
     component: () => import("views/trips/TripNew.vue"),
+    meta: { requireAuth: true }
+  },
+  {
+    path: '/trip',
+    name: 'UserTrips',
+    component: () => import("views/user/UserTrips.vue"),
     meta: { requireAuth: true }
   },
   {
