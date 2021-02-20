@@ -15,6 +15,7 @@
 								"
 								:rules="requiredRule"
 								:disabled="loading"
+								outlined
 								dense
 							></v-text-field>
 						</v-col>
@@ -26,6 +27,7 @@
 								"
 								:rules="requiredRule"
 								:disabled="loading"
+								outlined
 								dense
 							></v-text-field>
 						</v-col>
@@ -37,6 +39,7 @@
 								"
 								:rules="requiredRule"
 								:disabled="loading"
+								outlined
 								dense
 							></date-picker>
 						</v-col>
@@ -52,6 +55,7 @@
 								item-text="countryName"
 								value="countryShortCode"
 								return-object
+								outlined
 								dense
 							></v-select>
 						</v-col>
@@ -64,6 +68,7 @@
 								:disabled="loading"
 								:rules="biographySizeRule"
 								counter="500"
+								outlined
 								dense
 							>
 							</v-textarea>

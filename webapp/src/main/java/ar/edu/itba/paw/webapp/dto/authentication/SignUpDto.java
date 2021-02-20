@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.dto.authentication;
 import ar.edu.itba.paw.webapp.dto.validators.PasswordConstraint;
 import ar.edu.itba.paw.webapp.dto.validators.Past;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -12,13 +13,16 @@ public class SignUpDto
 {
     @NotNull
     @NotBlank
+    @Length( max = 100 )
     private String firstname;
     @NotNull
     @NotBlank
+    @Length( max = 100 )
     private String lastname;
     @NotNull
     @NotBlank
     @Email
+    @Length( max = 100 )
     private String email;
     @NotNull
     @NotBlank
@@ -26,6 +30,7 @@ public class SignUpDto
     private String password;
     @NotNull
     @NotBlank
+    @Length( max = 100 )
     private String nationality;
     @NotNull
     @Past

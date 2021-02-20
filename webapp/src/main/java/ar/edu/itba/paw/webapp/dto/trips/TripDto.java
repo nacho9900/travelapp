@@ -5,6 +5,7 @@ import ar.edu.itba.paw.webapp.dto.validators.Future;
 import ar.edu.itba.paw.webapp.dto.validators.TripConstraint;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -16,8 +17,10 @@ public class TripDto
 {
     private Long id;
     @NotBlank
+    @Length( max = 100 )
     private String name;
     @NotBlank
+    @Length( max = 500 )
     private String description;
     private String role;
     @NotNull

@@ -9,7 +9,11 @@
 							<v-text-field
 								v-model="firstname"
 								:label="$t('views.signup.firstname')"
-								:rules="requiredRule"
+								:rules="
+									requiredRule.concat(
+										oneHundredFieldLengthRule
+									)
+								"
 								:disabled="loading"
 								outlined
 								dense
@@ -19,7 +23,11 @@
 							<v-text-field
 								v-model="lastname"
 								:label="$t('views.signup.lastname')"
-								:rules="requiredRule"
+								:rules="
+									requiredRule.concat(
+										oneHundredFieldLengthRule
+									)
+								"
 								:disabled="loading"
 								outlined
 								dense
@@ -53,7 +61,11 @@
 							<v-text-field
 								v-model="email"
 								:label="$t('views.signup.email')"
-								:rules="requiredRule.concat(emailRules)"
+								:rules="
+									requiredRule
+										.concat(emailRules)
+										.concat(oneHundredFieldLengthRule)
+								"
 								:disabled="loading"
 								outlined
 								dense
@@ -121,7 +133,12 @@
 
 <script>
 import countries from "country-region-data";
-import { emailRules, requiredRule, passwordRules } from "../../rules.js";
+import {
+	emailRules,
+	requiredRule,
+	passwordRules,
+	oneHundredFieldLengthRule,
+} from "../../rules.js";
 
 export default {
 	props: {
@@ -145,6 +162,7 @@ export default {
 					this.password === this.passwordRepeat ||
 					this.$t("views.signup.password_repeat_rule"),
 			],
+			oneHundredFieldLengthRule,
 		};
 	},
 	methods: {

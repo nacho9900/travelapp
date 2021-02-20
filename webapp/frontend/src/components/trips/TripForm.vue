@@ -11,8 +11,9 @@
 							<v-text-field
 								v-model.trim="nameEntered"
 								:label="$t('components.trips.tripform.name')"
-								:rules="requiredRule"
+								:rules="requiredRule.concat(tripNameSizeRule)"
 								:disabled="loading"
+								outlined
 							>
 							</v-text-field>
 						</v-col>
@@ -28,6 +29,7 @@
 										.concat(datesRule)
 								"
 								:disabled="loading"
+								outlined
 							></date-picker>
 						</v-col>
 						<v-col cols="12" md="6">
@@ -42,6 +44,7 @@
 										.concat(datesRule)
 								"
 								:disabled="loading"
+								outlined
 							></date-picker>
 						</v-col>
 						<v-col cols="12">
@@ -55,8 +58,12 @@
 										'components.trips.tripform.description_hint'
 									)
 								"
-								:rules="requiredRule"
+								:rules="
+									requiredRule.concat(descriptionSizeRule)
+								"
 								:disabled="loading"
+								counter="500"
+								outlined
 							>
 							</v-textarea>
 						</v-col>
@@ -65,8 +72,8 @@
 			</v-card-text>
 			<v-card-actions>
 				<v-container fluid>
-					<v-row justify="end">
-						<v-col cols="6" class="d-flex justify-end">
+					<v-row>
+						<v-col cols="6" class="px-5">
 							<v-btn
 								color="primary"
 								type="submit"
@@ -110,6 +117,18 @@ export default {
 			],
 			requiredRule,
 			futureDateRule,
+			tripNameSizeRule: [
+				(v) =>
+					!v ||
+					v.length <= 100 ||
+					this.$t("components.trips.tripform.name_length_rule"),
+			],
+			descriptionSizeRule: [
+				(v) =>
+					!v ||
+					v.length <= 500 ||
+					this.$t("components.trips.tripform.desc_length_rule"),
+			],
 		};
 	},
 	computed: {

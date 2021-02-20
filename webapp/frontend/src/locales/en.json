@@ -33,7 +33,8 @@
       "format": "The password must contains 8 to 20 characters and a capital letter",
       "required": "Password is required"
     },
-    "future_date_rule": "The date must be in the future."
+    "future_date_rule": "The date must be in the future.",
+    "one_hundred_length": "the field must be shorter than 100 characters"
   },
   "ui": {
     "delete_dialog": {
@@ -137,7 +138,9 @@
         "create": "Create",
         "date_rule": "Date from cannot be after Date to",
         "title_edit": "Edit trip information",
-        "edit": "update"
+        "edit": "update",
+        "name_length_rule": "the name must be shorter than 100 characters",
+        "desc_length_rule": "the description must be shorter than 500 characters"
       },
       "trip_new_comment_box": {
         "new_comment": "Enter a new comment"

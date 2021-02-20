@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.webapp.dto.validators.Future;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -13,10 +14,9 @@ import java.time.LocalDate;
 public class ActivityDto
 {
     private Long id;
-    @NotNull
     @NotBlank
+    @Length( max = 40 )
     private String name;
-    private String category;
     @NotNull
     @Future
     @JsonFormat( shape = JsonFormat.Shape.STRING,
@@ -42,10 +42,6 @@ public class ActivityDto
         return name;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -62,9 +58,10 @@ public class ActivityDto
         LocalDate startDate = this.startDate;
         LocalDate endDate = this.endDate;
 
-        if(this.id != null) {
+        if ( this.id != null ) {
             return new Activity( this.id, this.name, this.place.toPlace(), null, startDate, endDate );
-        } else {
+        }
+        else {
             return new Activity( this.name, this.place.toPlace(), null, startDate, endDate );
         }
     }

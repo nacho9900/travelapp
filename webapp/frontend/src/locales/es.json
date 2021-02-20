@@ -137,7 +137,9 @@
         "create": "Crear",
         "date_rule": "La fecha desde no puede ser despues de la fecha hasta",
         "title_edit": "Editar información del viaje",
-        "edit": "modificar"
+        "edit": "modificar",
+        "name_length_rule": "el nombre debe contener menos de 100 caracteres",
+        "desc_length_rule": "la descripción debe contener menos de 500 caracteres"
       },
       "trip_new_comment_box": {
         "new_comment": "Ingrese un nuevo comentario"

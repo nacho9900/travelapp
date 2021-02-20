@@ -10,6 +10,7 @@
 		:solo="solo"
 		:label="label"
 		:hide-details="hideDetails"
+		:outlined="outlined"
 		item-text="address"
 		prepend-inner-icon="mdi-map-marker-outline"
 		return-object
@@ -31,6 +32,7 @@ export default {
 		solo: Boolean,
 		label: String,
 		hideDetails: Boolean,
+		outlined: Boolean,
 	},
 	data() {
 		return {

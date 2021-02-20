@@ -16,6 +16,7 @@
 							"
 							:rules="requiredRule"
 							:disabled="loading || success"
+							outlined
 							dense
 						>
 						</password-text-field>
@@ -34,6 +35,7 @@
 									.concat(repeatPasswordRule)
 							"
 							:disabled="loading || success"
+							outlined
 							dense
 						>
 						</password-text-field>
@@ -52,6 +54,7 @@
 									.concat(repeatPasswordRule)
 							"
 							:disabled="loading || success"
+							outlined
 							dense
 						>
 						</password-text-field>

@@ -1,7 +1,7 @@
 <template>
 	<v-form @submit.prevent="submit" ref="form">
 		<v-card :loading="loading">
-			<v-card-title>
+			<v-card-title class="font-weight-regular">
 				{{ title }}
 			</v-card-title>
 			<v-card-text class="px-0">
@@ -17,6 +17,7 @@
 								v-model="placeSelected"
 								:disabled="loading"
 								:rules="requiredRule"
+								outlined
 							></place-autocomplete>
 						</v-col>
 						<v-col cols="12" class="pa-0">
@@ -30,6 +31,7 @@
 								"
 								:rules="requiredRule.concat(nameLengthRule)"
 								counter="40"
+								outlined
 							></v-text-field>
 						</v-col>
 						<v-col cols="6" class="py-0 pl-0">
@@ -44,6 +46,7 @@
 								:rules="requiredRule"
 								:min="from"
 								:max="to"
+								outlined
 							></date-picker>
 						</v-col>
 						<v-col cols="6" class="py-0 pr-0">
@@ -58,6 +61,7 @@
 								:rules="requiredRule"
 								:min="from"
 								:max="to"
+								outlined
 							></date-picker>
 						</v-col>
 					</v-row>
