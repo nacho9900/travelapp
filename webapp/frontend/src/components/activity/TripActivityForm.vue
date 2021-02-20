@@ -42,6 +42,8 @@
 									)
 								"
 								:rules="requiredRule"
+								:min="from"
+								:max="to"
 							></date-picker>
 						</v-col>
 						<v-col cols="6" class="py-0 pr-0">
@@ -54,6 +56,8 @@
 									)
 								"
 								:rules="requiredRule"
+								:min="from"
+								:max="to"
 							></date-picker>
 						</v-col>
 					</v-row>
@@ -88,6 +92,8 @@ export default {
 		endDate: String,
 		loading: Boolean,
 		edit: Boolean,
+		from: String,
+		to: String,
 	},
 	data() {
 		return {

@@ -112,6 +112,9 @@
       "page_not_found": {
         "message": "Lo sentimos, no pudimos encontrar esa página",
         "redirect": "Intentá visitando la página principal y buscando por un viaje que te pueda gustar. "
+      },
+      "connection_lost": {
+        "message": "parece que se perdió la conexion de internet. Por favor, revisa tu conexión a internet y si el problema persiste vuelva a visitar el sitio en unos minutos."
       }
     },
     "user_trips": {

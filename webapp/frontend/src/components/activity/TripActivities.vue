@@ -10,6 +10,8 @@
 				:place="activityToEdit ? activityToEdit.place : null"
 				:startDate="activityToEdit ? activityToEdit.startDate : null"
 				:endDate="activityToEdit ? activityToEdit.endDate : null"
+				:from="from"
+				:to="to"
 			></trip-activity-form>
 		</v-dialog>
 		<delete-dialog
@@ -79,6 +81,8 @@ export default {
 		return {
 			activities: [],
 			role: null,
+			from: "",
+			to: "",
 			createDialog: false,
 			loadingAction: false,
 			loadingDelete: false,
@@ -220,6 +224,8 @@ export default {
 				);
 
 				this.activities = activities.activities;
+				this.from = activities.from;
+				this.to = activities.to;
 				const role = activities.role;
 				this.setRole(role);
 			} catch (error) {

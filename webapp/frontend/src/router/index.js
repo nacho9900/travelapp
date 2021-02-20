@@ -72,6 +72,11 @@ const routes = [
     props: true,
   },
   {
+    path: '/connection-lost',
+    name: "NetworkError",
+    component: () => import("views/error/NetworkError.vue"),
+  },
+  {
     path: '/:notFound(.*)',
     component: () => import("views/error/PageNotFound.vue"),
   }

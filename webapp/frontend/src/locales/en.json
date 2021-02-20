@@ -111,6 +111,9 @@
       "page_not_found": {
         "message": "Sorry, we couldn't find that page",
         "redirect": "Try visiting the home page and search for a trip you may enjoy."
+      },
+      "connection_lost": {
+        "message": "It seems that the internet connection was lost. Please, check your internet connection and if the problem persists, visit the site again in a few minutes."
       }
     },
     "user_trips": {

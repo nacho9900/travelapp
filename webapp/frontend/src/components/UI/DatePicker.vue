@@ -26,6 +26,8 @@
 			<v-date-picker
 				v-model="date"
 				:locale="locale"
+				:min="min"
+				:max="max"
 				no-title
 			></v-date-picker>
 		</template>
@@ -46,6 +48,8 @@ export default {
 		disabled: Boolean,
 		solo: Boolean,
 		hideDetails: Boolean,
+		min: String,
+		max: String,
 	},
 	data() {
 		return {

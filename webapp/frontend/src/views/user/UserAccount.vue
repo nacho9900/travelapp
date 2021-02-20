@@ -94,5 +94,10 @@ export default {
 			this.loadingChangePassword = false;
 		},
 	},
+	created() {
+		if (!this.hasUser) {
+			this.$store.dispatch("loadUser");
+		}
+	},
 };
 </script>

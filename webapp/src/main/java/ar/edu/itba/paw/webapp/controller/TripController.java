@@ -384,6 +384,14 @@ public class TripController extends BaseController
             return TripNotFound();
         }
 
+        Trip trip = maybeTrip.get();
+
+        if ( activityDto.getStartDate().isAfter( activityDto.getEndDate() ) || activityDto.getStartDate().isBefore(
+                trip.getStartDate() ) || activityDto.getEndDate().isAfter( trip.getEndDate() ) ) {
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    new ErrorDto( "invalid date range", "starDate and endDate" ) ).build();
+        }
+
         Activity activity = activityService.create( activityDto.getName(), maybeTrip.get(), activityDto.getStartDate(),
                                                     activityDto.getEndDate(), activityDto.getPlace().toPlace() );
 
@@ -395,7 +403,16 @@ public class TripController extends BaseController
     public Response getActivities( @PathParam( "id" ) long id ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        ActivityListDto activities = ActivityListDto.fromActivityList( activityService.findByTrip( id ) );
+        Optional<Trip> maybeTrip = tripService.findById( id );
+
+        if ( !maybeTrip.isPresent() ) {
+            return TripNotFound();
+        }
+
+        Trip trip = maybeTrip.get();
+
+        ActivityListDto activities = ActivityListDto.fromActivityList( activityService.findByTrip( id ),
+                                                                       trip.getStartDate(), trip.getEndDate() );
 
         tripMemberService.findByTripIdAndUsername( id, username ).ifPresent(
                 tripMember -> activities.setRole( tripMember.getRole().name() ) );
