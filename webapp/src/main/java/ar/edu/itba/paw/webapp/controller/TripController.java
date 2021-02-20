@@ -52,7 +52,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
@@ -312,7 +316,8 @@ public class TripController extends BaseController
     @Path( "/{id}/picture" )
     @Produces( "image/png" )
     public Response getPicture(
-            @PathParam( "id" ) long id, @QueryParam( "width" ) Integer width, @QueryParam( "height" ) Integer height ) {
+            @PathParam( "id" ) long id,
+            @QueryParam( "width" ) Integer width, @QueryParam( "height" ) Integer height, @Context Request request ) {
         Optional<TripPicture> maybeTripPicture = tripPicturesService.findByTripId( id );
 
         if ( !maybeTripPicture.isPresent() ) {
@@ -321,17 +326,38 @@ public class TripController extends BaseController
 
         TripPicture tripPicture = maybeTripPicture.get();
 
+        EntityTag etag;
+
         if ( width != null && height != null ) {
+            etag = new EntityTag( Integer.toString( tripPicture.hashCode() * width.hashCode() * height.hashCode() ) );
             tripPicture.setPicture( tripPicturesService.resize( tripPicture.getPicture(), width, height ) );
         }
         else if ( width != null ) {
+            etag = new EntityTag( Integer.toString( tripPicture.hashCode() * width.hashCode() * 7 ) );
             tripPicture.setPicture( tripPicturesService.resizeWidth( tripPicture.getPicture(), width ) );
         }
         else if ( height != null ) {
+            etag = new EntityTag( Integer.toString( tripPicture.hashCode() * height.hashCode() * 11 ) );
             tripPicture.setPicture( tripPicturesService.resizeHeight( tripPicture.getPicture(), height ) );
         }
+        else {
+            etag = new EntityTag( Integer.toString( tripPicture.hashCode() ) );
+        }
 
-        return Response.ok( new ByteArrayInputStream( tripPicture.getPicture() ) ).build();
+        Response.ResponseBuilder builder = request.evaluatePreconditions( etag );
+
+        CacheControl cc = new CacheControl();
+        cc.setMaxAge( 3600 );
+
+        if ( builder == null ) {
+            return Response.ok( new ByteArrayInputStream( tripPicture.getPicture() ) )
+                           .tag( etag )
+                           .cacheControl( cc )
+                           .build();
+        }
+        else {
+            return builder.cacheControl( cc ).build();
+        }
     }
 
     //endregion

@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { formatDateTimeString } from "../../utils.js";
+import { formatDateString } from "../../utils.js";
 
 export default {
 	props: {
@@ -55,10 +55,10 @@ export default {
 	},
 	computed: {
 		startDateFormatted() {
-			return formatDateTimeString(this.startDate);
+			return formatDateString(this.startDate);
 		},
 		endDateFormatted() {
-			return formatDateTimeString(this.endDate);
+			return formatDateString(this.endDate);
 		},
 	},
 	methods: {

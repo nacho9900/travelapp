@@ -1,7 +1,7 @@
 <template>
 	<v-avatar :rounded="rounded" :tile="tile" :color="color">
-		<span v-if="imageError">{{ initials }}</span>
-		<v-img :src="url" @error="imageError = true" v-else></v-img>
+		<span v-if="!url || url === ''">{{ initials }}</span>
+		<v-img :src="url" @error="url = ''" v-else></v-img>
 	</v-avatar>
 </template>
 
@@ -9,7 +9,6 @@
 export default {
 	props: {
 		id: Number,
-		cacheBreaker: Number,
 		firstname: String,
 		lastname: String,
 		color: String,
@@ -19,7 +18,7 @@ export default {
 	},
 	data() {
 		return {
-			imageError: false,
+			url: "",
 		};
 	},
 	computed: {
@@ -29,17 +28,16 @@ export default {
 						this.lastname.split(" ")[0][0]
 				: "";
 		},
-		url() {
-			return (
+	},
+	methods: {
+		init() {
+			this.url =
 				process.env.VUE_APP_API_BASE_URL +
-				`/users/${this.id}/picture?width=50&${this.cacheBreaker}`
-			);
+				`/users/${this.id}/picture?width=50`;
 		},
 	},
-	watch: {
-		cacheBreaker() {
-			this.imageError = false;
-		},
+	created() {
+		this.init();
 	},
 };
 </script>

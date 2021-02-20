@@ -58,7 +58,7 @@ export default {
 			return this.imageError
 				? "/VvNhMb0.jpg"
 				: process.env.VUE_APP_API_BASE_URL +
-						`/trip/${this.id}/picture?height=200&${this.imageCacheBreaker}`;
+						`/trip/${this.id}/picture?height=200`;
 		},
 	},
 };

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "user_pictures")
@@ -61,5 +62,33 @@ public class UserPicture {
 
     public void setUser( User user ) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) {
+            return true;
+        }
+        if ( o == null || getClass() != o.getClass() ) {
+            return false;
+        }
+
+        UserPicture that = (UserPicture) o;
+
+        if ( id != that.id ) {
+            return false;
+        }
+        if ( !Arrays.equals( picture, that.picture ) ) {
+            return false;
+        }
+        return name.equals( that.name );
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) ( id ^ ( id >>> 32 ) );
+        result = 31 * result + Arrays.hashCode( picture );
+        result = 31 * result + name.hashCode();
+        return result;
     }
 }

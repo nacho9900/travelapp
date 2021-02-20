@@ -14,8 +14,8 @@
 						:id="id"
 						:firstname="firstname"
 						:lastname="lastname"
-						:cache-breaker="avatarCacheBreaker"
 						color="secondary"
+						ref="avatar"
 					>
 					</user-avatar>
 				</v-btn>
@@ -56,7 +56,6 @@ export default {
 		return {
 			changeAvatarDialog: false,
 			loadingAvatar: false,
-			avatarCacheBreaker: new Date().getTime(),
 			error: null,
 		};
 	},
@@ -74,7 +73,10 @@ export default {
 			try {
 				await this.$store.dispatch("changeAvatar", { image: image });
 				this.avatarCacheBreaker = new Date().getTime();
-				this.changeAvatarDialog = false;
+
+				if (this.$refs.avatar) {
+					this.$refs.avatar.init();
+				}
 			} catch (error) {
 				this.error = this.$t(
 					"components.user.user_menu.change_avatar_error"

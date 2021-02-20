@@ -15,6 +15,7 @@ import ar.edu.itba.paw.webapp.dto.users.NewPasswordDto;
 import ar.edu.itba.paw.webapp.dto.users.UserDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,9 +31,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.ByteArrayInputStream;
@@ -162,8 +166,10 @@ public class UsersController
     @GET
     @Path( "/{id}/picture" )
     @Produces( "image/png" )
+    @Cacheable
     public Response getPicture(
-            @PathParam( "id" ) long id, @QueryParam( "width" ) Integer width, @QueryParam( "height" ) Integer height ) {
+            @PathParam( "id" ) long id,
+            @QueryParam( "width" ) Integer width, @QueryParam( "height" ) Integer height, @Context Request request ) {
         Optional<UserPicture> maybeUserPicture = userPicturesService.findByUserId( id );
 
         if ( !maybeUserPicture.isPresent() ) {
@@ -172,17 +178,38 @@ public class UsersController
 
         UserPicture userPicture = maybeUserPicture.get();
 
+        EntityTag etag;
+
         if ( width != null && height != null ) {
+            etag = new EntityTag( Integer.toString( userPicture.hashCode() * width.hashCode() * height.hashCode() ) );
             userPicture.setPicture( userPicturesService.resize( userPicture.getPicture(), width, height ) );
         }
         else if ( width != null ) {
+            etag = new EntityTag( Integer.toString( userPicture.hashCode() * width.hashCode() * 7 ) );
             userPicture.setPicture( userPicturesService.resizeWidth( userPicture.getPicture(), width ) );
         }
         else if ( height != null ) {
+            etag = new EntityTag( Integer.toString( userPicture.hashCode() * height.hashCode() * 11 ) );
             userPicture.setPicture( userPicturesService.resizeHeight( userPicture.getPicture(), height ) );
         }
+        else {
+            etag = new EntityTag( Integer.toString( userPicture.hashCode() ) );
+        }
 
-        return Response.ok( new ByteArrayInputStream( userPicture.getPicture() ) ).build();
+        Response.ResponseBuilder builder = request.evaluatePreconditions( etag );
+
+        CacheControl cc = new CacheControl();
+        cc.setMaxAge( 3600 );
+
+        if ( builder == null ) {
+            return Response.ok( new ByteArrayInputStream( userPicture.getPicture() ) )
+                           .tag( etag )
+                           .cacheControl( cc )
+                           .build();
+        }
+        else {
+            return builder.cacheControl( cc ).build();
+        }
     }
 
     //endregion
