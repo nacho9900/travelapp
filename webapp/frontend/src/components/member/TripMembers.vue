@@ -1,6 +1,23 @@
 <template>
 	<v-container class="px-0 py-0" fluid>
 		<simple-error-dialog v-model="error"></simple-error-dialog>
+		<delete-dialog
+			v-model="deleteMemberDialog"
+			:title="$t('components.trips.trip_member_card.delete_dialog_title')"
+			:message="
+				deleteMemberDialog
+					? $t(
+							'components.trips.trip_member_card.delete_dialog_message'
+					) +
+					memberToDelete.user.firstname +
+					' ' +
+					memberToDelete.user.lastname
+					: ''
+			"
+			:loading="memberDeleteLoading"
+			@remove="deleteMember"
+			@cancel="memberToDelete = null"
+		></delete-dialog>
 		<v-row justify="center">
 			<v-col cols="12">
 				<v-expansion-panels focusable accordion>
@@ -21,6 +38,7 @@
 								:members="members"
 								:loading="loading"
 								:actions="showActions"
+								@delete="setMemberToDelete"
 							></trip-member-list>
 							<v-alert class="mt-10" type="info" v-else>
 								{{
@@ -97,6 +115,8 @@ export default {
 			error: null,
 			loadingRequests: false,
 			memberRoles,
+			memberToDelete: null,
+			memberDeleteLoading: false,
 		};
 	},
 	computed: {
@@ -108,6 +128,9 @@ export default {
 		},
 		canEditMember() {
 			return !!this.role && this.role.canEditMember;
+		},
+		deleteMemberDialog() {
+			return !!this.memberToDelete;
 		},
 	},
 	methods: {
@@ -167,6 +190,29 @@ export default {
 		exit() {
 			this.getMembers();
 			this.getJoinRequests();
+		},
+		setMemberToDelete(data) {
+			this.memberToDelete = this.members.find((x) => x.id === data.id);
+		},
+		async deleteMember() {
+			this.memberDeleteLoading = true;
+
+			try {
+				await this.$store.dispatch("member/delete", {
+					id: this.memberToDelete.id,
+					tripId: this.tripId,
+				});
+				this.members = this.members.filter(
+					(x) => x.id !== this.memberToDelete.id
+				);
+				this.memberToDelete = null;
+			} catch (error) {
+				this.error = this.$t(
+					"components.trips.trip_members.delete_error"
+				);
+			}
+
+			this.memberDeleteLoading = false;
 		},
 	},
 	created() {

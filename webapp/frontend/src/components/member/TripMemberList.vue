@@ -26,6 +26,7 @@
 					:biography="member.user.biography"
 					:role="member.role"
 					:actions="actions"
+					@delete="deleteMember"
 				></trip-member-card>
 			</v-col>
 		</v-row>
@@ -43,6 +44,11 @@ export default {
 		members: Array,
 		loading: Boolean,
 		actions: Boolean,
+	},
+	methods: {
+		deleteMember(data) {
+			this.$emit("delete", data);
+		},
 	},
 };
 </script>

@@ -182,7 +182,8 @@
         "members": "Active Members",
         "join_request": "Join Requests",
         "get_requests_error": "There was an error trying to obtain the join requests. Please, try again later.",
-        "not_admin": "You must be the trip owner or an administrator to see the trip join requests"
+        "not_admin": "You must be the trip owner or an administrator to see the trip join requests",
+        "delete_error": "There was an error deleting a member. Please, try again later."
       },
       "trip_join_button": {
         "exit_trip": "Exit trip",
@@ -217,6 +218,10 @@
       },
       "trip_paginated_list": {
         "no_results": "No matching trips found, try creating a new one!"
+      },
+      "trip_member_card": {
+        "delete_dialog_title": "Are you sure that you want to delete this member?",
+        "delete_dialog_message": "You are going to delete  "
       }
     },
     "user": {

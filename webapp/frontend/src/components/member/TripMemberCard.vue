@@ -16,27 +16,23 @@
 			<v-chip class="black--text" :color="roleObj.color">{{
 				roleObj.text
 			}}</v-chip>
-			<v-menu v-if="actions" bottom right>
+			<v-menu v-if="roleObj.canBeEdited && actions" bottom right>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn color="primary" icon v-bind="attrs" v-on="on">
 						<v-icon>mdi-dots-vertical</v-icon>
 					</v-btn>
 				</template>
 
-				<!-- <v-list>
-					<v-list-item @click="edit">
-						<v-list-item-title>{{
-							$t(
-								"components.trips.trip_member_card.edit_activity"
-							)
-						}}</v-list-item-title>
-					</v-list-item>
-					<v-list-item @click="remove">
+				<v-list>
+					<v-list-item @click="deleteMember">
+						<v-list-item-icon>
+							<v-icon> mdi-logout </v-icon>
+						</v-list-item-icon>
 						<v-list-item-title>{{
 							$t("components.trips.trip_activity_card.remove")
 						}}</v-list-item-title>
 					</v-list-item>
-				</v-list> -->
+				</v-list>
 			</v-menu>
 		</v-app-bar>
 		<v-card-text class="text--primary pt-0" v-if="biography">
@@ -70,6 +66,11 @@ export default {
 	computed: {
 		fullname() {
 			return this.firstname + " " + this.lastname;
+		},
+	},
+	methods: {
+		deleteMember() {
+			this.$emit("delete", { id: this.id });
 		},
 	},
 };

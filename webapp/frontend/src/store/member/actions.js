@@ -10,5 +10,10 @@ export default {
     async exit(_, payload) {
         const tripId = payload.tripId;
         await Axios.post(`/trip/${tripId}/exit`);
+    },
+    async delete(_, payload) {
+        const tripId = payload.tripId;
+        const memberId = payload.id;
+        await Axios.delete(`/trip/${tripId}/member/${memberId}`);
     }
 };

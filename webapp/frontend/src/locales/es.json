@@ -182,7 +182,8 @@
         "members": "Miembros Activos",
         "join_request": "Solicitudes de Miembro",
         "get_requests_error": "Ocurrio un error al querer obtener las solicitudes de miembro. Por favor, intente nuevamente más tarde.",
-        "not_admin": "Debes ser el propietario del viaje o administrador para ver las solicitudes de miembro del viaje"
+        "not_admin": "Debes ser el propietario del viaje o administrador para ver las solicitudes de miembro del viaje",
+        "delete_error": "Ocurrión un error al eliminar un miembro. por favor, intente nuevamente más tarde."
       },
       "trip_join_button": {
         "exit_trip": "Abondanar viaje",
@@ -217,6 +218,10 @@
       },
       "trip_paginated_list": {
         "no_results": "No se encontraron viajes que coincidan con la busqueda, intenta crear uno nuevo!"
+      },
+      "trip_member_card": {
+        "delete_dialog_title": "¿Está seguro que desea eliminar a este miembro?",
+        "delete_dialog_message": "Usted está por eliminar a "
       }
     },
     "user": {
