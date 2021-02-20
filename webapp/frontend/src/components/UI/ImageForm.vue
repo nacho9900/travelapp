@@ -44,8 +44,8 @@ export default {
 
 				reader.addEventListener("load", () => {
 					this.$emit("submit", {
-						name: this.file.name,
-						body: reader.result.split(",")[1],
+						filename: this.file.name,
+						fileBase64: reader.result.split(",")[1],
 					});
 				});
 

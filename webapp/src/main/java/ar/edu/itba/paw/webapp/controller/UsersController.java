@@ -1,99 +1,217 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripMember;
+import ar.edu.itba.paw.model.TripMemberRole;
+import ar.edu.itba.paw.model.TripPicture;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
-import ar.edu.itba.paw.webapp.auth.LoginHelper;
-import ar.edu.itba.paw.webapp.dto.AuthDto;
-import ar.edu.itba.paw.webapp.dto.AuthRequestDto;
-import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.model.UserPicture;
+import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
+import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
+import ar.edu.itba.paw.webapp.dto.general.FileDto;
+import ar.edu.itba.paw.webapp.dto.users.NewPasswordDto;
+import ar.edu.itba.paw.webapp.dto.users.UserDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component  //For autowired
 @Path( "/users" )
 public class UsersController
 {
-    private static final Integer PAGE_SIZE = 10;
-
     @Autowired
     private UserService userService;
 
     @Autowired
-    private LoginHelper loginHelper;
+    private UserPicturesService userPicturesService;
+
+    @Autowired
+    private Validator validator;
 
     @Context
     private UriInfo uriInfo;
 
-    //TODO: Paging
-    @GET
-    @Produces( value = {MediaType.APPLICATION_JSON} )
-    public Response listUsers( @QueryParam( "page" ) @DefaultValue( "1" ) int page ) {
-        final List<UserDto> users = userService.getAll( page, PAGE_SIZE )
-                                               .stream()
-                                               .map( x -> UserDto.fromUser( x, uriInfo ) )
-                                               .collect( Collectors.toList() );
+    @PUT
+    @Path( "/current" )
+    public Response edit( @RequestBody UserDto userDto ) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Set<ConstraintViolation<UserDto>> violations = validator.validate( userDto );
 
-        return Response.ok( new GenericEntity<List<UserDto>>( users )
-        {
-        } )
-                       .link( uriInfo.getAbsolutePathBuilder()
-                                     .queryParam( "page", 1 )
-                                     .build(), "first" )
-                       .link( uriInfo.getAbsolutePathBuilder()
-                                     .queryParam( "page", 5 )
-                                     .build(), "last" )
-                       .link( uriInfo.getAbsolutePathBuilder()
-                                     .queryParam( "page", page + 1 )
-                                     .build(), "next" )
-                       .link( uriInfo.getAbsolutePathBuilder()
-                                     .queryParam( "page", page - 1 )
-                                     .build(), "prev" )
-                       .build();
+        if ( !violations.isEmpty() ) {
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+        }
+
+        Optional<User> maybeUser = userService.findByUsername( username );
+
+        if ( !maybeUser.isPresent() || maybeUser.get().getId() != userDto.getId() ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        User userUpdates = userDto.toUser();
+
+        User user = userService.update( maybeUser.get(), userUpdates.getFirstname(), userUpdates.getLastname(),
+                                        userUpdates.getBirthday(), userUpdates.getNationality(),
+                                        userUpdates.getBiography() );
+
+        return Response.ok().entity( UserDto.fromUser( user ) ).build();
+    }
+
+    @GET
+    @Path( "/current" )
+    public Response getCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Optional<User> maybeUser = userService.findByUsername( username );
+
+        if ( !maybeUser.isPresent() ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        return Response.ok().entity( maybeUser.map( UserDto::fromUser ) ).build();
     }
 
     @POST
-    @Path( "/login" )
-    @Consumes( MediaType.APPLICATION_JSON )
-    public Response login( @RequestBody AuthRequestDto authRequestDto ) {
-        String email = authRequestDto.getEmail();
-        String password = authRequestDto.getPassword();
+    @Path( "/change-password" )
+    public Response changePassword( @RequestBody NewPasswordDto newPasswordDto ) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Set<ConstraintViolation<NewPasswordDto>> violations = validator.validate( newPasswordDto );
 
-        Optional<AuthDto> maybeAuth = loginHelper.authenticate( email, password );
+        if ( !violations.isEmpty() ) {
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+        }
 
-        if ( maybeAuth.isPresent() )
-        {
-            return Response.ok( maybeAuth.get() )
+        Optional<User> maybeUser = userService.findByUsername( username );
+
+        if ( !maybeUser.isPresent() ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        if ( !userService.matchPassword( maybeUser.get().getPassword(), newPasswordDto.getPasswordCurrent() ) ) {
+            return Response.status( Response.Status.CONFLICT )
+                           .entity( new ErrorDto( "passwords didn't match" ) )
+                           .build();
+        }
+
+        User user = userService.changePassword( maybeUser.get(), newPasswordDto.getPasswordNew() );
+
+        return Response.ok().build();
+    }
+
+    //region picture
+
+    @PUT
+    @Path( "/current/picture" )
+    public Response createOrUpdatePicture( @RequestBody FileDto fileDto ) {
+        Set<ConstraintViolation<FileDto>> violations = validator.validate( fileDto );
+
+        if ( !violations.isEmpty() ) {
+            return Response.status( Response.Status.BAD_REQUEST ).entity(
+                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+        }
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Optional<User> maybeUser = userService.findByUsername( username );
+
+        if ( !maybeUser.isPresent() ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+
+        User user = maybeUser.get();
+
+        Optional<UserPicture> maybeUserPicture = userPicturesService.findByUserId( user.getId() );
+
+        if ( maybeUserPicture.isPresent() ) {
+            userPicturesService.update( maybeUserPicture.get(), user, fileDto.getFilename(), fileDto.getFileBase64() );
+        }
+        else {
+            userPicturesService.create( user, fileDto.getFilename(), fileDto.getFileBase64() );
+        }
+
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path( "/{id}/picture" )
+    @Produces( "image/png" )
+    @Cacheable
+    public Response getPicture(
+            @PathParam( "id" ) long id,
+            @QueryParam( "width" ) Integer width, @QueryParam( "height" ) Integer height, @Context Request request ) {
+        Optional<UserPicture> maybeUserPicture = userPicturesService.findByUserId( id );
+
+        if ( !maybeUserPicture.isPresent() ) {
+            return Response.status( Response.Status.NOT_FOUND ).build();
+        }
+
+        UserPicture userPicture = maybeUserPicture.get();
+
+        EntityTag etag;
+
+        if ( width != null && height != null ) {
+            etag = new EntityTag( Integer.toString( userPicture.hashCode() * width.hashCode() * height.hashCode() ) );
+            userPicture.setPicture( userPicturesService.resize( userPicture.getPicture(), width, height ) );
+        }
+        else if ( width != null ) {
+            etag = new EntityTag( Integer.toString( userPicture.hashCode() * width.hashCode() * 7 ) );
+            userPicture.setPicture( userPicturesService.resizeWidth( userPicture.getPicture(), width ) );
+        }
+        else if ( height != null ) {
+            etag = new EntityTag( Integer.toString( userPicture.hashCode() * height.hashCode() * 11 ) );
+            userPicture.setPicture( userPicturesService.resizeHeight( userPicture.getPicture(), height ) );
+        }
+        else {
+            etag = new EntityTag( Integer.toString( userPicture.hashCode() ) );
+        }
+
+        Response.ResponseBuilder builder = request.evaluatePreconditions( etag );
+
+        CacheControl cc = new CacheControl();
+        cc.setMaxAge( 3600 );
+
+        if ( builder == null ) {
+            return Response.ok( new ByteArrayInputStream( userPicture.getPicture() ) )
+                           .tag( etag )
+                           .cacheControl( cc )
                            .build();
         }
         else {
-            return Response.status( Response.Status.UNAUTHORIZED).build();
+            return builder.cacheControl( cc ).build();
         }
     }
 
-    @PUT
-    @Consumes( MediaType.APPLICATION_JSON )
-    public Response edit( @RequestBody UserDto userDto ) {
-        return Response.ok( userDto )
-                       .build();
-    }
+    //endregion
+
 }

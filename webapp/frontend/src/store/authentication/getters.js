@@ -7,5 +7,8 @@ export default {
     },
     user(state) {
         return state.user;
+    },
+    didAutologout(state) {
+        return state.autologout;
     }
 }

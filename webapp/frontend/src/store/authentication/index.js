@@ -6,6 +6,7 @@ export default {
     state: {
         token: null,
         user: null,
+        autologout: false,
     },
     actions,
     mutations,

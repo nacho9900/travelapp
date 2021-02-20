@@ -33,12 +33,18 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
-        return userDao.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality);
+    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String biography) {
+        return userDao.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality, biography);
     }
 
     @Override
-    public boolean update(User user) {
+    public User update( User user, String firstname, String lastname, LocalDate birthday, String nationality, String biography) {
+        user.setFirstname( firstname );
+        user.setLastname( lastname );
+        user.setBirthday( birthday );
+        user.setNationality( nationality );
+        user.setBiography( biography );
+
         return userDao.update(user);
     }
 
@@ -46,5 +52,16 @@ public class UserServiceImpl implements UserService {
     public List<User> getAll(int page, int pageSize) {
         //TODO: Paging
         return userDao.listUsers(page, pageSize);
+    }
+
+    @Override
+    public boolean matchPassword( String passwordCurrentEncoded, String passwordNew ) {
+        return passwordEncoder.matches( passwordNew, passwordCurrentEncoded );
+    }
+
+    @Override
+    public User changePassword( User user, String passwordNew ) {
+        user.setPassword( passwordEncoder.encode( passwordNew ) );
+        return userDao.update( user );
     }
 }

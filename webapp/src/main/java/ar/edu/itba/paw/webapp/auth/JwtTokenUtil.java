@@ -1,102 +1,93 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import org.jose4j.jwa.AlgorithmConstraints;
-import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.jwk.RsaJwkGenerator;
-import org.jose4j.jws.AlgorithmIdentifiers;
-import org.jose4j.jws.JsonWebSignature;
-import org.jose4j.jwt.JwtClaims;
-import org.jose4j.jwt.MalformedClaimException;
-import org.jose4j.jwt.NumericDate;
-import org.jose4j.jwt.consumer.InvalidJwtException;
-import org.jose4j.jwt.consumer.JwtConsumer;
-import org.jose4j.jwt.consumer.JwtConsumerBuilder;
-import org.jose4j.keys.AesKey;
-import org.jose4j.lang.JoseException;
+import ar.edu.itba.paw.webapp.dto.authentication.AuthDto;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.time.Instant;
+import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JwtTokenUtil
 {
-    private RsaJsonWebKey rsaJsonWebKey;
+    private PrivateKey key;
 
-    private final JwtConsumer jwtConsumer;
+    private static final int ONE_MINUTE = 60;
+    private static final int ONE_HOUR = 60 * ONE_MINUTE;
+    private static final int ONE_DAY = 24 * ONE_HOUR;
+    private static final int TEN_DAYS = 10 * ONE_DAY;
 
-    private final JsonWebSignature jsonWebSignature;
-
-    public JwtTokenUtil() {
-        try
-        {
-            this.rsaJsonWebKey = RsaJwkGenerator.generateJwk( 2048 );
-            this.rsaJsonWebKey.setKeyId( "nacho2021" );
+    public JwtTokenUtil( InputStream secretKey ) {
+        try {
+            KeyFactory keyFactory = KeyFactory.getInstance( "RSA" );
+            byte[] keyArray = new byte[secretKey.available()];
+            secretKey.read( keyArray );
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec( keyArray );
+            key = keyFactory.generatePrivate( spec );
         }
-        catch ( JoseException e )
-        {
-            e.printStackTrace();
-        }
-
-        this.jwtConsumer = new JwtConsumerBuilder().setExpectedIssuer( "PAW2019a4" )
-                                                   .setRequireExpirationTime()
-                                                   .setAllowedClockSkewInSeconds( 30 )
-                                                   .setVerificationKey( rsaJsonWebKey.getKey() )
-                                                   .setJweAlgorithmConstraints(
-                                                           AlgorithmConstraints.ConstraintType.PERMIT,
-                                                           AlgorithmIdentifiers.RSA_USING_SHA256 )
-                                                   .build();
-
-        jsonWebSignature = new JsonWebSignature();
-        jsonWebSignature.setKey( rsaJsonWebKey.getRsaPrivateKey() );
-        jsonWebSignature.setAlgorithmHeaderValue( AlgorithmIdentifiers.RSA_USING_SHA256 );
-    }
-
-    public String create( String email ) {
-        JwtClaims claims = new JwtClaims();
-        claims.setIssuer( "PAW2019a4" );
-        claims.setExpirationTimeMinutesInTheFuture( 10 );
-        claims.setIssuedAtToNow();
-        claims.setClaim( "email", email );
-
-        jsonWebSignature.setPayload( claims.toJson() );
-
-        String jwt = "";
-
-        try
-        {
-            jwt = jsonWebSignature.getCompactSerialization();
-        }
-        catch ( JoseException e )
-        {
-            //Do Nothing
-        }
-
-        return jwt;
-    }
-
-    public JwtClaims validate( String token ) throws InvalidJwtException {
-        try
-        {
-            return jwtConsumer.processToClaims( token );
-        }
-        catch ( InvalidJwtException ex )
-        {
-            if ( ex.hasExpired() )
-            {
-                return null;
-            }
-            else
-            {
-                throw ex;
-            }
+        catch ( InvalidKeySpecException | NoSuchAlgorithmException | IOException ex ) {
+            ex.printStackTrace();
         }
     }
 
-    public long getExpiresIn( String token ) throws InvalidJwtException, MalformedClaimException {
-        JwtClaims claims = validate( token );
-        NumericDate expiresInNumericData = claims.getExpirationTime();
+    public AuthDto create( UserDetails user ) {
+        Claims claims = Jwts.claims()
+                            .setSubject( user.getUsername() );
 
-        return expiresInNumericData.getValue();
+        Date expiresIn = Date.from( Instant.now()
+                                           .plusSeconds( ONE_DAY ) );
+
+        claims.setExpiration( expiresIn );
+
+        return new AuthDto( Jwts.builder()
+                                .setClaims( claims )
+                                .signWith( key )
+                                .compact(), expiresIn );
+    }
+
+    public Optional<String> getUserName( String token ) {
+        try {
+            JwtParser parser = Jwts.parserBuilder()
+                                   .setSigningKey( key )
+                                   .build();
+            Claims claims = (Claims) parser.parse( token )
+                                           .getBody();
+
+            return Optional.of( claims.getSubject() );
+        }
+        catch ( JwtException | ClassCastException ex ) {
+            return Optional.empty();
+        }
+    }
+
+    public boolean isExpired( String token ) {
+        try {
+            JwtParser parser = Jwts.parserBuilder()
+                                   .setSigningKey( key )
+                                   .build();
+            Claims claims = (Claims) parser.parse( token )
+                                           .getBody();
+
+            return claims.getExpiration()
+                         .before( Date.from( Instant.now() ) );
+        }
+        catch ( JwtException | ClassCastException ex ) {
+            return true;
+        }
     }
 }

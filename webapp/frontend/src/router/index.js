@@ -7,8 +7,43 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
+    redirect: { name: 'Home' }
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: () => import("views/home/Home.vue"),
+    meta: { requireAuth: true }
+  },
+  {
+    path: '/trip/:id',
+    name: 'Trip',
+    component: () => import("views/trips/Trip.vue"),
+    meta: { requireAuth: true },
+    props: true,
+  },
+  {
+    path: '/trip/new',
+    name: 'TripNew',
+    component: () => import("views/trips/TripNew.vue"),
+    meta: { requireAuth: true }
+  },
+  {
+    path: '/trip',
+    name: 'UserTrips',
+    component: () => import("views/user/UserTrips.vue"),
+    meta: { requireAuth: true }
+  },
+  {
+    path: '/trip-not-found',
+    name: 'TripNotFound',
+    component: () => import("views/trips/TripNotFound.vue"),
+    meta: { requireAuth: true }
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    component: () => import("views/user/UserAccount.vue"),
     meta: { requireAuth: true }
   },
   {
@@ -20,7 +55,7 @@ const routes = [
   {
     path: '/signin',
     name: 'SignIn',
-    component: () => import("views/authentication/SignIn.vue"),
+    component: () => import("views/authentication/SignUp.vue"),
     meta: { requireUnauth: true }
   },
   {
@@ -29,14 +64,22 @@ const routes = [
     component: () => import("views/authentication/PasswordRecovery.vue"),
     meta: { requireUnauth: true }
   },
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  // component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
+  {
+    path: '/recovery/:token',
+    name: 'ChangePassword',
+    component: () => import("views/authentication/ChangePassword.vue"),
+    meta: { requireUnauth: true },
+    props: true,
+  },
+  {
+    path: '/connection-lost',
+    name: "NetworkError",
+    component: () => import("views/error/NetworkError.vue"),
+  },
+  {
+    path: '/:notFound(.*)',
+    component: () => import("views/error/PageNotFound.vue"),
+  }
 ];
 
 const router = new VueRouter({
@@ -46,15 +89,17 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  store.dispatch('tryLogin');
-
-  if (to.meta.requireAuth && !store.getters.isAuth) {
-    next('/login');
-  } else if (to.meta.requireUnauth && store.getters.isAuth) {
-    next('/');
-  } else {
-    next();
-  }
+  store.dispatch('tryLogin').then(
+    () => {
+      if (to.meta.requireAuth && !store.getters.isAuth) {
+        next('/login');
+      } else if (to.meta.requireUnauth && store.getters.isAuth) {
+        next('/');
+      } else {
+        next();
+      }
+    }
+  );
 });
 
 export default router;

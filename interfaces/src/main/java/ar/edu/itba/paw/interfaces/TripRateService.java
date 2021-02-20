@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripRate;
-import ar.edu.itba.paw.model.User;
 
 import java.util.Optional;
 
 public interface TripRateService {
-    TripRate create(User user, Trip trip, int rate);
+    TripRate create( TripMember member, int rate);
 
     Optional<TripRate> findById(long id);
 
@@ -16,4 +15,6 @@ public interface TripRateService {
     void update(TripRate id);
 
     Optional<TripRate> findByUserAndTrip(long tripId, long userId);
+
+    void deleteByMemberId( long memberId );
 }

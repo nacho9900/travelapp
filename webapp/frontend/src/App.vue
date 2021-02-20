@@ -1,37 +1,64 @@
 <template>
 	<v-app id="inspire">
-		<v-navigation-drawer v-model="drawer" temporary fixed>
-			<v-list>
-				<v-list-item>
-					<v-list-item-avatar>
-						<v-img
-							src="https://randomuser.me/api/portraits/men/1.jpg"
-						></v-img>
-					</v-list-item-avatar>
+		<v-navigation-drawer v-if="isAuth" v-model="drawer" temporary fixed>
+			<v-list nav dense>
+				<v-subheader>TravelApp</v-subheader>
+				<v-list-item :to="{ name: 'Home' }">
+					<v-list-item-icon>
+						<v-icon>mdi-home</v-icon>
+					</v-list-item-icon>
+					<v-list-item-title>{{ $t("app.home") }}</v-list-item-title>
 				</v-list-item>
 			</v-list>
-			<v-divider></v-divider>
-			<v-list>
+
+			<v-list nav dense>
+				<v-subheader>{{ $t("app.my_stuff") }}</v-subheader>
+				<v-list-item :to="{ name: 'Account' }">
+					<v-list-item-icon>
+						<v-icon>mdi-account</v-icon>
+					</v-list-item-icon>
+					<v-list-item-title>{{
+						$t("app.account")
+					}}</v-list-item-title>
+				</v-list-item>
+				<v-list-item :to="{ name: 'UserTrips' }">
+					<v-list-item-icon
+						><v-icon>mdi-earth</v-icon></v-list-item-icon
+					>
+					<v-list-item-title>
+						{{ $t("app.my_trips") }}
+					</v-list-item-title>
+				</v-list-item>
+			</v-list>
+
+			<v-list nav dense>
+				<v-subheader>
+					{{ $t("app.view_options") }}
+				</v-subheader>
 				<v-list-item>
 					<v-switch
 						v-model="$vuetify.theme.dark"
 						:label="modeLabel"
 						color="primary"
+						dense
 					></v-switch>
-				</v-list-item>
-			</v-list>
-			<v-divider></v-divider>
-			<v-list nav dense>
-				<v-list-item :to="{ name: 'Home' }" link>
-					<v-list-item-title>Home</v-list-item-title>
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
 
 		<v-app-bar color="primary" app>
-			<v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+			<v-app-bar-nav-icon
+				v-if="isAuth"
+				@click="drawer = !drawer"
+			></v-app-bar-nav-icon>
 			<v-toolbar-title> TravelApp </v-toolbar-title>
 			<v-spacer></v-spacer>
+			<user-menu
+				v-if="isAuth && hasUser"
+				:id="user.id"
+				:firstname="user.firstname"
+				:lastname="user.lastname"
+			></user-menu>
 		</v-app-bar>
 
 		<v-main>
@@ -39,11 +66,33 @@
 				<router-view> </router-view>
 			</transition>
 		</v-main>
+
+		<v-footer padless>
+			<v-card
+				flat
+				tile
+				color="primary"
+				class="text-center"
+				style="width: 100%"
+			>
+				<v-card-text>
+					{{ $t("app.made_by") }} Ignacio Negro Caino (57509)
+				</v-card-text>
+				<v-card-text>
+					<b>TravelApp — 2021</b>
+				</v-card-text>
+			</v-card>
+		</v-footer>
 	</v-app>
 </template>
 
 <script>
+import UserMenu from "components/user/UserMenu.vue";
+
 export default {
+	components: {
+		UserMenu,
+	},
 	data: () => ({
 		drawer: false,
 	}),
@@ -56,12 +105,30 @@ export default {
 		logoPath() {
 			return "./logos/lb.png";
 		},
+		autologout() {
+			return this.$store.getters.didAutologout;
+		},
+		isAuth() {
+			return this.$store.getters.isAuth;
+		},
+		hasUser() {
+			return this.$store.getters.hasUser;
+		},
+		user() {
+			return this.$store.getters.user;
+		},
 	},
-	methods: {},
 	created() {
 		// if (this.isAuthenticated && !this.hasUser) {
 		// 	this.$store.dispatch("loadUser");
 		// }
+	},
+	watch: {
+		autologout() {
+			if (this.autologout) {
+				this.$router.replace({ name: "Login" });
+			}
+		},
 	},
 };
 </script>

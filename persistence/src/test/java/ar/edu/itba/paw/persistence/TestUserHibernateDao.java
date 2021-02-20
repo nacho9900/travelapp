@@ -37,7 +37,7 @@ public class TestUserHibernateDao {
 
     @Test
     public void testCreate() {
-        final User user = ud.create(FIRSTNAME, LASTNAME, EMAIL2, PASSWORD, LocalDate.now(), NATIONALITY);
+        final User user = ud.create(FIRSTNAME, LASTNAME, EMAIL2, PASSWORD, LocalDate.now(), NATIONALITY, null);
         Assert.assertNotNull(user);
         Assert.assertEquals(FIRSTNAME, user.getFirstname());
         Assert.assertEquals(LASTNAME, user.getLastname());

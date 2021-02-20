@@ -1,6 +1,6 @@
 <template>
 	<v-container>
-		<error-dialog :error="error" v-model="showError"></error-dialog>
+		<simple-error-dialog v-model="error"></simple-error-dialog>
 		<v-row justify="center">
 			<v-col cols="12" md="6" class="d-flex justify-center">
 				<v-form @submit.prevent="login" ref="form">
@@ -49,7 +49,7 @@
 													() =>
 														!unauthorized ||
 														$t(
-															'views.login.views.login.incorrect_email_password'
+															'views.login.incorrect_email_password'
 														),
 												])
 											"
@@ -131,7 +131,6 @@ export default {
 			email: "",
 			password: "",
 			error: null,
-			showError: false,
 			unauthorized: false,
 			requiredRule,
 		};
@@ -153,7 +152,7 @@ export default {
 						password: this.password,
 					});
 
-					this.$router.replace("/");
+					this.$router.replace({ name: "Home" });
 				} catch (err) {
 					if (
 						err.response &&
@@ -163,9 +162,7 @@ export default {
 						this.unauthorized = true;
 						this.$refs.form.validate();
 					} else {
-						this.error =
-							"Ocurrio un error al iniciar sesión, intente más tarde.";
-						this.showError = true;
+						this.error = this.$t("views.login.error");
 					}
 				}
 				this.loading = false;

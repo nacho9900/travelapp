@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
@@ -19,15 +18,15 @@ public class UserHibernateDao implements UserDao {
     private EntityManager em;
 
     @Override
-    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
-       final User user = new User(firstname, lastname, email, password, birthday, nationality);
+    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String biography) {
+       final User user = new User(firstname, lastname, email, password, birthday, nationality, biography);
        em.persist(user);
        return user;
     }
 
     @Override
-    public boolean update(User u) {
-        return em.merge(u) != null;
+    public User update( User u) {
+        return em.merge(u);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public Optional<User> findById(long id) {
-        return Optional.of(em.find(User.class, id));
+        return Optional.ofNullable(em.find(User.class, id));
     }
 
     @Override

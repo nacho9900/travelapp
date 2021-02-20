@@ -1,51 +1,285 @@
 {
-	"$vuetify": {
-		"dataTable": {
-			"itemsPerPageText": "Elements per page"
-		}
-	},
-	"app": {
-		"dark_mode": "dark mode",
-		"light_mode": "light mode"
-	},
-	"rules": {
-		"email": {
-			"format": "The email is invalid"
-		},
-		"field_required": "The field is required",
-		"greater_or_equals_zero": "The field must be greater or equals to zero",
-		"not_zero": "The field must not be zero",
-		"number_format": "The number is invalid",
-		"password": {
-			"format": "The password must contains 8 to 20 characters and a capital letter",
-			"required": "Password is required"
-		}
-	},
-	"ui": {
-		"delete_dialog": {
-			"cancel": "cancel",
-			"delete": "delete"
-		},
-		"error_dialog": {
-			"error_ocurred": "An unexpected error has occurred"
-		},
-		"image_form": {
-			"image_required": "The image is required",
-			"image_size": "The image size cannot be up 5MB",
-			"title": "Upload an image",
-			"upload": "upload"
-		}
-	},
-	"views": {
-		"login": {
-			"email_label": "Email",
-			"incorrect_email_password": "Email or Password are not valid",
-			"login_btn": "Login",
-			"password_forget": "Forget your password?",
-			"password_label": "Password",
-			"signin_btn": "Singin",
-			"subtitle": "to enter TravelApp",
-			"title": "Login"
-		}
-	}
+  "$vuetify": {
+    "noDataText": "Empty data",
+    "dataTable": {
+      "itemsPerPageText": "Elements per page"
+    },
+    "datePicker": {
+      "nextMonthAriaLabel": "Next month",
+      "prevMonthAriaLabel": "Prev. month",
+      "nextYearAriaLabel": "Next year",
+      "prevYearAriaLabel": "Prev. year"
+    }
+  },
+  "app": {
+    "dark_mode": "dark mode",
+    "light_mode": "light mode",
+    "home": "Home",
+    "account": "My Account",
+    "view_options": "View Options",
+    "my_stuff": "My Stuff",
+    "made_by": "App version made by",
+    "my_trips": "My Trips"
+  },
+  "rules": {
+    "email": {
+      "format": "The email is invalid"
+    },
+    "field_required": "The field is required",
+    "greater_or_equals_zero": "The field must be greater or equals to zero",
+    "not_zero": "The field must not be zero",
+    "number_format": "The number is invalid",
+    "password": {
+      "format": "The password must contains 8 to 20 characters and a capital letter",
+      "required": "Password is required"
+    },
+    "future_date_rule": "The date must be in the future."
+  },
+  "ui": {
+    "delete_dialog": {
+      "cancel": "cancel",
+      "delete": "delete"
+    },
+    "error_dialog": {
+      "error_ocurred": "An unexpected error has occurred"
+    },
+    "image_form": {
+      "image_required": "The image is required",
+      "image_size": "The image size cannot be up 5MB",
+      "title": "Upload an image",
+      "upload": "upload"
+    }
+  },
+  "views": {
+    "login": {
+      "email_label": "Email",
+      "incorrect_email_password": "Invalid Email or Password",
+      "login_btn": "Login",
+      "password_forget": "Forget your password?",
+      "password_label": "Password",
+      "signin_btn": "SingUp",
+      "subtitle": "to enter TravelApp",
+      "title": "Login",
+      "error": "There was an error trying to login to TravelApp. Please, try again later."
+    },
+    "signup": {
+      "errors": {
+        "422": "The provided email already corresponds to an user.",
+        "default": "There was an error while creating your user. Please, try again later."
+      },
+      "firstname": "Firstname",
+      "lastname": "Lastname",
+      "nationality": "Nationality",
+      "birthday": "Birthday",
+      "email": "Email",
+      "password": "Password",
+      "password_repeat": "Repeat Password",
+      "title": "Complete your information",
+      "login_btn": "Login",
+      "signin_btn": "SingUp",
+      "password_repeat_rule": "Those passwords didn’t match. Try again.",
+      "welcome": "Welcome",
+      "welcome_text": "Your registrations has succesed. You will receive an email in a moment with your user data."
+    },
+    "signup_welcome_continue": "continue",
+    "trip_new": {
+      "success_title": "Trip successfully created!",
+      "success_text": "Your trip was successfully created, now you'll be able to add activities and some more details.",
+      "success_btn": "Continue",
+      "error": "There was an error creating your trip. Please, try again later."
+    },
+    "trip": {
+      "trip": "Trip",
+      "activities": "Activities",
+      "members": "Members",
+      "comments": "Comments"
+    },
+    "trips": {
+      "trip_not_found": {
+        "message": "Ups... The trip you are looking for does't not exists.",
+        "redirect": "Try visiting the home page and search for another trip."
+      }
+    },
+    "user_account": {
+      "title": "My Account Information",
+      "error_update": "There was an error updating your account information. Please try again later.",
+      "error_passwords_match": "The entered password didn't match with your current password.",
+      "error_change_password": "There was an error changing your password. Please try again later.",
+      "sign_out": "Sign out"
+    },
+    "error": {
+      "page_not_found": {
+        "message": "Sorry, we couldn't find that page",
+        "redirect": "Try visiting the home page and search for a trip you may enjoy."
+      },
+      "connection_lost": {
+        "message": "It seems that the internet connection was lost. Please, check your internet connection and if the problem persists, visit the site again in a few minutes."
+      }
+    },
+    "user_trips": {
+      "no_trips": "You don't have any trips yet, ",
+      "search": "search for a trip that you might like",
+      "or": "or",
+      "create_a_new_one": "start planning a new one.",
+      "error": "There was an error finding your trips. Please, try again later.",
+      "title": "My Trips"
+    }
+  },
+  "components": {
+    "trips": {
+      "tripform": {
+        "title": "Let's create a new trip!",
+        "name": "Name",
+        "description": "Description",
+        "description_hint": "Give others a tip of what kind of trip are you planning ",
+        "start_date": "Date from",
+        "end_date": "Date to",
+        "create": "Create",
+        "date_rule": "Date from cannot be after Date to",
+        "title_edit": "Edit trip information",
+        "edit": "update"
+      },
+      "trip_new_comment_box": {
+        "new_comment": "Enter a new comment"
+      },
+      "trip_activity_card": {
+        "from": "From",
+        "to": "to",
+        "edit_activity": "Edit",
+        "remove": "Delete"
+      },
+      "trip_activity_form": {
+        "title": "Create new activity",
+        "name": "Name",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "add": "Add",
+        "name_length_rule": "The Name cannot be longer than 40 characters.",
+        "update": "Update",
+        "title_edit": "Update Activity"
+      },
+      "trip_activities": {
+        "new_activity": "new activity",
+        "create_error": "There was an error creating a new activity. Please, try again later.",
+        "get_activities_error": "There was an error trying to obtain the activities. Please, try again later.",
+        "remove_dialog_title": "Delete Activity",
+        "delete_dialog_message": "Are you sure that you want to delete the activity?",
+        "update_error": "There was an error updating the activity. Please, try again later.",
+        "delete_error": "There was an error deleting the activity. Please, try again later."
+      },
+      "trip_card": {
+        "error": "There was an error trying to obtain the trip. Please try again later.",
+        "edit": "Edit",
+        "error_update": "There was an error updating the trip. Please try again later.",
+        "change_image": "Upload a new portrait",
+        "change_image_error": "There was an error uploading the trip portrait. Please try again later.",
+        "from": "From",
+        "to": "to"
+      },
+      "trip_activities_list": {
+        "no_data": "no activities were found for the trip. Try creating a new one."
+      },
+      "trip_members": {
+        "get_error": "There was an error trying to obtain the trip membes. Please, try again later.",
+        "not_members": "You must be a member to see the other members of the trip.",
+        "members": "Active Members",
+        "join_request": "Join Requests",
+        "get_requests_error": "There was an error trying to obtain the join requests. Please, try again later.",
+        "not_admin": "You must be the trip owner or an administrator to see the trip join requests",
+        "delete_error": "There was an error deleting a member. Please, try again later."
+      },
+      "trip_join_button": {
+        "exit_trip": "Exit trip",
+        "join": "JOIN TRIP",
+        "join_dialog_title": "Send a member join request",
+        "join_dialog_message": "You can write a message so that the trip administrators understand why you are interested in joining the trip",
+        "join_dialog_message_label": "Message",
+        "join_dialog_btn": "Send",
+        "pending": "Pending Confirmation",
+        "exit_dialog_title": "Are you sure you want to exit the trip?",
+        "exit_dialog_btn": "Exit trip",
+        "exit_error": "There was an error leaving the trip. Please, try again later."
+      },
+      "trip_join_form": {
+        "message_size_rule": "the length of the message must be less than 255 characters",
+        "error": "There was an error trying to send your join request. Please, try again later."
+      },
+      "trip_join_request_card": {
+        "accept": "Accept",
+        "reject": "Reject",
+        "accept_error": "There was an error accepting the join request. Please, try again later."
+      },
+      "trip_commments": {
+        "get_error": "There was an error obteining the trip comments. Please, try again later.",
+        "unauthorized": "You must be a member to comment and read comments of other members"
+      },
+      "trip_search_bar": {
+        "title": "Search for a trip",
+        "location": "Location",
+        "start": "From",
+        "end": "To"
+      },
+      "trip_paginated_list": {
+        "no_results": "No matching trips found, try creating a new one!"
+      },
+      "trip_member_card": {
+        "delete_dialog_title": "Are you sure that you want to delete this member?",
+        "delete_dialog_message": "You are going to delete  "
+      }
+    },
+    "user": {
+      "user_form": {
+        "title": "Change Account Information",
+        "firstname": "Firstname",
+        "lastname": "Lastname",
+        "birthday": "Birthday",
+        "nationality": "Nationality",
+        "biography": "Biography",
+        "save": "Save Changes",
+        "biography_size_rule": "The biography must be shorter than 500 characters long."
+      },
+      "change_password_form": {
+        "title": "Change Password",
+        "current_password": "Current Password",
+        "new_password": "New Password",
+        "repeat_password": "Repeat New Password",
+        "repeat_password_rule": "New passwords didn't match.",
+        "change_password": "Change password"
+      },
+      "user_menu": {
+        "sign_out": "Sign Out",
+        "change_avatar": "Change Avatar",
+        "change_avatar_error": "There was an error changing your avatar. Please, try again later."
+      }
+    }
+  },
+  "enums": {
+    "member_roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member"
+    },
+    "join_request_statuses": {
+      "pending": "Pending Confirmation",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    }
+  },
+  "view": {
+    "password_recovery": {
+      "title": "Recover your TravelApp password",
+      "email": "Email",
+      "subtitle": "Tell us the email address associated with your TravelApp account, and we’ll send you an email with a link to reset your password",
+      "continue": "Continue",
+      "success_title": "Password recovery started",
+      "success": " Thanks! If your TravelApp email address match, you'll get an email with a link to reset your password shortly. ",
+      "error": "There was an error processing the information. Please try again later.",
+      "login": "Click here to go to login page."
+    },
+    "change_password": {
+      "success": "Your password has been changed successfully.",
+      "not_found_or_expired": "Your password recovery process has expired or you enter a wrong url.",
+      "error": "There was an error changing your password. Please, try again later."
+    }
+  }
 }

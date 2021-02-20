@@ -12,29 +12,35 @@ import javax.persistence.TypedQuery;
 import java.util.Optional;
 
 @Repository
-public class UserPicturesHibernateDao implements UserPicturesDao {
-
+public class UserPicturesHibernateDao implements UserPicturesDao
+{
     @PersistenceContext
     EntityManager em;
 
     @Override
-    public UserPicture create(User user, byte[] image) {
-        UserPicture up = new UserPicture(image, user);
-        em.persist(up);
+    public UserPicture create( User user, String name, byte[] image ) {
+        UserPicture up = new UserPicture( user, name, image );
+        em.persist( up );
         return up;
     }
 
     @Override
-    public Optional<UserPicture> findByUserId(long userId) {
-        final TypedQuery<UserPicture> query = em.createQuery("From UserPicture as up where up.user.id = :userId", UserPicture.class);
-        query.setParameter("userId", userId);
+    public Optional<UserPicture> findByUserId( long userId ) {
+        final TypedQuery<UserPicture> query = em.createQuery( "From UserPicture as up where up.user.id = :userId",
+                                                              UserPicture.class );
+        query.setParameter( "userId", userId );
         return query.getResultList().stream().findFirst();
     }
 
     @Override
-    public boolean deleteByUserId(long userId) {
-        final Query upDeletion = em.createQuery("delete UserPicture as up where up.user.id = :userId");
-        upDeletion.setParameter("userId", userId);
+    public boolean deleteByUserId( long userId ) {
+        final Query upDeletion = em.createQuery( "delete UserPicture as up where up.user.id = :userId" );
+        upDeletion.setParameter( "userId", userId );
         return upDeletion.executeUpdate() == 1;
+    }
+
+    @Override
+    public UserPicture update( UserPicture userPicture ) {
+        return em.merge( userPicture );
     }
 }

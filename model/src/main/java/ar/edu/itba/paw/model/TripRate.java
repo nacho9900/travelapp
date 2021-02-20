@@ -11,13 +11,6 @@ public class TripRate {
     @SequenceGenerator(sequenceName = "trip_comments_id_seq", name = "trip_comments_id_seq", allocationSize = 1)
     private long id;
 
-    public TripRate(int rate, LocalDateTime createdOn, Trip trip, User user) {
-        this.rate = rate;
-        this.createdOn = createdOn;
-        this.trip = trip;
-        this.user = user;
-    }
-
     @Column(nullable = false)
     private int rate;
 
@@ -26,16 +19,29 @@ public class TripRate {
 
     ////////////
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Trip trip;
-
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    private User user;
+    @OneToOne( fetch = FetchType.LAZY, optional = false)
+    private TripMember member;
 
     ////////////
 
     protected TripRate() {
         // Just for Hibernate
+    }
+
+    public TripRate(long id, int rate, LocalDateTime createdOn, TripMember member) {
+        this(rate, createdOn, member);
+        this.id = id;
+    }
+
+    public TripRate(int rate, LocalDateTime createdOn, TripMember member)
+    {
+        this(rate, createdOn);
+        this.member = member;
+    }
+
+    public TripRate(int rate, LocalDateTime createdOn) {
+        this.rate = rate;
+        this.createdOn = createdOn;
     }
 
     public long getId() {
@@ -46,19 +52,23 @@ public class TripRate {
         return rate;
     }
 
+    public void setRate( int rate ) {
+        this.rate = rate;
+    }
+
     public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public Trip getTrip() {
-        return trip;
+    public void setCreatedOn( LocalDateTime createdOn ) {
+        this.createdOn = createdOn;
     }
 
-    public User getUser() {
-        return user;
+    public TripMember getMember() {
+        return member;
     }
 
-    public void setRate(int rate) {
-        this.rate = rate;
+    public void setMember( TripMember member ) {
+        this.member = member;
     }
 }

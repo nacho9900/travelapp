@@ -3,8 +3,8 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.ActivityDao;
 import ar.edu.itba.paw.interfaces.ActivityService;
+import ar.edu.itba.paw.interfaces.PlaceService;
 import ar.edu.itba.paw.model.Activity;
-import ar.edu.itba.paw.model.DataPair;
 import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,39 +20,52 @@ import java.util.Optional;
 public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
-    ActivityDao ad;
+    ActivityDao activityDao;
+
+    @Autowired
+    PlaceService placeService;
 
     @Override
     public Optional<Activity> findById(long id) {
-        return ad.findById(id);
+        return activityDao.findById(id);
     }
 
     @Override
     public Optional<Activity> findByName(String name) {
-        return ad.findByName(name);
+        return activityDao.findByName(name);
     }
 
     @Override
-    public Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
-        return ad.create(name, category, place, trip, startDate, endDate);
+    public Activity create( String name, Trip trip, LocalDate startDate, LocalDate endDate, Place place ) {
+        place = placeService.createIfNotExists( place.getGoogleId(), place.getName(),
+                                                place.getLatitude(), place.getLongitude(),
+                                                place.getAddress() );
+
+        return activityDao.create( name, trip, startDate, endDate, place );
     }
 
     @Override
-    public List<DataPair<Activity, Place>> getTripActivitiesDetails(Trip trip) {
-        List<Activity> activities = ad.getTripActivities(trip.getId());
-        Collections.sort(activities);
-        List<DataPair<Activity, Place>> dataPairList = new ArrayList<>();
-        for(Activity activity : activities) {
-            Place place = activity.getPlace();
-            dataPairList.add(new DataPair<>(activity, place));
-
-        }
-        return dataPairList;
+    public List<Activity> findByTrip(long tripId) {
+        return activityDao.getTripActivities( tripId );
     }
 
     @Override
-    public Optional<Activity> findByCategory(String category) {
-        return ad.findByCategory(category);
+    public boolean isActivityPartOfTheTrip( long tripId, long activityId ) {
+        return activityDao.isActivityPartOfTheTrip( tripId, activityId );
     }
 
+    @Override
+    public Activity update( Activity activity ) {
+        Place place = activity.getPlace();
+        place = placeService.createIfNotExists( place.getGoogleId(), place.getName(),
+                                                place.getLatitude(), place.getLongitude(),
+                                                place.getAddress() );
+        activity.setPlace( place );
+        return activityDao.update( activity );
+    }
+
+    @Override
+    public void delete( long id ) {
+        activityDao.deleteActivity( id );
+    }
 }

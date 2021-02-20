@@ -18,8 +18,10 @@ public class PlaceServiceImpl implements PlaceService {
     PlaceDao pd;
 
     @Override
-    public Place create(String googleId, String name, double latitude, double longitude, String address) {
-        return pd.create(googleId,name,latitude,longitude,address);
+    public Place createIfNotExists( String googleId, String name, double latitude, double longitude, String address) {
+        Optional<Place> maybePlace = findByGoogleId( googleId );
+        return maybePlace.orElseGet( () -> pd.create( googleId, name, latitude, longitude, address ) );
+
     }
 
     @Override
@@ -31,6 +33,4 @@ public class PlaceServiceImpl implements PlaceService {
     public Optional<Place> findByGoogleId(String googleId) {
         return pd.findByGoogleId(googleId);
     }
-
-
 }

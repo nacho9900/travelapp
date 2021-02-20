@@ -3,6 +3,13 @@ export default {
         state.token = payload.token;
     },
     setUser(state, payload) {
-        state.user = payload.user;
+        if (payload) {
+            state.user = { ...payload };
+        } else {
+            state.user = null;
+        }
+    },
+    setAutologout(state, payload) {
+        state.autologout = !!payload.autologout;
     }
 }

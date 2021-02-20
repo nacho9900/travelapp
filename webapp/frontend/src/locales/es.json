@@ -1,51 +1,284 @@
 {
-	"$vuetify": {
-		"dataTable": {
-			"itemsPerPageText": "Elemetos por página"
-		}
-	},
-	"app": {
-		"dark_mode": "modo oscuro",
-		"light_mode": "modo claro"
-	},
-	"rules": {
-		"email": {
-			"format": "El email es invalido"
-		},
-		"field_required": "El campo es obligatorio",
-		"greater_or_equals_zero": "El campo debe ser mayor o igual a cero",
-		"not_zero": "El campo no puede ser cero",
-		"number_format": "El número no tiene un formato correcto",
-		"password": {
-			"format": "La contraseña debe tener entre 8 y 20 caracteres y debe contener una letra mayúscula",
-			"required": "La contraseña es obligatoria"
-		}
-	},
-	"ui": {
-		"delete_dialog": {
-			"cancel": "cancelar",
-			"delete": "eliminar"
-		},
-		"error_dialog": {
-			"error_ocurred": "Ocurrió un error"
-		},
-		"image_form": {
-			"image_required": "La imagen es requerida",
-			"image_size": "La imagen no puede superar los 5MB",
-			"title": "Subir una imagen",
-			"upload": "subir"
-		}
-	},
-	"views": {
-		"login": {
-			"email_label": "Email",
-			"incorrect_email_password": "El email o la contraseña no son válidos",
-			"login_btn": "Ingresar",
-			"password_forget": "¿Olvidaste tu contraseña?",
-			"password_label": "Contraseña",
-			"signin_btn": "Registrarse",
-			"subtitle": "para ingresar a TravelApp",
-			"title": "Iniciar Sesión"
-		}
-	}
+  "$vuetify": {
+    "noDataText": "No hay datos",
+    "dataTable": {
+      "itemsPerPageText": "Elemetos por página"
+    },
+    "datePicker": {
+      "nextMonthAriaLabel": "Siguiente mes",
+      "prevMonthAriaLabel": "Anterior mes",
+      "nextYearAriaLabel": "Siguiente año",
+      "prevYearAriaLabel": "Anterior año"
+    }
+  },
+  "app": {
+    "dark_mode": "modo oscuro",
+    "light_mode": "modo claro",
+    "home": "Página Principal",
+    "account": "Mi Cuenta",
+    "view_options": "Opciones de Vista",
+    "my_stuff": "Mis Cosas",
+    "made_by": "Version de la app hecha por",
+    "my_trips": "Mis Viajes"
+  },
+  "rules": {
+    "email": {
+      "format": "El email es invalido"
+    },
+    "field_required": "El campo es obligatorio",
+    "greater_or_equals_zero": "El campo debe ser mayor o igual a cero",
+    "not_zero": "El campo no puede ser cero",
+    "number_format": "El número no tiene un formato correcto",
+    "password": {
+      "format": "La contraseña debe tener entre 8 y 20 caracteres y debe contener una letra mayúscula",
+      "required": "La contraseña es obligatoria"
+    },
+    "future_date_rule": "La fecha debe estar en el futuro."
+  },
+  "ui": {
+    "delete_dialog": {
+      "cancel": "cancelar",
+      "delete": "eliminar"
+    },
+    "error_dialog": {
+      "error_ocurred": "Ocurrió un error"
+    },
+    "image_form": {
+      "image_required": "La imagen es requerida",
+      "image_size": "La imagen no puede superar los 5MB",
+      "title": "Subir una imagen",
+      "upload": "subir"
+    }
+  },
+  "views": {
+    "login": {
+      "email_label": "Email",
+      "incorrect_email_password": "El email o la contraseña no son válidos",
+      "login_btn": "Ingresar",
+      "password_forget": "¿Olvidaste tu contraseña?",
+      "password_label": "Contraseña",
+      "signin_btn": "Registrarse",
+      "subtitle": "para ingresar a TravelApp",
+      "title": "Iniciar Sesión",
+      "error": "Ocurrio un error al iniciar sesión. Por favor, intente nuevamente más tarde."
+    },
+    "signup": {
+      "errors": {
+        "422": "Ya existe un usuario con el email ingresado.",
+        "default": "Ocurrio un error al crear el usuario. Por favor, intente nuevamente más tarde."
+      },
+      "firstname": "Nombre",
+      "lastname": "Apellido",
+      "email": "Email",
+      "password": "Contraseña",
+      "password_repeat": "Repita la Contraseña",
+      "nationality": "Nacionalidad",
+      "birthday": "Fecha de Nacimiento",
+      "title": "Completá tus datos",
+      "login_btn": "Iniciar Sesión",
+      "signin_btn": "Registrarse",
+      "password_repeat_rule": "Las contraseñas no coinciden. Intente nuevamente.",
+      "welcome": "!Bienvenido",
+      "welcome_text": "Se registró exitosamente en TravelApp. En unos momentos \t\t\t\t\trecibirá un correo de bienvenda con los datos de su cuenta."
+    },
+    "signup_welcome_continue": "continuar",
+    "trip_new": {
+      "success_title": "!Se creó el viaje!",
+      "success_text": "Su viaje fue creado con éxito, a continuacion podra agregar las actividades y algunos detalles más.",
+      "success_btn": "Continuar",
+      "error": "Ocurrio un error al crear el viaje. Por favor, intente nuevamente más tarde."
+    },
+    "trip": {
+      "trip": "Viaje",
+      "activities": "Actividades",
+      "members": "Miembros",
+      "comments": "Comentarios",
+      "error": "Ocurrio un error al obtener el viaje. Por favor, intente nuevamente más tarde."
+    },
+    "trips": {
+      "trip_not_found": {
+        "message": "Ups... El viaje que estás buscando no existe.",
+        "redirect": "Intentá visitar la página principal y ingresar a otro viaje."
+      }
+    },
+    "user_account": {
+      "title": "Información de Mi Cuenta",
+      "error_update": "Ocurrio un error al actuaizar la información de su cuenta. Por favor, intente nuevamente más tarde.",
+      "error_passwords_match": "La contraseña ingresada no coincide con su contraseña actual.",
+      "error_change_password": "Ocurrio un error al cambiar la contraseña. Por favor, intente nuevamente más tarde.",
+      "sign_out": "Cerrar sesión"
+    },
+    "error": {
+      "page_not_found": {
+        "message": "Lo sentimos, no pudimos encontrar esa página",
+        "redirect": "Intentá visitando la página principal y buscando por un viaje que te pueda gustar. "
+      },
+      "connection_lost": {
+        "message": "parece que se perdió la conexion de internet. Por favor, revisa tu conexión a internet y si el problema persiste vuelva a visitar el sitio en unos minutos."
+      }
+    },
+    "user_trips": {
+      "no_trips": "Aun no tienes ningún viaje",
+      "or": "o",
+      "create_a_new_one": "empieza a planear uno nuevo.",
+      "error": "Ocurrió un error buscando sus viajes. Por favor, intente nuevamente más tarde.",
+      "title": "Mis Viajes"
+    }
+  },
+  "components": {
+    "trips": {
+      "tripform": {
+        "title": "Vamos a crear un nuevo viaje!",
+        "name": "Nombre",
+        "description": "Descripción",
+        "description_hint": "Describí el viaje para que los demás puedan saber que estás planeado hacer",
+        "start_date": "Fecha desde",
+        "end_date": "Fecha hasta",
+        "create": "Crear",
+        "date_rule": "La fecha desde no puede ser despues de la fecha hasta",
+        "title_edit": "Editar información del viaje",
+        "edit": "modificar"
+      },
+      "trip_new_comment_box": {
+        "new_comment": "Ingrese un nuevo comentario"
+      },
+      "trip_activity_card": {
+        "from": "Desde",
+        "to": "hasta el",
+        "edit_activity": "Modificar",
+        "remove": "Eliminar"
+      },
+      "trip_activity_form": {
+        "title": "Crear nueva actividad",
+        "name": "Nombre",
+        "start_date": "Fecha de inicio",
+        "end_date": "Fecha de fin",
+        "add": "Agregar",
+        "name_length_rule": "El nombre no puede superar los 40 caracteres de largo.",
+        "update": "Actualizar",
+        "title_edit": "Actualizar actividad"
+      },
+      "trip_activities": {
+        "new_activity": "nueva actividad",
+        "create_error": "Ocurrio un error al crear la actividad. Por favor, intente nuevamente más tarde.",
+        "get_activities_error": "Ocurrio un error obteniendo las actividades. Por favor, intente nuevamente más tarde.",
+        "remove_dialog_title": "Eliminar Actividad",
+        "delete_dialog_message": "¿Esta seguro que desea eliminar la actividad?",
+        "update_error": "Ocurrio un error al actualizar la actividad. Por favor, intente nuevamente más tarde.",
+        "delete_error": "Ocurrio un error al eliminar la actividad. Por favor, intente nuevamente más tarde."
+      },
+      "trip_card": {
+        "error": "Ocurrio un error obteniendo el viaje. Por favor, intente nuevamente más tarde.",
+        "edit": "Editar",
+        "error_update": "Ocurrio un error al actualizar el viaje. Por favor, intente nuevamente más tarde.",
+        "change_image": "Subir una nueva portada",
+        "change_image_error": "Ocurrió un error al cambiar la portada del viaje. Por favor, intente nuevamente más tarde.",
+        "from": "Desde el",
+        "to": "hasta el"
+      },
+      "trip_activities_list": {
+        "no_data": "No se econtraron actividades para el viaje. Si eres administrador, intenta crear una nueva con el botón debajo.."
+      },
+      "trip_members": {
+        "get_error": "Ocurrio un error al querer obtener los miembros del viaje. Por favor, intente nuevamente más tarde.",
+        "not_members": "Debes ser un miembre para ver los demas miembros del viaje",
+        "members": "Miembros Activos",
+        "join_request": "Solicitudes de Miembro",
+        "get_requests_error": "Ocurrio un error al querer obtener las solicitudes de miembro. Por favor, intente nuevamente más tarde.",
+        "not_admin": "Debes ser el propietario del viaje o administrador para ver las solicitudes de miembro del viaje",
+        "delete_error": "Ocurrión un error al eliminar un miembro. por favor, intente nuevamente más tarde."
+      },
+      "trip_join_button": {
+        "exit_trip": "Abondanar viaje",
+        "join": "UNIRSE AL VIAJE",
+        "join_dialog_title": "Enviar una solicitud de miembro",
+        "join_dialog_message": "puedes escribir un mensaje para que los administradores del viaje entiendan porque estás interesado en unirte al viaje",
+        "join_dialog_message_label": "Mensaje",
+        "join_dialog_btn": "Enviar",
+        "pending": "Confirmación pendiente",
+        "exit_dialog_title": "¿Estás seguro que deseas salir del viaje?",
+        "exit_dialog_btn": "Salir del viaje",
+        "exit_error": "Ocurrio un error al salir del viaje. Por favor, intente nuevamente más tarde."
+      },
+      "trip_join_form": {
+        "message_size_rule": "el largo del mensaje no puede ser superior a 255 caracteres",
+        "error": "Ocurrió un error al intentar enviar su solicitud de miembro. Por favor, intente nuevamente más tarde."
+      },
+      "trip_join_request_card": {
+        "accept": "Aceptar",
+        "reject": "Rechazar",
+        "accept_error": "Ocurrió un error al aceptar la solicitud de miembro. Por favor, intente nuevamente más tarde."
+      },
+      "trip_commments": {
+        "get_error": "Ocurrio un error al obtener los comentarios. Por favor, intente nuevamente más tarde.",
+        "unauthorized": "debes ser miembro para comentar y leer los comentarios de los demás miembros"
+      },
+      "trip_search_bar": {
+        "title": "Busca un viaje",
+        "location": "Ubicación",
+        "start": "Desde",
+        "end": "Hasta"
+      },
+      "trip_paginated_list": {
+        "no_results": "No se encontraron viajes que coincidan con la busqueda, intenta crear uno nuevo!"
+      },
+      "trip_member_card": {
+        "delete_dialog_title": "¿Está seguro que desea eliminar a este miembro?",
+        "delete_dialog_message": "Usted está por eliminar a "
+      }
+    },
+    "user": {
+      "user_form": {
+        "title": "Cambiar Información de mi Cuenta",
+        "firstname": "Nombre",
+        "lastname": "Apellido",
+        "birthday": "Fecha de Nacimiento",
+        "nationality": "Nacionalidad",
+        "biography": "Biografía",
+        "save": "Guardar Cambios",
+        "biography_size_rule": "La biografía no puede exeder los 500 caracteres de largo."
+      },
+      "change_password_form": {
+        "title": "Cambiar Contraseña",
+        "current_password": "Contraseña Actual",
+        "repeat_password": "Repita la nueva Contraseña",
+        "new_password": "Nueva Contraseña",
+        "repeat_password_rule": "Las contraseñas nuevas no coinciden",
+        "change_password": "Cambiar contraseña"
+      },
+      "user_menu": {
+        "sign_out": "Cerrar Sesión",
+        "change_avatar": "Cambiar Avatar",
+        "change_avatar_error": "Ocurrio un error al cambiar el avatar. Por favor, intente nuevamente más tarde."
+      }
+    }
+  },
+  "enums": {
+    "member_roles": {
+      "owner": "Propietario",
+      "admin": "Admin",
+      "member": "Miembro"
+    },
+    "join_request_statuses": {
+      "pending": "Confirmación Pendiente",
+      "accepted": "Aceptado",
+      "rejected": "Rechazado"
+    }
+  },
+  "view": {
+    "password_recovery": {
+      "title": "Recupera tu contraseña de TravelApp",
+      "email": "Email",
+      "subtitle": "Completando esta información, recibirás un correo indicando los pasos a seguir para recuperar tu contraseña",
+      "continue": "Continuar",
+      "success": "Gracias! si tu email coincide con una cuenta de TravelApp, recibirás un email con un link para reiniciar tu contraseña a la brevedad.",
+      "error": "Ocurrio un error al procesar la informacion. Por favor, intente nuevamente más tarde.",
+      "login": "Haga click aqui para ir al inicio de sesion"
+    },
+    "change_password": {
+      "success": "Su contraseña fue modificada con éxito.",
+      "not_found_or_expired": "Su proceso de recuperación de contraseña a expirado o usted ingreso una url incorrecta.",
+      "error": "Ocurrió un error al cambiar su contraseña. Por favor, intente nuevamente más tarde."
+    }
+  }
 }

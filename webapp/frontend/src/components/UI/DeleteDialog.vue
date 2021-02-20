@@ -1,12 +1,12 @@
 <template>
-	<v-dialog v-model="dialog" :width="width">
+	<v-dialog v-model="dialog" :width="width" persistent>
 		<v-card :loading="loading">
 			<v-card-title>{{ title }}</v-card-title>
 			<v-card-text>{{ message }}</v-card-text>
 			<v-card-actions>
 				<v-spacer></v-spacer>
 				<v-btn color="error" text @click="remove" :disabled="loading">
-					{{ $t("ui.delete_dialog.delete") }}
+					{{ deleteBtnText || $t("ui.delete_dialog.delete") }}
 				</v-btn>
 				<v-btn color="primary" text @click="cancel" :disabled="loading"
 					>{{ $t("ui.delete_dialog.cancel") }}
@@ -24,6 +24,7 @@ export default {
 		loading: Boolean,
 		title: String,
 		item: Object,
+		deleteBtnText: String,
 		width: { type: String, default: "350" },
 	},
 	computed: {

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.model.PaginatedResult;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
 import org.junit.Assert;
@@ -39,7 +40,7 @@ public class TestTripHibernateDao {
 
     @Test
     public void testCreate() {
-        Trip trip = td.create(userId, placeId, NAME, DESC, START_DATE, END_DATE);
+        Trip trip = td.create( NAME, DESC, START_DATE, END_DATE);
         Assert.assertNotNull(trip);
         Assert.assertEquals(NAME, trip.getName());
         Assert.assertEquals(DESC, trip.getDescription());
@@ -71,16 +72,10 @@ public class TestTripHibernateDao {
 
     @Test
     public void testFindUserCreatedTrips() {
-        List<Trip> trips = td.findUserCreatedTrips(userId);
+        PaginatedResult<Trip> trips = td.findUserTrips( userId, 1 );
         Assert.assertNotNull(trips);
-        Assert.assertNotEquals(0, trips.size());
-        Assert.assertEquals(tripId, trips.get(0).getId());
-    }
-
-    @Test
-    public void testCountAllTrips() {
-        int count = td.countAllTrips();
-        Assert.assertEquals(1, count );
+        Assert.assertNotEquals(0, trips.getResult().size());
+        Assert.assertEquals(tripId, trips.getResult().get(0).getId());
     }
 
     @Test
