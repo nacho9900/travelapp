@@ -13,12 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@Sql("classpath:schema.sql")
-@ContextConfiguration(classes = TestConfig.class)
+@RunWith( SpringJUnit4ClassRunner.class )
+@Sql( "classpath:schema.sql" )
+@ContextConfiguration( classes = TestConfig.class )
 @Transactional
-public class TestUserHibernateDao {
+public class TestUserHibernateDao
+{
 
     private static final String PASSWORD = "password2";
 
@@ -37,27 +39,27 @@ public class TestUserHibernateDao {
 
     @Test
     public void testCreate() {
-        final User user = ud.create(FIRSTNAME, LASTNAME, EMAIL2, PASSWORD, LocalDate.now(), NATIONALITY, null);
-        Assert.assertNotNull(user);
-        Assert.assertEquals(FIRSTNAME, user.getFirstname());
-        Assert.assertEquals(LASTNAME, user.getLastname());
+        final User user = ud.create( FIRSTNAME, LASTNAME, EMAIL2, PASSWORD, LocalDate.now(), NATIONALITY, null,
+                                     UUID.randomUUID() );
+        Assert.assertNotNull( user );
+        Assert.assertEquals( FIRSTNAME, user.getFirstname() );
+        Assert.assertEquals( LASTNAME, user.getLastname() );
     }
 
     @Test
     public void TestfindById() {
-        Optional<User> user = ud.findById(ID);
-        Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(ID, user.get().getId());
+        Optional<User> user = ud.findById( ID );
+        Assert.assertTrue( user.isPresent() );
+        Assert.assertEquals( ID, user.get().getId() );
     }
 
     @Test
     public void TestfindByUsername() {
-        Optional<User> user = ud.findByUsername(EMAIL);
-        Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(EMAIL, user.get().getEmail());
-        Assert.assertEquals(ID, user.get().getId());
+        Optional<User> user = ud.findByUsername( EMAIL );
+        Assert.assertTrue( user.isPresent() );
+        Assert.assertEquals( EMAIL, user.get().getEmail() );
+        Assert.assertEquals( ID, user.get().getId() );
     }
-
 
 
 }

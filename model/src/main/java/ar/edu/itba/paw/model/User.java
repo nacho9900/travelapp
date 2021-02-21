@@ -44,18 +44,25 @@ public class User
              nullable = false )
     private String nationality;
 
+    @Column( nullable = false )
+    private boolean verified;
+
+    @Column( name = "verification_token",
+             nullable = false )
+    private UUID verificationToken;
+
     //////////////
 
     @OneToOne( fetch = FetchType.LAZY,
                mappedBy = "user",
                cascade = CascadeType.ALL,
-               orphanRemoval = true)
+               orphanRemoval = true )
     private UserPicture profilePicture;
 
     @OneToOne( fetch = FetchType.LAZY,
                mappedBy = "user",
                cascade = CascadeType.ALL,
-               orphanRemoval = true)
+               orphanRemoval = true )
     private PasswordRecoveryToken passwordRecoveryToken;
 
     @OneToMany( fetch = FetchType.LAZY,
@@ -152,6 +159,22 @@ public class User
 
     public void setProfilePicture( UserPicture profilePicture ) {
         this.profilePicture = profilePicture;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified( boolean verified ) {
+        this.verified = verified;
+    }
+
+    public UUID getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken( UUID verificationToken ) {
+        this.verificationToken = verificationToken;
     }
 
     @Override

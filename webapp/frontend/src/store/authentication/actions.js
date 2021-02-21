@@ -106,5 +106,9 @@ export default {
     async changeAvatar(_, payload) {
         const image = payload.image;
         await Axios.put(`/users/current/picture`, image);
+    },
+    async verify(_, payload) {
+        const token = payload.token;
+        await Axios.post("/auth/verify", { token: token });
     }
 };

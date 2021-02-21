@@ -51,7 +51,7 @@
 														$t(
 															'views.login.incorrect_email_password'
 														),
-												])
+												]).concat(notVerifiedRule)
 											"
 											outlined
 										></v-text-field>
@@ -133,6 +133,10 @@ export default {
 			error: null,
 			unauthorized: false,
 			requiredRule,
+			notVerified: false,
+			notVerifiedRule: [
+				() => !this.notVerified || this.$t("views.login.not_verified"),
+			],
 		};
 	},
 	computed: {
@@ -154,12 +158,11 @@ export default {
 
 					this.$router.replace({ name: "Home" });
 				} catch (err) {
-					if (
-						err.response &&
-						err.response.status &&
-						err.response.status === 401
-					) {
+					if (err?.response?.status === 401) {
 						this.unauthorized = true;
+						this.$refs.form.validate();
+					} else if (err?.response?.status === 403) {
+						this.notVerified = true;
 						this.$refs.form.validate();
 					} else {
 						this.error = this.$t("views.login.error");

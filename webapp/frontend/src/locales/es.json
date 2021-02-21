@@ -60,7 +60,8 @@
       "signin_btn": "Registrarse",
       "subtitle": "para ingresar a TravelApp",
       "title": "Iniciar Sesión",
-      "error": "Ocurrio un error al iniciar sesión. Por favor, intente nuevamente más tarde."
+      "error": "Ocurrio un error al iniciar sesión. Por favor, intente nuevamente más tarde.",
+      "not_verified": "debes verificar tu correo para ingresar, revisá tu correo para verificar tu cuenta"
     },
     "signup": {
       "errors": {
@@ -123,6 +124,14 @@
       "create_a_new_one": "empieza a planear uno nuevo.",
       "error": "Ocurrió un error buscando sus viajes. Por favor, intente nuevamente más tarde.",
       "title": "Mis Viajes"
+    },
+    "auth": {
+      "email_verification": {
+        "loading_title": "Su correo electrínico está siendo confirmado, por favor, aguarde unos momentos mientras finaliza la operacion",
+        "success_title": "Bienvenido a TravelApp, su email fue confirmado exitosamente",
+        "success_btn": "ir al inisio de seción",
+        "error_title": "Ocurrio un error al confirmar su correo electronico, puede que halla ingresado a una url erronea. Si el problema persiste, por favor, registrese nuevamente."
+      }
     }
   },
   "components": {

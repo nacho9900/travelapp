@@ -61,7 +61,8 @@
       "signin_btn": "SingUp",
       "subtitle": "to enter TravelApp",
       "title": "Login",
-      "error": "There was an error trying to login to TravelApp. Please, try again later."
+      "error": "There was an error trying to login to TravelApp. Please, try again later.",
+      "not_verified": "you must verify your email to login, check your email for confirm your account"
     },
     "signup": {
       "errors": {
@@ -124,6 +125,14 @@
       "create_a_new_one": "start planning a new one.",
       "error": "There was an error finding your trips. Please, try again later.",
       "title": "My Trips"
+    },
+    "auth": {
+      "email_verification": {
+        "loading_title": "Your email is being confirmed, please wait a few moments while the operation completes ",
+        "success_title": "Welcome to TravelApp, your email was confirmed successfully ",
+        "success_btn": "Go to login",
+        "error_title": "An error occurred when confirming your email, you may have entered a wrong url. If the problem persists, please register again. "
+      }
     }
   },
   "components": {

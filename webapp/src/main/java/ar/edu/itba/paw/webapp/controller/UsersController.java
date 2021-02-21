@@ -114,8 +114,8 @@ public class UsersController
 
         Optional<User> maybeUser = userService.findByUsername( username );
 
-        if ( !maybeUser.isPresent() ) {
-            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        if ( !maybeUser.isPresent() || !maybeUser.get().isVerified() ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).entity( "user email address not verified" ).build();
         }
 
         if ( !userService.matchPassword( maybeUser.get().getPassword(), newPasswordDto.getPasswordCurrent() ) ) {
@@ -145,8 +145,8 @@ public class UsersController
 
         Optional<User> maybeUser = userService.findByUsername( username );
 
-        if ( !maybeUser.isPresent() ) {
-            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        if ( !maybeUser.isPresent() || !maybeUser.get().isVerified() ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).entity( "user email address not verified" ).build();
         }
 
         User user = maybeUser.get();
@@ -213,5 +213,4 @@ public class UsersController
     }
 
     //endregion
-
 }

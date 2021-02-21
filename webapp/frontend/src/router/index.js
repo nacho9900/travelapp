@@ -72,6 +72,13 @@ const routes = [
     props: true,
   },
   {
+    path: '/verify/:token',
+    name: 'EmailVerification',
+    component: () => import("views/authentication/EmailVerification.vue"),
+    meta: { requireUnauth: true },
+    props: true,
+  },
+  {
     path: '/connection-lost',
     name: "NetworkError",
     component: () => import("views/error/NetworkError.vue"),

@@ -1,6 +1,6 @@
 <template>
 	<v-container fluid>
-		<error-dialog v-model="errorDialog" :error="error"></error-dialog>
+		<simple-error-dialog v-model="error"></simple-error-dialog>
 		<v-dialog width="400" persistent v-model="success">
 			<v-card>
 				<v-card-title
@@ -12,9 +12,8 @@
 					>{{ $t("views.signup.welcome_text") }}
 				</v-card-text>
 				<v-card-actions class="d-flex justify-end">
-					<v-btn @click="redirectLogin" color="primary"
-						>
-                        {{$t("views.signup_welcome_continue")}}
+					<v-btn @click="redirectLogin" color="primary">
+						{{ $t("views.signup_welcome_continue") }}
 					</v-btn>
 				</v-card-actions>
 			</v-card>
@@ -45,16 +44,6 @@ export default {
 			firstname: "",
 		};
 	},
-	computed: {
-		errorDialog: {
-			get() {
-				return !!this.error;
-			},
-			set() {
-				this.error = null;
-			},
-		},
-	},
 	methods: {
 		async signup(user) {
 			this.loading = true;
@@ -79,10 +68,10 @@ export default {
 			}
 
 			this.loading = false;
-        },
-        redirectLogin() {
+		},
+		redirectLogin() {
 			this.$router.replace("/login");
-        }
+		},
 	},
 };
 </script>

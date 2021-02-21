@@ -4,6 +4,8 @@ import java.util.Locale;
 
 public interface MailingService
 {
+    void welcomeAndVerificationEmail( String name, String email, String token, String frontendUrl );
+
     void sendPasswordRecoveryEmail( String name, String email, String token, String redirectUrl );
 
     void sendNewJoinRequestEmail( String userName, String adminName, String email, long tripId, String frontendUrl );

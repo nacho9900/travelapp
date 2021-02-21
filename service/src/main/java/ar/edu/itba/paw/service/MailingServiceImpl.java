@@ -27,7 +27,6 @@ public class MailingServiceImpl implements MailingService
     private static final String EMAIL_NAME = "travelapp.inegro@gmail.com";
     private static final String EMAIL_PASS = "D2SpMKqesDtAbLp";
 
-    private static final String PASSWORD_RECOVERY_EMAIL = "templates/password-recovery.html";
     private static final String NOTIFICATION_EMAIL = "templates/notification-template-email.html";
 
     @Autowired
@@ -36,16 +35,25 @@ public class MailingServiceImpl implements MailingService
     @Autowired
     private TemplateEngine htmlTemplateEngine;
 
+    @Async
+    @Override
+    public void welcomeAndVerificationEmail( String name, String email, String token, String frontendUrl ) {
+        String subject = "Welcome to TravelApp: Confirm your email";
+        String message = "Thank you for signing up for TravelApp. To complete and confirm your registration for TravelApp" +
+                         ", you’ll need to verify your email address. To do so, please click the button below:";
+        String btnText = "Confirm your Email";
+        String btnHref = frontendUrl + "/verify/" + token;
+        sendNotification( name, email, subject, subject, message, btnHref, btnText );
+    }
 
     @Async
     @Override
     public void sendPasswordRecoveryEmail( String name, String email, String token, String frontEndUrl ) {
-        final Context context = new Context( Locale.ENGLISH );
         String subject = "Password Recovery";
         String message = "We have received your request to reset your password. Please click the link below to complete the reset:";
         String btnText = "Reset My Password";
         String btnHref = frontEndUrl + "/recovery/" + token;
-        sendNotification( name, email, subject, "Password recovery", message, btnHref, btnText );
+        sendNotification( name, email, subject, subject, message, btnHref, btnText );
     }
 
     @Async
@@ -56,7 +64,7 @@ public class MailingServiceImpl implements MailingService
         String title = "New Member Request";
         String message = userName + " would like to become a new member of one of your trips!";
         String btnHref = frontendUrl + "/trip/" + tripId;
-        String btnText = "GO TO THE TRIP";
+        String btnText = "Go to the Trip";
         sendNotification( adminName, email, subject, title, message, btnHref, btnText );
     }
 
@@ -68,7 +76,7 @@ public class MailingServiceImpl implements MailingService
         String title = "Member Exit";
         String message = userName + " has exit your trip \"" + tripName + "\"";
         String btnHref = frontendUrl + "/trip/" + tripId;
-        String btnText = "GO TO THE TRIP";
+        String btnText = "Go to the Trip";
         sendNotification( adminName, email, subject, title, message, btnHref, btnText );
     }
 
@@ -80,7 +88,7 @@ public class MailingServiceImpl implements MailingService
         String title = "Member Request Accepted";
         String message ="you has been accepted on \"" + tripName + "\", go to the trip and start meeting your partners!";
         String btnHref = frontendUrl + "/trip/" + tripId;
-        String btnText = "GO TO THE TRIP";
+        String btnText = "Go to the Trip";
         sendNotification( userName, email, subject, title, message, btnHref, btnText );
     }
 
@@ -91,7 +99,7 @@ public class MailingServiceImpl implements MailingService
         String title = "There's a new Member!";
         String message = userName + " has join your trip \"" + tripName + "\"";
         String btnHref = frontendUrl + "/trip/" + tripId;
-        String btnText = "GO TO THE TRIP";
+        String btnText = "Go to the Trip";
         sendNotification( memberName, email, subject, title, message, btnHref, btnText );
     }
 

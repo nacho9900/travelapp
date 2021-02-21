@@ -11,6 +11,7 @@ import ar.edu.itba.paw.webapp.dto.authentication.AuthRequestDto;
 import ar.edu.itba.paw.webapp.dto.authentication.PasswordRecoveryDto;
 import ar.edu.itba.paw.webapp.dto.authentication.SignUpDto;
 import ar.edu.itba.paw.webapp.dto.authentication.TokenPasswordDto;
+import ar.edu.itba.paw.webapp.dto.authentication.VerificationDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
 import ar.edu.itba.paw.webapp.dto.users.UserDto;
@@ -69,7 +70,15 @@ public class AuthenticationController extends BaseController
             return Response.status( Response.Status.UNAUTHORIZED ).build();
         }
 
-        userService.findByUsername( email ).ifPresent( user -> maybeAuth.get().setUser( UserDto.fromUser( user ) ) );
+        Optional<User> maybeUser = userService.findByUsername( email );
+
+        if ( !maybeUser.isPresent() || !maybeUser.get().isVerified() ) {
+            return Response.status( Response.Status.FORBIDDEN ).entity(
+                    new ErrorDto( "user email address not verified" ) ).build();
+
+        }
+
+        maybeAuth.get().setUser( UserDto.fromUser( maybeUser.get() ) );
 
         return Response.ok().entity( maybeAuth.get() ).build();
     }
@@ -92,8 +101,12 @@ public class AuthenticationController extends BaseController
         }
 
         User user = userService.create( signUpDto.getFirstname(), signUpDto.getLastname(), signUpDto.getEmail(),
-                                        signUpDto.getPassword(), signUpDto.getBirthday(),
-                                        signUpDto.getNationality(), null );
+                                        signUpDto.getPassword(), signUpDto.getBirthday(), signUpDto.getNationality(),
+                                        null );
+
+        mailingService.welcomeAndVerificationEmail( user.getFullName(), user.getEmail(),
+                                                    user.getVerificationToken().toString(), getFrontendUrl() );
+
 
         return Response.ok().entity( UserDto.fromUser( user ) ).build();
     }
@@ -110,7 +123,7 @@ public class AuthenticationController extends BaseController
 
         Optional<User> maybeUser = userService.findByUsername( passwordRecoveryDto.getEmail() );
 
-        if ( !maybeUser.isPresent() ) {
+        if ( !maybeUser.isPresent() || !maybeUser.get().isVerified() ) {
             return Response.ok().build();
         }
 
@@ -137,17 +150,27 @@ public class AuthenticationController extends BaseController
         Optional<PasswordRecoveryToken> maybeToken = passwordRecoveryTokenService.findByToken(
                 tokenPasswordDto.getToken() );
 
-        if ( !maybeToken.isPresent() || maybeToken.get().getExpiresIn().isBefore( LocalDateTime.now(
-                ZoneOffset.UTC) ) ||
-             maybeToken.get().isUsed() ) {
+        if ( !maybeToken.isPresent() || maybeToken.get().getExpiresIn().isBefore(
+                LocalDateTime.now( ZoneOffset.UTC ) ) || maybeToken.get().isUsed() ||
+             !maybeToken.get().getUser().isVerified() ) {
             return Response.status( Response.Status.NOT_FOUND ).build();
         }
 
-        passwordRecoveryTokenService.markAsUsed(maybeToken.get());
-
         User user = maybeToken.get().getUser();
 
-        userService.changePassword( user, tokenPasswordDto.getPassword() );
+        userService.changePassword( user, maybeToken.get(), tokenPasswordDto.getPassword() );
+
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path( "/verify" )
+    public Response verify( @RequestBody VerificationDto verificationDto ) {
+        if ( verificationDto.getToken() == null || !userService.verifyEmail( verificationDto.getToken() ) ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "invalid token", "token" ) )
+                           .build();
+        }
 
         return Response.ok().build();
     }
