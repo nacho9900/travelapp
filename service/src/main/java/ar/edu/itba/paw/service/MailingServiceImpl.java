@@ -27,11 +27,8 @@ public class MailingServiceImpl implements MailingService
     private static final String EMAIL_NAME = "travelapp.inegro@gmail.com";
     private static final String EMAIL_PASS = "D2SpMKqesDtAbLp";
 
-    private static final String REGISTER_TEMPLATE = "templates/registerMail.html";
-    private static final String JOIN_TRIP_TEMPLATE = "templates/joinTripMail.html";
-    private static final String EXIT_TRIP_TEMPLATE = "templates/exitTripMail.html";
-    private static final String DELETE_TRIP_TEMPLATE = "templates/deleteTripMail.html";
     private static final String PASSWORD_RECOVERY_EMAIL = "templates/password-recovery.html";
+    private static final String NOTIFICATION_EMAIL = "templates/notification-template-email.html";
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -39,79 +36,81 @@ public class MailingServiceImpl implements MailingService
     @Autowired
     private TemplateEngine htmlTemplateEngine;
 
-    @Async
-    @Override
-    public void sendRegisterMail( String emailName, String name, String lastname, Locale locale ) {
-        String subject = applicationContext.getMessage( "mailRegisterSubject", null, locale );
-        final Context ctx = new Context( locale );
-        ctx.setVariable( "email", emailName );
-        ctx.setVariable( "name", name );
-        ctx.setVariable( "lastname", lastname );
-        String html = htmlTemplateEngine.process( REGISTER_TEMPLATE, ctx );
-        sendMail( name + " " + lastname, emailName, html, subject );
-    }
 
     @Async
     @Override
-    public void sendJoinTripMail( String emailA, String adminName, String tripName, String firstname, String lastname
-            , Locale locale ) {
-        String subject = applicationContext.getMessage( "mailJoinSubject", null, locale );
-        final Context ctx = new Context( locale );
-        ctx.setVariable( "email", emailA );
-        ctx.setVariable( "adminname", adminName );
-        ctx.setVariable( "firstname", firstname );
-        ctx.setVariable( "lastname", lastname );
-        ctx.setVariable( "tripname", tripName );
-        String html = htmlTemplateEngine.process( JOIN_TRIP_TEMPLATE, ctx );
-        sendMail( adminName, emailA, html, subject );
-    }
-
-    @Async
-    @Override
-    public void sendExitTripMail( String emailA, String adminName, String tripName, String firstname, String lastname
-            , Locale locale ) {
-
-        String subject = applicationContext.getMessage( "mailExitSubject", null, locale );
-        final Context ctx = new Context( locale );
-        ctx.setVariable( "email", emailA );
-        ctx.setVariable( "adminname", adminName );
-        ctx.setVariable( "firstname", firstname );
-        ctx.setVariable( "lastname", lastname );
-        ctx.setVariable( "tripname", tripName );
-        String html = htmlTemplateEngine.process( EXIT_TRIP_TEMPLATE, ctx );
-        sendMail( adminName, emailA, html, subject );
-    }
-
-    @Async
-    @Override
-    public void sendDeleteTripMail( String email, String firstname, String lastname, String tripName, Locale locale ) {
-
-        String subject = applicationContext.getMessage( "mailDeleteSubject", null, locale );
-        final Context ctx = new Context( locale );
-        ctx.setVariable( "email", email );
-        ctx.setVariable( "firstname", firstname );
-        ctx.setVariable( "lastname", lastname );
-        ctx.setVariable( "tripname", tripName );
-        String html = htmlTemplateEngine.process( DELETE_TRIP_TEMPLATE, ctx );
-        sendMail( firstname + " " + lastname, email, html, subject );
-    }
-
-    @Async
-    @Override
-    public void sendPasswordRecoveryEmail( String name, String email, String token, String redirectUrl ) {
+    public void sendPasswordRecoveryEmail( String name, String email, String token, String frontEndUrl ) {
         final Context context = new Context( Locale.ENGLISH );
-        String subject = "TravelApp Password Recovery";
-        context.setVariable( "token", token );
-        context.setVariable( "url", redirectUrl );
-        String html = htmlTemplateEngine.process( PASSWORD_RECOVERY_EMAIL, context );
-        sendMail( name, email, html, subject );
+        String subject = "Password Recovery";
+        String message = "We have received your request to reset your password. Please click the link below to complete the reset:";
+        String btnText = "Reset My Password";
+        String btnHref = frontEndUrl + "/recovery/" + token;
+        sendNotification( name, email, subject, "Password recovery", message, btnHref, btnText );
+    }
+
+    @Async
+    @Override
+    public void sendNewJoinRequestEmail( String userName, String adminName, String email, long tripId,
+                                         String frontendUrl ) {
+        String subject = "New Member Request";
+        String title = "New Member Request";
+        String message = userName + " would like to become a new member of one of your trips!";
+        String btnHref = frontendUrl + "/trip/" + tripId;
+        String btnText = "GO TO THE TRIP";
+        sendNotification( adminName, email, subject, title, message, btnHref, btnText );
+    }
+
+    @Async
+    @Override
+    public void exitTripEmail( String userName, String adminName, String email, long tripId, String tripName,
+                               String frontendUrl ) {
+        String subject = "Member Exit";
+        String title = "Member Exit";
+        String message = userName + " has exit your trip \"" + tripName + "\"";
+        String btnHref = frontendUrl + "/trip/" + tripId;
+        String btnText = "GO TO THE TRIP";
+        sendNotification( adminName, email, subject, title, message, btnHref, btnText );
+    }
+
+    @Async
+    @Override
+    public void requestAcceptedEmail( String userName, String email, long tripId, String tripName,
+                                      String frontendUrl ) {
+        String subject = "Member Request Accepted";
+        String title = "Member Request Accepted";
+        String message ="you has been accepted on \"" + tripName + "\", go to the trip and start meeting your partners!";
+        String btnHref = frontendUrl + "/trip/" + tripId;
+        String btnText = "GO TO THE TRIP";
+        sendNotification( userName, email, subject, title, message, btnHref, btnText );
+    }
+
+    @Async
+    @Override
+    public void newMemberEmail( String userName, String memberName, String email, long tripId, String tripName, String frontendUrl ) {
+        String subject = "There's a new Member!";
+        String title = "There's a new Member!";
+        String message = userName + " has join your trip \"" + tripName + "\"";
+        String btnHref = frontendUrl + "/trip/" + tripId;
+        String btnText = "GO TO THE TRIP";
+        sendNotification( memberName, email, subject, title, message, btnHref, btnText );
+    }
+
+    private void sendNotification( String receiverName, String receiverEmail, String subject, String title,
+                                   String message, String btnHref, String btnText ) {
+        final Context context = new Context( Locale.ENGLISH );
+        context.setVariable( "title", title );
+        context.setVariable( "message", message );
+        context.setVariable( "btnHref", "http://" + btnHref );
+        context.setVariable( "btnText", btnText );
+        String html = htmlTemplateEngine.process( NOTIFICATION_EMAIL, context );
+        sendMail( receiverName, receiverEmail, html, subject );
     }
 
     private void sendMail( String receiverName, String receiverEmail, String html, String subject ) {
         try {
             Email email = EmailBuilder.startingBlank()
                                       .to( receiverName, receiverEmail )
-                                      .from( "Meet and Travel", "meet.travel.paw@gmail.com" )
+                                      .from( "TravelApp", "meet.travel.paw@gmail.com" )
                                       .withSubject( subject )
                                       .withHTMLText( html )
                                       .buildEmail();

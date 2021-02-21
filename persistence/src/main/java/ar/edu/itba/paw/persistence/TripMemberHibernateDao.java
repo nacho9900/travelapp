@@ -71,9 +71,19 @@ public class TripMemberHibernateDao implements TripMemberDao
     @Override
     public TripMember create( Trip trip, User user, TripMemberRole role, boolean active ) {
         TripMember member = new TripMember( trip, role, active, user );
-        TripRate rate = new TripRate( 0, LocalDateTime.now( ZoneOffset.UTC) );
+        TripRate rate = new TripRate( 0, LocalDateTime.now( ZoneOffset.UTC ) );
         member.setRate( rate );
         em.persist( member );
         return member;
+    }
+
+    @Override
+    public List<TripMember> getAllAdmins( long tripId ) {
+        TypedQuery<TripMember> query = em.createQuery(
+                "select m from TripMember as m where m.trip.id = :tripId and (m.role = :admin or m.role = :owner)", TripMember.class );
+        query.setParameter( "tripId", tripId );
+        query.setParameter( "owner", TripMemberRole.OWNER );
+        query.setParameter( "admin", TripMemberRole.ADMIN );
+        return query.getResultList();
     }
 }

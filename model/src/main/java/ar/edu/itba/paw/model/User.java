@@ -201,4 +201,8 @@ public class User
     public void setMembers( List<TripMember> members ) {
         this.members = members;
     }
+
+    public String getFullName() {
+        return this.firstname + " " + this.lastname;
+    }
 }

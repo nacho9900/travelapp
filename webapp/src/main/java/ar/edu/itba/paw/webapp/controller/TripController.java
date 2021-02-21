@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ActivityService;
+import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.TripCommentsService;
 import ar.edu.itba.paw.interfaces.TripJoinRequestService;
 import ar.edu.itba.paw.interfaces.TripMemberService;
@@ -96,6 +97,9 @@ public class TripController extends BaseController
 
     @Autowired
     private TripCommentsService tripCommentsService;
+
+    @Autowired
+    private MailingService mailingService;
 
     //region trip
 
@@ -584,9 +588,10 @@ public class TripController extends BaseController
     public Response exitTrip( @PathParam( "id" ) long id ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
+        Optional<Trip> maybeTrip = tripService.findById( id );
         Optional<TripMember> maybeMember = tripMemberService.findByTripIdAndUsername( id, username );
 
-        if ( !maybeMember.isPresent() ) {
+        if ( !maybeMember.isPresent() || !maybeTrip.isPresent() ) {
             return TripNotFound();
         }
 
@@ -598,6 +603,11 @@ public class TripController extends BaseController
         }
 
         tripMemberService.delete( member.getId() );
+
+        tripMemberService.getAllByTripId( id ).forEach( x -> {
+            mailingService.exitTripEmail( member.getUser().getFullName(), x.getUser().getFullName(),
+                                          x.getUser().getEmail(), id, maybeTrip.get().getName(), getFrontendUrl() );
+        } );
 
         return Response.ok().build();
     }
@@ -636,8 +646,13 @@ public class TripController extends BaseController
                     new ErrorDto( "already have a pending join request" ) ).build();
         }
 
-        TripJoinRequest request = tripJoinRequestService.create( maybeUser.get(), maybeTrip.get(),
-                                                                 joinTripDto.getMessage() );
+        User user = maybeUser.get();
+
+        TripJoinRequest request = tripJoinRequestService.create( user, maybeTrip.get(), joinTripDto.getMessage() );
+
+        tripMemberService.getAllAdmins( id ).forEach(
+                x -> mailingService.sendNewJoinRequestEmail( user.getFullName(), x.getUser().getFullName(),
+                                                             x.getUser().getEmail(), id, getFrontendUrl() ) );
 
         return Response.ok().entity( TripJoinRequestDto.fromTripJoinRequest( request, false ) ).build();
     }
@@ -684,7 +699,19 @@ public class TripController extends BaseController
                            .build();
         }
 
+        User user = maybeJoinRequest.get().getUser();
+
         TripMember tripMember = tripJoinRequestService.accept( maybeJoinRequest.get() );
+
+        mailingService.requestAcceptedEmail( user.getFullName(), user.getEmail(), id, maybeTrip.get().getName(),
+                                             getFrontendUrl() );
+
+        tripMemberService.getAllByTripId( id ).forEach( x -> {
+            if ( x.getId() != tripMember.getId() ) {
+                mailingService.newMemberEmail( user.getFullName(), x.getUser().getFullName(), x.getUser().getEmail(),
+                                               id, maybeTrip.get().getName(), getFrontendUrl() );
+            }
+        } );
 
         return Response.ok().entity( TripMemberDto.fromTripMember( tripMember, false, false ) ).build();
     }

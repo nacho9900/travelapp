@@ -69,4 +69,9 @@ public class TripMemberServiceImpl implements TripMemberService
     public TripMember createOwner( Trip trip, User user ) {
         return tripMemberDao.create( trip, user, TripMemberRole.OWNER, true );
     }
+
+    @Override
+    public List<TripMember> getAllAdmins( long tripId ) {
+        return tripMemberDao.getAllAdmins(tripId);
+    }
 }

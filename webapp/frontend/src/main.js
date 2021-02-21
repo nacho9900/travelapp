@@ -21,10 +21,10 @@ Vue.config.productionTip = false;
 Axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
 
 Axios.interceptors.response.use((response) => { return response; }, (error) => {
-  if (error.request) {
+  if (!error.response && error.request) {
     router.replace({ name: "NetworkError" });
   }
-  return error;
+  throw error;
 });
 
 Vue.use(GmapVue, {

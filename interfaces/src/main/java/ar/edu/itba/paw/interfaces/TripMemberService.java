@@ -9,14 +9,21 @@ import java.util.Optional;
 
 public interface TripMemberService
 {
-    Optional<TripMember> findById( long id);
-    List<TripMember> getAllByTripId( long tripId);
+    Optional<TripMember> findById( long id );
+
+    List<TripMember> getAllByTripId( long tripId );
+
     boolean memberBelongsToTheTrip( long id, long tripId );
+
     Optional<TripMember> findByTripIdAndUsername( long tripId, String username );
-    void delete(long id);
+
+    void delete( long id );
+
     TripMember update( TripMember tripMember );
 
     TripMember create( Trip trip, User user );
 
     TripMember createOwner( Trip trip, User user );
+
+    List<TripMember> getAllAdmins( long tripId );
 }

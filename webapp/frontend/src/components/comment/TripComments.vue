@@ -62,6 +62,7 @@ export default {
 				const data = await this.$store.dispatch("comment/getAll", {
 					tripId: this.id,
 				});
+				console.log(data);
 				this.comments = data.comments;
 				this.member = data.member;
 			} catch (error) {
