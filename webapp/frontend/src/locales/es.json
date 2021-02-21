@@ -236,6 +236,9 @@
       "trip_member_card": {
         "delete_dialog_title": "¿Está seguro que desea eliminar a este miembro?",
         "delete_dialog_message": "Usted está por eliminar a "
+      },
+      "trip_join_request_list": {
+        "empty": "no se encontraron nuevas solicitudes de miembro"
       }
     },
     "user": {

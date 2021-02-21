@@ -237,6 +237,9 @@
       "trip_member_card": {
         "delete_dialog_title": "Are you sure that you want to delete this member?",
         "delete_dialog_message": "You are going to delete  "
+      },
+      "trip_join_request_list": {
+        "empty": "no new join request were found"
       }
     },
     "user": {

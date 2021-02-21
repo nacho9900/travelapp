@@ -30,12 +30,10 @@ public class ActivityHibernateDao implements ActivityDao
     @Override
     public Optional<Activity> findByName( String name ) {
         final TypedQuery<Activity> query = em.createQuery( "From Activity as a where a.name like :name",
-                Activity.class );
+                                                           Activity.class );
         query.setParameter( "name", name );
         query.setMaxResults( MAX_ROWS );
-        return query.getResultList()
-                    .stream()
-                    .findFirst();
+        return query.getResultList().stream().findFirst();
     }
 
     @Override
@@ -62,8 +60,8 @@ public class ActivityHibernateDao implements ActivityDao
 
     @Override
     public List<Activity> getTripActivities( long tripId ) {
-        final TypedQuery<Activity> query = em.createQuery( "From Activity as a where a.trip.id = :tripId",
-                Activity.class );
+        final TypedQuery<Activity> query = em.createQuery(
+                "From Activity as a where a.trip.id = :tripId order by a.startDate, a.id", Activity.class );
         query.setParameter( "tripId", tripId );
         return query.getResultList();
     }
@@ -77,8 +75,7 @@ public class ActivityHibernateDao implements ActivityDao
         query.setParameter( "tripId", tripId );
         query.setParameter( "activityId", activityId );
 
-        return query.getResultList()
-                    .size() > 0;
+        return query.getResultList().size() > 0;
     }
 
     @Override

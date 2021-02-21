@@ -1,19 +1,19 @@
 <template>
 	<v-container  fluid class="pb-0">
 		<v-row v-if="!unauthorized">
+			<v-col cols="12" class="pt-5 pb-0">
+				<trip-new-comment-box
+					:tripId="id"
+					@created="addComment"
+				></trip-new-comment-box>
+			</v-col>
+		</v-row>
+		<v-row v-if="!unauthorized">
 			<v-col cols="12" class="px-0">
 				<trip-comments-timeline
 					:comments="comments"
 					:loading="loading"
 				></trip-comments-timeline>
-			</v-col>
-		</v-row>
-		<v-row v-if="!unauthorized">
-			<v-col cols="12" class="py-5">
-				<trip-new-comment-box
-					:tripId="id"
-					@created="addComment"
-				></trip-new-comment-box>
 			</v-col>
 		</v-row>
 		<v-row v-if="unauthorized">
@@ -53,7 +53,7 @@ export default {
 	},
 	methods: {
 		addComment(comment) {
-			this.comments.push(comment);
+			this.comments.unshift(comment);
 		},
 		async getAll() {
 			this.loading = true;
@@ -62,7 +62,6 @@ export default {
 				const data = await this.$store.dispatch("comment/getAll", {
 					tripId: this.id,
 				});
-				console.log(data);
 				this.comments = data.comments;
 				this.member = data.member;
 			} catch (error) {

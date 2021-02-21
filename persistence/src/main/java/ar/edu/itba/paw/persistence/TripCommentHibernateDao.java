@@ -45,7 +45,7 @@ public class TripCommentHibernateDao implements TripCommentsDao
     public List<TripComment> getAllByTripId( long tripId ) {
         TypedQuery<TripComment> query = em.createQuery(
                 "select c from TripComment as c inner join fetch c.member as m inner join m.trip as t where t.id = " +
-                ":tripId", TripComment.class );
+                ":tripId order by c.createdOn desc", TripComment.class );
         query.setParameter( "tripId", tripId );
         return query.getResultList();
     }

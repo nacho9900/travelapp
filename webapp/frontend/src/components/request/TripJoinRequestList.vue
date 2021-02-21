@@ -11,7 +11,14 @@
 				<v-skeleton-loader type="sentences"></v-skeleton-loader>
 			</v-col>
 		</v-row>
-		<v-row  class="overflow-y-auto" style="max-height: 300px" v-else>
+		<v-row v-else-if="isEmpty">
+			<v-col cols="12" class="d-flex justify-center">
+				<v-alert type="info">
+					{{ $t("components.trips.trip_join_request_list.empty") }}
+				</v-alert>
+			</v-col>
+		</v-row>
+		<v-row class="overflow-y-auto" style="max-height: 300px" v-else>
 			<v-col cols="12" v-for="request in requests" :key="request.id">
 				<trip-join-request-card
 					:id="request.id"
@@ -37,6 +44,11 @@ export default {
 		tripId: String,
 		requests: Array,
 		loading: Boolean,
+	},
+	computed: {
+		isEmpty() {
+			return this.requests && this.requests.length === 0;
+		},
 	},
 	methods: {
 		accept(data) {
