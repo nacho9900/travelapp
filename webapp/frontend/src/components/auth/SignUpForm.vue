@@ -39,6 +39,7 @@
 								:label="$t('views.signup.birthday')"
 								:rules="requiredRule"
 								:disabled="loading"
+								:max="today"
 								outlined
 								dense
 							></date-picker>
@@ -185,6 +186,9 @@ export default {
 		imageUrl() {
 			return "logos/green_w_logo.png";
 		},
+		today() {
+			return new Date().toISOString();
+		}
 	},
 };
 </script>
