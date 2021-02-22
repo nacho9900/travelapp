@@ -65,10 +65,10 @@
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
-<!--    <error-page>-->
-<!--        <error-code>404</error-code>-->
-<!--        <location>/404</location>-->
-<!--    </error-page>-->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/index.html</location>
+    </error-page>
 
     <!--
     <error-page>

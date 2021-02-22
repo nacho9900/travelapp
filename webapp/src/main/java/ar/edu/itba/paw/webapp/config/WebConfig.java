@@ -101,9 +101,13 @@ public class WebConfig extends WebMvcConfigurerAdapter
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         ds.setDriverClass( org.postgresql.Driver.class );
-        ds.setUrl( "jdbc:postgresql://localhost/paw" );
-        ds.setUsername( "postgres" );
-        ds.setPassword( "postgres" );
+        //        ds.setUrl( "jdbc:postgresql://localhost/paw" );
+        //        ds.setUsername( "postgres" );
+        //        ds.setPassword( "postgres" );
+        ds.setUrl( "jdbc:postgresql://10.16.1.110/paw-2019a-4" );
+        ds.setUsername( "paw-2019a-4" );
+        ds.setPassword( "qwQf3Kj2g" );
+
         return ds;
     }
 
@@ -129,8 +133,8 @@ public class WebConfig extends WebMvcConfigurerAdapter
         final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         factoryBean.setJpaVendorAdapter( vendorAdapter );
         final Properties properties = new Properties();
-        properties.setProperty( "hibernate.SQL", "debug" );
-        properties.setProperty( "hibernate.type", "trace" );
+        //        properties.setProperty( "hibernate.SQL", "debug" );
+        //        properties.setProperty( "hibernate.type", "trace" );
         properties.setProperty( "hibernate.hbm2ddl.auto", "update" );
         properties.setProperty( "hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect" );
         factoryBean.setJpaProperties( properties );
@@ -158,9 +162,7 @@ public class WebConfig extends WebMvcConfigurerAdapter
 
     @Override
     public void addCorsMappings( CorsRegistry registry ) {
-        registry.addMapping( "/api/**" )
-                .allowedOrigins( "*" )
-                .allowedMethods( "*" );
+        registry.addMapping( "/api/**" ).allowedOrigins( "*" ).allowedMethods( "*" );
     }
 
     @Bean
@@ -171,9 +173,8 @@ public class WebConfig extends WebMvcConfigurerAdapter
     }
 
     @Bean
-    public ObjectMapper objectMapper( ) {
-        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json()
-                                                               .build();
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MM-yyyy hh:mm" );
         dateFormat.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
@@ -200,15 +201,14 @@ public class WebConfig extends WebMvcConfigurerAdapter
             apiKey = "";
         }
 
-        return new GeoApiContext.Builder().apiKey( apiKey )
-                                          .build();
+        return new GeoApiContext.Builder().apiKey( apiKey ).build();
     }
 
     @Override
-    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        for (HttpMessageConverter<?> httpConverter : converters) {
-            if (httpConverter instanceof MappingJackson2HttpMessageConverter) {
-                ((MappingJackson2HttpMessageConverter) httpConverter).setObjectMapper(objectMapper);
+    public void extendMessageConverters( List<HttpMessageConverter<?>> converters ) {
+        for ( HttpMessageConverter<?> httpConverter : converters ) {
+            if ( httpConverter instanceof MappingJackson2HttpMessageConverter ) {
+                ( (MappingJackson2HttpMessageConverter) httpConverter ).setObjectMapper( objectMapper );
             }
         }
     }

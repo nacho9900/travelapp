@@ -13,7 +13,7 @@ public abstract class BaseController
             return "localhost:8080";
         }
         else {
-            return uriInfo.getBaseUri().getHost();
+            return uriInfo.getBaseUri().getHost() + "/paw-2019a-4";
         }
     }
 }

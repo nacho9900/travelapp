@@ -37,7 +37,7 @@
         <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
         <google-places-api-java-version>2.1.7</google-places-api-java-version>
-        <simple-java-mail-version>5.1.6</simple-java-mail-version>
+        <simple-java-mail-version>5.1.7</simple-java-mail-version>
         <commons-fileupload-version>1.3.3</commons-fileupload-version>
         <mockito.version>2.25.1</mockito.version>
         <org.hibernate.version>5.1.0.Final</org.hibernate.version>
@@ -53,6 +53,7 @@
         <jersey-media-json-jackson.version>2.33</jersey-media-json-jackson.version>
         <jackson-core.version>2.10.2</jackson-core.version>
         <google-maps-services.version>0.16.1</google-maps-services.version>
+        <email-address-rfc.version>2.3.0</email-address-rfc.version>
     </properties>
 
     <build>
@@ -107,6 +108,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- EMAIL DEP -->
+            <dependency>
+                <groupId>com.github.bbottema</groupId>
+                <artifactId>emailaddress-rfc2822</artifactId>
+                <version>${email-address-rfc.version}</version>
+            </dependency>
+
             <!-- IMAGE SCALE -->
 
             <dependency>
