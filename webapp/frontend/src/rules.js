@@ -28,10 +28,6 @@ export const numberRule = [
     (v) => !isNaN(+v) || i18n.t("rules.number_format")
 ];
 
-export const futureDateRule = [
-    (v) => new Date(v).getTime() > new Date().getTime() || i18n.t("rules.future_date_rule")
-];
-
 export const oneHundredFieldLengthRule = [
     (v) => !v || v.length <= 100 || i18n.t("rules.one_hundred_length")
 ]

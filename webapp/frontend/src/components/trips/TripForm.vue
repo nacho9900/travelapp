@@ -25,9 +25,10 @@
 								"
 								:rules="
 									requiredRule
-										.concat(futureDateRule)
+										.concat(futureStartDateRule)
 										.concat(datesRule)
 								"
+								:min="today"
 								:disabled="loading"
 								outlined
 							></date-picker>
@@ -40,9 +41,11 @@
 								"
 								:rules="
 									requiredRule
-										.concat(futureDateRule)
+										.concat(futureEndDateRule)
 										.concat(datesRule)
 								"
+								:min="startDateEntered || today"
+								:current="startDateEntered || today"
 								:disabled="loading"
 								outlined
 							></date-picker>
@@ -90,7 +93,8 @@
 </template>
 
 <script>
-import { requiredRule, futureDateRule } from "../../rules.js";
+import { requiredRule } from "../../rules.js";
+import { dateIsFuture } from "../../utils.js";
 
 export default {
 	props: {
@@ -116,7 +120,16 @@ export default {
 					this.$t("components.trips.tripform.date_rule"),
 			],
 			requiredRule,
-			futureDateRule,
+			futureEndDateRule: [
+				() =>
+					dateIsFuture(this.endDateEntered) ||
+					this.$t("rules.future_date_rule"),
+			],
+			futureStartDateRule: [
+				() =>
+					dateIsFuture(this.startDateEntered) ||
+					this.$t("rules.future_date_rule"),
+			],
 			tripNameSizeRule: [
 				(v) =>
 					!v ||
@@ -142,6 +155,9 @@ export default {
 				? this.$t("components.trips.tripform.edit")
 				: this.$t("components.trips.tripform.create");
 		},
+		today() {
+			return new Date().toISOString();
+		}
 	},
 	methods: {
 		init() {

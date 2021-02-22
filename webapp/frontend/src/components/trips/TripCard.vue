@@ -34,10 +34,11 @@
 					class="white--text align-end"
 					height="200px"
 					:src="imageUrl"
+					:contain="imageError"
 					@error="imageError = true"
 				>
 				</v-img>
-				<v-app-bar flat>
+				<v-app-bar color="primary" flat>
 					<v-toolbar-title>{{ trip.name }}</v-toolbar-title>
 					<v-spacer></v-spacer>
 
@@ -66,7 +67,7 @@
 						</v-list>
 					</v-menu>
 				</v-app-bar>
-				<v-card-text class="text--primary pt-0" style="height: 100px">
+				<v-card-text class="text--primary pt-2" style="height: 100px">
 					<div>{{ trip.description }}</div>
 				</v-card-text>
 				<v-card-text class="text--primary">
@@ -116,14 +117,15 @@ export default {
 			imageFormDialog: false,
 			loadingImage: false,
 			imageError: false,
+			cacheBreaker: null,
 		};
 	},
 	computed: {
 		imageUrl() {
 			return this.imageError
-				? "/VvNhMb0.jpg"
+				? "/no-image-available.png"
 				: process.env.VUE_APP_API_BASE_URL +
-						`/trip/${this.id}/picture?height=200`;
+						`/trip/${this.id}/picture?height=200` + (this.cacheBreaker ? `&${this.cacheBreaker}` : "");
 		},
 		isMember() {
 			return !!this.role;
@@ -201,8 +203,7 @@ export default {
 					id: this.id,
 				});
 				this.imageFormDialog = false;
-				this.imageError = true;
-				this.imageError = false;
+				this.cacheBreaker = new Date().getTime();
 			} catch (error) {
 				this.error = this.$t(
 					"components.trips.trip_card.change_image_error"

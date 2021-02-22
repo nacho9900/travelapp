@@ -56,7 +56,7 @@ export default {
 		},
 		imageUrl() {
 			return this.imageError
-				? "/VvNhMb0.jpg"
+				? "/no-image-available.png"
 				: process.env.VUE_APP_API_BASE_URL +
 						`/trip/${this.id}/picture?height=200`;
 		},

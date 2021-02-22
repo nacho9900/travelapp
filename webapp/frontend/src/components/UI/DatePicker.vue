@@ -28,6 +28,7 @@
 				:locale="locale"
 				:min="min"
 				:max="max"
+				:show-current="current"
 				no-title
 			></v-date-picker>
 		</template>
@@ -50,6 +51,7 @@ export default {
 		hideDetails: Boolean,
 		min: String,
 		max: String,
+		current: String,
 	},
 	data() {
 		return {

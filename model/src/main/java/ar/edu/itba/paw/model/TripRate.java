@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 @Table(name = "trip_rate")
 public class TripRate {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_comments_id_seq")
-    @SequenceGenerator(sequenceName = "trip_comments_id_seq", name = "trip_comments_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_rate_id_seq")
+    @SequenceGenerator(sequenceName = "trip_rate_id_seq", name = "trip_rate_id_seq", allocationSize = 1)
     private long id;
 
     @Column(nullable = false)

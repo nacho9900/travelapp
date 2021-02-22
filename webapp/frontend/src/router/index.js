@@ -23,7 +23,7 @@ const routes = [
     props: true,
   },
   {
-    path: '/trip/new',
+    path: '/new-trip',
     name: 'TripNew',
     component: () => import("views/trips/TripNew.vue"),
     meta: { requireAuth: true }

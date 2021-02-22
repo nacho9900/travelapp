@@ -5,9 +5,9 @@ export function formatDateString(date) {
         return "";
     }
 
-    const dateObj =  new Date(new Date(date).getTime() + new Date().getTimezoneOffset() * 60000); 
+    const dateObj = new Date(new Date(date).getTime() + new Date().getTimezoneOffset() * 60000);
 
-    return dateObj.toLocaleDateString(getBrowserLocale);
+    return dateObj.toLocaleDateString(getBrowserLocale());
 }
 
 export function formatDateTimeString(date) {
@@ -18,4 +18,8 @@ export function formatDateTimeString(date) {
     const dateToFormat = new Date(date + "+0000");
 
     return `${dateToFormat.toLocaleString(getBrowserLocale())}`;
+}
+
+export function dateIsFuture(date) {
+    return new Date(date).getTime() >= new Date().getTime();
 }
