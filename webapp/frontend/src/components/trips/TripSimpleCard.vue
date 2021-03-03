@@ -8,9 +8,17 @@
 					@error="imageError = true"
 				>
 				</v-img>
-				<v-card-title class="font-weight-regular">{{
-					name
-				}}</v-card-title>
+				<v-card-title
+					class="font-weight-regular"
+					
+					><span style="
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						width: 100%
+						display: inline-block;
+					">{{ name }}</span></v-card-title
+				>
 				<v-card-text class="text--primary pt-0" style="height: 100px">
 					<div>{{ description }}</div>
 				</v-card-text>
@@ -56,9 +64,14 @@ export default {
 		},
 		imageUrl() {
 			return this.imageError
-				? "/no-image-available.png"
+				? this.basePath + "no-image-available.png"
 				: process.env.VUE_APP_API_BASE_URL +
 						`/trip/${this.id}/picture?height=200`;
+		},
+		basePath() {
+			return process.env.NODE_ENV === "production"
+				? "/paw-2019a-4/"
+				: "/";
 		},
 	},
 };

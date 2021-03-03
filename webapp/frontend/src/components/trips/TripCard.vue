@@ -123,9 +123,15 @@ export default {
 	computed: {
 		imageUrl() {
 			return this.imageError
-				? "/no-image-available.png"
+				? this.basePath + "no-image-available.png"
 				: process.env.VUE_APP_API_BASE_URL +
-						`/trip/${this.id}/picture?height=200` + (this.cacheBreaker ? `&${this.cacheBreaker}` : "");
+						`/trip/${this.id}/picture?height=200` +
+						(this.cacheBreaker ? `&${this.cacheBreaker}` : "");
+		},
+		basePath() {
+			return process.env.NODE_ENV === "production"
+				? "/paw-2019a-4/"
+				: "/";
 		},
 		isMember() {
 			return !!this.role;
@@ -203,6 +209,7 @@ export default {
 					id: this.id,
 				});
 				this.imageFormDialog = false;
+				this.imageError = false;
 				this.cacheBreaker = new Date().getTime();
 			} catch (error) {
 				this.error = this.$t(
