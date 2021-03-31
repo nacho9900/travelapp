@@ -6,7 +6,7 @@
 				style="padding-top: 100px"
 				class="d-flex justify-center"
 			>
-				<v-img src="logos/green_w_logo.png" max-width="200"></v-img>
+				<v-img :src="require('@/assets/logos/green_w_logo.png')" max-width="200"></v-img>
 			</v-col>
 			<v-col cols="12" class="d-flex justify-center py-1">
 				<h2 class="font-weight-regular">

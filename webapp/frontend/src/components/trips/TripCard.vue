@@ -123,15 +123,10 @@ export default {
 	computed: {
 		imageUrl() {
 			return this.imageError
-				? this.basePath + "no-image-available.png"
+				? require("@/assets/no-image-available.png")
 				: process.env.VUE_APP_API_BASE_URL +
 						`/trip/${this.id}/picture?height=200` +
 						(this.cacheBreaker ? `&${this.cacheBreaker}` : "");
-		},
-		basePath() {
-			return process.env.NODE_ENV === "production"
-				? "/paw-2019a-4/"
-				: "/";
 		},
 		isMember() {
 			return !!this.role;

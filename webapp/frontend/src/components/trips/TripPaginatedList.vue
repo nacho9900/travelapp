@@ -1,6 +1,6 @@
 <template>
 	<v-container fluid>
-		<v-img height="400" src="search-background.jpg">
+		<v-img height="400" :src="require('@/assets/search-background.jpg')">
 			<v-row justify="center" class="px-10 mt-10">
 				<v-col cols="12">
 					<trip-search-bar @submit="search"></trip-search-bar>

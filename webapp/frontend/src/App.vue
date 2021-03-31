@@ -103,7 +103,7 @@ export default {
 				: this.$t("app.light_mode");
 		},
 		logoPath() {
-			return "./logos/lb.png";
+			return require("@/assets/logos/lb.png");
 		},
 		autologout() {
 			return this.$store.getters.didAutologout;

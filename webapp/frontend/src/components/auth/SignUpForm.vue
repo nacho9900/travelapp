@@ -184,7 +184,7 @@ export default {
 	},
 	computed: {
 		imageUrl() {
-			return "logos/green_w_logo.png";
+			return require("@/assets/logos/green_w_logo.png");
 		},
 		today() {
 			return new Date().toISOString();

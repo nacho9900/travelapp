@@ -141,7 +141,7 @@ export default {
 	},
 	computed: {
 		logoUrl() {
-			return "logos/green_w_logo.png";
+			return require("@/assets/logos/green_w_logo.png");
 		},
 	},
 	methods: {
