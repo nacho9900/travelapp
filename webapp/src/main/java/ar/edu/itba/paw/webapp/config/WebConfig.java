@@ -63,9 +63,6 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter
 {
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private ApplicationContext applicationContext;
 
     @Value( "classpath:places_api.key" )
@@ -178,24 +175,6 @@ public class WebConfig extends WebMvcConfigurerAdapter
     }
 
     @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MM-yyyy hh:mm" );
-        dateFormat.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
-
-        objectMapper = objectMapper.setSerializationInclusion( JsonInclude.Include.NON_NULL )
-                                   .setDefaultPropertyInclusion( JsonInclude.Include.NON_NULL )
-                                   .setPropertyNamingStrategy( PropertyNamingStrategy.LOWER_CAMEL_CASE )
-                                   .registerModule( new JavaTimeModule() )
-                                   .registerModule( new Jdk8Module() )
-                                   .disable( SerializationFeature.WRITE_DATES_AS_TIMESTAMPS )
-                                   .setDateFormat( dateFormat );
-
-        return objectMapper;
-    }
-
-    @Bean
     public GeoApiContext geoApiContext() {
         String apiKey;
 
@@ -207,14 +186,5 @@ public class WebConfig extends WebMvcConfigurerAdapter
         }
 
         return new GeoApiContext.Builder().apiKey( apiKey ).build();
-    }
-
-    @Override
-    public void extendMessageConverters( List<HttpMessageConverter<?>> converters ) {
-        for ( HttpMessageConverter<?> httpConverter : converters ) {
-            if ( httpConverter instanceof MappingJackson2HttpMessageConverter ) {
-                ( (MappingJackson2HttpMessageConverter) httpConverter ).setObjectMapper( objectMapper );
-            }
-        }
     }
 }

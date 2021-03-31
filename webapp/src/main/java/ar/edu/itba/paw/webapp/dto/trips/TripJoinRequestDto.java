@@ -12,8 +12,6 @@ import java.util.Date;
 public class TripJoinRequestDto
 {
     private Long id;
-    @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd HH:mm:ss" )
     private LocalDateTime createdOn;
     private String message;
     private String status;

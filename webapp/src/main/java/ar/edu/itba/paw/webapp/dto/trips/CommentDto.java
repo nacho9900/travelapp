@@ -18,8 +18,6 @@ public class CommentDto
     @NotBlank
     @Length( max = 160 )
     private String comment;
-    @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd HH:mm:ss" )
     private LocalDateTime createdOn;
     private TripMemberDto member;
 

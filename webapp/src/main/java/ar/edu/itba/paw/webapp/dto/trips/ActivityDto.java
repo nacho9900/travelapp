@@ -19,13 +19,9 @@ public class ActivityDto
     private String name;
     @NotNull
     @Future
-    @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd" )
     private LocalDate startDate;
     @NotNull
     @Future
-    @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd" )
     private LocalDate endDate;
     @NotNull
     private PlaceDto place;

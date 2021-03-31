@@ -25,13 +25,9 @@ public class TripDto
     private String role;
     @NotNull
     @Future
-    @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd" )
     private LocalDate startDate;
     @NotNull
     @Future
-    @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd" )
     private LocalDate endDate;
     private TripJoinRequestDto userJoinRequest;
 

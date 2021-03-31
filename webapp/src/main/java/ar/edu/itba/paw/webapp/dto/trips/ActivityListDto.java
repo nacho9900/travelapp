@@ -11,11 +11,7 @@ import java.util.stream.Collectors;
 
 public class ActivityListDto
 {
-    @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd" )
     private final LocalDate from;
-    @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd" )
     private final LocalDate to;
     private String role;
     @JsonSerialize( using = CollectionSerializer.class )

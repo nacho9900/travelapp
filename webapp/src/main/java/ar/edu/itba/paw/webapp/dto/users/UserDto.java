@@ -25,8 +25,6 @@ public class UserDto
     @NotBlank
     @Size( max = 100 )
     private String nationality;
-    @JsonFormat( shape = JsonFormat.Shape.STRING,
-                 pattern = "yyyy-MM-dd" )
     @NotNull
     @Past
     private LocalDate birthday;
