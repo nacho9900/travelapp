@@ -14,6 +14,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -86,19 +87,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
         return super.authenticationManagerBean();
     }
 
-    //    // Used by spring security if CORS is enabled.
-    //    @Bean
-    //    public CorsFilter corsFilter() {
-    //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //        CorsConfiguration config = new CorsConfiguration();
-    //        config.setAllowCredentials( true );
-    //        config.addAllowedOrigin( "*" );
-    //        config.addAllowedHeader( "*" );
-    //        config.addAllowedMethod( "*" );
-    //        source.registerCorsConfiguration( "/**", config );
-    //        return new CorsFilter( source );
-    //    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -113,6 +101,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public void configure( WebSecurity web) {
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico");
     }
 }
 

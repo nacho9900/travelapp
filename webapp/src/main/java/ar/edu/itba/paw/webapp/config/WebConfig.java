@@ -17,6 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.CacheControl;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -54,9 +55,10 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
+//@EnableWebMvc
 @EnableTransactionManagement
-@EnableWebMvc
 @ComponentScan( {"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.service"} )
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter
@@ -77,10 +79,18 @@ public class WebConfig extends WebMvcConfigurerAdapter
 
     @Override
     public void addResourceHandlers( final ResourceHandlerRegistry registry ) {
-        registry.addResourceHandler( "/webjars/**" )
-                .addResourceLocations( "/webjars/" );
         registry.addResourceHandler( "/resources/**" )
                 .addResourceLocations( "/resources/" );
+
+        registry.addResourceHandler( "/js/**" )
+                .addResourceLocations( "/js/" )
+                .setCachePeriod( 0 );
+        registry.addResourceHandler( "/css/**" )
+                .addResourceLocations( "/css/" )
+                .setCachePeriod( 0 );
+        registry.addResourceHandler( "/img/**" )
+                .addResourceLocations( "/img/" )
+                .setCachePeriod( 0 );
     }
 
     @Bean
@@ -101,12 +111,12 @@ public class WebConfig extends WebMvcConfigurerAdapter
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         ds.setDriverClass( org.postgresql.Driver.class );
-//                ds.setUrl( "jdbc:postgresql://localhost/paw" );
-//                ds.setUsername( "postgres" );
-//                ds.setPassword( "postgres" );
-        ds.setUrl( "jdbc:postgresql://10.16.1.110/paw-2019a-4" );
-        ds.setUsername( "paw-2019a-4" );
-        ds.setPassword( "qwQf3Kj2g" );
+                ds.setUrl( "jdbc:postgresql://localhost/paw" );
+                ds.setUsername( "postgres" );
+                ds.setPassword( "postgres" );
+//        ds.setUrl( "jdbc:postgresql://10.16.1.110/paw-2019a-4" );
+//        ds.setUsername( "paw-2019a-4" );
+//        ds.setPassword( "qwQf3Kj2g" );
 
         return ds;
     }
@@ -158,11 +168,6 @@ public class WebConfig extends WebMvcConfigurerAdapter
         templateEngine.setTemplateResolver( templateResolver() );
         templateEngine.setEnableSpringELCompiler( true );
         return templateEngine;
-    }
-
-    @Override
-    public void addCorsMappings( CorsRegistry registry ) {
-        registry.addMapping( "/api/**" ).allowedOrigins( "*" ).allowedMethods( "*" );
     }
 
     @Bean
