@@ -19,6 +19,8 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 
@@ -49,10 +51,9 @@ public class JwtTokenUtil
         Claims claims = Jwts.claims()
                             .setSubject( user.getUsername() );
 
-        Date expiresIn = Date.from( Instant.now()
-                                           .plusSeconds( ONE_DAY ) );
+        LocalDateTime expiresIn = LocalDateTime.now().plusSeconds( ONE_DAY );
 
-        claims.setExpiration( expiresIn );
+        claims.setExpiration( java.util.Date.from( expiresIn.atZone( ZoneId.systemDefault() ).toInstant() ) );
 
         return new AuthDto( Jwts.builder()
                                 .setClaims( claims )

@@ -13,7 +13,7 @@ export default {
 
         const auth = response.data;
 
-        const expirationDate = auth.expiresIn;
+        const expirationDate = new Date(auth.expiresIn).getTime();
         const expiresIn = expirationDate - new Date().getTime();
         const user = auth.user;
 
@@ -24,7 +24,7 @@ export default {
         Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
         timer = setTimeout(() => {  //Para autologout cuando se acaba el token
-            context.dispatch('logout');
+            context.dispatch('autologout');
         }, expiresIn);
 
         context.commit("setToken", { token });
