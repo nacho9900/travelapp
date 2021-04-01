@@ -5,6 +5,7 @@
                           http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     <display-name>paw-inegro</display-name>
 
+    <!-- JERSEY SERVLET -->
     <servlet>
         <servlet-name>jersey-servlet</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -18,19 +19,19 @@
             <param-name>jersey.config.server.provider.classnames</param-name>
             <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
         </init-param>
-
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>jersey-servlet</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
+    <!-- END JERSEY SERVLET -->
 
+    <!-- SPRING CONFIG -->
     <context-param>
         <param-name>contextClass</param-name>
         <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
     </context-param>
-
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
@@ -38,7 +39,12 @@
             ar.edu.itba.paw.webapp.config.WebAuthConfig
         </param-value>
     </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- SPRING CONFIG -->
 
+    <!-- ENCODING FILTER-->
     <filter>
         <filter-name>encoding-filter</filter-name>
         <filter-class>
@@ -53,12 +59,13 @@
             <param-value>true</param-value>
         </init-param>
     </filter>
-
     <filter-mapping>
         <filter-name>encoding-filter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <!-- END ENCODING FILTER-->
 
+    <!-- SPRING SECURITY FILTER-->
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -67,19 +74,59 @@
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
+    <!-- END SPRING SECURITY FILTER-->
 
+    <!-- CACHE CONTROL FILTER-->
+    <filter>
+        <filter-name>cacheControlResponseFilter</filter-name>
+        <filter-class>ar.edu.itba.paw.webapp.filters.CacheControlResponseFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>cacheControlResponseFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>cacheControlResponseFilter</filter-name>
+        <url-pattern>*.htm</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>cacheControlResponseFilter</filter-name>
+        <url-pattern>*.css</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>cacheControlResponseFilter</filter-name>
+        <url-pattern>*.js</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>cacheControlResponseFilter</filter-name>
+        <url-pattern>*.jpg</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>cacheControlResponseFilter</filter-name>
+        <url-pattern>*.jpeg</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>cacheControlResponseFilter</filter-name>
+        <url-pattern>*.ico</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>cacheControlResponseFilter</filter-name>
+        <url-pattern>*.gif</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>cacheControlResponseFilter</filter-name>
+        <url-pattern>*.png</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>cacheControlResponseFilter</filter-name>
+        <url-pattern>*.svg</url-pattern>
+    </filter-mapping>
+    <!-- END CACHE CONTROL FILTER-->
+
+    <!-- FRONTEND HANDLE ROUTING-->
     <error-page>
         <error-code>404</error-code>
         <location>/index.html</location>
     </error-page>
-
-    <!--
-    <error-page>
-      <error-code>500</error-code>
-      <location>/500</location>
-    </error-page>
-    -->
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
+    <!-- END FRONTEND HANDLE ROUTING-->
 </web-app>
