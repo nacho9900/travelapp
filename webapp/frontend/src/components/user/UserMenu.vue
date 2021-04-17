@@ -78,6 +78,7 @@ export default {
 					this.$refs.avatar.init();
 				}
 			} catch (error) {
+        console.log(error)
 				this.error = this.$t(
 					"components.user.user_menu.change_avatar_error"
 				);

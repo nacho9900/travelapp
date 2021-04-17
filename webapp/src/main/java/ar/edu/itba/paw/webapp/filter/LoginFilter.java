@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.filter;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.auth.JwtAuthenticationService;
-import ar.edu.itba.paw.webapp.config.JacksonObjectMapperProvider;
 import ar.edu.itba.paw.webapp.dto.authentication.AuthDto;
 import ar.edu.itba.paw.webapp.exception.UserAuthenticationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,10 +28,12 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter
     private final UserDetailsService userDetailsService;
     private final ObjectMapper objectMapper;
     private final UserService userService;
+    private final AntPathRequestMatcher pathRequestMatcher;
 
     public LoginFilter( String defaultFilterProcessesUrl, JwtAuthenticationService jwtAuthenticationService,
                         UserDetailsService userDetailsService, ObjectMapper objectMapper, UserService userService ) {
         super( new AntPathRequestMatcher( defaultFilterProcessesUrl ) );
+        this.pathRequestMatcher = new AntPathRequestMatcher( defaultFilterProcessesUrl );
         this.jwtAuthenticationService = jwtAuthenticationService;
         this.userDetailsService = userDetailsService;
         this.objectMapper = objectMapper;
@@ -42,9 +43,9 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter
     @Override
     public void doFilter( ServletRequest req, ServletResponse res, FilterChain chain )
             throws IOException, ServletException {
-        final String method = ( (HttpServletRequest) req ).getMethod();
+        final HttpServletRequest request = (HttpServletRequest) req;
 
-        if ( method.equals( "OPTIONS" ) ) {
+        if ( pathRequestMatcher.matches( request ) && request.getMethod().equals( "OPTIONS" ) ) {
             HttpServletResponse response = (HttpServletResponse) res;
             response.setStatus( HttpServletResponse.SC_OK );
             setCORS( response );

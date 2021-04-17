@@ -156,7 +156,7 @@ export default {
 						password: this.password,
 					});
 
-					this.$router.replace({ name: "Home" });
+					await this.$router.replace({ name: "Home" });
 				} catch (err) {
 					if (err?.response?.status === 401) {
 						this.unauthorized = true;

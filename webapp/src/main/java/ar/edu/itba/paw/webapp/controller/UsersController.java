@@ -62,25 +62,29 @@ public class UsersController
     private UriInfo uriInfo;
 
     @PUT
-    @Path( "/current" )
-    public Response edit( @RequestBody UserDto userDto ) {
+    @Path( "/{id}" )
+    public Response edit( @PathParam( "id" ) long id, @RequestBody UserDto userDto ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Set<ConstraintViolation<UserDto>> violations = validator.validate( userDto );
 
         if ( !violations.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( violations ) )
+                           .build();
         }
 
-        Optional<User> maybeUser = userService.findByUsername( username );
+        Optional<User> maybeLoggedUser = userService.findByUsername( username );
+        Optional<User> maybeUserToEdit = userService.findById( id );
 
-        if ( !maybeUser.isPresent() || maybeUser.get().getId() != userDto.getId() ) {
+        if ( !maybeLoggedUser.isPresent() || !maybeUserToEdit.isPresent() ||
+             maybeLoggedUser.get().getId() != userDto.getId() ||
+             maybeLoggedUser.get().getId() != maybeUserToEdit.get().getId() ) {
             return Response.status( Response.Status.UNAUTHORIZED ).build();
         }
 
         User userUpdates = userDto.toUser();
 
-        User user = userService.update( maybeUser.get(), userUpdates.getFirstname(), userUpdates.getLastname(),
+        User user = userService.update( maybeLoggedUser.get(), userUpdates.getFirstname(), userUpdates.getLastname(),
                                         userUpdates.getBirthday(), userUpdates.getNationality(),
                                         userUpdates.getBiography() );
 
@@ -88,34 +92,39 @@ public class UsersController
     }
 
     @GET
-    @Path( "/current" )
-    public Response getCurrentUser() {
+    @Path( "/{id}" )
+    public Response getCurrentUser( @PathParam( "id" ) long id ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<User> maybeUser = userService.findByUsername( username );
+        Optional<User> maybeLoggedUser = userService.findByUsername( username );
+        Optional<User> maybeRequestedUser = userService.findById( id );
 
-        if ( !maybeUser.isPresent() ) {
+        if ( !maybeLoggedUser.isPresent() || !maybeRequestedUser.isPresent() ||
+             maybeRequestedUser.get().getId() != maybeLoggedUser.get().getId() ) {
             return Response.status( Response.Status.UNAUTHORIZED ).build();
         }
 
-        return Response.ok().entity( maybeUser.map( UserDto::fromUser ) ).build();
+        return Response.ok().entity( maybeLoggedUser.map( UserDto::fromUser ) ).build();
     }
 
     @POST
-    @Path( "/change-password" )
-    public Response changePassword( @RequestBody NewPasswordDto newPasswordDto ) {
+    @Path( "/{id}/change-password" )
+    public Response changePassword( @PathParam( "id" ) long id, @RequestBody NewPasswordDto newPasswordDto ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Set<ConstraintViolation<NewPasswordDto>> violations = validator.validate( newPasswordDto );
 
         if ( !violations.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( violations ) )
+                           .build();
         }
 
         Optional<User> maybeUser = userService.findByUsername( username );
+        Optional<User> maybeRequestedUser = userService.findById( id );
 
-        if ( !maybeUser.isPresent() || !maybeUser.get().isVerified() ) {
-            return Response.status( Response.Status.UNAUTHORIZED ).entity( "user email address not verified" ).build();
+        if ( !maybeUser.isPresent() || !maybeRequestedUser.isPresent() ||
+             maybeRequestedUser.get().getId() != maybeUser.get().getId() || !maybeUser.get().isVerified() ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
         }
 
         if ( !userService.matchPassword( maybeUser.get().getPassword(), newPasswordDto.getPasswordCurrent() ) ) {
@@ -132,24 +141,27 @@ public class UsersController
     //region picture
 
     @PUT
-    @Path( "/current/picture" )
-    public Response createOrUpdatePicture( @RequestBody FileDto fileDto ) {
+    @Path( "/{id}/picture" )
+    public Response createOrUpdatePicture( @PathParam( "id" ) long id, @RequestBody FileDto fileDto ) {
         Set<ConstraintViolation<FileDto>> violations = validator.validate( fileDto );
 
         if ( !violations.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( violations ) )
+                           .build();
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<User> maybeUser = userService.findByUsername( username );
+        Optional<User> maybeLoggedUser = userService.findByUsername( username );
+        Optional<User> maybeRequestedUser = userService.findById( id );
 
-        if ( !maybeUser.isPresent() || !maybeUser.get().isVerified() ) {
-            return Response.status( Response.Status.UNAUTHORIZED ).entity( "user email address not verified" ).build();
+        if ( !maybeLoggedUser.isPresent() || !maybeRequestedUser.isPresent() || !maybeLoggedUser.get().isVerified() ||
+             maybeLoggedUser.get().getId() != maybeRequestedUser.get().getId() ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
         }
 
-        User user = maybeUser.get();
+        User user = maybeLoggedUser.get();
 
         Optional<UserPicture> maybeUserPicture = userPicturesService.findByUserId( user.getId() );
 
@@ -211,6 +223,5 @@ public class UsersController
             return builder.cacheControl( cc ).build();
         }
     }
-
     //endregion
 }
