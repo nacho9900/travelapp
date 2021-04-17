@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.filter;
 
+import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.auth.JwtAuthenticationService;
 import ar.edu.itba.paw.webapp.config.JacksonObjectMapperProvider;
 import ar.edu.itba.paw.webapp.dto.authentication.AuthDto;
@@ -19,19 +21,22 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 public class LoginFilter extends AbstractAuthenticationProcessingFilter
 {
     private final JwtAuthenticationService jwtAuthenticationService;
     private final UserDetailsService userDetailsService;
     private final ObjectMapper objectMapper;
+    private final UserService userService;
 
     public LoginFilter( String defaultFilterProcessesUrl, JwtAuthenticationService jwtAuthenticationService,
-                        UserDetailsService userDetailsService, ObjectMapper objectMapper ) {
+                        UserDetailsService userDetailsService, ObjectMapper objectMapper, UserService userService ) {
         super( new AntPathRequestMatcher( defaultFilterProcessesUrl ) );
         this.jwtAuthenticationService = jwtAuthenticationService;
         this.userDetailsService = userDetailsService;
         this.objectMapper = objectMapper;
+        this.userService = userService;
     }
 
     @Override
@@ -68,7 +73,8 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter
                                              FilterChain chain, Authentication authResult )
             throws IOException {
         UserDetails userDetails = userDetailsService.loadUserByUsername( authResult.getName() );
-        AuthDto authDto = jwtAuthenticationService.createAuthDto( userDetails );
+        Optional<User> user = userService.findByUsername( userDetails.getUsername() );
+        AuthDto authDto = jwtAuthenticationService.createAuthDto( userDetails, user.get().getId() );
         response.getWriter().write( objectMapper.writeValueAsString( authDto ) );
         response.setStatus( HttpServletResponse.SC_OK );
         response.setContentType( "application/json" );

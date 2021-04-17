@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.webapp.auth.JwtAuthenticationService;
 import ar.edu.itba.paw.webapp.filter.JwtTokenFilter;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
@@ -51,6 +52,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UserService userService;
+
 
     protected void configure( AuthenticationManagerBuilder auth ) throws Exception {
         auth.userDetailsService( username -> userDetailsService.loadUserByUsername( username ) );
@@ -77,9 +81,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
             .authenticated();
 
         http.addFilterBefore( jwtTokenFilter, UsernamePasswordAuthenticationFilter.class );
-        http.addFilterBefore(
-                new LoginFilter( "/api/login", jwtAuthenticationService, userDetailsService, objectMapper ),
-                UsernamePasswordAuthenticationFilter.class );
+        http.addFilterBefore( new LoginFilter( "/api/login", jwtAuthenticationService, userDetailsService, objectMapper,
+                                               userService ), UsernamePasswordAuthenticationFilter.class );
     }
 
     @Bean

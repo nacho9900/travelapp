@@ -60,14 +60,15 @@ public class JwtAuthenticationService
         }
     }
 
-    public AuthDto createAuthDto( UserDetails user ) {
+    public AuthDto createAuthDto( UserDetails user, long userId ) {
         Claims claims = Jwts.claims().setSubject( user.getUsername() );
 
         LocalDateTime expiresIn = LocalDateTime.now().plusSeconds( ONE_DAY );
 
         claims.setExpiration( java.util.Date.from( expiresIn.atZone( ZoneId.systemDefault() ).toInstant() ) );
+        claims.setId( Long.toString( userId ) );
 
-        return new AuthDto( Jwts.builder().setClaims( claims ).signWith( key ).compact(), expiresIn );
+        return new AuthDto( Jwts.builder().setClaims( claims ).signWith( key ).compact(), expiresIn, userId );
     }
 
     public Optional<String> getUserName( String token ) {
