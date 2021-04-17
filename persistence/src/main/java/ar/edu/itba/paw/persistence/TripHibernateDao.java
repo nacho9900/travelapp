@@ -3,8 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.model.PaginatedResult;
 import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.TripComment;
-import ar.edu.itba.paw.model.TripRate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -42,23 +40,6 @@ public class TripHibernateDao implements TripDao
     }
 
     @Override
-    public List<Trip> findByName( String name ) {
-        final TypedQuery<Trip> query = em.createQuery( "From Trip as t where lower(t.name) like lower(:name)",
-                                                       Trip.class );
-        query.setParameter( "name", "%" + name + "%" );
-        query.setMaxResults( MAX_ROWS );
-        return query.getResultList();
-    }
-
-    @Override
-    public List<Trip> getAllTrips( int pageNum ) {
-        final TypedQuery<Trip> query = em.createQuery( "From Trip", Trip.class );
-        query.setFirstResult( ( pageNum - 1 ) * MAX_ROWS );
-        query.setMaxResults( MAX_ROWS );
-        return query.getResultList();
-    }
-
-    @Override
     public PaginatedResult<Trip> findUserTrips( long userId, int page ) {
         String queryString = "from Trip as t left join t.members as m left join m.user as u where u.id = :userId ";
 
@@ -80,42 +61,6 @@ public class TripHibernateDao implements TripDao
         Query tripDelete = em.createQuery( "delete Trip as t where t.id = :id" );
         tripDelete.setParameter( "id", tripId );
         tripDelete.executeUpdate();
-    }
-
-    @Override
-    public List<Trip> findByCategory( String category ) {
-        final TypedQuery<Trip> query = em.createQuery(
-                "select t From Trip as t, Activity as a" + " where a.trip.id = t.id and a.category like :category",
-                Trip.class );
-        query.setParameter( "category", category );
-        query.setMaxResults( MAX_ROWS );
-        return query.getResultList();
-    }
-
-    @Override
-    public List<Trip> findByPlace( String placeName ) {
-        final TypedQuery<Trip> query = em.createQuery(
-                "select t From Trip as t, Place as p" + " where t.startPlaceId = p.id and lower(p.address) like " +
-                "lower" + "(:placeName)", Trip.class );
-        query.setParameter( "placeName", "%" + placeName + "%" );
-        query.setMaxResults( MAX_ROWS );
-        return query.getResultList();
-    }
-
-    @Override
-    public List<TripComment> getTripComments( long tripId ) {
-        final TypedQuery<TripComment> query = em.createQuery( "From TripComment as tc where tc.trip.id = :tripId",
-                                                              TripComment.class );
-        query.setParameter( "tripId", tripId );
-        return query.getResultList();
-    }
-
-    @Override
-    public List<TripRate> getTripRates( long tripId ) {
-        final TypedQuery<TripRate> query = em.createQuery( "From TripRate as tr where tr.trip.id = :tripId",
-                                                           TripRate.class );
-        query.setParameter( "tripId", tripId );
-        return query.getResultList();
     }
 
     @Override

@@ -31,11 +31,6 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Optional<Activity> findByName(String name) {
-        return activityDao.findByName(name);
-    }
-
-    @Override
     public Activity create( String name, Trip trip, LocalDate startDate, LocalDate endDate, Place place ) {
         place = placeService.createIfNotExists( place.getGoogleId(), place.getName(),
                                                 place.getLatitude(), place.getLongitude(),

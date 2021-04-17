@@ -32,28 +32,8 @@ public class TripServiceImpl implements TripService
     }
 
     @Override
-    public List<Trip> findByName( String name ) {
-        return tripDao.findByName( name );
-    }
-
-    @Override
-    public List<Trip> getAllTrips( int pageNum ) {
-        return tripDao.getAllTrips( pageNum );
-    }
-
-    @Override
     public PaginatedResult<Trip> getAllUserTrips( User user, int page ) {
         return tripDao.findUserTrips( user.getId(), page );
-    }
-
-    @Override
-    public List<Trip> findByCategory( String category ) {
-        return tripDao.findByCategory( category );
-    }
-
-    @Override
-    public List<Trip> findByPlace( String placeName ) {
-        return tripDao.findByPlace( placeName );
     }
 
     @Override

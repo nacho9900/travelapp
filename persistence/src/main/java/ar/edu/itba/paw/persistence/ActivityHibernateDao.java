@@ -28,15 +28,6 @@ public class ActivityHibernateDao implements ActivityDao
     }
 
     @Override
-    public Optional<Activity> findByName( String name ) {
-        final TypedQuery<Activity> query = em.createQuery( "From Activity as a where a.name like :name",
-                                                           Activity.class );
-        query.setParameter( "name", name );
-        query.setMaxResults( MAX_ROWS );
-        return query.getResultList().stream().findFirst();
-    }
-
-    @Override
     public Activity create( String name, Trip trip, LocalDate startDate, LocalDate endDate, Place place ) {
         Activity activity = new Activity( name, place, trip, startDate, endDate );
         activity.setPlace( place );

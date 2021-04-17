@@ -18,21 +18,9 @@ public interface TripDao
 
     Optional<Trip> findById( long id );
 
-    List<Trip> findByName( String name );
-
-    List<Trip> getAllTrips( int pageNum );
-
     PaginatedResult<Trip> findUserTrips( long userId, int page );
 
     void deleteTrip( long tripId );
-
-    List<Trip> findByCategory( String category );
-
-    List<Trip> findByPlace( String placeName );
-
-    List<TripComment> getTripComments( long tripId );
-
-    List<TripRate> getTripRates( long tripId );
 
     boolean isUserMember( long tripId, String username );
 

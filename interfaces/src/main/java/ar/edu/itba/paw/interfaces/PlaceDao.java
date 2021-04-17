@@ -6,11 +6,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
-public interface PlaceDao {
+public interface PlaceDao
+{
+    Place create( String googleId, String name, double latitude, double longitude, String address );
 
-    public Place create(String googleId, String name, double latitude, double longitude, String address);
-    public Optional<Place> findById(long id);
-    public Optional<Place> findByGoogleId(String googleId);
+    Optional<Place> findById( long id );
 
-
+    Optional<Place> findByGoogleId( String googleId );
 }

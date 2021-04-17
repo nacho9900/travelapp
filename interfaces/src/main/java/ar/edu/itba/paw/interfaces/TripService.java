@@ -12,15 +12,7 @@ public interface TripService
 
     Optional<Trip> findById( long id );
 
-    List<Trip> getAllTrips( int pageNum );
-
-    List<Trip> findByName( String name );
-
     PaginatedResult<Trip> getAllUserTrips( User user, int page );
-
-    List<Trip> findByCategory( String category );
-
-    List<Trip> findByPlace( String placeName );
 
     boolean isUserOwnerOrAdmin( long tripId, String username );
 
