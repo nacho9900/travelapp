@@ -5,9 +5,6 @@ import ar.edu.itba.paw.interfaces.PasswordRecoveryTokenService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.PasswordRecoveryToken;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.webapp.auth.LoginHelper;
-import ar.edu.itba.paw.webapp.dto.authentication.AuthDto;
-import ar.edu.itba.paw.webapp.dto.authentication.AuthRequestDto;
 import ar.edu.itba.paw.webapp.dto.authentication.PasswordRecoveryDto;
 import ar.edu.itba.paw.webapp.dto.authentication.SignUpDto;
 import ar.edu.itba.paw.webapp.dto.authentication.TokenPasswordDto;
@@ -42,9 +39,6 @@ public class AuthenticationController extends BaseController
     private UserService userService;
 
     @Autowired
-    private LoginHelper loginHelper;
-
-    @Autowired
     private Validator validator;
 
     @Autowired
@@ -55,33 +49,6 @@ public class AuthenticationController extends BaseController
 
     @Context
     private UriInfo uriInfo;
-
-    @POST
-    @Path( "/login" )
-    @Consumes( MediaType.APPLICATION_JSON )
-    @Produces( MediaType.APPLICATION_JSON )
-    public Response login( @RequestBody AuthRequestDto authRequestDto ) {
-        String email = authRequestDto.getEmail();
-        String password = authRequestDto.getPassword();
-
-        Optional<AuthDto> maybeAuth = loginHelper.authenticate( email, password );
-
-        if ( !maybeAuth.isPresent() ) {
-            return Response.status( Response.Status.UNAUTHORIZED ).build();
-        }
-
-        Optional<User> maybeUser = userService.findByUsername( email );
-
-        if ( !maybeUser.isPresent() || !maybeUser.get().isVerified() ) {
-            return Response.status( Response.Status.FORBIDDEN ).entity(
-                    new ErrorDto( "user email address not verified" ) ).build();
-
-        }
-
-        maybeAuth.get().setUser( UserDto.fromUser( maybeUser.get() ) );
-
-        return Response.ok().entity( maybeAuth.get() ).build();
-    }
 
     @POST
     @Path( "/signup" )

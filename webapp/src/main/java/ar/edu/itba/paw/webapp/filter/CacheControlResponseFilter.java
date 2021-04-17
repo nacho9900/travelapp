@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.filters;
+package ar.edu.itba.paw.webapp.filter;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,7 +16,7 @@ public class CacheControlResponseFilter extends OncePerRequestFilter
     @Override
     protected void doFilterInternal( HttpServletRequest request, HttpServletResponse response, FilterChain filterChain )
             throws IOException, ServletException {
-        response.setHeader( HttpHeaders.CACHE_CONTROL, "public, max-age=31536000" );
+        response.setHeader( HttpHeaders.CACHE_CONTROL, "public, max-age=31536000, immutable" );
         filterChain.doFilter( request, response );
     }
 }

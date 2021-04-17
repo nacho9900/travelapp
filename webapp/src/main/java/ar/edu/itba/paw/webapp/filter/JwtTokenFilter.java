@@ -1,5 +1,7 @@
-package ar.edu.itba.paw.webapp.auth;
+package ar.edu.itba.paw.webapp.filter;
 
+import ar.edu.itba.paw.webapp.auth.JwtAuthenticationService;
+import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +28,7 @@ public class JwtTokenFilter extends OncePerRequestFilter
     private TravelUserDetailsService userDetailsService;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private JwtAuthenticationService JwtAuthenticationService;
 
     protected JwtTokenFilter() {
         //
@@ -46,17 +48,17 @@ public class JwtTokenFilter extends OncePerRequestFilter
         // Get jwt token and validate
         final String token = header.split( " " )[1].trim();
 
-        Optional<String> maybeUsername = jwtTokenUtil.getUserName( token );
+        Optional<String> maybeUsername = JwtAuthenticationService.getUserName( token );
 
         if ( !maybeUsername.isPresent() ) {
             response.setStatus( HttpServletResponse.SC_UNAUTHORIZED );
-            ( (HttpServletResponse) response ).sendError( HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token" );
+            response.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token" );
             return;
         }
 
-        if ( jwtTokenUtil.isExpired( token ) ) {
+        if ( JwtAuthenticationService.isExpired( token ) ) {
             response.setStatus( HttpServletResponse.SC_UNAUTHORIZED );
-            ( (HttpServletResponse) response ).sendError( HttpServletResponse.SC_UNAUTHORIZED, "Token Expired" );
+            response.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Token Expired" );
             return;
         }
 

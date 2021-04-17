@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.webapp.auth.JwtTokenFilter;
+import ar.edu.itba.paw.webapp.auth.JwtAuthenticationService;
+import ar.edu.itba.paw.webapp.filter.JwtTokenFilter;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
+import ar.edu.itba.paw.webapp.filter.LoginFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +45,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
 
+    @Autowired
+    private JwtAuthenticationService jwtAuthenticationService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+
     protected void configure( AuthenticationManagerBuilder auth ) throws Exception {
         auth.userDetailsService( username -> userDetailsService.loadUserByUsername( username ) );
     }
@@ -52,25 +62,24 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
 
         http.exceptionHandling().authenticationEntryPoint( new RestAuthenticationEntryPoint() );
 
-        http.sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS ).and();
+        http.sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS );
 
         http.authorizeRequests()
             .antMatchers( HttpMethod.OPTIONS, "/**" )
             .permitAll()
-            .and()
-            .authorizeRequests()
             .antMatchers( HttpMethod.POST, "/api/auth/**" )
             .anonymous()
-            .and()
-            .authorizeRequests()
+            .antMatchers( HttpMethod.POST, "/api/login" )
+            .anonymous()
             .antMatchers( HttpMethod.GET, "/api/**/picture" )
             .anonymous()
-            .and()
-            .authorizeRequests()
             .anyRequest()
             .authenticated();
 
         http.addFilterBefore( jwtTokenFilter, UsernamePasswordAuthenticationFilter.class );
+        http.addFilterBefore(
+                new LoginFilter( "/api/login", jwtAuthenticationService, userDetailsService, objectMapper ),
+                UsernamePasswordAuthenticationFilter.class );
     }
 
     @Bean
@@ -104,8 +113,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
     }
 
     @Override
-    public void configure( WebSecurity web) {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico");
+    public void configure( WebSecurity web ) {
+        web.ignoring().antMatchers( "/css/**", "/js/**", "/img/**", "/favicon.ico" );
     }
 }
 
