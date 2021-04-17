@@ -57,12 +57,6 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public List<User> getAll( int page, int pageSize ) {
-        //TODO: Paging
-        return userDao.listUsers( page, pageSize );
-    }
-
-    @Override
     public boolean matchPassword( String passwordCurrentEncoded, String passwordNew ) {
         return passwordEncoder.matches( passwordNew, passwordCurrentEncoded );
     }

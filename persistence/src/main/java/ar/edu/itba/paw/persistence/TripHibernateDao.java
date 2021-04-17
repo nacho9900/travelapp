@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -43,17 +44,24 @@ public class TripHibernateDao implements TripDao
     public PaginatedResult<Trip> findUserTrips( long userId, int page ) {
         String queryString = "from Trip as t left join t.members as m left join m.user as u where u.id = :userId ";
 
-        final TypedQuery<Trip> query = em.createQuery( "select t " + queryString + "order by t.startDate", Trip.class );
+        final TypedQuery<Long> idsQuery = em.createQuery( "select t.id " + queryString + "order by t.startDate",
+                                                          Long.class );
+        final TypedQuery<Trip> tripsQuery = em.createQuery(
+                "select t from Trip as t where t.id in (:ids) order by t.startDate", Trip.class );
         final Query queryCount = em.createQuery( "select count(t) " + queryString );
-        query.setParameter( "userId", userId );
+        idsQuery.setParameter( "userId", userId );
         queryCount.setParameter( "userId", userId );
-        int firstResults = ( page - 1 ) * MAX_ROWS;
-        query.setFirstResult( firstResults );
-        query.setMaxResults( MAX_ROWS );
-        List<Trip> result = query.getResultList();
-        Long total = (Long) queryCount.getSingleResult();
 
-        return new PaginatedResult<>( result, total, MAX_ROWS, total != 0 && firstResults >= total );
+        int firstResults = ( page - 1 ) * MAX_ROWS;
+        idsQuery.setFirstResult( firstResults );
+        idsQuery.setMaxResults( MAX_ROWS );
+
+        List<Long> ids = idsQuery.getResultList();
+        tripsQuery.setParameter( "ids", ids );
+        Long total = (Long) queryCount.getSingleResult();
+        List<Trip> trips = tripsQuery.getResultList();
+
+        return new PaginatedResult<>( trips, total, MAX_ROWS, total != 0 && firstResults >= total );
     }
 
     @Override
@@ -115,33 +123,42 @@ public class TripHibernateDao implements TripDao
             queryString.append( "and t.endDate <= :to " );
         }
 
-        TypedQuery<Trip> query = em.createQuery( "select distinct t " + queryString.toString() + "order by t.startDate",
-                                                 Trip.class );
-        Query queryCount = em.createQuery( "select count( distinct t) " + queryString.toString() );
+        TypedQuery<Long> idsQuery = em.createQuery( "select t.id " + queryString + "order by t.startDate", Long.class );
+
+        TypedQuery<Trip> tripsQuery = em.createQuery(
+                "select distinct t from Trip as t  where t.id in (:ids) order by t.startDate", Trip.class );
+
+        Query countQuery = em.createQuery( "select count(distinct t) " + queryString );
 
         if ( latitude != null && longitude != null ) {
-            query.setParameter( "latitude", latitude );
-            query.setParameter( "longitude", longitude );
-            queryCount.setParameter( "latitude", latitude );
-            queryCount.setParameter( "longitude", longitude );
+            idsQuery.setParameter( "latitude", latitude );
+            idsQuery.setParameter( "longitude", longitude );
+            countQuery.setParameter( "latitude", latitude );
+            countQuery.setParameter( "longitude", longitude );
         }
 
         if ( from != null ) {
-            query.setParameter( "from", from );
-            queryCount.setParameter( "from", from );
+            idsQuery.setParameter( "from", from );
+            countQuery.setParameter( "from", from );
         }
 
         if ( to != null ) {
-            query.setParameter( "to", to );
-            queryCount.setParameter( "to", to );
+            idsQuery.setParameter( "to", to );
+            countQuery.setParameter( "to", to );
         }
 
         int firstResults = ( page - 1 ) * MAX_ROWS;
-        query.setFirstResult( firstResults );
-        query.setMaxResults( MAX_ROWS );
+        idsQuery.setFirstResult( firstResults );
+        idsQuery.setMaxResults( MAX_ROWS );
 
-        List<Trip> results = query.getResultList();
-        Long total = (Long) queryCount.getSingleResult();
-        return new PaginatedResult<>( results, total, MAX_ROWS, total != 0 && firstResults >= total );
+        List<Long> ids = idsQuery.getResultList();
+
+        tripsQuery.setParameter( "ids", ids );
+
+        List<Trip> trips = tripsQuery.getResultList();
+
+        long total = (Long) countQuery.getSingleResult();
+
+        return new PaginatedResult<>( trips, total, MAX_ROWS, total != 0 && firstResults >= total );
     }
 }

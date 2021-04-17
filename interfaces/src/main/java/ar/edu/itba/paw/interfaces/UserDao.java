@@ -19,7 +19,5 @@ public interface UserDao
 
     User update( User u );
 
-    List<User> listUsers( int i, int maxValue );
-
     Optional<User> findByVerificationToken( UUID verificationToken );
 }

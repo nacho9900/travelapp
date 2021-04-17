@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,15 +29,6 @@ public class UserHibernateDao implements UserDao
     @Override
     public User update( User u ) {
         return em.merge( u );
-    }
-
-    @Override
-    public List<User> listUsers( int page, int pageSize ) {
-        final TypedQuery<User> query = em.createQuery( "from User as u", User.class );
-        query.setFirstResult( ( page - 1 ) * pageSize );
-        query.setMaxResults( pageSize );
-
-        return query.getResultList();
     }
 
     @Override

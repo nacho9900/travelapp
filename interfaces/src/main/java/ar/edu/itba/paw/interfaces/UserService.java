@@ -23,8 +23,6 @@ public interface UserService
     User update( User user, String firstname, String lastname, LocalDate birthday, String nationality,
                  String biography );
 
-    List<User> getAll( int page, int pageSize );
-
     boolean matchPassword( String passwordCurrentEncoded, String passwordNew );
 
     User changePassword( User user, PasswordRecoveryToken token, String passwordNew );
