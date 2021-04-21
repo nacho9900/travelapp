@@ -75,7 +75,10 @@ public class AuthenticationController extends BaseController
                                                     user.getVerificationToken().toString(), getFrontendUrl() );
 
 
-        return Response.ok().entity( UserDto.fromUser( user ) ).build();
+        return Response.created( uriInfo.getBaseUriBuilder()
+                                        .path( UsersController.class)
+                                        .path( Long.toString( user.getId() ) )
+                                        .build() ).entity( UserDto.fromUser( user ) ).build();
     }
 
     @POST
@@ -84,8 +87,9 @@ public class AuthenticationController extends BaseController
         Set<ConstraintViolation<PasswordRecoveryDto>> violations = validator.validate( passwordRecoveryDto );
 
         if ( !violations.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( violations ) )
+                           .build();
         }
 
         Optional<User> maybeUser = userService.findByUsername( passwordRecoveryDto.getEmail() );
@@ -110,16 +114,17 @@ public class AuthenticationController extends BaseController
         Set<ConstraintViolation<TokenPasswordDto>> violations = validator.validate( tokenPasswordDto );
 
         if ( !violations.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( violations ) )
+                           .build();
         }
 
         Optional<PasswordRecoveryToken> maybeToken = passwordRecoveryTokenService.findByToken(
                 tokenPasswordDto.getToken() );
 
-        if ( !maybeToken.isPresent() || maybeToken.get().getExpiresIn().isBefore(
-                LocalDateTime.now( ZoneOffset.UTC ) ) || maybeToken.get().isUsed() ||
-             !maybeToken.get().getUser().isVerified() ) {
+        if ( !maybeToken.isPresent() ||
+             maybeToken.get().getExpiresIn().isBefore( LocalDateTime.now( ZoneOffset.UTC ) ) ||
+             maybeToken.get().isUsed() || !maybeToken.get().getUser().isVerified() ) {
             return Response.status( Response.Status.NOT_FOUND ).build();
         }
 

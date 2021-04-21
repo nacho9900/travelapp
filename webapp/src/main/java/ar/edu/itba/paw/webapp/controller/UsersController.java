@@ -93,7 +93,7 @@ public class UsersController
 
     @GET
     @Path( "/{id}" )
-    public Response getCurrentUser( @PathParam( "id" ) long id ) {
+    public Response get( @PathParam( "id" ) long id ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Optional<User> maybeLoggedUser = userService.findByUsername( username );
@@ -172,7 +172,7 @@ public class UsersController
             userPicturesService.create( user, fileDto.getFilename(), fileDto.getFileBase64() );
         }
 
-        return Response.ok().build();
+        return Response.created( uriInfo.getAbsolutePathBuilder().build() ).build();
     }
 
     @GET

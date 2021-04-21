@@ -59,6 +59,8 @@ import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -101,6 +103,9 @@ public class TripController extends BaseController
     @Autowired
     private MailingService mailingService;
 
+    @Context
+    private UriInfo uriInfo;
+
     //region trip
 
     @POST
@@ -110,8 +115,9 @@ public class TripController extends BaseController
         Set<ConstraintViolation<TripDto>> violations = validator.validate( tripDto );
 
         if ( !violations.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( violations ) )
+                           .build();
         }
 
         tripDto.toTrip();
@@ -126,7 +132,9 @@ public class TripController extends BaseController
         Trip trip = tripService.create( maybeOwner.get(), tripDto.getName(), tripDto.getDescription(),
                                         tripDto.getStartDate(), tripDto.getEndDate() );
 
-        return Response.ok().entity( TripDto.fromTrip( trip ) ).build();
+        return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( trip.getId() ) ).build() )
+                       .entity( TripDto.fromTrip( trip ) )
+                       .build();
     }
 
     @GET
@@ -142,13 +150,13 @@ public class TripController extends BaseController
 
         TripDto tripDto = TripDto.fromTrip( maybeTrip.get() );
 
-        tripMemberService.findByTripIdAndUsername( id, username ).ifPresent(
-                tripMember -> tripDto.setRole( tripMember.getRole().name() ) );
+        tripMemberService.findByTripIdAndUsername( id, username )
+                         .ifPresent( tripMember -> tripDto.setRole( tripMember.getRole().name() ) );
 
         if ( tripDto.getRole() == null ) {
-            tripJoinRequestService.getLastByTripIdAndUsername( id, username ).ifPresent(
-                    tripJoinRequest -> tripDto.setUserJoinRequest(
-                            TripJoinRequestDto.fromTripJoinRequest( tripJoinRequest, false ) ) );
+            tripJoinRequestService.getLastByTripIdAndUsername( id, username )
+                                  .ifPresent( tripJoinRequest -> tripDto.setUserJoinRequest(
+                                          TripJoinRequestDto.fromTripJoinRequest( tripJoinRequest, false ) ) );
         }
 
         return Response.ok().entity( tripDto ).build();
@@ -182,8 +190,9 @@ public class TripController extends BaseController
         Set<ConstraintViolation<TripDto>> violations = validator.validate( tripDto );
 
         if ( !violations.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( violations ) )
+                           .build();
         }
 
         if ( tripDto.getId() == null || id != tripDto.getId() ) {
@@ -203,7 +212,7 @@ public class TripController extends BaseController
         Trip tripUpdates = tripDto.toTrip();
 
         if ( !maybeTrip.isPresent() ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         Trip trip = maybeTrip.get();
@@ -277,8 +286,9 @@ public class TripController extends BaseController
         Set<ConstraintViolation<FileDto>> violations = validator.validate( fileDto );
 
         if ( !violations.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( violations ) )
+                           .build();
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -291,7 +301,7 @@ public class TripController extends BaseController
         Optional<Trip> maybeTrip = tripService.findById( id );
 
         if ( !maybeTrip.isPresent() ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         Optional<TripPicture> maybeTripPicture = tripPicturesService.findByTripId( id );
@@ -312,7 +322,7 @@ public class TripController extends BaseController
                            .build();
         }
 
-        return Response.created( uriInfo.getAbsolutePathBuilder().path( String.format( "/%d/picture", id ) ).build() )
+        return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( tripPicture.getId() ) ).build() )
                        .build();
     }
 
@@ -375,9 +385,10 @@ public class TripController extends BaseController
         Set<ConstraintViolation<PlaceDto>> placeValidation = validator.validate( activityDto.getPlace() );
 
         if ( !activityValidation.isEmpty() || !placeValidation.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    ErrorsDto.fromConstraintsViolations( activityValidation )
-                             .addConstraintsViolations( placeValidation ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( activityValidation )
+                                             .addConstraintsViolations( placeValidation ) )
+                           .build();
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -385,21 +396,25 @@ public class TripController extends BaseController
         Optional<Trip> maybeTrip = tripService.findById( id );
 
         if ( !tripService.isUserOwnerOrAdmin( id, username ) || !maybeTrip.isPresent() ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         Trip trip = maybeTrip.get();
 
-        if ( activityDto.getStartDate().isAfter( activityDto.getEndDate() ) || activityDto.getStartDate().isBefore(
-                trip.getStartDate() ) || activityDto.getEndDate().isAfter( trip.getEndDate() ) ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    new ErrorDto( "invalid date range", "starDate and endDate" ) ).build();
+        if ( activityDto.getStartDate().isAfter( activityDto.getEndDate() ) ||
+             activityDto.getStartDate().isBefore( trip.getStartDate() ) ||
+             activityDto.getEndDate().isAfter( trip.getEndDate() ) ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "invalid date range", "starDate and endDate" ) )
+                           .build();
         }
 
         Activity activity = activityService.create( activityDto.getName(), maybeTrip.get(), activityDto.getStartDate(),
                                                     activityDto.getEndDate(), activityDto.getPlace().toPlace() );
 
-        return Response.ok().entity( ActivityDto.fromActivity( activity ) ).build();
+        return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( activity.getId() ) ).build() )
+                       .entity( ActivityDto.fromActivity( activity ) )
+                       .build();
     }
 
     @GET
@@ -410,7 +425,7 @@ public class TripController extends BaseController
         Optional<Trip> maybeTrip = tripService.findById( id );
 
         if ( !maybeTrip.isPresent() ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         Trip trip = maybeTrip.get();
@@ -418,8 +433,8 @@ public class TripController extends BaseController
         ActivityListDto activities = ActivityListDto.fromActivityList( activityService.findByTrip( id ),
                                                                        trip.getStartDate(), trip.getEndDate() );
 
-        tripMemberService.findByTripIdAndUsername( id, username ).ifPresent(
-                tripMember -> activities.setRole( tripMember.getRole().name() ) );
+        tripMemberService.findByTripIdAndUsername( id, username )
+                         .ifPresent( tripMember -> activities.setRole( tripMember.getRole().name() ) );
 
         return Response.ok().entity( activities ).build();
     }
@@ -431,14 +446,16 @@ public class TripController extends BaseController
         Set<ConstraintViolation<PlaceDto>> placeValidation = validator.validate( activityDto.getPlace() );
 
         if ( !activityValidation.isEmpty() || !placeValidation.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    ErrorsDto.fromConstraintsViolations( activityValidation )
-                             .addConstraintsViolations( placeValidation ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( activityValidation )
+                                             .addConstraintsViolations( placeValidation ) )
+                           .build();
         }
 
         if ( activityDto.getId() == null ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    new ErrorDto( "the activity does not contains id", "id" ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "the activity does not contains id", "id" ) )
+                           .build();
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -447,7 +464,7 @@ public class TripController extends BaseController
 
         if ( !tripService.isUserOwnerOrAdmin( id, username ) || !maybeTrip.isPresent() ||
              !activityService.isActivityPartOfTheTrip( maybeTrip.get().getId(), activityDto.getId() ) ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         Activity activity = activityDto.toActivity();
@@ -486,14 +503,14 @@ public class TripController extends BaseController
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if ( !maybeTrip.isPresent() || !tripService.isUserMember( id, username ) ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         TripMemberListDto tripMemberListDto = TripMemberListDto.fromMembersList(
                 tripMemberService.getAllByTripId( id ) );
 
-        tripMemberService.findByTripIdAndUsername( id, username ).ifPresent(
-                tripMember -> tripMemberListDto.setRole( tripMember.getRole().name() ) );
+        tripMemberService.findByTripIdAndUsername( id, username )
+                         .ifPresent( tripMember -> tripMemberListDto.setRole( tripMember.getRole().name() ) );
 
         return Response.ok().entity( tripMemberListDto ).build();
     }
@@ -533,7 +550,7 @@ public class TripController extends BaseController
 
         if ( !maybeTrip.isPresent() || !maybeMember.isPresent() || !maybeLoggedMember.isPresent() ||
              !tripMemberService.memberBelongsToTheTrip( memberId, id ) ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         Set<ConstraintViolation<TripMemberUpdateDto>> violations = validator.validate( tripMemberUpdateDto );
@@ -568,7 +585,7 @@ public class TripController extends BaseController
         Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username );
 
         if ( !maybeTrip.isPresent() || !maybeLoggedMember.isPresent() ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         if ( rate < 1 || rate > 5 ) {
@@ -592,14 +609,15 @@ public class TripController extends BaseController
         Optional<TripMember> maybeMember = tripMemberService.findByTripIdAndUsername( id, username );
 
         if ( !maybeMember.isPresent() || !maybeTrip.isPresent() ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         TripMember member = maybeMember.get();
 
         if ( member.getRole().equals( TripMemberRole.OWNER ) ) {
-            return Response.status( Response.Status.CONFLICT ).entity(
-                    new ErrorDto( "the owner of the trip cannot exit" ) ).build();
+            return Response.status( Response.Status.CONFLICT )
+                           .entity( new ErrorDto( "the owner of the trip cannot exit" ) )
+                           .build();
         }
 
         tripMemberService.delete( member.getId() );
@@ -622,15 +640,16 @@ public class TripController extends BaseController
         Set<ConstraintViolation<JoinTripDto>> violations = validator.validate( joinTripDto );
 
         if ( !violations.isEmpty() ) {
-            return Response.status( Response.Status.BAD_REQUEST ).entity(
-                    ErrorsDto.fromConstraintsViolations( violations ) ).build();
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( ErrorsDto.fromConstraintsViolations( violations ) )
+                           .build();
         }
 
         Optional<Trip> maybeTrip = tripService.findById( id );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if ( !maybeTrip.isPresent() ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         Optional<User> maybeUser = userService.findByUsername( username );
@@ -642,17 +661,20 @@ public class TripController extends BaseController
         Optional<TripJoinRequest> maybeRequest = tripJoinRequestService.getLastByTripIdAndUsername( id, username );
 
         if ( maybeRequest.isPresent() && maybeRequest.get().getStatus().equals( TripJoinRequestStatus.PENDING ) ) {
-            return Response.status( Response.Status.CONFLICT ).entity(
-                    new ErrorDto( "already have a pending join request" ) ).build();
+            return Response.status( Response.Status.CONFLICT )
+                           .entity( new ErrorDto( "already have a pending join request" ) )
+                           .build();
         }
 
         User user = maybeUser.get();
 
         TripJoinRequest request = tripJoinRequestService.create( user, maybeTrip.get(), joinTripDto.getMessage() );
 
-        tripMemberService.getAllAdmins( id ).forEach(
-                x -> mailingService.sendNewJoinRequestEmail( user.getFullName(), x.getUser().getFullName(),
-                                                             x.getUser().getEmail(), id, getFrontendUrl() ) );
+        tripMemberService.getAllAdmins( id )
+                         .forEach( x -> mailingService.sendNewJoinRequestEmail( user.getFullName(),
+                                                                                x.getUser().getFullName(),
+                                                                                x.getUser().getEmail(), id,
+                                                                                getFrontendUrl() ) );
 
         return Response.ok().entity( TripJoinRequestDto.fromTripJoinRequest( request, false ) ).build();
     }
@@ -664,7 +686,7 @@ public class TripController extends BaseController
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if ( !maybeTrip.isPresent() ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
@@ -673,8 +695,9 @@ public class TripController extends BaseController
 
         List<TripJoinRequest> joinRequests = tripJoinRequestService.getAllPendingByTripId( id );
 
-        return Response.ok().entity(
-                joinRequests.stream().map( x -> TripJoinRequestDto.fromTripJoinRequest( x, true ) ) ).build();
+        return Response.ok()
+                       .entity( joinRequests.stream().map( x -> TripJoinRequestDto.fromTripJoinRequest( x, true ) ) )
+                       .build();
     }
 
     @POST
@@ -684,7 +707,7 @@ public class TripController extends BaseController
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if ( !maybeTrip.isPresent() ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
@@ -723,7 +746,7 @@ public class TripController extends BaseController
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if ( !maybeTrip.isPresent() ) {
-            return TripNotFound();
+            return tripNotFound();
         }
 
         if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
@@ -755,13 +778,16 @@ public class TripController extends BaseController
         Optional<TripMember> maybeMember = tripMemberService.findByTripIdAndUsername( id, username );
 
         if ( !maybeMember.isPresent() ) {
-            return Response.status( Response.Status.NOT_FOUND ).entity(
-                    new ErrorDto( "trip not found or user not member" ) ).build();
+            return Response.status( Response.Status.NOT_FOUND )
+                           .entity( new ErrorDto( "trip not found or user not member" ) )
+                           .build();
         }
 
         TripComment comment = tripCommentsService.create( maybeMember.get(), commentDto.getComment() );
 
-        return Response.ok().entity( CommentDto.fromComment( comment, true ) ).build();
+        return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( comment.getId() ) ).build() )
+                       .entity( CommentDto.fromComment( comment, true ) )
+                       .build();
     }
 
     @GET
@@ -782,7 +808,7 @@ public class TripController extends BaseController
 
     //endregion
 
-    private static Response TripNotFound() {
+    private static Response tripNotFound() {
         return Response.status( Response.Status.NOT_FOUND ).entity( new ErrorDto( "Trip not Found" ) ).build();
     }
 }
