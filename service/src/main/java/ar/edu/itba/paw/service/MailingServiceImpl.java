@@ -8,7 +8,7 @@ import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
 import org.simplejavamail.mailer.config.TransportStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,91 +27,91 @@ public class MailingServiceImpl implements MailingService
     private static final String EMAIL_NAME = "travelapp.inegro@gmail.com";
     private static final String EMAIL_PASS = "D2SpMKqesDtAbLp";
 
-    private static final String NOTIFICATION_EMAIL = "templates/notification-template-email.html";
-
-    @Autowired
-    private ApplicationContext applicationContext;
+    private static final String WELCOME_EMAIL = "welcome";
+    private static final String PASSWORD_RECOVERY_EMAIL = "password-recovery";
+    private static final String JOIN_REQUEST_NEW_EMAIL = "join-request-new";
+    private static final String MEMBER_EXIT_EMAIL = "member-exit";
+    private static final String JOIN_REQUEST_ACCEPTED = "join-request-accepted";
+    private static final String MEMBER_NEW_EMAIL = "member-new";
 
     @Autowired
     private TemplateEngine htmlTemplateEngine;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Async
     @Override
-    public void welcomeAndVerificationEmail( String name, String email, String token, String frontendUrl ) {
-        String subject = "Welcome to TravelApp: Confirm your email";
-        String message = "Thank you for signing up for TravelApp. To complete and confirm your registration for TravelApp" +
-                         ", you’ll need to verify your email address. To do so, please click the button below:";
-        String btnText = "Confirm your Email";
+    public void welcomeAndVerificationEmail( String name, String email, String token, String frontendUrl,
+                                             Locale locale ) {
         String btnHref = frontendUrl + "/verify/" + token;
-        sendNotification( name, email, subject, subject, message, btnHref, btnText );
+        final Context context = new Context( locale );
+        context.setVariable( "btnHref", "http://" + btnHref );
+        context.setVariable( "name", name );
+        String html = htmlTemplateEngine.process( WELCOME_EMAIL, context );
+        sendMail( name, email, html, messageSource.getMessage( "welcome.subject", null, locale ) );
     }
 
     @Async
     @Override
-    public void sendPasswordRecoveryEmail( String name, String email, String token, String frontEndUrl ) {
-        String subject = "Password Recovery";
-        String message = "We have received your request to reset your password. Please click the link below to complete the reset:";
-        String btnText = "Reset My Password";
+    public void sendPasswordRecoveryEmail( String name, String email, String token, String frontEndUrl,
+                                           Locale locale ) {
         String btnHref = frontEndUrl + "/recovery/" + token;
-        sendNotification( name, email, subject, subject, message, btnHref, btnText );
+        final Context context = new Context( locale );
+        context.setVariable( "btnHref", "http://" + btnHref );
+        String html = htmlTemplateEngine.process( PASSWORD_RECOVERY_EMAIL, context );
+        sendMail( name, email, html, messageSource.getMessage( "password_recovery.subject", null, locale ) );
     }
 
     @Async
     @Override
     public void sendNewJoinRequestEmail( String userName, String adminName, String email, long tripId,
-                                         String frontendUrl ) {
-        String subject = "New Member Request";
-        String title = "New Member Request";
-        String message = userName + " would like to become a new member of one of your trips!";
+                                         String frontendUrl, Locale locale ) {
+
         String btnHref = frontendUrl + "/trip/" + tripId;
-        String btnText = "Go to the Trip";
-        sendNotification( adminName, email, subject, title, message, btnHref, btnText );
+        final Context context = new Context( locale );
+        context.setVariable( "btnHref", "http://" + btnHref );
+        context.setVariable( "name", userName );
+        String html = htmlTemplateEngine.process( JOIN_REQUEST_NEW_EMAIL, context );
+        sendMail( adminName, email, html, messageSource.getMessage( "join_request_new.subject", null, locale ) );
     }
 
     @Async
     @Override
     public void exitTripEmail( String userName, String adminName, String email, long tripId, String tripName,
-                               String frontendUrl ) {
-        String subject = "Member Exit";
-        String title = "Member Exit";
-        String message = userName + " has exit your trip \"" + tripName + "\"";
+                               String frontendUrl, Locale locale ) {
         String btnHref = frontendUrl + "/trip/" + tripId;
-        String btnText = "Go to the Trip";
-        sendNotification( adminName, email, subject, title, message, btnHref, btnText );
-    }
-
-    @Async
-    @Override
-    public void requestAcceptedEmail( String userName, String email, long tripId, String tripName,
-                                      String frontendUrl ) {
-        String subject = "Member Request Accepted";
-        String title = "Member Request Accepted";
-        String message ="you has been accepted on \"" + tripName + "\", go to the trip and start meeting your partners!";
-        String btnHref = frontendUrl + "/trip/" + tripId;
-        String btnText = "Go to the Trip";
-        sendNotification( userName, email, subject, title, message, btnHref, btnText );
-    }
-
-    @Async
-    @Override
-    public void newMemberEmail( String userName, String memberName, String email, long tripId, String tripName, String frontendUrl ) {
-        String subject = "There's a new Member!";
-        String title = "There's a new Member!";
-        String message = userName + " has join your trip \"" + tripName + "\"";
-        String btnHref = frontendUrl + "/trip/" + tripId;
-        String btnText = "Go to the Trip";
-        sendNotification( memberName, email, subject, title, message, btnHref, btnText );
-    }
-
-    private void sendNotification( String receiverName, String receiverEmail, String subject, String title,
-                                   String message, String btnHref, String btnText ) {
-        final Context context = new Context( Locale.ENGLISH );
-        context.setVariable( "title", title );
-        context.setVariable( "message", message );
+        final Context context = new Context( locale );
         context.setVariable( "btnHref", "http://" + btnHref );
-        context.setVariable( "btnText", btnText );
-        String html = htmlTemplateEngine.process( NOTIFICATION_EMAIL, context );
-        sendMail( receiverName, receiverEmail, html, subject );
+        context.setVariable( "name", userName );
+        context.setVariable( "trip", tripName );
+        String html = htmlTemplateEngine.process( MEMBER_EXIT_EMAIL, context );
+        sendMail( adminName, email, html, messageSource.getMessage( "exit_trip.subject", null, locale ) );
+    }
+
+    @Async
+    @Override
+    public void requestAcceptedEmail( String userName, String email, long tripId, String tripName, String frontendUrl
+            , Locale locale ) {
+        String btnHref = frontendUrl + "/trip/" + tripId;
+        final Context context = new Context( locale );
+        context.setVariable( "btnHref", "http://" + btnHref );
+        context.setVariable( "trip", tripName );
+        String html = htmlTemplateEngine.process( JOIN_REQUEST_ACCEPTED, context );
+        sendMail( userName, email, html, messageSource.getMessage( "join_request_accepted.subject", null, locale ) );
+    }
+
+    @Async
+    @Override
+    public void newMemberEmail( String userName, String memberName, String email, long tripId, String tripName,
+                                String frontendUrl, Locale locale ) {
+        String btnHref = frontendUrl + "/trip/" + tripId;
+        final Context context = new Context( locale );
+        context.setVariable( "btnHref", "http://" + btnHref );
+        context.setVariable( "name", memberName );
+        context.setVariable( "trip", tripName );
+        String html = htmlTemplateEngine.process( MEMBER_NEW_EMAIL, context );
+        sendMail( userName, email, html, messageSource.getMessage( "member_new.subject", null, locale ) );
     }
 
     private void sendMail( String receiverName, String receiverEmail, String html, String subject ) {

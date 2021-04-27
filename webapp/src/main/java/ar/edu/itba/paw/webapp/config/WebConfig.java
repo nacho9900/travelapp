@@ -106,7 +106,7 @@ public class WebConfig extends WebMvcConfigurerAdapter
     @Bean
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename( "classpath:i18n/messages" );
+        messageSource.setBasename( "classpath:mail/i18n/messages" );
         messageSource.setDefaultEncoding( StandardCharsets.UTF_8.displayName() );
         messageSource.setCacheSeconds( 5 );
         return messageSource;
@@ -137,7 +137,7 @@ public class WebConfig extends WebMvcConfigurerAdapter
     public SpringResourceTemplateResolver templateResolver() {
         final SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext( this.applicationContext );
-        templateResolver.setPrefix( "/WEB-INF/mail/" );
+        templateResolver.setPrefix( "classpath:mail/templates/" );
         templateResolver.setSuffix( ".html" );
         templateResolver.setTemplateMode( TemplateMode.HTML );
         templateResolver.setCacheable( true );

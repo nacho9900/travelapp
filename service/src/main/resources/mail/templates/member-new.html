@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>New Member</title>
+    <style>
+
+        .bg {
+            background-color: #66BB6A;
+            padding: 30px;
+        }
+
+        .title {
+            font-weight: 300;
+            color: white;
+        }
+
+        .justify-center {
+            text-align: center;
+        }
+
+        .btn {
+            box-shadow: 0 0 37px -20px #000000;
+            background-color: #29b5f6;
+            border-radius: 15px;
+            display: inline-block;
+            cursor: pointer;
+            color: #ffffff;
+            font-size: 17px;
+            padding: 16px 31px;
+            text-decoration: none;
+        }
+
+        .btn:active {
+            position: relative;
+            top: 1px;
+        }
+
+        .message {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="bg">
+    <div>
+        <div class=" justify-center">
+            <h3 class="title" th:text="#{member_new.title}"></h3>
+        </div>
+    </div>
+    <div>
+        <div class=" justify-center">
+            <p class="message" th:text="#{member_new.message(${name}, ${trip})}"></p>
+        </div>
+    </div>
+    <div class=" justify-center">
+        <a href="#" class="btn" th:href="${btnHref}" th:text="#{member_new.button_text}">
+        </a>
+    </div>
+</div>
+</body>
+</html>

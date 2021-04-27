@@ -41,6 +41,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
@@ -59,7 +60,6 @@ import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
@@ -80,7 +80,6 @@ public class TripController extends BaseController
 
     @Autowired
     private ActivityService activityService;
-
 
     @Autowired
     private TripPicturesService tripPicturesService;
@@ -602,7 +601,7 @@ public class TripController extends BaseController
 
     @POST
     @Path( "/{id}/exit" )
-    public Response exitTrip( @PathParam( "id" ) long id ) {
+    public Response exitTrip( @PathParam( "id" ) long id, @Context HttpServletRequest httpRequest ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Optional<Trip> maybeTrip = tripService.findById( id );
@@ -624,7 +623,8 @@ public class TripController extends BaseController
 
         tripMemberService.getAllByTripId( id ).forEach( x -> {
             mailingService.exitTripEmail( member.getUser().getFullName(), x.getUser().getFullName(),
-                                          x.getUser().getEmail(), id, maybeTrip.get().getName(), getFrontendUrl() );
+                                          x.getUser().getEmail(), id, maybeTrip.get().getName(), getFrontendUrl(),
+                                          httpRequest.getLocale() );
         } );
 
         return Response.ok().build();
@@ -636,7 +636,9 @@ public class TripController extends BaseController
 
     @POST
     @Path( "/{id}/join" )
-    public Response joinTrip( @PathParam( "id" ) long id, @RequestBody JoinTripDto joinTripDto ) {
+    public Response joinTrip(
+            @PathParam( "id" ) long id,
+            @RequestBody JoinTripDto joinTripDto, @Context HttpServletRequest httpRequest ) {
         Set<ConstraintViolation<JoinTripDto>> violations = validator.validate( joinTripDto );
 
         if ( !violations.isEmpty() ) {
@@ -674,7 +676,8 @@ public class TripController extends BaseController
                          .forEach( x -> mailingService.sendNewJoinRequestEmail( user.getFullName(),
                                                                                 x.getUser().getFullName(),
                                                                                 x.getUser().getEmail(), id,
-                                                                                getFrontendUrl() ) );
+                                                                                getFrontendUrl(),
+                                                                                httpRequest.getLocale() ) );
 
         return Response.ok().entity( TripJoinRequestDto.fromTripJoinRequest( request, false ) ).build();
     }
@@ -702,7 +705,9 @@ public class TripController extends BaseController
 
     @POST
     @Path( "/{id}/join/{requestId}/accept" )
-    public Response acceptRequest( @PathParam( "id" ) long id, @PathParam( "requestId" ) long requestId ) {
+    public Response acceptRequest(
+            @PathParam( "id" ) long id,
+            @PathParam( "requestId" ) long requestId, @Context HttpServletRequest httpRequest ) {
         Optional<Trip> maybeTrip = tripService.findById( id );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -727,12 +732,13 @@ public class TripController extends BaseController
         TripMember tripMember = tripJoinRequestService.accept( maybeJoinRequest.get() );
 
         mailingService.requestAcceptedEmail( user.getFullName(), user.getEmail(), id, maybeTrip.get().getName(),
-                                             getFrontendUrl() );
+                                             getFrontendUrl(), httpRequest.getLocale() );
 
         tripMemberService.getAllByTripId( id ).forEach( x -> {
             if ( x.getId() != tripMember.getId() ) {
                 mailingService.newMemberEmail( user.getFullName(), x.getUser().getFullName(), x.getUser().getEmail(),
-                                               id, maybeTrip.get().getName(), getFrontendUrl() );
+                                               id, maybeTrip.get().getName(), getFrontendUrl(),
+                                               httpRequest.getLocale() );
             }
         } );
 

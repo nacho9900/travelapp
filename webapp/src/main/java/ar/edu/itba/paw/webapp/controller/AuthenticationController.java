@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
@@ -54,7 +55,7 @@ public class AuthenticationController extends BaseController
     @Path( "/signup" )
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
-    public Response signup( @RequestBody SignUpDto signUpDto ) {
+    public Response signup( @RequestBody SignUpDto signUpDto, @Context HttpServletRequest request ) {
         Set<ConstraintViolation<SignUpDto>> violations = validator.validate( signUpDto );
 
         if ( !violations.isEmpty() ) {
@@ -72,18 +73,19 @@ public class AuthenticationController extends BaseController
                                         null );
 
         mailingService.welcomeAndVerificationEmail( user.getFullName(), user.getEmail(),
-                                                    user.getVerificationToken().toString(), getFrontendUrl() );
-
+                                                    user.getVerificationToken().toString(), getFrontendUrl(),
+                                                    request.getLocale() );
 
         return Response.created( uriInfo.getBaseUriBuilder()
-                                        .path( UsersController.class)
+                                        .path( UsersController.class )
                                         .path( Long.toString( user.getId() ) )
                                         .build() ).entity( UserDto.fromUser( user ) ).build();
     }
 
     @POST
     @Path( "/password-recovery" )
-    public Response passwordRecovery( @RequestBody PasswordRecoveryDto passwordRecoveryDto ) {
+    public Response passwordRecovery(
+            @RequestBody PasswordRecoveryDto passwordRecoveryDto, @Context HttpServletRequest request ) {
         Set<ConstraintViolation<PasswordRecoveryDto>> violations = validator.validate( passwordRecoveryDto );
 
         if ( !violations.isEmpty() ) {
@@ -103,7 +105,7 @@ public class AuthenticationController extends BaseController
         PasswordRecoveryToken token = passwordRecoveryTokenService.createOrUpdate( user );
 
         mailingService.sendPasswordRecoveryEmail( user.getFirstname() + "" + user.getLastname(), user.getEmail(),
-                                                  token.getToken().toString(), getFrontendUrl() );
+                                                  token.getToken().toString(), getFrontendUrl(), request.getLocale() );
 
         return Response.ok().build();
     }

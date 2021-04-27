@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
     <meta charset="UTF-8">
-    <title>TravelApp Notification</title>
+    <title>New Member Request</title>
     <style>
 
         .bg {
@@ -45,16 +45,16 @@
 <div class="bg">
     <div>
         <div class=" justify-center">
-            <h3 class="title" th:text="${title}"></h3>
+            <h3 class="title" th:text="#{exit_trip.title}"></h3>
         </div>
     </div>
     <div>
         <div class=" justify-center">
-            <p class="message" th:text="${message}"></p>
+            <p class="message" th:text="#{exit_trip.message(${name}, ${trip})}"></p>
         </div>
     </div>
     <div class=" justify-center">
-        <a href="#" class="btn" th:href="${btnHref}" th:text="${btnText}">
+        <a href="#" class="btn" th:href="${btnHref}" th:text="#{exit_trip.button_text}">
         </a>
     </div>
 </div>
