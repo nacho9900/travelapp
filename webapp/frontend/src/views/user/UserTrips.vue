@@ -10,9 +10,8 @@
 			<v-col cols="12" class="my-5" v-if="loading || hasTrips">
 				<trip-data-iterator
 					:trips="trips"
-					:total="total"
-					:itemsPerPage="itemsPerPage"
 					:loading="loading"
+          :link="link"
 					:page="page"
 					@next="nextPage"
 					@prev="prevPage"
@@ -36,6 +35,7 @@
 
 <script>
 import TripDataIterator from "components/trips/TripDataIterator.vue";
+import parseLinkHeader from "parse-link-header";
 
 export default {
 	components: {
@@ -44,11 +44,10 @@ export default {
 	data() {
 		return {
 			trips: [],
-			total: 0,
 			page: 1,
-			itemsPerPage: 12,
 			loading: false,
 			error: null,
+      link: null,
 		};
 	},
 	computed: {
@@ -57,31 +56,39 @@ export default {
 		},
 	},
 	methods: {
-		async getAll() {
+		async getAll(url) {
 			this.loading = true;
 			this.trips = [];
 
 			try {
-				const result = await this.$store.dispatch("trip/getUserTrips", {
+				const response = await this.$store.dispatch("trip/getUserTrips", {
 					page: this.page,
+          url: url,
 				});
-				this.itemsPerPage = result.itemsPerPage;
-				this.total = result.total;
-				this.trips = result.trips;
+
+        const data = response.data;
+        const trips = data.trips;
+
+        this.trips = trips || [];
+
+        if (this.hasTrips) {
+          this.link = parseLinkHeader(response.headers["link"]);
+        }
+
 			} catch (error) {
 				this.error = this.$t("views.user_trips.error");
 			}
 
 			this.loading = false;
 		},
-		async nextPage() {
-			this.page += 1;
-			await this.getAll();
-		},
-		async prevPage() {
-			this.page -= 1;
-			await this.getAll();
-		},
+    async nextPage() {
+      this.page = parseInt(this.link.next.page);
+      await this.getAll(this.link.next.url);
+    },
+    async prevPage() {
+      this.page = parseInt(this.link.prev.page);
+      await this.getAll(this.link.prev.url);
+    },
 	},
 	created() {
 		this.getAll();

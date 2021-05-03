@@ -12,7 +12,7 @@ public interface TripService
 
     Optional<Trip> findById( long id );
 
-    PaginatedResult<Trip> getAllUserTrips( User user, int page );
+    PaginatedResult<Trip> getAllUserTrips( User user, int page, int perPage );
 
     boolean isUserOwnerOrAdmin( long tripId, String username );
 
@@ -20,5 +20,5 @@ public interface TripService
 
     Trip update( Trip trip, String name, String description, LocalDate startDate, LocalDate endDate );
 
-    PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to, int page );
+    PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage );
 }

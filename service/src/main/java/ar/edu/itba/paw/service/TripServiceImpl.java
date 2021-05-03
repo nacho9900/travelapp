@@ -32,8 +32,8 @@ public class TripServiceImpl implements TripService
     }
 
     @Override
-    public PaginatedResult<Trip> getAllUserTrips( User user, int page ) {
-        return tripDao.findUserTrips( user.getId(), page );
+    public PaginatedResult<Trip> getAllUserTrips( User user, int page, int perPage ) {
+        return tripDao.findUserTrips( user.getId(), page, perPage);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class TripServiceImpl implements TripService
 
     @Override
     public PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to
-            , int page ) {
-        return tripDao.search( text, latitude, longitude, from, to, page );
+            , int page, int perPage ) {
+        return tripDao.search( text, latitude, longitude, from, to, page, perPage);
     }
 }

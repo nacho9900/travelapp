@@ -26,29 +26,36 @@ export default {
         return location;
     },
     async search(_, payload) {
-        const data = {
-            params: {
-                text: payload.text,
-                from: payload.from,
-                to: payload.to,
-                latitude: payload.location?.latitude,
-                longitude: payload.location?.longitude,
-                page: payload.page
-            }
-        };
-        const response = await Axios.get("/trip/search", data);
-        const result = response.data;
-        return result;
+        if (payload.url) {
+            return await Axios.get(payload.url);
+        } else {
+            const data = {
+                params: {
+                    text: payload.text,
+                    from: payload.from,
+                    to: payload.to,
+                    latitude: payload.location?.latitude,
+                    longitude: payload.location?.longitude,
+                    page: payload.page,
+                    perPage: 12,
+                }
+            };
+
+            return await Axios.get("/trip/search", data);
+        }
     },
     async getUserTrips(_, payload) {
-        const data = {
-            params: {
-                page: payload.page,
-            }
-        };
+        if (payload.url) {
+            return await Axios.get(payload.url);
+        } else {
+            const data = {
+                params: {
+                    page: payload.page,
+                    perPage: 12,
+                }
+            };
 
-        const response = await Axios.get("/trip", data);
-        const result = response.data;
-        return result;
+            return await Axios.get("/trip", data);
+        }
     }
 };

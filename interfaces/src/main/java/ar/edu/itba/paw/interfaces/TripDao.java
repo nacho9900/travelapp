@@ -3,11 +3,8 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.PaginatedResult;
 import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.TripComment;
-import ar.edu.itba.paw.model.TripRate;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 public interface TripDao
@@ -18,7 +15,7 @@ public interface TripDao
 
     Optional<Trip> findById( long id );
 
-    PaginatedResult<Trip> findUserTrips( long userId, int page );
+    PaginatedResult<Trip> findUserTrips( long userId, int page, int perPage );
 
     void deleteTrip( long tripId );
 
@@ -28,5 +25,5 @@ public interface TripDao
 
     Trip update( Trip trip );
 
-    PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to, int page );
+    PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage );
 }

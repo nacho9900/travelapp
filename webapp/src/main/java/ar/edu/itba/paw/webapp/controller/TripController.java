@@ -35,6 +35,8 @@ import ar.edu.itba.paw.webapp.dto.trips.TripListDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberListDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberUpdateDto;
+import ar.edu.itba.paw.webapp.utils.MyQueryParam;
+import ar.edu.itba.paw.webapp.utils.PaginatedResultResponseHelper;
 import com.google.maps.GeoApiContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -64,6 +66,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -161,9 +164,12 @@ public class TripController extends BaseController
         return Response.ok().entity( tripDto ).build();
     }
 
+    //TODO: move this method to /user/{id}/trips
     @GET
     @Produces( MediaType.APPLICATION_JSON )
-    public Response getAll( @QueryParam( "page" ) int page ) {
+    public Response getAllByUserId(
+            @QueryParam( "page" ) @DefaultValue( "1" ) int page,
+            @QueryParam( "perPage" ) @DefaultValue( "12" ) int perPage ) {
         if ( page <= 0 ) {
             return Response.status( Response.Status.BAD_REQUEST )
                            .entity( new ErrorDto( "invalid page", "page" ) )
@@ -178,9 +184,11 @@ public class TripController extends BaseController
             return Response.status( Response.Status.NOT_FOUND ).build();
         }
 
-        PaginatedResult<Trip> result = tripService.getAllUserTrips( maybeUser.get(), page );
+        PaginatedResult<Trip> result = tripService.getAllUserTrips( maybeUser.get(), page, perPage );
 
-        return Response.ok().entity( TripListDto.fromPaginatedResult( result ) ).build();
+        return PaginatedResultResponseHelper.makeResponseBuilder( result, uriInfo )
+                                            .entity( TripListDto.fromPaginatedResult( result ) )
+                                            .build();
     }
 
     @PUT
@@ -230,8 +238,11 @@ public class TripController extends BaseController
             @QueryParam( "latitude" ) Double latitude,
             @QueryParam( "longitude" ) Double longitude,
             @QueryParam( "from" ) String fromString,
-            @QueryParam( "to" ) String toString, @QueryParam( "page" ) @DefaultValue( "1" ) int page ) {
+            @QueryParam( "to" ) String toString,
+            @QueryParam( "perPage" ) @DefaultValue( "12" ) int perPage,
+            @QueryParam( "page" ) @DefaultValue( "1" ) int page ) {
         ErrorsDto errors = new ErrorsDto();
+        List<MyQueryParam> myQueryParams = new LinkedList<>();
 
         LocalDate from = null;
         LocalDate to = null;
@@ -239,6 +250,7 @@ public class TripController extends BaseController
         if ( fromString != null ) {
             try {
                 from = LocalDate.parse( fromString );
+                myQueryParams.add( new MyQueryParam( "from", fromString ) );
             }
             catch ( DateTimeParseException e ) {
                 errors.addError( "invalid from date format", "from" );
@@ -248,6 +260,7 @@ public class TripController extends BaseController
         if ( toString != null ) {
             try {
                 to = LocalDate.parse( toString );
+                myQueryParams.add( new MyQueryParam( "to", toString ) );
             }
             catch ( DateTimeParseException e ) {
                 errors.addError( "invalid to date format", "to" );
@@ -258,21 +271,33 @@ public class TripController extends BaseController
             errors.addError( "invalid page number", "page" );
         }
 
-        if ( latitude != null && ( latitude < -90 || latitude > 90 ) ) {
-            errors.addError( "invalid latitude", "latitude" );
+        if ( latitude != null ) {
+            if ( latitude < -90 || latitude > 90 ) {
+                errors.addError( "invalid latitude", "latitude" );
+            }
+            else {
+                myQueryParams.add( new MyQueryParam( "latitude", latitude ) );
+            }
         }
 
-        if ( longitude != null && ( longitude < -180 || longitude > 180 ) ) {
-            errors.addError( "invalid longitude", "longitude" );
+        if ( longitude != null ) {
+            if ( longitude < -180 || longitude > 180 ) {
+                errors.addError( "invalid longitude", "longitude" );
+            }
+            else {
+                myQueryParams.add( new MyQueryParam( "longitude", longitude ) );
+            }
         }
 
         if ( !errors.isEmpty() ) {
             return Response.status( Response.Status.BAD_REQUEST ).entity( errors ).build();
         }
 
-        PaginatedResult<Trip> results = tripService.search( text, latitude, longitude, from, to, page );
+        PaginatedResult<Trip> results = tripService.search( text, latitude, longitude, from, to, page, perPage );
 
-        return Response.ok().entity( TripListDto.fromPaginatedResult( results ) ).build();
+        return PaginatedResultResponseHelper.makeResponseBuilder( results, uriInfo, myQueryParams )
+                                            .entity( TripListDto.fromPaginatedResult( results ) )
+                                            .build();
     }
 
     //endregion

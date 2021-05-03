@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +16,7 @@ import java.util.Optional;
 @Repository
 public class TripHibernateDao implements TripDao
 {
-    private static final int MAX_ROWS = 12;
+    private static final int MAX_ROWS = 100;
 
     @PersistenceContext
     EntityManager em;
@@ -41,7 +40,7 @@ public class TripHibernateDao implements TripDao
     }
 
     @Override
-    public PaginatedResult<Trip> findUserTrips( long userId, int page ) {
+    public PaginatedResult<Trip> findUserTrips( long userId, int page, int perPage ) {
         String queryString = "from Trip as t left join t.members as m left join m.user as u where u.id = :userId ";
 
         final TypedQuery<Long> idsQuery = em.createQuery( "select t.id " + queryString + "order by t.startDate",
@@ -52,16 +51,23 @@ public class TripHibernateDao implements TripDao
         idsQuery.setParameter( "userId", userId );
         queryCount.setParameter( "userId", userId );
 
-        int firstResults = ( page - 1 ) * MAX_ROWS;
+        final int itemsPerPage = Math.min( perPage, MAX_ROWS );
+
+        final int firstResults = ( page - 1 ) * itemsPerPage;
         idsQuery.setFirstResult( firstResults );
-        idsQuery.setMaxResults( MAX_ROWS );
+        idsQuery.setMaxResults( itemsPerPage );
 
         List<Long> ids = idsQuery.getResultList();
+
+        if ( ids.isEmpty() ) {
+            return PaginatedResult.getEmpty();
+        }
+
         tripsQuery.setParameter( "ids", ids );
         Long total = (Long) queryCount.getSingleResult();
         List<Trip> trips = tripsQuery.getResultList();
 
-        return new PaginatedResult<>( trips, total, MAX_ROWS, total != 0 && firstResults >= total );
+        return new PaginatedResult<>( trips, total, itemsPerPage, page );
     }
 
     @Override
@@ -102,7 +108,7 @@ public class TripHibernateDao implements TripDao
 
     @Override
     public PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to
-            , int page ) {
+            , int page, int perPage ) {
         StringBuilder queryString = new StringBuilder(
                 "from Trip as t inner join t.activities as a inner join a.place as p " + "where 1=1 " );
 
@@ -147,18 +153,21 @@ public class TripHibernateDao implements TripDao
             countQuery.setParameter( "to", to );
         }
 
-        int firstResults = ( page - 1 ) * MAX_ROWS;
+        final int itemsPerPage = Math.min( perPage, MAX_ROWS );
+
+        final int firstResults = ( page - 1 ) * itemsPerPage;
         idsQuery.setFirstResult( firstResults );
-        idsQuery.setMaxResults( MAX_ROWS );
+        idsQuery.setMaxResults( itemsPerPage );
 
         List<Long> ids = idsQuery.getResultList();
 
+        if ( ids.isEmpty() ) {
+            return PaginatedResult.getEmpty();
+        }
+
         tripsQuery.setParameter( "ids", ids );
-
         List<Trip> trips = tripsQuery.getResultList();
-
-        long total = (Long) countQuery.getSingleResult();
-
-        return new PaginatedResult<>( trips, total, MAX_ROWS, total != 0 && firstResults >= total );
+        final long total = (Long) countQuery.getSingleResult();
+        return new PaginatedResult<>( trips, total, itemsPerPage, page );
     }
 }
