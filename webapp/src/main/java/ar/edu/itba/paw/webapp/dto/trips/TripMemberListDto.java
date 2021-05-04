@@ -4,13 +4,12 @@ import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.webapp.dto.serializers.CollectionSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TripMemberListDto
 {
-    private String role;
-
     @JsonSerialize( using = CollectionSerializer.class )
     private List<TripMemberDto> members;
 
@@ -18,18 +17,12 @@ public class TripMemberListDto
         return members;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole( String role ) {
-        this.role = role;
-    }
-
-    public static TripMemberListDto fromMembersList( List<TripMember> members ) {
+    public static TripMemberListDto fromMembersList( List<TripMember> members, UriInfo uriInfo, long tripId ) {
         TripMemberListDto tripMemberListDto = new TripMemberListDto();
-        tripMemberListDto.members = members.stream().map(
-                tripMember -> TripMemberDto.fromTripMember( tripMember, true, false ) ).collect( Collectors.toList() );
+        tripMemberListDto.members = members.stream()
+                                           .map( tripMember -> TripMemberDto.fromTripMember( tripMember, uriInfo,
+                                                                                             tripId ) )
+                                           .collect( Collectors.toList() );
         return tripMemberListDto;
     }
 }

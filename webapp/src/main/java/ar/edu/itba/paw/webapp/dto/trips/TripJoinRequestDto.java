@@ -1,12 +1,13 @@
 package ar.edu.itba.paw.webapp.dto.trips;
 
 import ar.edu.itba.paw.model.TripJoinRequest;
+import ar.edu.itba.paw.webapp.controller.TripController;
 import ar.edu.itba.paw.webapp.dto.users.UserDto;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @JsonInclude( JsonInclude.Include.NON_NULL )
 public class TripJoinRequestDto
@@ -16,6 +17,8 @@ public class TripJoinRequestDto
     private String message;
     private String status;
     private UserDto user;
+    private URI acceptUri;
+    private URI rejectUri;
 
     public TripJoinRequestDto() {
         //For Jackson
@@ -41,15 +44,32 @@ public class TripJoinRequestDto
         return user;
     }
 
-    public static TripJoinRequestDto fromTripJoinRequest( TripJoinRequest tripJoinRequest, boolean includeUser ) {
+    public URI getAcceptUri() {
+        return acceptUri;
+    }
+
+    public URI getRejectUri() {
+        return rejectUri;
+    }
+
+    public static TripJoinRequestDto fromTripJoinRequest( TripJoinRequest tripJoinRequest, UriInfo uriInfo,
+                                                          long tripId ) {
         TripJoinRequestDto joinRequestDto = new TripJoinRequestDto();
         joinRequestDto.id = tripJoinRequest.getId();
         joinRequestDto.createdOn = tripJoinRequest.getCreatedOn();
         joinRequestDto.message = tripJoinRequest.getMessage();
         joinRequestDto.status = tripJoinRequest.getStatus().name();
+        joinRequestDto.acceptUri = uriInfo.getBaseUriBuilder()
+                                          .path( TripController.class )
+                                          .path( TripController.class, "acceptRequest" )
+                                          .build( tripId, tripJoinRequest.getId() );
+        joinRequestDto.rejectUri = uriInfo.getBaseUriBuilder()
+                                          .path( TripController.class )
+                                          .path( TripController.class, "rejectRequest" )
+                                          .build( tripId, tripJoinRequest.getId() );
 
-        if ( tripJoinRequest.getUser() != null && includeUser ) {
-            joinRequestDto.user = UserDto.fromUser( tripJoinRequest.getUser() );
+        if ( tripJoinRequest.getUser() != null ) {
+            joinRequestDto.user = UserDto.fromUser( tripJoinRequest.getUser(), uriInfo );
         }
 
         return joinRequestDto;

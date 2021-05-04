@@ -34,22 +34,14 @@ public class RateDto
         return rate;
     }
 
-    public TripRate toTripRate() {
-        LocalDateTime createdOn = this.createdOn;
-
-        return new TripRate( this.id, this.rate, createdOn, this.member != null ? this.member.toTripMember() : null );
-    }
-
-    public static RateDto fromTripRate( TripRate tripRate, boolean includeMember ) {
+    public static RateDto fromTripRateWithMember( TripRate tripRate, UriInfo uriInfo, long tripId ) {
         RateDto rateDto = new RateDto();
         rateDto.id = tripRate.getId();
         rateDto.createdOn = tripRate.getCreatedOn();
 
-        if ( includeMember ) {
-            TripMember member = tripRate.getMember();
-            if ( member != null ) {
-                rateDto.member = TripMemberDto.fromTripMember( member, false, false );
-            }
+        TripMember member = tripRate.getMember();
+        if ( member != null ) {
+            rateDto.member = TripMemberDto.fromTripMember( member, uriInfo, tripId );
         }
 
         return rateDto;

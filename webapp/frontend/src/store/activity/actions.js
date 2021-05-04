@@ -21,7 +21,7 @@ export default {
         const activity = {
             ...payload.activity
         };
-        const response = await Axios.put(`/trip/${tripId}/activity`, activity);
+        const response = await Axios.put(`/trip/${tripId}/activity/${activity.id}`, activity);
         const activityUpdated = response.data;
         return activityUpdated;
     },

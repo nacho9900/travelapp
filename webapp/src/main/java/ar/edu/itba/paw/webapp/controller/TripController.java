@@ -135,7 +135,7 @@ public class TripController extends BaseController
                                         tripDto.getStartDate(), tripDto.getEndDate() );
 
         return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( trip.getId() ) ).build() )
-                       .entity( TripDto.fromTrip( trip ) )
+                       .entity( TripDto.fromTrip( trip, uriInfo ) )
                        .build();
     }
 
@@ -150,16 +150,10 @@ public class TripController extends BaseController
             return Response.status( Response.Status.NOT_FOUND ).build();
         }
 
-        TripDto tripDto = TripDto.fromTrip( maybeTrip.get() );
+        TripDto tripDto = TripDto.fromTrip( maybeTrip.get(), uriInfo );
 
         tripMemberService.findByTripIdAndUsername( id, username )
                          .ifPresent( tripMember -> tripDto.setRole( tripMember.getRole().name() ) );
-
-        if ( tripDto.getRole() == null ) {
-            tripJoinRequestService.getLastByTripIdAndUsername( id, username )
-                                  .ifPresent( tripJoinRequest -> tripDto.setUserJoinRequest(
-                                          TripJoinRequestDto.fromTripJoinRequest( tripJoinRequest, false ) ) );
-        }
 
         return Response.ok().entity( tripDto ).build();
     }
@@ -187,7 +181,7 @@ public class TripController extends BaseController
         PaginatedResult<Trip> result = tripService.getAllUserTrips( maybeUser.get(), page, perPage );
 
         return PaginatedResultResponseHelper.makeResponseBuilder( result, uriInfo )
-                                            .entity( TripListDto.fromPaginatedResult( result ) )
+                                            .entity( TripListDto.fromPaginatedResult( result, uriInfo ) )
                                             .build();
     }
 
@@ -227,7 +221,7 @@ public class TripController extends BaseController
         trip = tripService.update( trip, tripUpdates.getName(), tripUpdates.getDescription(),
                                    tripUpdates.getStartDate(), tripUpdates.getEndDate() );
 
-        return Response.ok().entity( TripDto.fromTrip( trip ) ).build();
+        return Response.ok().entity( TripDto.fromTrip( trip, uriInfo ) ).build();
     }
 
     @GET
@@ -296,7 +290,7 @@ public class TripController extends BaseController
         PaginatedResult<Trip> results = tripService.search( text, latitude, longitude, from, to, page, perPage );
 
         return PaginatedResultResponseHelper.makeResponseBuilder( results, uriInfo, myQueryParams )
-                                            .entity( TripListDto.fromPaginatedResult( results ) )
+                                            .entity( TripListDto.fromPaginatedResult( results, uriInfo ) )
                                             .build();
     }
 
@@ -437,7 +431,7 @@ public class TripController extends BaseController
                                                     activityDto.getEndDate(), activityDto.getPlace().toPlace() );
 
         return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( activity.getId() ) ).build() )
-                       .entity( ActivityDto.fromActivity( activity ) )
+                       .entity( ActivityDto.fromActivity( activity, uriInfo, id ) )
                        .build();
     }
 
@@ -452,20 +446,16 @@ public class TripController extends BaseController
             return tripNotFound();
         }
 
-        Trip trip = maybeTrip.get();
-
-        ActivityListDto activities = ActivityListDto.fromActivityList( activityService.findByTrip( id ),
-                                                                       trip.getStartDate(), trip.getEndDate() );
-
-        tripMemberService.findByTripIdAndUsername( id, username )
-                         .ifPresent( tripMember -> activities.setRole( tripMember.getRole().name() ) );
+        ActivityListDto activities = ActivityListDto.fromActivityList( activityService.findByTrip( id ), uriInfo, id );
 
         return Response.ok().entity( activities ).build();
     }
 
     @PUT
-    @Path( "/{id}/activity" )
-    public Response updateActivity( @PathParam( "id" ) long id, @RequestBody ActivityDto activityDto ) {
+    @Path( "/{id}/activity/{activityId}" )
+    public Response updateActivity(
+            @PathParam( "id" ) long id,
+            @PathParam( "activityId" ) long activityId, @RequestBody ActivityDto activityDto ) {
         Set<ConstraintViolation<ActivityDto>> activityValidation = validator.validate( activityDto );
         Set<ConstraintViolation<PlaceDto>> placeValidation = validator.validate( activityDto.getPlace() );
 
@@ -476,7 +466,7 @@ public class TripController extends BaseController
                            .build();
         }
 
-        if ( activityDto.getId() == null ) {
+        if ( activityDto.getId() == null || activityId != activityDto.getId() ) {
             return Response.status( Response.Status.BAD_REQUEST )
                            .entity( new ErrorDto( "the activity does not contains id", "id" ) )
                            .build();
@@ -495,7 +485,7 @@ public class TripController extends BaseController
         activity.setTrip( maybeTrip.get() );
         activity = activityService.update( activity );
 
-        return Response.ok().entity( ActivityDto.fromActivity( activity ) ).build();
+        return Response.ok().entity( ActivityDto.fromActivity( activity, uriInfo, id ) ).build();
     }
 
     @DELETE
@@ -530,11 +520,8 @@ public class TripController extends BaseController
             return tripNotFound();
         }
 
-        TripMemberListDto tripMemberListDto = TripMemberListDto.fromMembersList(
-                tripMemberService.getAllByTripId( id ) );
-
-        tripMemberService.findByTripIdAndUsername( id, username )
-                         .ifPresent( tripMember -> tripMemberListDto.setRole( tripMember.getRole().name() ) );
+        TripMemberListDto tripMemberListDto = TripMemberListDto.fromMembersList( tripMemberService.getAllByTripId( id ),
+                                                                                 uriInfo, id );
 
         return Response.ok().entity( tripMemberListDto ).build();
     }
@@ -598,7 +585,7 @@ public class TripController extends BaseController
             member = tripMemberService.update( member );
         }
 
-        return Response.ok().entity( TripMemberDto.fromTripMember( member, true, false ) ).build();
+        return Response.ok().entity( TripMemberDto.fromTripMember( member, uriInfo, id ) ).build();
     }
 
     @PUT
@@ -621,7 +608,7 @@ public class TripController extends BaseController
         TripRate rateEntity = maybeLoggedMember.get().getRate();
         rateEntity.setRate( rate );
         rateEntity = tripMemberService.update( maybeLoggedMember.get() ).getRate();
-        return Response.ok().entity( RateDto.fromTripRate( rateEntity, false ) ).build();
+        return Response.ok().entity( RateDto.fromTripRateWithMember( rateEntity, uriInfo, id ) ).build();
     }
 
     @POST
@@ -704,7 +691,7 @@ public class TripController extends BaseController
                                                                                 getFrontendUrl(),
                                                                                 httpRequest.getLocale() ) );
 
-        return Response.ok().entity( TripJoinRequestDto.fromTripJoinRequest( request, false ) ).build();
+        return Response.ok().entity( TripJoinRequestDto.fromTripJoinRequest( request, uriInfo, id ) ).build();
     }
 
     @GET
@@ -724,7 +711,8 @@ public class TripController extends BaseController
         List<TripJoinRequest> joinRequests = tripJoinRequestService.getAllPendingByTripId( id );
 
         return Response.ok()
-                       .entity( joinRequests.stream().map( x -> TripJoinRequestDto.fromTripJoinRequest( x, true ) ) )
+                       .entity( joinRequests.stream()
+                                            .map( x -> TripJoinRequestDto.fromTripJoinRequest( x, uriInfo, id ) ) )
                        .build();
     }
 
@@ -767,7 +755,7 @@ public class TripController extends BaseController
             }
         } );
 
-        return Response.ok().entity( TripMemberDto.fromTripMember( tripMember, false, false ) ).build();
+        return Response.ok().entity( TripMemberDto.fromTripMember( tripMember, uriInfo, id ) ).build();
     }
 
     @POST
@@ -817,7 +805,7 @@ public class TripController extends BaseController
         TripComment comment = tripCommentsService.create( maybeMember.get(), commentDto.getComment() );
 
         return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( comment.getId() ) ).build() )
-                       .entity( CommentDto.fromComment( comment, true ) )
+                       .entity( CommentDto.fromCommentWithMember( comment, uriInfo, id ) )
                        .build();
     }
 
@@ -834,7 +822,7 @@ public class TripController extends BaseController
 
         List<TripComment> comments = tripCommentsService.getAllByTripId( id );
 
-        return Response.ok().entity( CommentListDto.fromMemberAndComments( member.get(), comments ) ).build();
+        return Response.ok().entity( CommentListDto.fromComments( comments, uriInfo, id ) ).build();
     }
 
     //endregion

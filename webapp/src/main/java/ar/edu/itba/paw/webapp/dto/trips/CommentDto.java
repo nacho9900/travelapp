@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.UriInfo;
 import java.time.LocalDateTime;
 
 @JsonInclude( JsonInclude.Include.NON_NULL )
@@ -41,24 +42,15 @@ public class CommentDto
         return member;
     }
 
-    public TripComment toTripComment() {
-        LocalDateTime createdOn = this.createdOn;
-
-        return new TripComment( this.id, this.member != null ? this.member.toTripMember() : null, this.comment,
-                                createdOn );
-    }
-
-    public static CommentDto fromComment( TripComment tripComment, boolean includeMember ) {
+    public static CommentDto fromCommentWithMember( TripComment tripComment, UriInfo uriInfo, long tripId ) {
         CommentDto commentDto = new CommentDto();
         commentDto.id = tripComment.getId();
         commentDto.comment = tripComment.getComment();
         commentDto.createdOn = tripComment.getCreatedOn();
 
-        if ( includeMember ) {
-            TripMember tripMember = tripComment.getMember();
-            if ( tripMember != null ) {
-                commentDto.member = TripMemberDto.fromTripMember( tripMember, false, false );
-            }
+        TripMember tripMember = tripComment.getMember();
+        if ( tripMember != null ) {
+            commentDto.member = TripMemberDto.fromTripMember( tripMember, uriInfo, tripId );
         }
 
         return commentDto;

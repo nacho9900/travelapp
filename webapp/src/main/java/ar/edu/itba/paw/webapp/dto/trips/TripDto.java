@@ -1,14 +1,16 @@
 package ar.edu.itba.paw.webapp.dto.trips;
 
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.webapp.controller.TripController;
 import ar.edu.itba.paw.webapp.dto.validators.Future;
 import ar.edu.itba.paw.webapp.dto.validators.TripConstraint;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.time.LocalDate;
 
 @TripConstraint
@@ -29,7 +31,12 @@ public class TripDto
     @NotNull
     @Future
     private LocalDate endDate;
-    private TripJoinRequestDto userJoinRequest;
+    private URI tripUri;
+    private URI tripCommentsUri;
+    private URI tripActivitiesUri;
+    private URI tripMembersUri;
+    private URI tripJoinRequestUri;
+    private URI tripPictureUri;
 
     public TripDto() {
         //For Jackson
@@ -55,12 +62,28 @@ public class TripDto
         return endDate;
     }
 
-    public TripJoinRequestDto getUserJoinRequest() {
-        return userJoinRequest;
+    public URI getTripUri() {
+        return tripUri;
     }
 
-    public void setUserJoinRequest( TripJoinRequestDto userJoinRequest ) {
-        this.userJoinRequest = userJoinRequest;
+    public URI getTripCommentsUri() {
+        return tripCommentsUri;
+    }
+
+    public URI getTripActivitiesUri() {
+        return tripActivitiesUri;
+    }
+
+    public URI getTripMembersUri() {
+        return tripMembersUri;
+    }
+
+    public URI getTripJoinRequestUri() {
+        return tripJoinRequestUri;
+    }
+
+    public URI getTripPictureUri() {
+        return tripPictureUri;
     }
 
     public String getRole() {
@@ -108,13 +131,37 @@ public class TripDto
         return trip;
     }
 
-    public static TripDto fromTrip( Trip trip ) {
+    public static TripDto fromTrip( Trip trip, UriInfo uriInfo ) {
         TripDto tripDto = new TripDto();
         tripDto.id = trip.getId();
         tripDto.name = trip.getName();
         tripDto.startDate = trip.getStartDate();
         tripDto.endDate = trip.getEndDate();
         tripDto.description = trip.getDescription();
+        tripDto.tripUri = uriInfo.getBaseUriBuilder()
+                                 .path( TripController.class )
+                                 .path( TripController.class, "get" )
+                                 .build( trip.getId() );
+        tripDto.tripCommentsUri = uriInfo.getBaseUriBuilder()
+                                         .path( TripController.class )
+                                         .path( TripController.class, "getAllComments" )
+                                         .build( trip.getId() );
+        tripDto.tripActivitiesUri = uriInfo.getBaseUriBuilder()
+                                           .path( TripController.class )
+                                           .path( TripController.class, "getActivities" )
+                                           .build( trip.getId() );
+        tripDto.tripMembersUri = uriInfo.getBaseUriBuilder()
+                                        .path( TripController.class )
+                                        .path( TripController.class, "getAllMembers" )
+                                        .build( trip.getId() );
+        tripDto.tripJoinRequestUri = uriInfo.getBaseUriBuilder()
+                                            .path( TripController.class )
+                                            .path( TripController.class, "getAllJoinRequest" )
+                                            .build( trip.getId() );
+        tripDto.tripPictureUri = uriInfo.getBaseUriBuilder()
+                                        .path( TripController.class )
+                                        .path( TripController.class, "getPicture" )
+                                        .build( trip.getId() );
 
         return tripDto;
     }

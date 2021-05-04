@@ -78,8 +78,8 @@ public class AuthenticationController extends BaseController
 
         return Response.created( uriInfo.getBaseUriBuilder()
                                         .path( UsersController.class )
-                                        .path( Long.toString( user.getId() ) )
-                                        .build() ).entity( UserDto.fromUser( user ) ).build();
+                                        .path( UsersController.class, "get" )
+                                        .build( user.getId() ) ).entity( UserDto.fromUser( user, uriInfo ) ).build();
     }
 
     @POST

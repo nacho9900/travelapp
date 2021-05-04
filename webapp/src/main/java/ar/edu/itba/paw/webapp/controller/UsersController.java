@@ -88,7 +88,7 @@ public class UsersController
                                         userUpdates.getBirthday(), userUpdates.getNationality(),
                                         userUpdates.getBiography() );
 
-        return Response.ok().entity( UserDto.fromUser( user ) ).build();
+        return Response.ok().entity( UserDto.fromUser( user, uriInfo ) ).build();
     }
 
     @GET
@@ -104,7 +104,7 @@ public class UsersController
             return Response.status( Response.Status.UNAUTHORIZED ).build();
         }
 
-        return Response.ok().entity( maybeLoggedUser.map( UserDto::fromUser ) ).build();
+        return Response.ok().entity( maybeLoggedUser.map( x -> UserDto.fromUser( x, uriInfo ) ) ).build();
     }
 
     @POST

@@ -1,12 +1,15 @@
 package ar.edu.itba.paw.webapp.dto.users;
 
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.webapp.controller.UsersController;
 import ar.edu.itba.paw.webapp.dto.validators.Past;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.time.LocalDate;
 
 public class UserDto
@@ -28,6 +31,9 @@ public class UserDto
     @NotNull
     @Past
     private LocalDate birthday;
+    private URI userUri;
+    private URI userPictureUri;
+    private URI changePasswordUri;
 
     public Long getId() {
         return id;
@@ -57,6 +63,18 @@ public class UserDto
         return birthday;
     }
 
+    public URI getUserUri() {
+        return userUri;
+    }
+
+    public URI getUserPictureUri() {
+        return userPictureUri;
+    }
+
+    public URI getChangePasswordUri() {
+        return changePasswordUri;
+    }
+
     public UserDto() {
         //For Jackson
     }
@@ -68,7 +86,7 @@ public class UserDto
                          this.biography );
     }
 
-    public static UserDto fromUser( User user ) {
+    public static UserDto fromUser( User user, UriInfo uriInfo ) {
         UserDto userDto = new UserDto();
 
         userDto.id = user.getId();
@@ -78,6 +96,19 @@ public class UserDto
         userDto.nationality = user.getNationality();
         userDto.biography = user.getBiography();
         userDto.birthday = user.getBirthday();
+
+        userDto.userUri = uriInfo.getBaseUriBuilder()
+                                 .path( UsersController.class )
+                                 .path( UsersController.class, "get" )
+                                 .build( user.getId() );
+        userDto.userPictureUri = uriInfo.getBaseUriBuilder()
+                                        .path( UsersController.class )
+                                        .path( UsersController.class, "getPicture" )
+                                        .build( user.getId() );
+        userDto.changePasswordUri = uriInfo.getBaseUriBuilder()
+                                           .path( UsersController.class )
+                                           .path( UsersController.class, "changePassword" )
+                                           .build( user.getId() );
 
         return userDto;
     }
