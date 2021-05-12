@@ -70,6 +70,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 @Path( "/trip" )
@@ -512,23 +514,37 @@ public class TripController extends BaseController
 
     @GET
     @Path( "/{id}/member" )
-    public Response getAllMembers( @PathParam( "id" ) long id ) {
+    public Response getAllMembers( @PathParam( "id" ) long id, @QueryParam( "email" ) String email ) {
         Optional<Trip> maybeTrip = tripService.findById( id );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if ( !maybeTrip.isPresent() || !tripService.isUserMember( id, username ) ) {
-            return tripNotFound();
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
         }
 
-        TripMemberListDto tripMemberListDto = TripMemberListDto.fromMembersList( tripMemberService.getAllByTripId( id ),
-                                                                                 uriInfo, id );
+        TripMemberListDto tripMemberListDto;
+
+        if ( email != null && !email.isEmpty() ) {
+            Optional<TripMember> maybeTripMember = tripMemberService.findByTripIdAndUsername( id, email );
+
+            tripMemberListDto = maybeTripMember.map( tripMember -> TripMemberListDto.fromMembersList(
+                    Stream.of( tripMember ).collect( Collectors.toList() ), uriInfo, id ) )
+                                               .orElseGet( () -> TripMemberListDto.fromMembersList( new LinkedList<>(),
+                                                                                                    uriInfo, id ) );
+        }
+        else {
+            tripMemberListDto = TripMemberListDto.fromMembersList( tripMemberService.getAllByTripId( id ), uriInfo,
+                                                                   id );
+        }
 
         return Response.ok().entity( tripMemberListDto ).build();
     }
 
     @DELETE
     @Path( "/{id}/member/{memberId}" )
-    public Response deleteMember( @PathParam( "id" ) long id, @PathParam( "memberId" ) long memberId ) {
+    public Response deleteMember(
+            @PathParam( "id" ) long id,
+            @PathParam( "memberId" ) long memberId, @Context HttpServletRequest httpRequest ) {
         Optional<Trip> maybeTrip = tripService.findById( id );
         Optional<TripMember> maybeMember = tripMemberService.findById( memberId );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -539,12 +555,22 @@ public class TripController extends BaseController
             return Response.status( Response.Status.NO_CONTENT ).build();
         }
 
-        if ( maybeLoggedMember.get().getRole() == TripMemberRole.MEMBER ||
-             maybeMember.get().getRole() == TripMemberRole.OWNER ) {
-            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        TripMember loggedMember = maybeLoggedMember.get();
+        TripMember member = maybeMember.get();
+
+        if ( member.getRole().equals( TripMemberRole.OWNER ) ||
+             ( !loggedMember.getRole().equals( TripMemberRole.OWNER ) && member.getId() != loggedMember.getId() ) ) {
+            return Response.status( Response.Status.FORBIDDEN ).build();
         }
 
         tripMemberService.delete( memberId );
+
+        //TODO: Meter esto adentro del delete
+        tripMemberService.getAllByTripId( id ).forEach( x -> {
+            mailingService.exitTripEmail( member.getUser().getFullName(), x.getUser().getFullName(),
+                                          x.getUser().getEmail(), id, maybeTrip.get().getName(), getFrontendUrl(),
+                                          httpRequest.getLocale() );
+        } );
 
         return Response.ok().build();
     }
@@ -611,37 +637,6 @@ public class TripController extends BaseController
         return Response.ok().entity( RateDto.fromTripRateWithMember( rateEntity, uriInfo, id ) ).build();
     }
 
-    @POST
-    @Path( "/{id}/exit" )
-    public Response exitTrip( @PathParam( "id" ) long id, @Context HttpServletRequest httpRequest ) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        Optional<Trip> maybeTrip = tripService.findById( id );
-        Optional<TripMember> maybeMember = tripMemberService.findByTripIdAndUsername( id, username );
-
-        if ( !maybeMember.isPresent() || !maybeTrip.isPresent() ) {
-            return tripNotFound();
-        }
-
-        TripMember member = maybeMember.get();
-
-        if ( member.getRole().equals( TripMemberRole.OWNER ) ) {
-            return Response.status( Response.Status.CONFLICT )
-                           .entity( new ErrorDto( "the owner of the trip cannot exit" ) )
-                           .build();
-        }
-
-        tripMemberService.delete( member.getId() );
-
-        tripMemberService.getAllByTripId( id ).forEach( x -> {
-            mailingService.exitTripEmail( member.getUser().getFullName(), x.getUser().getFullName(),
-                                          x.getUser().getEmail(), id, maybeTrip.get().getName(), getFrontendUrl(),
-                                          httpRequest.getLocale() );
-        } );
-
-        return Response.ok().build();
-    }
-
     //endregion
 
     //region joinrequest
@@ -696,7 +691,7 @@ public class TripController extends BaseController
 
     @GET
     @Path( "/{id}/join" )
-    public Response getAllJoinRequest( @PathParam( "id" ) long id ) {
+    public Response getAllJoinRequest( @PathParam( "id" ) long id, @QueryParam( "email" ) String email ) {
         Optional<Trip> maybeTrip = tripService.findById( id );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -704,11 +699,19 @@ public class TripController extends BaseController
             return tripNotFound();
         }
 
-        if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
+        if ( !tripService.isUserOwnerOrAdmin( id, username ) && ( email == null || email.isEmpty() ) ) {
             return Response.status( Response.Status.UNAUTHORIZED ).build();
         }
 
         List<TripJoinRequest> joinRequests = tripJoinRequestService.getAllPendingByTripId( id );
+
+        if ( email != null && !email.isEmpty() ) {
+            return Response.ok()
+                           .entity( joinRequests.stream()
+                                                .filter( x -> !x.getUser().getEmail().equals( email ) )
+                                                .map( x -> TripJoinRequestDto.fromTripJoinRequest( x, uriInfo, id ) ) )
+                           .build();
+        }
 
         return Response.ok()
                        .entity( joinRequests.stream()

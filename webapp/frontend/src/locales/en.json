@@ -94,7 +94,8 @@
       "trip": "Trip",
       "activities": "Activities",
       "members": "Members",
-      "comments": "Comments"
+      "comments": "Comments",
+      "error": "There was an error trying to get your trip. Please, try again later."
     },
     "trips": {
       "trip_not_found": {

@@ -46,10 +46,7 @@ import { requiredRule } from "../../rules.js";
 
 export default {
 	props: {
-		tripId: {
-			required: true,
-			type: String,
-		},
+		url: String,
 	},
 	data() {
 		return {
@@ -65,7 +62,7 @@ export default {
 
 				try {
 					const data = {
-						tripId: this.tripId,
+						url: this.url,
 						comment: this.comment,
 					};
 

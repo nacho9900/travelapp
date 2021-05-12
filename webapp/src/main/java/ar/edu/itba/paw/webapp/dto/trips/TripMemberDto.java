@@ -48,6 +48,10 @@ public class TripMemberDto
         return role;
     }
 
+    public URI getMemberUri() {
+        return memberUri;
+    }
+
     public static TripMemberDto fromTripMember( TripMember tripMember, UriInfo uriInfo, long tripId ) {
         TripMemberDto tripMemberDto = new TripMemberDto();
         tripMemberDto.id = tripMember.getId();

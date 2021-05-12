@@ -1,6 +1,6 @@
 <template>
 	<v-card>
-		<error-dialog v-model="showError" :error="error"></error-dialog>
+		<simple-error-dialog v-model="error"></simple-error-dialog>
 		<v-dialog v-model="formDialog" :persistent="loadingAction" width="500">
 			<trip-activity-form
 				@submit="submitActivityForm"
@@ -66,7 +66,6 @@
 import TripActivitiesMap from "components/activity/TripActivitiesMap.vue";
 import TripActivitiesList from "components/activity/TripActivitiesList.vue";
 import TripActivityForm from "components/activity/TripActivityForm.vue";
-import { memberRoles } from "../../enums.js";
 
 export default {
 	components: {
@@ -75,14 +74,14 @@ export default {
 		TripActivityForm,
 	},
 	props: {
-		tripId: String,
+		url: String,
+		from: String,
+		to: String,
+		role: Object,
 	},
 	data() {
 		return {
 			activities: [],
-			role: null,
-			from: "",
-			to: "",
 			createDialog: false,
 			loadingAction: false,
 			loadingDelete: false,
@@ -93,14 +92,6 @@ export default {
 		};
 	},
 	computed: {
-		showError: {
-			get() {
-				return !!this.error;
-			},
-			set() {
-				this.error = null;
-			},
-		},
 		editDialog: {
 			get() {
 				return !!this.activityToEdit;
@@ -150,7 +141,7 @@ export default {
 				const activityCreated = await this.$store.dispatch(
 					"activity/create",
 					{
-						tripId: this.tripId,
+						url: this.url,
 						activity: {
 							...activity,
 						},
@@ -169,13 +160,13 @@ export default {
 			const activityToUpdate = {
 				...activity,
 				id: this.activityToEdit.id,
+				activityUri: this.activityToEdit.activityUri,
 			};
 
 			try {
 				const activityUpdated = await this.$store.dispatch(
 					"activity/update",
 					{
-						tripId: this.tripId,
 						activity: activityToUpdate,
 					}
 				);
@@ -196,7 +187,6 @@ export default {
 
 			try {
 				await this.$store.dispatch("activity/delete", {
-					tripId: this.tripId,
 					activity: this.activityToRemove,
 				});
 
@@ -216,18 +206,11 @@ export default {
 			this.loading = true;
 
 			try {
-				const activities = await this.$store.dispatch(
-					"activity/getByTrip",
-					{
-						tripId: this.tripId,
-					}
-				);
+				const activities = await this.$store.dispatch("activity/get", {
+					url: this.url,
+				});
 
 				this.activities = activities.activities;
-				this.from = activities.from;
-				this.to = activities.to;
-				const role = activities.role;
-				this.setRole(role);
 			} catch (error) {
 				this.error = this.$t(
 					"components.trips.trip_activities.get_activities_error"
@@ -235,11 +218,6 @@ export default {
 			}
 
 			this.loading = false;
-		},
-		setRole(role) {
-			if (role) {
-				this.role = memberRoles.find((x) => x.value === role);
-			}
 		},
 		exit() {
 			this.getActivities();

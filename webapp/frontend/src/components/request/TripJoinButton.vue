@@ -38,9 +38,8 @@ export default {
 		TripJoinForm,
 	},
 	props: {
-		id: Number,
-		status: String,
-		member: Boolean,
+		memberUrl: String,
+		joinUrl: String,
 	},
 	data() {
 		return {
@@ -81,7 +80,7 @@ export default {
 			}
 		},
 		hasMember() {
-			return !!this.member;
+			return !!this.memberUrl;
 		},
 		canJoin() {
 			return !this.status || this.status !== "PENDING";
@@ -89,7 +88,7 @@ export default {
 	},
 	methods: {
 		click() {
-			if (this.member) {
+			if (this.hasMember) {
 				this.exitDialog = true;
 			} else {
 				this.joinDialog = true;

@@ -4,16 +4,7 @@
 		<delete-dialog
 			v-model="deleteMemberDialog"
 			:title="$t('components.trips.trip_member_card.delete_dialog_title')"
-			:message="
-				deleteMemberDialog
-					? $t(
-							'components.trips.trip_member_card.delete_dialog_message'
-					) +
-					memberToDelete.user.firstname +
-					' ' +
-					memberToDelete.user.lastname
-					: ''
-			"
+			:message="deleteMemberMessage"
 			:loading="memberDeleteLoading"
 			@remove="deleteMember"
 			@cancel="memberToDelete = null"
@@ -37,7 +28,7 @@
 								v-if="isMember || loading"
 								:members="members"
 								:loading="loading"
-								:actions="showActions"
+								:actions="canEditMember"
 								@delete="setMemberToDelete"
 							></trip-member-list>
 							<v-alert class="mt-10" type="info" v-else>
@@ -93,7 +84,6 @@
 <script>
 import TripMemberList from "components/member/TripMemberList.vue";
 import TripJoinRequestList from "components/request/TripJoinRequestList.vue";
-import { memberRoles } from "../../enums.js";
 
 export default {
 	components: {
@@ -101,20 +91,17 @@ export default {
 		TripJoinRequestList,
 	},
 	props: {
-		tripId: {
-			required: true,
-			type: String,
-		},
+		membersUrl: String,
+		joinRequestUrl: String,
+		role: Object,
 	},
 	data() {
 		return {
 			members: [],
 			requests: [],
-			role: null,
 			loading: false,
 			error: null,
 			loadingRequests: false,
-			memberRoles,
 			memberToDelete: null,
 			memberDeleteLoading: false,
 		};
@@ -123,14 +110,33 @@ export default {
 		isMember() {
 			return !!this.role;
 		},
-		showActions() {
-			return this.isMember && this.role.canEditMember;
-		},
 		canEditMember() {
-			return !!this.role && this.role.canEditMember;
+			return this.role?.canEditMember;
 		},
 		deleteMemberDialog() {
 			return !!this.memberToDelete;
+		},
+		memberToDeleteName() {
+			if (!this.memberToDelete) {
+				return "";
+			}
+
+			return (
+				this.memberToDelete.user.firstname +
+				" " +
+				this.memberToDelete.user.lastname
+			);
+		},
+		deleteMemberMessage() {
+			if (!this.deleteMemberDialog) {
+				return "";
+			}
+
+			return (
+				this.$t(
+					"components.trips.trip_member_card.delete_dialog_message"
+				) + this.memberToDeleteName
+			);
 		},
 	},
 	methods: {
@@ -139,11 +145,9 @@ export default {
 
 			try {
 				const members = await this.$store.dispatch("member/getAll", {
-					tripId: this.tripId,
+					url: this.membersUrl,
 				});
 				this.members = members.members;
-				const role = members.role;
-				this.setRole(role);
 			} catch (error) {
 				if (!this.error?.response?.status === 404) {
 					this.error = this.$t(
@@ -160,7 +164,7 @@ export default {
 			try {
 				this.requests = await this.$store.dispatch(
 					"request/getAllPending",
-					{ tripId: this.tripId }
+					{ url: this.joinRequestUrl }
 				);
 			} catch (error) {
 				if (!this.error?.response?.status == 401) {
@@ -171,11 +175,6 @@ export default {
 			}
 
 			this.loadingRequests = false;
-		},
-		setRole(role) {
-			if (role) {
-				this.role = memberRoles.find((x) => x.value === role);
-			}
 		},
 		accept(data) {
 			const id = data.id;
@@ -199,8 +198,7 @@ export default {
 
 			try {
 				await this.$store.dispatch("member/delete", {
-					id: this.memberToDelete.id,
-					tripId: this.tripId,
+					url: this.memberToDelete.memberUri,
 				});
 				this.members = this.members.filter(
 					(x) => x.id !== this.memberToDelete.id

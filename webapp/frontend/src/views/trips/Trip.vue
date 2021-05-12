@@ -1,5 +1,6 @@
 <template>
 	<v-container fluid>
+		<simple-error-dialog v-model="error"></simple-error-dialog>
 		<v-row justify="center">
 			<v-col cols="12" md="6">
 				<v-card>
@@ -20,11 +21,6 @@
 									<v-col cols="12" class="px-0 pt-0">
 										<trip-card
 											:id="tripId"
-											@notFound="
-												$router.replace({
-													name: 'TripNotFound',
-												})
-											"
 											@exit="exit"
 											:actions="true"
 										></trip-card>
@@ -34,13 +30,19 @@
 						</v-tab-item>
 						<v-tab-item>
 							<trip-activities
-								:tripId="tripId"
+								v-if="trip"
+								:url="trip.tripActivitiesUri"
+								:from="trip.startDate"
+								:to="trip.endDate"
+								:role="role"
 								ref="activities"
 							></trip-activities>
 						</v-tab-item>
 						<v-tab-item>
 							<trip-members
-								:tripId="tripId"
+								v-if="trip"
+								:membersUrl="trip.tripMembersUri"
+								:joinRequestUrl="trip.tripJoinRequestUri"
 								ref="members"
 							></trip-members>
 						</v-tab-item>
@@ -58,8 +60,10 @@
 						<v-tab>{{ $t("views.trip.comments") }}</v-tab>
 						<v-tab-item>
 							<trip-comments
+								v-if="trip"
+								:url="trip.tripCommentsUri"
+								:role="role"
 								ref="comments"
-								:id="tripId"
 							></trip-comments>
 						</v-tab-item>
 					</v-tabs>
@@ -74,6 +78,7 @@ import TripCard from "components/trips/TripCard.vue";
 import TripActivities from "components/activity/TripActivities.vue";
 import TripMembers from "components/member/TripMembers.vue";
 import TripComments from "components/comment/TripComments.vue";
+import { memberRoles } from "../../enums.js";
 
 export default {
 	components: {
@@ -91,9 +96,46 @@ export default {
 	data() {
 		return {
 			tripId: this.id,
+			trip: null,
+			member: null,
+			loading: false,
+			error: null,
 		};
 	},
+	computed: {
+		role() {
+			return !this.member
+				? null
+				: memberRoles.find((x) => x.value === this.member.role);
+		},
+	},
 	methods: {
+		async get() {
+			this.loading = true;
+
+			try {
+				this.trip = await this.$store.dispatch("trip/get", {
+					tripId: this.id,
+				});
+
+				const membersUrl = this.trip.tripMembersUri;
+
+				const members = await this.$store.dispatch(
+					"member/checkIfUserIsMember",
+					{ url: membersUrl }
+				);
+
+				this.member = members?.members[0];
+			} catch (error) {
+				if (error?.response?.status === 404) {
+					await this.$router.replace({ name: "TripNotFound" });
+				} else {
+					this.error = this.$t("views.trip.error");
+				}
+			}
+
+			this.loading = false;
+		},
 		exit() {
 			if (this.$refs.comments) {
 				this.$refs.comments.exit();
@@ -107,6 +149,9 @@ export default {
 				this.$refs.members.exit();
 			}
 		},
+	},
+	created() {
+		this.get();
 	},
 };
 </script>

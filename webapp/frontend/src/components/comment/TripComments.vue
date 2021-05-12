@@ -1,14 +1,14 @@
 <template>
-	<v-container  fluid class="pb-0">
-		<v-row v-if="!unauthorized">
+	<v-container fluid class="pb-0">
+		<v-row v-if="canComment">
 			<v-col cols="12" class="pt-5 pb-0">
 				<trip-new-comment-box
-					:tripId="id"
+					:url="url"
 					@created="addComment"
 				></trip-new-comment-box>
 			</v-col>
 		</v-row>
-		<v-row v-if="!unauthorized">
+		<v-row v-if="canViewComments">
 			<v-col cols="12" class="px-0">
 				<trip-comments-timeline
 					:comments="comments"
@@ -16,12 +16,12 @@
 				></trip-comments-timeline>
 			</v-col>
 		</v-row>
-		<v-row v-if="unauthorized">
+		<v-row v-if="!canViewComments">
 			<v-col cols="12">
 				<v-alert type="info">
-						{{ $t("components.trips.trip_commments.unauthorized")}}
-					</v-alert>	
-			</v-col>	
+					{{ $t("components.trips.trip_commments.unauthorized") }}
+				</v-alert>
+			</v-col>
 		</v-row>
 	</v-container>
 </template>
@@ -32,23 +32,22 @@ import TripNewCommentBox from "components/comment/TripNewCommentBox.vue";
 
 export default {
 	props: {
-		id: {
-			required: true,
-			type: String,
-		},
+		url: String,
+		role: Object,
 	},
 	data() {
 		return {
 			comments: [],
 			loading: false,
 			error: null,
-			member: null,
-			unauthorized: false,
 		};
 	},
 	computed: {
-		hasMember() {
-			return !!this.member;
+		canComment() {
+			return this.role?.canComment;
+		},
+		canViewComments() {
+			return this.role?.canViewComments;
 		},
 	},
 	methods: {
@@ -60,17 +59,14 @@ export default {
 
 			try {
 				const data = await this.$store.dispatch("comment/getAll", {
-					tripId: this.id,
+					url: this.url,
 				});
 				this.comments = data.comments;
-				this.member = data.member;
 			} catch (error) {
 				if (error?.response?.status !== 401) {
 					this.error = this.$t(
 						"components.trips.trip_commments.get_error"
 					);
-				} else {
-					this.unauthorized = true;
 				}
 			}
 
@@ -78,14 +74,16 @@ export default {
 		},
 		exit() {
 			this.getAll();
-		}
+		},
 	},
 	components: {
 		TripCommentsTimeline,
 		TripNewCommentBox,
 	},
 	created() {
-		this.getAll();
+		if (this.canViewComments) {
+			this.getAll();
+		}
 	},
 };
 </script>
