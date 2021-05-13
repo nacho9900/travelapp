@@ -187,7 +187,6 @@ export default {
 			this.$emit("joined", request);
 		},
 		exit() {
-			this.role = null;
 			this.$emit("exit");
 		},
 	},

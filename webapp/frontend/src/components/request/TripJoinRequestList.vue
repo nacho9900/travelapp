@@ -22,11 +22,12 @@
 			<v-col cols="12" v-for="request in requests" :key="request.id">
 				<trip-join-request-card
 					:id="request.id"
-					:tripId="tripId"
 					:firstname="request.user.firstname"
 					:lastname="request.user.lastname"
 					:biography="request.user.biography"
 					:message="request.message"
+					:acceptUrl="request.acceptUri"
+					:rejectUrl="request.rejectUri"
 					@accept="accept"
 					@reject="reject"
 				>
@@ -41,7 +42,6 @@ import TripJoinRequestCard from "components/request/TripJoinRequestCard.vue";
 export default {
 	components: { TripJoinRequestCard },
 	props: {
-		tripId: String,
 		requests: Array,
 		loading: Boolean,
 	},

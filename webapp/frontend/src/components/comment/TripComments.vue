@@ -80,10 +80,12 @@ export default {
 		TripCommentsTimeline,
 		TripNewCommentBox,
 	},
-	created() {
-		if (this.canViewComments) {
-			this.getAll();
-		}
+	watch: {
+		role() {
+			if (this.canViewComments) {
+				this.getAll();
+			}
+		},
 	},
 };
 </script>

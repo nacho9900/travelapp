@@ -13,7 +13,7 @@
 					>
 						<v-tab> {{ $t("views.trip.trip") }}</v-tab>
 						<v-tab>{{ $t("views.trip.activities") }}</v-tab>
-						<v-tab>{{ $t("views.trip.members") }}</v-tab>
+						<v-tab v-if="member">{{ $t("views.trip.members") }}</v-tab>
 						<v-tabs-slider color="secondary"></v-tabs-slider>
 						<v-tab-item>
 							<v-container fluid>
@@ -47,6 +47,7 @@
 								v-if="trip"
 								:membersUrl="trip.tripMembersUri"
 								:joinRequestUrl="trip.tripJoinRequestUri"
+								:role="role"
 								ref="members"
 							></trip-members>
 						</v-tab-item>
@@ -156,6 +157,8 @@ export default {
 			this.request = requests[0];
 		},
 		exit() {
+			this.member = null;
+
 			if (this.$refs.comments) {
 				this.$refs.comments.exit();
 			}

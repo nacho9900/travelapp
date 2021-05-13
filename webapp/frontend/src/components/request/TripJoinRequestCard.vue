@@ -30,11 +30,12 @@
 export default {
 	props: {
 		id: Number,
-		tripId: String,
 		firstname: String,
 		lastname: String,
 		biography: String,
 		message: String,
+		acceptUrl: String,
+		rejectUrl: String,
 	},
 	data() {
 		return {
@@ -53,8 +54,7 @@ export default {
 
 			try {
 				const member = await this.$store.dispatch("request/accept", {
-					tripId: this.tripId,
-					id: this.id,
+					url: this.acceptUrl,
 				});
 				this.$emit("accept", { id: this.id, member: member });
 			} catch (error) {
@@ -70,8 +70,7 @@ export default {
 
 			try {
 				await this.$store.dispatch("request/reject", {
-					tripId: this.tripId,
-					id: this.id,
+					url: this.rejectUrl
 				});
 				this.$emit("reject", { id: this.id });
 			} catch (error) {

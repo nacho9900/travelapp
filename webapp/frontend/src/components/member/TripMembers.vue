@@ -60,7 +60,6 @@
 						<v-expansion-panel-content>
 							<trip-join-request-list
 								v-if="canEditMember"
-								:tripId="tripId"
 								:requests="requests"
 								:loading="loadingRequests"
 								@accept="accept"
