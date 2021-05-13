@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.webapp.config.JacksonObjectMapperProvider;
 import ar.edu.itba.paw.webapp.dto.authentication.AuthDto;
 import ar.edu.itba.paw.webapp.dto.authentication.AuthRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.interfaces;
 
 
-import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.PaginatedResult;
+import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.User;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Optional;
 
 public interface TripService
 {

@@ -1,21 +1,15 @@
 package ar.edu.itba.paw.webapp.dto.trips;
 
-import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripMemberRole;
-import ar.edu.itba.paw.model.TripRate;
 import ar.edu.itba.paw.webapp.controller.TripController;
-import ar.edu.itba.paw.webapp.dto.serializers.CollectionSerializer;
 import ar.edu.itba.paw.webapp.dto.users.UserDto;
 import ar.edu.itba.paw.webapp.dto.validators.StringEnumConstraint;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @JsonInclude( JsonInclude.Include.NON_NULL )
 public class TripMemberDto

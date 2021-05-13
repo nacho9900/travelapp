@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripRateDao;
-import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripRate;
 import org.springframework.stereotype.Repository;

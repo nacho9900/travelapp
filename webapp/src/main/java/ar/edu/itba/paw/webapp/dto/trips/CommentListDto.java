@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.dto.trips;
 
 import ar.edu.itba.paw.model.TripComment;
-import ar.edu.itba.paw.model.TripMember;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.List;

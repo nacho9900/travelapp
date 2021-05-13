@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.utils;
 
 import ar.edu.itba.paw.model.PaginatedResult;
-import org.glassfish.jersey.server.Uri;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;

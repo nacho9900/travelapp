@@ -2,11 +2,9 @@ package ar.edu.itba.paw.webapp.dto.trips;
 
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.webapp.dto.serializers.CollectionSerializer;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.ws.rs.core.UriInfo;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 

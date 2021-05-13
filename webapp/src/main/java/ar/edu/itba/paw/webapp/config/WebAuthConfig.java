@@ -2,8 +2,8 @@ package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.webapp.auth.JwtAuthenticationService;
-import ar.edu.itba.paw.webapp.filter.JwtTokenFilter;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
+import ar.edu.itba.paw.webapp.filter.JwtTokenFilter;
 import ar.edu.itba.paw.webapp.filter.LoginFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

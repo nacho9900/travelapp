@@ -1,13 +1,17 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.interfaces.*;
-import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.interfaces.TripDao;
+import ar.edu.itba.paw.interfaces.TripMemberService;
+import ar.edu.itba.paw.interfaces.TripService;
+import ar.edu.itba.paw.model.PaginatedResult;
+import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Optional;
 
 @Service
 @Transactional

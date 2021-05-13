@@ -1,8 +1,5 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.model.TripPicture;
-import org.imgscalr.Scalr;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

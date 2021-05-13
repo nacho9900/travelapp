@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.dto.trips;
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.webapp.controller.TripController;
 import ar.edu.itba.paw.webapp.dto.validators.Future;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;

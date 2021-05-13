@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.dto.users;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.controller.UsersController;
 import ar.edu.itba.paw.webapp.dto.validators.Past;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
