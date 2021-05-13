@@ -20,9 +20,13 @@
 								<v-row>
 									<v-col cols="12" class="px-0 pt-0">
 										<trip-card
-											:id="tripId"
+											:trip="trip"
+											:loading="loading"
+											:request="request"
+											:member="member"
 											@exit="exit"
-											:actions="true"
+											@joined="joined"
+											actions
 										></trip-card>
 									</v-col>
 								</v-row>
@@ -98,6 +102,7 @@ export default {
 			tripId: this.id,
 			trip: null,
 			member: null,
+			request: null,
 			loading: false,
 			error: null,
 		};
@@ -118,14 +123,7 @@ export default {
 					tripId: this.id,
 				});
 
-				const membersUrl = this.trip.tripMembersUri;
-
-				const members = await this.$store.dispatch(
-					"member/checkIfUserIsMember",
-					{ url: membersUrl }
-				);
-
-				this.member = members?.members[0];
+				await this.setMember();
 			} catch (error) {
 				if (error?.response?.status === 404) {
 					await this.$router.replace({ name: "TripNotFound" });
@@ -135,6 +133,27 @@ export default {
 			}
 
 			this.loading = false;
+		},
+		async setMember() {
+			const members = await this.$store.dispatch(
+				"member/checkIfUserIsMember",
+				{ url: this.trip.tripMembersUri }
+			);
+
+			this.member = members?.members[0];
+			if (!this.member) {
+				await this.setRequest();
+			}
+		},
+		async setRequest() {
+			const requests = await this.$store.dispatch(
+				"request/checkIfUserHasRequest",
+				{
+					url: this.trip.tripJoinRequestUri,
+				}
+			);
+
+			this.request = requests[0];
 		},
 		exit() {
 			if (this.$refs.comments) {
@@ -148,6 +167,9 @@ export default {
 			if (this.$refs.members) {
 				this.$refs.members.exit();
 			}
+		},
+		joined(request) {
+			this.request = request;
 		},
 	},
 	created() {

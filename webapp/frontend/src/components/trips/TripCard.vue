@@ -79,8 +79,9 @@
 				<v-card-actions v-if="showJoinButton" class="pt-0 px-4">
 					<trip-join-button
 						:id="trip.id"
-						:member="isMember"
-						:status="requestStatus"
+						:member="member"
+						:request="request"
+						:joinUrl="trip.tripJoinRequestUri"
 						@joined="joined"
 						@exit="exit"
 					></trip-join-button>
@@ -94,23 +95,20 @@
 import TripForm from "components/trips/TripForm.vue";
 import TripJoinButton from "components/request/TripJoinButton.vue";
 import getBrowserLocale from "../../i18n/get-user-locale";
-import { memberRoles } from "../../enums.js";
+import { memberRoles } from "../../enums";
 
 export default {
 	components: { TripForm, TripJoinButton },
 	props: {
-		id: {
-			type: String,
-			required: true,
-		},
+		trip: Object,
+		member: Object,
+		request: Object,
 		actions: Boolean,
 		to: Object,
+		loading: Boolean,
 	},
 	data() {
 		return {
-			trip: null,
-			role: null,
-			loading: false,
 			error: null,
 			formDialog: false,
 			loadingEdit: false,
@@ -124,27 +122,22 @@ export default {
 		imageUrl() {
 			return this.imageError
 				? require("@/assets/no-image-available.png")
-				: process.env.VUE_APP_API_BASE_URL +
-						`/trip/${this.id}/picture?height=200` +
+				: this.trip.tripPictureUri +
 						(this.cacheBreaker ? `&${this.cacheBreaker}` : "");
 		},
 		isMember() {
 			return !!this.role;
-		},
-		hasPendingRequest() {
-			return (
-				!!this.trip?.userJoinRequest &&
-				this.trip.userJoinRequest === "PENDING"
-			);
-		},
-		requestStatus() {
-			return this.trip?.userJoinRequest?.status;
 		},
 		showJoinButton() {
 			return !this.isMember || this.role.canExitTrip;
 		},
 		showActions() {
 			return this.isMember && this.actions && this.role.canEditTrip;
+		},
+		role() {
+			return !this.member
+				? null
+				: memberRoles.find((x) => x.value === this.member.role);
 		},
 	},
 	methods: {
@@ -156,30 +149,6 @@ export default {
 			return date
 				? new Date(date).toLocaleDateString(getBrowserLocale(), opt)
 				: "";
-		},
-		async getTrip() {
-			this.loading = true;
-
-			try {
-				const trip = await this.$store.dispatch("trip/get", {
-					tripId: this.id,
-				});
-				this.trip = trip;
-				this.setRole(trip.role);
-			} catch (error) {
-				if (error?.response?.status === 404) {
-					this.$emit("notFound");
-				}
-
-				this.error = this.$t("components.trips.trip_card.error");
-			}
-
-			this.loading = false;
-		},
-		setRole(role) {
-			if (role) {
-				this.role = memberRoles.find((x) => x.value === role);
-			}
 		},
 		async update(tripUpdates) {
 			this.loadingEdit = true;
@@ -215,17 +184,12 @@ export default {
 			this.loadingImage = false;
 		},
 		joined(request) {
-			this.trip.userJoinRequest = {
-				...request,
-			};
+			this.$emit("joined", request);
 		},
 		exit() {
 			this.role = null;
 			this.$emit("exit");
 		},
-	},
-	created() {
-		this.getTrip();
 	},
 };
 </script>

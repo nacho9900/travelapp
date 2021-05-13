@@ -38,7 +38,8 @@ export default {
 		TripJoinForm,
 	},
 	props: {
-		memberUrl: String,
+		request: Object,
+		member: Object,
 		joinUrl: String,
 	},
 	data() {
@@ -80,10 +81,10 @@ export default {
 			}
 		},
 		hasMember() {
-			return !!this.memberUrl;
+			return !!this.member;
 		},
 		canJoin() {
-			return !this.status || this.status !== "PENDING";
+			return !this.request || this.request.status !== "PENDING";
 		},
 	},
 	methods: {
@@ -97,16 +98,11 @@ export default {
 		async submitJoin(data) {
 			this.loadingJoin = true;
 
-			const payload = {
-				...data,
-				tripId: this.id,
-			};
-
 			try {
-				const joinRequest = await this.$store.dispatch(
-					"request/join",
-					payload
-				);
+				const joinRequest = await this.$store.dispatch("request/join", {
+					...data,
+					url: this.joinUrl,
+				});
 				this.$emit("joined", joinRequest);
 				this.joinDialog = false;
 			} catch (error) {
@@ -120,7 +116,7 @@ export default {
 
 			try {
 				await this.$store.dispatch("member/exit", {
-					tripId: this.id,
+					url: this.member.memberUri,
 				});
 				this.$emit("exit");
 			} catch (error) {

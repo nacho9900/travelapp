@@ -18,5 +18,16 @@ export default {
     },
     async reject(_, payload) {
         await Axios.post(payload.url);
+    },
+    async checkIfUserHasRequest(context, payload) {
+        const email = context.rootGetters.user.email;
+        const data = {
+            params: {
+                email
+            }
+        };
+        
+        const response = await Axios.get(payload.url, data);
+        return response.data;
     }
 };

@@ -519,7 +519,7 @@ public class TripController extends BaseController
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if ( !maybeTrip.isPresent() || !tripService.isUserMember( id, username ) ) {
-            return Response.status( Response.Status.UNAUTHORIZED ).build();
+            return Response.status( Response.Status.FORBIDDEN ).build();
         }
 
         TripMemberListDto tripMemberListDto;
@@ -708,7 +708,7 @@ public class TripController extends BaseController
         if ( email != null && !email.isEmpty() ) {
             return Response.ok()
                            .entity( joinRequests.stream()
-                                                .filter( x -> !x.getUser().getEmail().equals( email ) )
+                                                .filter( x -> x.getUser().getEmail().equals( email ) )
                                                 .map( x -> TripJoinRequestDto.fromTripJoinRequest( x, uriInfo, id ) ) )
                            .build();
         }

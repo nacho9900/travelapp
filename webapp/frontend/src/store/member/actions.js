@@ -7,7 +7,7 @@ export default {
         return members;
     },
     async exit(_, payload) {
-        await Axios.post(payload.url);
+        await Axios.delete(payload.url);
     },
     async delete(_, payload) {
         await Axios.delete(payload.url);
@@ -18,16 +18,17 @@ export default {
             params: {
                 email
             }
-        }
+        };
 
         try {
             const response = await Axios.get(payload.url, data);
             return response.data;
         } catch (error) {
-            if(error?.response?.status === 401) {
+            if (error?.response?.status === 403) {
                 return null;
+            } else {
+                throw error;
             }
-            throw error;
         }
     }
 };
