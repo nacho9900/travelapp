@@ -28,7 +28,7 @@ export default {
             context.dispatch('autologout');
         }, expiresIn);
 
-        context.commit('setToken', {token});
+        context.commit('setToken', { token });
         await context.dispatch('loadUser');
     },
     tryLogin(context) {
@@ -51,17 +51,17 @@ export default {
             }, expiresIn);
 
             Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            context.commit('setToken', {token: token});
-            context.commit('setAutologout', {autologout: true});
-            context.dispatch('loadUser')
+            context.commit('setToken', { token: token });
+            context.commit('setAutologout', { autologout: true });
+            context.dispatch('loadUser');
         }
     },
     autologout(context) {
-        context.commit('setAutologout', {autologout: true});
+        context.commit('setAutologout', { autologout: true });
         context.dispatch('logout');
     },
     logout(context) {
-        context.commit('setToken', {token: null});
+        context.commit('setToken', { token: null });
         context.commit('setUser', null);
 
         delete Axios.defaults.headers.common['Authorization'];
@@ -88,18 +88,19 @@ export default {
         context.commit("setUser", user);
     },
     async updateUser(context, payload) {
-        const user = {...payload};
-        const response = await Axios.put(`/users/${user.id}`, user);
+        const userUrl = context.getters.user.userUri;
+        const user = { ...payload };
+        const response = await Axios.put(userUrl, user);
         const userUpdated = response.data;
         context.commit('setUser', userUpdated);
         return userUpdated;
     },
     async changePassword(context, payload) {
-        const user = context.getters.user;
+        const changePasswordUrl = context.getters.user.changePasswordUri;
         const passwords = {
             ...payload
         };
-        await Axios.post(`/users/${user.id}/change-password`, passwords);
+        await Axios.post(changePasswordUrl, passwords);
     },
     async passwordRecovery(_, payload) {
         await Axios.post("/auth/password-recovery", payload);
@@ -108,12 +109,12 @@ export default {
         await Axios.post("/auth/change-password", payload);
     },
     async changeAvatar(context, payload) {
-        const user = context.getters.user;
+        const userPictureUrl = context.getters.user.userPictureUri;
         const image = payload.image;
-        await Axios.put(`/users/${user.id}/picture`, image);
+        await Axios.put(userPictureUrl, image);
     },
     async verify(_, payload) {
         const token = payload.token;
-        await Axios.post("/auth/verify", {token: token});
+        await Axios.post("/auth/verify", { token: token });
     }
 };

@@ -44,6 +44,7 @@ export default {
 		description: String,
 		from: String,
 		to: String,
+		pictureUrl: String,
 	},
 	data() {
 		return {
@@ -66,8 +67,7 @@ export default {
 		imageUrl() {
 			return this.imageError
 				? require("@/assets/no-image-available.png")
-				: process.env.VUE_APP_API_BASE_URL +
-						`/trip/${this.id}/picture?height=200`;
+				: `${this.pictureUrl}?height=200`;
 		},
 	},
 };

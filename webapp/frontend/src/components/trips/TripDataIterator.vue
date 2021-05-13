@@ -29,6 +29,7 @@
               :description="trip.description"
               :from="trip.startDate"
               :to="trip.endDate"
+              :pictureUrl="trip.tripPictureUri"
           ></trip-simple-card>
         </v-col>
       </v-row>

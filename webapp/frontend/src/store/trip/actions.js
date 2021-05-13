@@ -13,15 +13,13 @@ export default {
         return trip;
     },
     async update(_, payload) {
-        const tripId = payload.id;
-        const response = await Axios.put(`/trip/${tripId}`, payload);
+        const response = await Axios.put(payload.url, payload);
         const trip = response.data;
         return trip;
     },
     async uploadImage(_, payload) {
-        const tripId = payload.id;
         const image = payload.image;
-        const response = await Axios.put(`/trip/${tripId}/picture`, image);
+        const response = await Axios.put(payload.url, image);
         const location = response.data;
         return location;
     },

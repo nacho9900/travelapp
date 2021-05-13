@@ -123,6 +123,7 @@ export default {
 			return this.imageError
 				? require("@/assets/no-image-available.png")
 				: this.trip.tripPictureUri +
+						"?height=800" +
 						(this.cacheBreaker ? `&${this.cacheBreaker}` : "");
 		},
 		isMember() {
@@ -154,10 +155,15 @@ export default {
 			this.loadingEdit = true;
 
 			try {
-				this.trip = await this.$store.dispatch("trip/update", {
-					id: this.id,
-					...tripUpdates,
-				});
+				tripUpdates.id = this.trip.id;
+				this.$emit(
+					"update",
+					await this.$store.dispatch("trip/update", {
+						url: this.trip.tripUri,
+						...tripUpdates,
+					})
+				);
+				this.formDialog = false;
 			} catch (error) {
 				this.error = this.$t("components.trips.trip_card.error_update");
 			}
@@ -169,8 +175,8 @@ export default {
 
 			try {
 				await this.$store.dispatch("trip/uploadImage", {
+					url: this.trip.tripPictureUri,
 					image: image,
-					id: this.id,
 				});
 				this.imageFormDialog = false;
 				this.imageError = false;

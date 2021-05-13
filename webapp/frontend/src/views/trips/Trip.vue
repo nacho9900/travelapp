@@ -13,7 +13,9 @@
 					>
 						<v-tab> {{ $t("views.trip.trip") }}</v-tab>
 						<v-tab>{{ $t("views.trip.activities") }}</v-tab>
-						<v-tab v-if="member">{{ $t("views.trip.members") }}</v-tab>
+						<v-tab v-if="member">{{
+							$t("views.trip.members")
+						}}</v-tab>
 						<v-tabs-slider color="secondary"></v-tabs-slider>
 						<v-tab-item>
 							<v-container fluid>
@@ -26,6 +28,7 @@
 											:member="member"
 											@exit="exit"
 											@joined="joined"
+											@update="update"
 											actions
 										></trip-card>
 									</v-col>
@@ -100,7 +103,6 @@ export default {
 	},
 	data() {
 		return {
-			tripId: this.id,
 			trip: null,
 			member: null,
 			request: null,
@@ -173,6 +175,9 @@ export default {
 		},
 		joined(request) {
 			this.request = request;
+		},
+		update(trip) {
+			this.trip = trip;
 		},
 	},
 	created() {
