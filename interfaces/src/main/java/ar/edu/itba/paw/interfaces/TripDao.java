@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface TripDao
 {
-    Trip create( Trip trip );
-
     Trip create( String name, String description, LocalDate startDate, LocalDate endDate );
 
     Optional<Trip> findById( long id );
