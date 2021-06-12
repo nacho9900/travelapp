@@ -112,38 +112,24 @@ CREATE TABLE IF NOT EXISTS user_pictures
  CONSTRAINT fkh10qx447rnu5jptru984is8jc FOREIGN KEY (user_id) REFERENCES users
 );
 
+-- user
+
 INSERT INTO users (id, biography, birthday, email, firstname, lastname, nationality, password, verification_token,
                    verified)
 VALUES (1, '', DATE '1995-11-30', 'inegro@itba.edu.ar', 'Ignacio', 'Negro Caino', 'AR', 'v3r1s3cr3t3p4ss',
         UUID('b60cd648-74a3-11eb-9439-0242ac130002'), TRUE);
 
+-- trip
 
+INSERT INTO trips (id, name, description, start_date, end_date)
+VALUES (1, 'Buenos Aires 2022', 'Recorrido por la Ciudad', DATE '2021-06-01', DATE '2021-06-30');
 
--- INSERT INTO places(id, google_id, name, latitude, longitude, address)
--- values(3, 'google id', 'Bahamas', 100, 100, 'Bahamas address');
---
+INSERT INTO places (id, name, address, google_id, latitude, longitude)
+VALUES (1, 'Obelisco', 'Av. 9 de Julio s/n, C1043 CABA', '9JW9+G9 Buenos Aires', -34.60361214726476,
+        -58.381577254564355);
 
--- INSERT INTO users (id, biography, birthday, email, firstname, lastname, nationality, password,
---                    verification_token, verified)
--- VALUES (1, '', DATE '1995-11-30', 'nachonegrocaino@gmail.com', 'Ignacio Nicolás', 'Negro Caino', 'AR',
---         'password', 'b60cd648-74a3-11eb-9439-0242ac130002', TRUE);
---
--- INSERT INTO trips(id, name, description, start_date, end_date, startplaceid, adminid)
--- values(2,'test name', 'test description', DATE '2019-08-23', DATE '2020-02-01', 3, 1);
---
--- INSERT INTO activities(id, name, category, place_id, start_date, end_date, trip_id)
--- values(4,'Scuba diving','Sports',3, DATE '2019-09-10', DATE '2019-09-11', 2);
---
--- INSERT INTO trips_users(trips_id, users_id)
--- values(2, 1);
---
--- INSERT INTO trip_pictures(id, trip_id, image)
--- values(1, 2, NULL);
---
--- INSERT INTO user_pictures(id, user_id, image)
--- values(1, 1, NULL);
---
--- INSERT INTO trip_comments(id, comment, created_on, trip_id, user_id)
--- VALUES (1, 'test comment', CURRENT_TIMESTAMP, 2, 1);
+INSERT INTO activities (id, name, end_date, start_date, place_id, trip_id)
+VALUES (1, 'Conocer el Obelisco', DATE '2021-06-02', DATE '2021-06-03', 1, 1);
 
-
+INSERT INTO trip_members (id, is_active, role, trip_id, user_id)
+VALUES (1, TRUE, 'OWNER', 1, 1);
