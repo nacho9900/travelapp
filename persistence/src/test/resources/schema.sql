@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS user_pictures
 
 INSERT INTO users (id, biography, birthday, email, firstname, lastname, nationality, password, verification_token,
                    verified)
-VALUES (1, '', DATE '1995-11-30', 'inegro@itba.edu.ar', 'Ignacio', 'Negro Caino', 'AR', '',
+VALUES (1, '', DATE '1995-11-30', 'inegro@itba.edu.ar', 'Ignacio', 'Negro Caino', 'AR', 'v3r1s3cr3t3p4ss',
         UUID('b60cd648-74a3-11eb-9439-0242ac130002'), TRUE);
 
 
