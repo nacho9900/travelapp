@@ -189,30 +189,6 @@ public class User
         this.verificationToken = verificationToken;
     }
 
-    @Override
-    public boolean equals( Object o ) {
-        if ( this == o ) {
-            return true;
-        }
-        if ( o == null || getClass() != o.getClass() ) {
-            return false;
-        }
-        User user = (User) o;
-        return id == user.id && firstname.equals( user.firstname ) && lastname.equals( user.lastname ) && email.equals(
-                user.email ) && password.equals( user.password ) && birthday.equals( user.birthday ) &&
-               nationality.equals( user.nationality );
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash( id, firstname, lastname, email, password, birthday, nationality );
-    }
-
-    @Override
-    public String toString() {
-        return "USER = [" + id + "]" + firstname + " " + lastname;
-    }
-
     public String getBiography() {
         return biography;
     }
@@ -239,5 +215,29 @@ public class User
 
     public String getFullName() {
         return this.firstname + " " + this.lastname;
+    }
+
+    @Override
+    public String toString() {
+        return "USER = [" + id + "]" + firstname + " " + lastname;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) {
+            return true;
+        }
+        if ( o == null || getClass() != o.getClass() ) {
+            return false;
+        }
+
+        User user = (User) o;
+
+        return Objects.equals( email, user.email );
+    }
+
+    @Override
+    public int hashCode() {
+        return email != null ? email.hashCode() : 0;
     }
 }
