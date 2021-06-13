@@ -119,7 +119,12 @@ INSERT INTO users (id, biography, birthday, email, firstname, lastname, national
 VALUES (1, '', DATE '1995-11-30', 'inegro@itba.edu.ar', 'Ignacio', 'Negro Caino', 'AR', 'v3r1s3cr3t3p4ss',
         UUID('b60cd648-74a3-11eb-9439-0242ac130002'), TRUE);
 
--- trip
+INSERT INTO users (id, biography, birthday, email, firstname, lastname, nationality, password, verification_token,
+                   verified)
+VALUES (2, '', DATE '1990-10-10', 'montoto@montoto.com', 'Montoto', 'Roma', 'AR', 'v3r1s3cr3t3p4ss',
+        UUID('b60cd648-74a3-11gb-9439-0242ac130002'), TRUE);
+
+-- trip 1
 
 INSERT INTO trips (id, name, description, start_date, end_date)
 VALUES (1, 'Buenos Aires 2022', 'Recorrido por la Ciudad', DATE '2021-06-01', DATE '2021-06-30');
@@ -128,8 +133,23 @@ INSERT INTO places (id, name, address, google_id, latitude, longitude)
 VALUES (1, 'Obelisco', 'Av. 9 de Julio s/n, C1043 CABA', '9JW9+G9 Buenos Aires', -34.60361214726476,
         -58.381577254564355);
 
-INSERT INTO activities (id, name, end_date, start_date, place_id, trip_id)
+INSERT INTO activities (id, name, start_date, end_date, place_id, trip_id)
 VALUES (1, 'Conocer el Obelisco', DATE '2021-06-02', DATE '2021-06-03', 1, 1);
 
 INSERT INTO trip_members (id, is_active, role, trip_id, user_id)
 VALUES (1, TRUE, 'OWNER', 1, 1);
+
+-- trip 2
+
+INSERT INTO trips (id, name, description, start_date, end_date)
+VALUES (2, 'Roma 2022', 'Ferrari! Its me Mario!', DATE '2022-02-01', DATE '2022-02-15');
+
+INSERT INTO places (id, name, address, google_id, latitude, longitude)
+VALUES (2, 'Colosseum', 'Piazza del Colosseo, 1, 00184 Roma RM, Italy',
+        'VFRR+3V Rome, Metropolitan City of Rome, Italy', 41.89043380980485, 12.492220169423662);
+
+INSERT INTO activities (id, name, start_date, end_date, place_id, trip_id)
+VALUES (2, 'Pizza Spaghetti', DATE '2022-02-01', DATE '2022-02-03', 2, 2);
+
+INSERT INTO trip_members (id, is_active, role, trip_id, user_id)
+VALUES (2, TRUE, 'OWNER', 2, 2);

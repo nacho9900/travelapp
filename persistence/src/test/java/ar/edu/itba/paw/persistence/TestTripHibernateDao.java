@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -33,7 +32,7 @@ public class TestTripHibernateDao
     /* test find */
     private final long USER_ID_1 = 1;
     private final String USERNAME_1 = "inegro@itba.edu.ar";
-    private final long USER_ID_2 = 2;
+    private final long USER_ID_2 = 3;
     private final String USERNAME_2 = "jdoe@itba.edu.ar";
     private final int PAGE = 1;
     private final int PER_PAGE = 20;
@@ -114,7 +113,7 @@ public class TestTripHibernateDao
 
     @Test
     public void testSearchWithLocation() {
-        final PaginatedResult<Trip> trips = tripDao.search( null, LAT_FIND, LNG_FIND, null, null, PAGE, PER_PAGE );
+        final PaginatedResult<Trip> trips = tripDao.search( LAT_FIND, LNG_FIND, null, null, PAGE, PER_PAGE );
         Assert.assertNotNull( trips );
         Assert.assertFalse( trips.isEmpty() );
         Assert.assertFalse( trips.hasNextPage() );
@@ -134,28 +133,7 @@ public class TestTripHibernateDao
 
     @Test
     public void testSearchWithDates() {
-        final PaginatedResult<Trip> trips = tripDao.search( null, null, null, START_DATE_FIND, END_DATE_FIND, PAGE,
-                                                            PER_PAGE );
-        Assert.assertNotNull( trips );
-        Assert.assertFalse( trips.isEmpty() );
-        Assert.assertFalse( trips.hasNextPage() );
-        Assert.assertEquals( TRIPS_QUANTITY, trips.getResult()
-                                                  .size() );
-        final Trip trip = trips.getResult()
-                               .stream()
-                               .findFirst()
-                               .get();
-        Assert.assertNotNull( trip );
-        Assert.assertEquals( ID_FIND, trip.getId() );
-        Assert.assertEquals( NAME_FIND, trip.getName() );
-        Assert.assertEquals( DESCRIPTION_FIND, trip.getDescription() );
-        Assert.assertEquals( START_DATE_FIND, trip.getStartDate() );
-        Assert.assertEquals( END_DATE_FIND, trip.getEndDate() );
-    }
-
-    @Test
-    public void testSearchWithText() {
-        final PaginatedResult<Trip> trips = tripDao.search( "B", null, null, null, null, PAGE,
+        final PaginatedResult<Trip> trips = tripDao.search( null, null, START_DATE_FIND, END_DATE_FIND, PAGE,
                                                             PER_PAGE );
         Assert.assertNotNull( trips );
         Assert.assertFalse( trips.isEmpty() );

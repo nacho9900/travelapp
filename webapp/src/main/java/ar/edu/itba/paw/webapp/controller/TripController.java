@@ -230,7 +230,6 @@ public class TripController extends BaseController
     @Path( "/search" )
     @Produces( MediaType.APPLICATION_JSON )
     public Response search(
-            @QueryParam( "text" ) String text,
             @QueryParam( "latitude" ) Double latitude,
             @QueryParam( "longitude" ) Double longitude,
             @QueryParam( "from" ) String fromString,
@@ -289,7 +288,7 @@ public class TripController extends BaseController
             return Response.status( Response.Status.BAD_REQUEST ).entity( errors ).build();
         }
 
-        PaginatedResult<Trip> results = tripService.search( text, latitude, longitude, from, to, page, perPage );
+        PaginatedResult<Trip> results = tripService.search( latitude, longitude, from, to, page, perPage );
 
         return PaginatedResultResponseHelper.makeResponseBuilder( results, uriInfo, myQueryParams )
                                             .entity( TripListDto.fromPaginatedResult( results, uriInfo ) )

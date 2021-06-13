@@ -23,5 +23,5 @@ public interface TripDao
 
     Trip update( Trip trip );
 
-    PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage );
+    PaginatedResult<Trip> search( Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage );
 }

@@ -16,6 +16,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @RunWith( SpringJUnit4ClassRunner.class )
 @Sql( "classpath:schema.sql" )
 @ContextConfiguration( classes = TestConfig.class )
@@ -70,6 +73,26 @@ public class TestTripMemberHibernateDao
 
     @Test
     public void testFindAllAdmins() {
+        final List<TripMember> admins = tripMemberHibernateDao.getAllAdmins( trip.getId() );
+        Assert.assertNotNull( admins );
+        Assert.assertEquals( 1, admins.size() );
+        final TripMember admin = admins.get( 0 );
+        Assert.assertEquals( user, admin.getUser() );
+        Assert.assertEquals( trip, admin.getTrip() );
+        Assert.assertEquals( TripMemberRole.OWNER, admin.getRole() );
+        Assert.assertEquals( ID_FIND, admin.getId() );
+    }
 
+    @Test
+    public void testFindAllByTripIdAndUsername() {
+        final Optional<TripMember> maybeAdmin = tripMemberHibernateDao.findByTripIdAndUsername( user.getEmail(),
+                                                                                                trip.getId() );
+        Assert.assertNotNull( maybeAdmin );
+        Assert.assertTrue( maybeAdmin.isPresent() );
+        final TripMember admin = maybeAdmin.get();
+        Assert.assertEquals( user, admin.getUser() );
+        Assert.assertEquals( trip, admin.getTrip() );
+        Assert.assertEquals( TripMemberRole.OWNER, admin.getRole() );
+        Assert.assertEquals( ID_FIND, admin.getId() );
     }
 }

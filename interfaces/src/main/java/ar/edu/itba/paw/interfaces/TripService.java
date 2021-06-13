@@ -22,5 +22,5 @@ public interface TripService
 
     Trip update( Trip trip, String name, String description, LocalDate startDate, LocalDate endDate );
 
-    PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage );
+    PaginatedResult<Trip> search( Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage );
 }

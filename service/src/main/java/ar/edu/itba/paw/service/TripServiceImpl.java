@@ -61,8 +61,7 @@ public class TripServiceImpl implements TripService
     }
 
     @Override
-    public PaginatedResult<Trip> search( String text, Double latitude, Double longitude, LocalDate from, LocalDate to
-            , int page, int perPage ) {
-        return tripDao.search( text, latitude, longitude, from, to, page, perPage);
+    public PaginatedResult<Trip> search( Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage ) {
+        return tripDao.search( latitude, longitude, from, to, page, perPage);
     }
 }
