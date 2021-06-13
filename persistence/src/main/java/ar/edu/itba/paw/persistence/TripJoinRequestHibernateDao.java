@@ -30,7 +30,7 @@ public class TripJoinRequestHibernateDao implements TripJoinRequestDao
     public List<TripJoinRequest> getAllByTripId( long tripId ) {
         TypedQuery<TripJoinRequest> query = em.createQuery(
                 "select r from Trip as t inner join t.joinRequests as r where t.id = :tripId", TripJoinRequest.class );
-        em.setProperty( "tripId", tripId );
+        query.setParameter( "tripId", tripId );
         return query.getResultList();
     }
 

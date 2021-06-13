@@ -36,6 +36,13 @@ public class TestTripActivityHibernateDao
 
     /* create */
 
+    private final long TRIP_ID_CREATE = 2;
+    private final long PLACE_ID_CREATE = 2;
+    private Place PLACE_CREATE;
+    private Trip TRIP_CREATE;
+    private final String NAME_CREATE = "molto bene+{}<@#";
+    private final LocalDate START_DATE_CREATE = LocalDate.of( 2022, 2, 2 );
+    private final LocalDate END_DATE_CREATE = LocalDate.of( 2022, 2, 10 );
 
     /* find */
     private final long ID_FIND = 1;
@@ -56,6 +63,10 @@ public class TestTripActivityHibernateDao
                              .get();
         TRIP_FIND = tripDao.findById( TRIP_ID_FIND )
                            .get();
+        PLACE_CREATE = placeDao.findById( PLACE_ID_CREATE )
+                               .get();
+        TRIP_CREATE = tripDao.findById( TRIP_ID_FIND )
+                             .get();
     }
 
     @Test
@@ -70,6 +81,7 @@ public class TestTripActivityHibernateDao
         Assert.assertEquals( END_DATE_FIND, activity.getEndDate() );
         Hibernate.initialize( activity.getTrip() );
         Assert.assertEquals( TRIP_FIND, activity.getTrip() );
+        Assert.assertEquals( PLACE_FIND, activity.getPlace() );
     }
 
     @Test
@@ -80,6 +92,15 @@ public class TestTripActivityHibernateDao
 
     @Test
     public void testCreate() {
-
+        final Activity activity = activityDao.create( NAME_CREATE, TRIP_CREATE, START_DATE_CREATE, END_DATE_CREATE,
+                                                      PLACE_CREATE );
+        Assert.assertNotNull( activity );
+        Assert.assertTrue( activity.getId() > 0 );
+        Assert.assertEquals( NAME_CREATE, activity.getName() );
+        Assert.assertEquals( START_DATE_CREATE, activity.getStartDate() );
+        Assert.assertEquals( END_DATE_CREATE, activity.getEndDate() );
+        Hibernate.initialize( activity.getTrip() );
+        Assert.assertEquals( TRIP_CREATE, activity.getTrip() );
+        Assert.assertEquals( PLACE_CREATE, activity.getPlace() );
     }
 }

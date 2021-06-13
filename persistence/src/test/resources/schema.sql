@@ -124,6 +124,11 @@ INSERT INTO users (id, biography, birthday, email, firstname, lastname, national
 VALUES (2, '', DATE '1990-10-10', 'montoto@montoto.com', 'Montoto', 'Roma', 'AR', 'v3r1s3cr3t3p4ss',
         UUID('b60cd648-74a3-11gb-9439-0242ac130002'), TRUE);
 
+INSERT INTO users (id, biography, birthday, email, firstname, lastname, nationality, password, verification_token,
+                   verified)
+VALUES (3, '', DATE '2000-5-15', 'elon@tesla.com', 'Elon', 'Musk', 'AR', 'v3r1s3cr3t3p4ss',
+        UUID('b60cd648-74a3-11fb-9439-0242ac130002'), TRUE);
+
 -- trip 1
 
 INSERT INTO trips (id, name, description, start_date, end_date)
@@ -138,6 +143,9 @@ VALUES (1, 'Conocer el Obelisco', DATE '2021-06-02', DATE '2021-06-03', 1, 1);
 
 INSERT INTO trip_members (id, is_active, role, trip_id, user_id)
 VALUES (1, TRUE, 'OWNER', 1, 1);
+
+INSERT INTO trip_join_requests (id, trip_id, user_id, message, status, created_on)
+VALUES (1, 1, 3, 'ME QUIERO UNIR', 'REJECTED', TIMESTAMP '2021-05-1 20:00:00');
 
 -- trip 2
 
