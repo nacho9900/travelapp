@@ -172,4 +172,23 @@ public class Trip implements Comparable<Trip>
     public int compareTo( Trip o ) {
         return ( this.startDate.isBefore( o.startDate ) ) ? -1 : 1;
     }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) {
+            return true;
+        }
+        if ( o == null || getClass() != o.getClass() ) {
+            return false;
+        }
+
+        Trip trip = (Trip) o;
+
+        return id == trip.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) ( id ^ ( id >>> 32 ) );
+    }
 }
