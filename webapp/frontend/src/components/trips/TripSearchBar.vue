@@ -5,7 +5,7 @@
 				<v-row>
 					<v-col cols="12" md="4">
 						<place-autocomplete
-							v-model="location"
+							v-model="locationEntered"
 							:label="
 								$t('components.trips.trip_search_bar.location')
 							"
@@ -15,7 +15,7 @@
 					</v-col>
 					<v-col cols="12" md="3">
 						<date-picker
-							v-model="from"
+							v-model="fromEntered"
 							:label="
 								$t('components.trips.trip_search_bar.start')
 							"
@@ -25,14 +25,19 @@
 					</v-col>
 					<v-col cols="12" md="3">
 						<date-picker
-							v-model="to"
+							v-model="toEntered"
 							:label="$t('components.trips.trip_search_bar.end')"
 							hide-details
 							solo
 						></date-picker>
 					</v-col>
 					<v-col cols="12" md="2" class="d-flex justify-end">
-						<v-btn color="accent" class="mr-2" :to="{ name: 'TripNew' }" fab>
+						<v-btn
+							color="accent"
+							class="mr-2"
+							:to="{ name: 'TripNew' }"
+							fab
+						>
 							<v-icon>mdi-plus</v-icon>
 						</v-btn>
 						<v-btn type="submit" color="secondary" fab>
@@ -47,25 +52,55 @@
 
 <script>
 export default {
+	props: {
+		from: String,
+		to: String,
+		location: Object,
+	},
 	data() {
 		return {
-			from: null,
-			to: null,
-			location: null,
+			fromEntered: null,
+			toEntered: null,
+			locationEntered: null,
 		};
 	},
 	methods: {
+		init() {
+			this.fromEntered = this.from;
+			this.toEntered = this.to;
+			this.locationEntered = this.location ? { ...this.location } : null;
+		},
 		submit() {
 			if (this.$refs.form.validate()) {
 				const data = {
-					from: this.from,
-					to: this.to,
-					location: this.location,
+					from: this.fromEntered,
+					to: this.toEntered,
+					location: this.locationEntered,
 				};
 
 				this.$emit("submit", data);
 			}
 		},
+	},
+	watch: {
+		from() {
+			if (this.from) {
+				this.fromEntered = this.from;
+			}
+		},
+		to() {
+			if (this.to) {
+				this.toEntered = this.to;
+			}
+		},
+		location() {
+			if (this.location) {
+				this.locationEntered = this.location;
+			}
+		},
+	},
+	created() {
+		this.init();
 	},
 };
 </script>

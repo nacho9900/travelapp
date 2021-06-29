@@ -111,7 +111,7 @@ public class TripHibernateDao implements TripDao
                                 "* power(sin((abs(p.longitude - :longitude) * pi()/180)/2) ,2))), " +
                                 "sqrt(1 - ((power(sin(abs((p.latitude - :latitude) * pi()/180)/2),2)" +
                                 "+ cos(p.latitude * pi()/180) * cos(:latitude * pi()/180)" +
-                                "* power(sin((abs(p.longitude - :longitude) * pi()/180)/2) , 2))))) * 6371) < 10" );
+                                "* power(sin((abs(p.longitude - :longitude) * pi()/180)/2) , 2))))) * 6371) < 10 " );
         }
 
         if ( from != null ) {

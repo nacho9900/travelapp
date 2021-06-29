@@ -13,7 +13,30 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: () => import("views/home/Home.vue"),
-    meta: { requireAuth: true }
+    meta: { requireAuth: true },
+    props: route => {
+      const query = {};
+
+      if (route.query.from) {
+        query.from = route.query.from;
+      }
+
+      if (route.query.to) {
+        query.to = route.query.to;
+      }
+
+      if (route.query.latitude && route.query.longitude) {
+        query.location = {
+          latitude: route.query.latitude,
+          longitude: route.query.longitude,
+          googleId: route.query.googleId,
+          address: route.query.address,
+          name: route.query.name,
+        };
+      }
+
+      return query;
+    }
   },
   {
     path: '/trip/:id',

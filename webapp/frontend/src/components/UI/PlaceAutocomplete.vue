@@ -66,6 +66,20 @@ export default {
 				this.address = this.value;
 			}
 		},
+		async geocode() {
+			await this.$gmapApiPromiseLazy();
+			this.$store.dispatch("google/geocode", {
+				...this.address,
+				google: this.google,
+				callback: (latlng) => {
+					this.address.latitude = latlng.latitude;
+					this.address.longitude = latlng.longitude;
+
+					this.$emit("input", this.address);
+					this.loading = false;
+				},
+			});
+		},
 	},
 	watch: {
 		search() {
@@ -74,18 +88,7 @@ export default {
 		address() {
 			if (this.address != null) {
 				this.loading = true;
-
-				this.$store.dispatch("google/geocode", {
-					...this.address,
-					google: this.google,
-					callback: (latlng) => {
-						this.address.latitude = latlng.latitude;
-						this.address.longitude = latlng.longitude;
-
-						this.$emit("input", this.address);
-						this.loading = false;
-					},
-				});
+				this.geocode();
 			} else {
 				this.$emit("input", null);
 			}
