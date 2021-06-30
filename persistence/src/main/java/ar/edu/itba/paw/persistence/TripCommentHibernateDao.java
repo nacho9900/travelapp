@@ -18,11 +18,11 @@ import java.util.Optional;
 public class TripCommentHibernateDao implements TripCommentsDao
 {
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public TripComment create( TripMember member, String comment ) {
-        TripComment tc = new TripComment( member, comment, LocalDateTime.now( ZoneOffset.UTC) );
+        TripComment tc = new TripComment( member, comment, LocalDateTime.now( ZoneOffset.UTC ) );
         em.persist( tc );
         return tc;
     }

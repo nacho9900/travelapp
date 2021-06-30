@@ -21,7 +21,7 @@ import java.util.Optional;
 public class TripMemberHibernateDao implements TripMemberDao
 {
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public Optional<TripMember> findById( long id ) {
@@ -80,7 +80,8 @@ public class TripMemberHibernateDao implements TripMemberDao
     @Override
     public List<TripMember> getAllAdmins( long tripId ) {
         TypedQuery<TripMember> query = em.createQuery(
-                "select m from TripMember as m where m.trip.id = :tripId and (m.role = :admin or m.role = :owner)", TripMember.class );
+                "select m from TripMember as m where m.trip.id = :tripId and (m.role = :admin or m.role = :owner)",
+                TripMember.class );
         query.setParameter( "tripId", tripId );
         query.setParameter( "owner", TripMemberRole.OWNER );
         query.setParameter( "admin", TripMemberRole.ADMIN );

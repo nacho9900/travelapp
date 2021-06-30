@@ -10,27 +10,28 @@ import javax.persistence.TypedQuery;
 import java.util.Optional;
 
 @Repository
-public class PlaceHibernateDao implements PlaceDao {
-
+public class PlaceHibernateDao implements PlaceDao
+{
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
-    public Place create(String googleId, String name, double latitude, double longitude, String address) {
-        Place place = new Place(googleId, name, latitude, longitude, address);
-        em.persist(place);
+    public Place create( String googleId, String name, double latitude, double longitude, String address ) {
+        Place place = new Place( googleId, name, latitude, longitude, address );
+        em.persist( place );
         return place;
     }
 
     @Override
-    public Optional<Place> findById(long id) {
-        return Optional.ofNullable(em.find(Place.class, id));
+    public Optional<Place> findById( long id ) {
+        return Optional.ofNullable( em.find( Place.class, id ) );
     }
 
     @Override
-    public Optional<Place> findByGoogleId(String googleId) {
-        final TypedQuery<Place> query = em.createQuery("From Place as p where p.googleId like :googleId", Place.class);
-        query.setParameter("googleId", googleId);
+    public Optional<Place> findByGoogleId( String googleId ) {
+        final TypedQuery<Place> query = em.createQuery( "From Place as p where p.googleId like :googleId",
+                                                        Place.class );
+        query.setParameter( "googleId", googleId );
         return query.getResultList().stream().findFirst();
     }
 }

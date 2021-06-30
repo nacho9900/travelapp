@@ -19,7 +19,7 @@ import java.util.Optional;
 public class TripJoinRequestHibernateDao implements TripJoinRequestDao
 {
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public Optional<TripJoinRequest> findById( long id ) {
@@ -38,8 +38,7 @@ public class TripJoinRequestHibernateDao implements TripJoinRequestDao
     public List<TripJoinRequest> getAllByTripIdAndStatus( long tripId, TripJoinRequestStatus status ) {
         TypedQuery<TripJoinRequest> query = em.createQuery(
                 "select r from TripJoinRequest as r inner join fetch r.user as u inner join r.trip as t where t.id = " +
-                ":tripId and r.status = :status",
-                TripJoinRequest.class );
+                ":tripId and r.status = :status", TripJoinRequest.class );
         query.setParameter( "tripId", tripId );
         query.setParameter( "status", status );
         return query.getResultList();

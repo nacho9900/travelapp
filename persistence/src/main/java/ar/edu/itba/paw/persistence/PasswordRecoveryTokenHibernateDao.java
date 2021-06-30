@@ -16,7 +16,7 @@ import java.util.UUID;
 public class PasswordRecoveryTokenHibernateDao implements PasswordRecoveryTokenDao
 {
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public Optional<PasswordRecoveryToken> findByUserId( long userId ) {

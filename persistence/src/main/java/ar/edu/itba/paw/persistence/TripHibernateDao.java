@@ -19,7 +19,7 @@ public class TripHibernateDao implements TripDao
     private static final int MAX_ROWS = 100;
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public Trip create( String name, String description, LocalDate startDate, LocalDate endDate ) {
@@ -101,7 +101,8 @@ public class TripHibernateDao implements TripDao
     }
 
     @Override
-    public PaginatedResult<Trip> search( Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage ) {
+    public PaginatedResult<Trip> search( Double latitude, Double longitude, LocalDate from, LocalDate to, int page,
+                                         int perPage ) {
         StringBuilder queryString = new StringBuilder(
                 "from Trip as t inner join t.activities as a inner join a.place as p " + "where 1=1 " );
 
