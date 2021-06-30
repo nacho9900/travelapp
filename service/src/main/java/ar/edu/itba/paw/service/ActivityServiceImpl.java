@@ -20,10 +20,10 @@ import java.util.Optional;
 public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
-    ActivityDao activityDao;
+    private ActivityDao activityDao;
 
     @Autowired
-    PlaceService placeService;
+    private PlaceService placeService;
 
     @Override
     public Optional<Activity> findById(long id) {

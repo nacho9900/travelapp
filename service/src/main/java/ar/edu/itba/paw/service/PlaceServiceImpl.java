@@ -11,25 +11,26 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class PlaceServiceImpl implements PlaceService {
+public class PlaceServiceImpl implements PlaceService
+{
 
     @Autowired
-    PlaceDao pd;
+    private PlaceDao placeDao;
 
     @Override
-    public Place createIfNotExists( String googleId, String name, double latitude, double longitude, String address) {
+    public Place createIfNotExists( String googleId, String name, double latitude, double longitude, String address ) {
         Optional<Place> maybePlace = findByGoogleId( googleId );
-        return maybePlace.orElseGet( () -> pd.create( googleId, name, latitude, longitude, address ) );
+        return maybePlace.orElseGet( () -> placeDao.create( googleId, name, latitude, longitude, address ) );
 
     }
 
     @Override
-    public Optional<Place> findById(long id) {
-        return pd.findById(id);
+    public Optional<Place> findById( long id ) {
+        return placeDao.findById( id );
     }
 
     @Override
-    public Optional<Place> findByGoogleId(String googleId) {
-        return pd.findByGoogleId(googleId);
+    public Optional<Place> findByGoogleId( String googleId ) {
+        return placeDao.findByGoogleId( googleId );
     }
 }

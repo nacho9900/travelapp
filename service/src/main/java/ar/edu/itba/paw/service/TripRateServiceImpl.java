@@ -14,7 +14,7 @@ import java.util.Optional;
 @Transactional
 public class TripRateServiceImpl implements TripRateService {
     @Autowired
-    TripRateDao tripRateDao;
+    private TripRateDao tripRateDao;
 
     @Override
     public TripRate create( TripMember member, int rate) {

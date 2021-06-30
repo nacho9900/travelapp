@@ -16,7 +16,7 @@ import java.util.Optional;
 public class TripCommentServiceImpl implements TripCommentsService
 {
     @Autowired
-    TripCommentsDao tripCommentsDao;
+    private TripCommentsDao tripCommentsDao;
 
     @Override
     public TripComment create( TripMember member, String comment ) {

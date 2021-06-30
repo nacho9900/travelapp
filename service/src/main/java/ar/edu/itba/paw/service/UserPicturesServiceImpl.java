@@ -18,7 +18,6 @@ import java.util.Optional;
 @Transactional
 public class UserPicturesServiceImpl extends ImageAbstractService implements UserPicturesService
 {
-
     @Autowired
     private UserPicturesDao userPicturesDao;
 

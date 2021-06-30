@@ -42,7 +42,6 @@ public class UserServiceImpl implements UserService
         return userDao.findByUsername( email );
     }
 
-
     @Override
     public User create( String firstname, String lastname, String email, String password, LocalDate birthday,
                         String nationality, String biography, Locale locale ) {

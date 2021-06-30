@@ -19,7 +19,7 @@ import java.util.Optional;
 public class TripPicturesServiceImpl extends ImageAbstractService implements TripPicturesService
 {
     @Autowired
-    TripPicturesDao tripPicturesDao;
+    private TripPicturesDao tripPicturesDao;
 
     private final int MAX_PICTURE_SIZE = 5000000; //5MB
 
