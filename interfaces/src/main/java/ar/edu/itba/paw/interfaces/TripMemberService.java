@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.User;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 public interface TripMemberService
@@ -17,7 +18,7 @@ public interface TripMemberService
 
     Optional<TripMember> findByTripIdAndUsername( long tripId, String username );
 
-    void delete( long id );
+    void delete( Trip trip, long id, Locale locale );
 
     TripMember update( TripMember tripMember );
 

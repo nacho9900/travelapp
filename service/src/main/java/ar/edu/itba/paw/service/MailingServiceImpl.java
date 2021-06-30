@@ -34,6 +34,10 @@ public class MailingServiceImpl implements MailingService
     private static final String JOIN_REQUEST_ACCEPTED = "join-request-accepted";
     private static final String MEMBER_NEW_EMAIL = "member-new";
 
+    //TODO: CHANGE IN PROD
+    private static final String FRONTEND_URL = "localhost:8080";
+    //    private static final String FRONTEND_URL = "http://pawserver.it.itba.edu.ar/paw-2019a-4";
+
     @Autowired
     private TemplateEngine htmlTemplateEngine;
 
@@ -42,9 +46,8 @@ public class MailingServiceImpl implements MailingService
 
     @Async
     @Override
-    public void welcomeAndVerificationEmail( String name, String email, String token, String frontendUrl,
-                                             Locale locale ) {
-        String btnHref = frontendUrl + "/verify/" + token;
+    public void welcomeAndVerificationEmail( String name, String email, String token, Locale locale ) {
+        String btnHref = FRONTEND_URL + "/verify/" + token;
         final Context context = new Context( locale );
         context.setVariable( "btnHref", "http://" + btnHref );
         context.setVariable( "name", name );
@@ -54,9 +57,8 @@ public class MailingServiceImpl implements MailingService
 
     @Async
     @Override
-    public void sendPasswordRecoveryEmail( String name, String email, String token, String frontEndUrl,
-                                           Locale locale ) {
-        String btnHref = frontEndUrl + "/recovery/" + token;
+    public void sendPasswordRecoveryEmail( String name, String email, String token, Locale locale ) {
+        String btnHref = FRONTEND_URL + "/recovery/" + token;
         final Context context = new Context( locale );
         context.setVariable( "btnHref", "http://" + btnHref );
         String html = htmlTemplateEngine.process( PASSWORD_RECOVERY_EMAIL, context );
@@ -65,10 +67,9 @@ public class MailingServiceImpl implements MailingService
 
     @Async
     @Override
-    public void sendNewJoinRequestEmail( String userName, String adminName, String email, long tripId,
-                                         String frontendUrl, Locale locale ) {
+    public void sendNewJoinRequestEmail( String userName, String adminName, String email, long tripId, Locale locale ) {
 
-        String btnHref = frontendUrl + "/trip/" + tripId;
+        String btnHref = FRONTEND_URL + "/trip/" + tripId;
         final Context context = new Context( locale );
         context.setVariable( "btnHref", "http://" + btnHref );
         context.setVariable( "name", userName );
@@ -79,8 +80,8 @@ public class MailingServiceImpl implements MailingService
     @Async
     @Override
     public void exitTripEmail( String userName, String adminName, String email, long tripId, String tripName,
-                               String frontendUrl, Locale locale ) {
-        String btnHref = frontendUrl + "/trip/" + tripId;
+                               Locale locale ) {
+        String btnHref = FRONTEND_URL + "/trip/" + tripId;
         final Context context = new Context( locale );
         context.setVariable( "btnHref", "http://" + btnHref );
         context.setVariable( "name", userName );
@@ -91,9 +92,8 @@ public class MailingServiceImpl implements MailingService
 
     @Async
     @Override
-    public void requestAcceptedEmail( String userName, String email, long tripId, String tripName, String frontendUrl
-            , Locale locale ) {
-        String btnHref = frontendUrl + "/trip/" + tripId;
+    public void requestAcceptedEmail( String userName, String email, long tripId, String tripName, Locale locale ) {
+        String btnHref = FRONTEND_URL + "/trip/" + tripId;
         final Context context = new Context( locale );
         context.setVariable( "btnHref", "http://" + btnHref );
         context.setVariable( "trip", tripName );
@@ -104,8 +104,8 @@ public class MailingServiceImpl implements MailingService
     @Async
     @Override
     public void newMemberEmail( String userName, String memberName, String email, long tripId, String tripName,
-                                String frontendUrl, Locale locale ) {
-        String btnHref = frontendUrl + "/trip/" + tripId;
+                                Locale locale ) {
+        String btnHref = FRONTEND_URL + "/trip/" + tripId;
         final Context context = new Context( locale );
         context.setVariable( "btnHref", "http://" + btnHref );
         context.setVariable( "name", memberName );

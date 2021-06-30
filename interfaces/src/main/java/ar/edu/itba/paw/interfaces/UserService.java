@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.PasswordRecoveryToken;
 import ar.edu.itba.paw.model.User;
 
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,8 +16,7 @@ public interface UserService
 
     Optional<User> findByUsername( final String email );
 
-    User create( final String firstname, final String lastname, final String email, final String password,
-                 final LocalDate birthday, final String nationality, final String biography );
+    User create( final String firstname, final String lastname, final String email, final String password, final LocalDate birthday, final String nationality, final String biography, Locale locale );
 
     User update( User user, String firstname, String lastname, LocalDate birthday, String nationality,
                  String biography );

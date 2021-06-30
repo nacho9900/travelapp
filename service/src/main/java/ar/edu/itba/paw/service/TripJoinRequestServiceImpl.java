@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.TripJoinRequestDao;
 import ar.edu.itba.paw.interfaces.TripJoinRequestService;
 import ar.edu.itba.paw.interfaces.TripMemberService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Transactional
@@ -20,15 +22,32 @@ import java.util.Optional;
 public class TripJoinRequestServiceImpl implements TripJoinRequestService
 {
     @Autowired
-    TripJoinRequestDao tripJoinRequestDao;
+    private TripJoinRequestDao tripJoinRequestDao;
 
     @Autowired
-    TripMemberService tripMemberService;
+    private TripMemberService tripMemberService;
+
+    @Autowired
+    private MailingService mailingService;
 
     @Override
-    public TripMember accept( TripJoinRequest tripJoinRequest ) {
+    public TripMember accept( Trip trip, TripJoinRequest tripJoinRequest, Locale locale ) {
+        User user = tripJoinRequest.getUser();
+
         TripMember member = tripMemberService.create( tripJoinRequest.getTrip(), tripJoinRequest.getUser() );
+
         updateStatus( tripJoinRequest, TripJoinRequestStatus.ACCEPTED );
+
+        mailingService.requestAcceptedEmail( user.getFullName(), user.getEmail(), trip.getId(), trip.getName(),
+                                             locale );
+
+        tripMemberService.getAllByTripId( trip.getId() ).forEach( x -> {
+            if ( x.getId() != member.getId() ) {
+                mailingService.newMemberEmail( user.getFullName(), x.getUser().getFullName(), x.getUser().getEmail(),
+                                               trip.getId(), trip.getName(), locale );
+            }
+        } );
+
         return member;
     }
 
@@ -48,8 +67,16 @@ public class TripJoinRequestServiceImpl implements TripJoinRequestService
     }
 
     @Override
-    public TripJoinRequest create( User user, Trip trip, String message ) {
-        return tripJoinRequestDao.create( user, trip, message );
+    public TripJoinRequest create( User user, Trip trip, String message, Locale locale ) {
+        TripJoinRequest request = tripJoinRequestDao.create( user, trip, message );
+
+        tripMemberService.getAllAdmins( trip.getId() )
+                         .forEach( x -> mailingService.sendNewJoinRequestEmail( user.getFullName(),
+                                                                                x.getUser().getFullName(),
+                                                                                x.getUser().getEmail(), trip.getId(),
+                                                                                locale ) );
+
+        return request;
     }
 
     @Override

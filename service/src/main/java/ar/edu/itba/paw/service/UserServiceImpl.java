@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.PasswordRecoveryTokenService;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,6 +29,9 @@ public class UserServiceImpl implements UserService
     @Autowired
     private PasswordRecoveryTokenService passwordRecoveryTokenService;
 
+    @Autowired
+    private MailingService mailingService;
+
     @Override
     public Optional<User> findById( long id ) {
         return userDao.findById( id );
@@ -40,9 +45,14 @@ public class UserServiceImpl implements UserService
 
     @Override
     public User create( String firstname, String lastname, String email, String password, LocalDate birthday,
-                        String nationality, String biography ) {
-        return userDao.create( firstname, lastname, email, passwordEncoder.encode( password ), birthday, nationality,
-                               biography, UUID.randomUUID() );
+                        String nationality, String biography, Locale locale ) {
+        User user = userDao.create( firstname, lastname, email, passwordEncoder.encode( password ), birthday,
+                                    nationality, biography, UUID.randomUUID() );
+
+        mailingService.welcomeAndVerificationEmail( user.getFullName(), user.getEmail(),
+                                                    user.getVerificationToken().toString(), locale );
+
+        return user;
     }
 
     @Override

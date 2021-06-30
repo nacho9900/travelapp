@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ActivityService;
-import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.TripCommentsService;
 import ar.edu.itba.paw.interfaces.TripJoinRequestService;
 import ar.edu.itba.paw.interfaces.TripMemberService;
@@ -75,7 +74,7 @@ import java.util.stream.Stream;
 
 @Component
 @Path( "/trip" )
-public class TripController extends BaseController
+public class TripController
 {
     @Autowired
     private UserService userService;
@@ -103,9 +102,6 @@ public class TripController extends BaseController
 
     @Autowired
     private TripCommentsService tripCommentsService;
-
-    @Autowired
-    private MailingService mailingService;
 
     @Context
     private UriInfo uriInfo;
@@ -562,14 +558,7 @@ public class TripController extends BaseController
             return Response.status( Response.Status.FORBIDDEN ).build();
         }
 
-        tripMemberService.delete( memberId );
-
-        //TODO: Meter esto adentro del delete
-        tripMemberService.getAllByTripId( id ).forEach( x -> {
-            mailingService.exitTripEmail( member.getUser().getFullName(), x.getUser().getFullName(),
-                                          x.getUser().getEmail(), id, maybeTrip.get().getName(), getFrontendUrl(),
-                                          httpRequest.getLocale() );
-        } );
+        tripMemberService.delete( maybeTrip.get(), memberId, httpRequest.getLocale() );
 
         return Response.ok().build();
     }
@@ -676,14 +665,8 @@ public class TripController extends BaseController
 
         User user = maybeUser.get();
 
-        TripJoinRequest request = tripJoinRequestService.create( user, maybeTrip.get(), joinTripDto.getMessage() );
-
-        tripMemberService.getAllAdmins( id )
-                         .forEach( x -> mailingService.sendNewJoinRequestEmail( user.getFullName(),
-                                                                                x.getUser().getFullName(),
-                                                                                x.getUser().getEmail(), id,
-                                                                                getFrontendUrl(),
-                                                                                httpRequest.getLocale() ) );
+        TripJoinRequest request = tripJoinRequestService.create( user, maybeTrip.get(), joinTripDto.getMessage(),
+                                                                 httpRequest.getLocale() );
 
         return Response.ok().entity( TripJoinRequestDto.fromTripJoinRequest( request, uriInfo, id ) ).build();
     }
@@ -742,20 +725,8 @@ public class TripController extends BaseController
                            .build();
         }
 
-        User user = maybeJoinRequest.get().getUser();
-
-        TripMember tripMember = tripJoinRequestService.accept( maybeJoinRequest.get() );
-
-        mailingService.requestAcceptedEmail( user.getFullName(), user.getEmail(), id, maybeTrip.get().getName(),
-                                             getFrontendUrl(), httpRequest.getLocale() );
-
-        tripMemberService.getAllByTripId( id ).forEach( x -> {
-            if ( x.getId() != tripMember.getId() ) {
-                mailingService.newMemberEmail( user.getFullName(), x.getUser().getFullName(), x.getUser().getEmail(),
-                                               id, maybeTrip.get().getName(), getFrontendUrl(),
-                                               httpRequest.getLocale() );
-            }
-        } );
+        TripMember tripMember = tripJoinRequestService.accept( maybeTrip.get(), maybeJoinRequest.get(),
+                                                               httpRequest.getLocale() );
 
         return Response.ok().entity( TripMemberDto.fromTripMember( tripMember, uriInfo, id ) ).build();
     }

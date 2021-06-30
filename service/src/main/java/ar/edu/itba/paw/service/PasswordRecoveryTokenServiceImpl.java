@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.PasswordRecoveryTokenDao;
 import ar.edu.itba.paw.interfaces.PasswordRecoveryTokenService;
 import ar.edu.itba.paw.model.PasswordRecoveryToken;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,25 +22,34 @@ public class PasswordRecoveryTokenServiceImpl implements PasswordRecoveryTokenSe
     @Autowired
     private PasswordRecoveryTokenDao passwordRecoveryTokenDao;
 
+    @Autowired
+    private MailingService mailingService;
+
     @Override
     public Optional<PasswordRecoveryToken> findByUserId( long userId ) {
         return passwordRecoveryTokenDao.findByUserId( userId );
     }
 
     @Override
-    public PasswordRecoveryToken createOrUpdate( User user ) {
+    public PasswordRecoveryToken createOrUpdate( User user, Locale locale ) {
         Optional<PasswordRecoveryToken> maybeToken = findByUserId( user.getId() );
+        PasswordRecoveryToken token;
 
         if ( maybeToken.isPresent() ) {
-            PasswordRecoveryToken token = maybeToken.get();
-            token.setToken( UUID.randomUUID() );
-            token.setExpiresIn( LocalDateTime.now( ZoneOffset.UTC ).plusHours( 3 ) );
-            return update( token );
+            PasswordRecoveryToken tokenToUpdate = maybeToken.get();
+            tokenToUpdate.setToken( UUID.randomUUID() );
+            tokenToUpdate.setExpiresIn( LocalDateTime.now( ZoneOffset.UTC ).plusHours( 3 ) );
+            token = update( tokenToUpdate );
         }
         else {
-            return passwordRecoveryTokenDao.create( UUID.randomUUID(),
-                                                    LocalDateTime.now( ZoneOffset.UTC ).plusHours( 3 ), user );
+            token = passwordRecoveryTokenDao.create( UUID.randomUUID(),
+                                                     LocalDateTime.now( ZoneOffset.UTC ).plusHours( 3 ), user );
         }
+
+        mailingService.sendPasswordRecoveryEmail( user.getFullName(), user.getEmail(), token.getToken().toString(),
+                                                  locale );
+
+        return token;
     }
 
     @Override

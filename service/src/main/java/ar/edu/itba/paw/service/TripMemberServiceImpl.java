@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.TripCommentsService;
 import ar.edu.itba.paw.interfaces.TripMemberDao;
 import ar.edu.itba.paw.interfaces.TripMemberService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Transactional
@@ -27,6 +29,9 @@ public class TripMemberServiceImpl implements TripMemberService
 
     @Autowired
     private TripCommentsService tripCommentsService;
+
+    @Autowired
+    private MailingService mailingService;
 
     @Override
     public Optional<TripMember> findById( long id ) {
@@ -49,10 +54,15 @@ public class TripMemberServiceImpl implements TripMemberService
     }
 
     @Override
-    public void delete( long id ) {
+    public void delete( Trip trip, long id, Locale locale ) {
         tripRateService.deleteByMemberId( id );
         tripCommentsService.deleteAllByMemberId( id );
         tripMemberDao.delete( id );
+
+        this.getAllByTripId( id ).forEach( member -> {
+            mailingService.exitTripEmail( member.getUser().getFullName(), member.getUser().getFullName(),
+                                          member.getUser().getEmail(), id, trip.getName(), locale );
+        } );
     }
 
     @Override

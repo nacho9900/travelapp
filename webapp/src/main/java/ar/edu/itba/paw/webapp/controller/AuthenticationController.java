@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.PasswordRecoveryTokenService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.PasswordRecoveryToken;
@@ -34,16 +33,13 @@ import java.util.Set;
 
 @Component
 @Path( "/auth" )
-public class AuthenticationController extends BaseController
+public class AuthenticationController
 {
     @Autowired
     private UserService userService;
 
     @Autowired
     private Validator validator;
-
-    @Autowired
-    private MailingService mailingService;
 
     @Autowired
     private PasswordRecoveryTokenService passwordRecoveryTokenService;
@@ -55,7 +51,7 @@ public class AuthenticationController extends BaseController
     @Path( "/signup" )
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
-    public Response signup( @RequestBody SignUpDto signUpDto, @Context HttpServletRequest request ) {
+    public Response signup( @RequestBody SignUpDto signUpDto, @Context HttpServletRequest httpRequest ) {
         Set<ConstraintViolation<SignUpDto>> violations = validator.validate( signUpDto );
 
         if ( !violations.isEmpty() ) {
@@ -70,11 +66,9 @@ public class AuthenticationController extends BaseController
 
         User user = userService.create( signUpDto.getFirstname(), signUpDto.getLastname(), signUpDto.getEmail(),
                                         signUpDto.getPassword(), signUpDto.getBirthday(), signUpDto.getNationality(),
-                                        null );
+                                        null, httpRequest.getLocale() );
 
-        mailingService.welcomeAndVerificationEmail( user.getFullName(), user.getEmail(),
-                                                    user.getVerificationToken().toString(), getFrontendUrl(),
-                                                    request.getLocale() );
+
 
         return Response.created( uriInfo.getBaseUriBuilder()
                                         .path( UsersController.class )
@@ -85,7 +79,7 @@ public class AuthenticationController extends BaseController
     @POST
     @Path( "/password-recovery" )
     public Response passwordRecovery(
-            @RequestBody PasswordRecoveryDto passwordRecoveryDto, @Context HttpServletRequest request ) {
+            @RequestBody PasswordRecoveryDto passwordRecoveryDto, @Context HttpServletRequest httpRequest ) {
         Set<ConstraintViolation<PasswordRecoveryDto>> violations = validator.validate( passwordRecoveryDto );
 
         if ( !violations.isEmpty() ) {
@@ -102,10 +96,7 @@ public class AuthenticationController extends BaseController
 
         User user = maybeUser.get();
 
-        PasswordRecoveryToken token = passwordRecoveryTokenService.createOrUpdate( user );
-
-        mailingService.sendPasswordRecoveryEmail( user.getFirstname() + "" + user.getLastname(), user.getEmail(),
-                                                  token.getToken().toString(), getFrontendUrl(), request.getLocale() );
+        PasswordRecoveryToken token = passwordRecoveryTokenService.createOrUpdate( user, httpRequest.getLocale());
 
         return Response.ok().build();
     }

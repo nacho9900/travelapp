@@ -6,17 +6,18 @@ import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.User;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 public interface TripJoinRequestService
 {
-    TripMember accept( TripJoinRequest tripJoinRequest );
+    TripMember accept( Trip trip, TripJoinRequest tripJoinRequest, Locale locale );
 
     TripJoinRequest reject( TripJoinRequest tripJoinRequest );
 
     Optional<TripJoinRequest> findById( long id );
 
-    TripJoinRequest create( User user, Trip trip, String message );
+    TripJoinRequest create( User user, Trip trip, String message, Locale locale );
 
     Optional<TripJoinRequest> getLastByTripIdAndUsername( long tripId, String username );
 
