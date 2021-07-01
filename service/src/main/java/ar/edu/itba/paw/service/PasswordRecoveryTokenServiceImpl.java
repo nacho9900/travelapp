@@ -25,12 +25,13 @@ public class PasswordRecoveryTokenServiceImpl implements PasswordRecoveryTokenSe
     @Autowired
     private MailingService mailingService;
 
+    private static final int TOKEN_EXPIRATION_TIME_HOURS = 3;
+
     @Override
     public Optional<PasswordRecoveryToken> findByUserId( long userId ) {
         return passwordRecoveryTokenDao.findByUserId( userId );
     }
 
-    @Override
     public PasswordRecoveryToken createOrUpdate( User user, Locale locale ) {
         Optional<PasswordRecoveryToken> maybeToken = findByUserId( user.getId() );
         PasswordRecoveryToken token;
@@ -38,12 +39,14 @@ public class PasswordRecoveryTokenServiceImpl implements PasswordRecoveryTokenSe
         if ( maybeToken.isPresent() ) {
             PasswordRecoveryToken tokenToUpdate = maybeToken.get();
             tokenToUpdate.setToken( UUID.randomUUID() );
-            tokenToUpdate.setExpiresIn( LocalDateTime.now( ZoneOffset.UTC ).plusHours( 3 ) );
+            tokenToUpdate.setExpiresIn( LocalDateTime.now( ZoneOffset.UTC ).plusHours( TOKEN_EXPIRATION_TIME_HOURS ) );
             token = update( tokenToUpdate );
         }
         else {
-            token = passwordRecoveryTokenDao.create( UUID.randomUUID(),
-                                                     LocalDateTime.now( ZoneOffset.UTC ).plusHours( 3 ), user );
+            token = passwordRecoveryTokenDao.create( UUID.randomUUID(), LocalDateTime.now( ZoneOffset.UTC )
+                                                                                     .plusHours(
+                                                                                             TOKEN_EXPIRATION_TIME_HOURS ),
+                                                     user );
         }
 
         mailingService.sendPasswordRecoveryEmail( user.getFullName(), user.getEmail(), token.getToken().toString(),

@@ -20,8 +20,8 @@ public class UserHibernateDao implements UserDao
     @Override
     public User create( String firstname, String lastname, String email, String password, LocalDate birthday,
                         String nationality, String biography, UUID verificationToken ) {
-        final User user = new User( firstname, lastname, email, password, birthday, nationality, biography );
-        user.setVerificationToken( verificationToken );
+        final User user = new User( firstname, lastname, email, password, birthday, nationality, biography,
+                                    verificationToken );
         em.persist( user );
         return user;
     }
@@ -49,6 +49,4 @@ public class UserHibernateDao implements UserDao
         query.setParameter( "email", email );
         return query.getResultList().stream().findFirst();
     }
-
-
 }

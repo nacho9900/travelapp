@@ -6,6 +6,10 @@ import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.PasswordRecoveryToken;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exception.EntityAlreadyExistsException;
+import ar.edu.itba.paw.model.exception.InvalidTokenException;
+import ar.edu.itba.paw.model.exception.InvalidUserException;
+import ar.edu.itba.paw.model.exception.UserNotVerifiedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,7 +48,12 @@ public class UserServiceImpl implements UserService
 
     @Override
     public User create( String firstname, String lastname, String email, String password, LocalDate birthday,
-                        String nationality, String biography, Locale locale ) {
+                        String nationality, String biography, Locale locale )
+            throws EntityAlreadyExistsException {
+        if ( this.findByUsername( email ).isPresent() ) {
+            throw new EntityAlreadyExistsException();
+        }
+
         User user = userDao.create( firstname, lastname, email, passwordEncoder.encode( password ), birthday,
                                     nationality, biography, UUID.randomUUID() );
 
@@ -72,14 +81,28 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public User changePassword( User user, PasswordRecoveryToken token, String passwordNew ) {
+    public User changePassword( UUID tokenUUID, String password )
+            throws InvalidTokenException, UserNotVerifiedException {
+        Optional<PasswordRecoveryToken> maybeToken = passwordRecoveryTokenService.findByToken( tokenUUID );
+
+        if ( !maybeToken.isPresent() || !maybeToken.get().isValid() ) {
+            throw new InvalidTokenException();
+        }
+
+        PasswordRecoveryToken token = maybeToken.get();
+        User user = token.getUser();
+
+        if ( !user.isVerified() ) {
+            throw new UserNotVerifiedException();
+        }
+
         passwordRecoveryTokenService.markAsUsed( token );
-        return changePassword( user, passwordNew );
+        return changePassword( user, password );
     }
 
     @Override
-    public User changePassword( User user, String passwordNew ) {
-        user.setPassword( passwordEncoder.encode( passwordNew ) );
+    public User changePassword( User user, String password ) {
+        user.setPassword( passwordEncoder.encode( password ) );
         return userDao.update( user );
     }
 
@@ -96,5 +119,16 @@ public class UserServiceImpl implements UserService
         userDao.update( user );
 
         return true;
+    }
+
+    @Override
+    public void initPasswordRecovery(String email, Locale locale) throws InvalidUserException {
+        Optional<User> maybeUser = this.findByUsername( email );
+
+        if(!maybeUser.isPresent() || !maybeUser.get().isVerified()) {
+            throw new InvalidUserException();
+        }
+
+        passwordRecoveryTokenService.createOrUpdate( maybeUser.get(), locale );
     }
 }

@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 @Entity
@@ -32,7 +33,8 @@ public class PasswordRecoveryToken
 
     /////////////////
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne( fetch = FetchType.LAZY,
+               optional = false )
     private User user;
 
     /////////////////
@@ -72,6 +74,10 @@ public class PasswordRecoveryToken
 
     public void setUsed( boolean used ) {
         this.used = used;
+    }
+
+    public boolean isValid() {
+        return !this.isUsed() && LocalDateTime.now( ZoneOffset.UTC ).isBefore( this.getExpiresIn() );
     }
 
     public PasswordRecoveryToken() {

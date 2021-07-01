@@ -92,9 +92,21 @@ public class User
     /////////////
 
     public User( long id, String firstname, String lastname, String email, String password, LocalDate birthday,
+                 String nationality, String biography, UUID verificationToken ) {
+        this( firstname, lastname, email, password, birthday, nationality, biography, verificationToken );
+        this.id = id;
+    }
+
+    public User( long id, String firstname, String lastname, String email, String password, LocalDate birthday,
                  String nationality, String biography ) {
         this( firstname, lastname, email, password, birthday, nationality, biography );
         this.id = id;
+    }
+
+    public User( String firstname, String lastname, String email, String password, LocalDate birthday,
+                 String nationality, String biography, UUID verificationToken ) {
+        this( firstname, lastname, email, password, birthday, nationality, biography );
+        this.verificationToken = verificationToken;
     }
 
     public User( String firstname, String lastname, String email, String password, LocalDate birthday,

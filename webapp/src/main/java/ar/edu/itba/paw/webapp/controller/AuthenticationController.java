@@ -2,8 +2,11 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.PasswordRecoveryTokenService;
 import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.model.PasswordRecoveryToken;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exception.EntityAlreadyExistsException;
+import ar.edu.itba.paw.model.exception.InvalidTokenException;
+import ar.edu.itba.paw.model.exception.InvalidUserException;
+import ar.edu.itba.paw.model.exception.UserNotVerifiedException;
 import ar.edu.itba.paw.webapp.dto.authentication.PasswordRecoveryDto;
 import ar.edu.itba.paw.webapp.dto.authentication.SignUpDto;
 import ar.edu.itba.paw.webapp.dto.authentication.TokenPasswordDto;
@@ -26,8 +29,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.Set;
 
@@ -58,17 +59,16 @@ public class AuthenticationController
             return Response.status( Response.Status.BAD_REQUEST ).build();
         }
 
-        Optional<User> maybeUser = this.userService.findByUsername( signUpDto.getEmail() );
+        User user = null;
 
-        if ( maybeUser.isPresent() ) {
+        try {
+            user = userService.create( signUpDto.getFirstname(), signUpDto.getLastname(), signUpDto.getEmail(),
+                                       signUpDto.getPassword(), signUpDto.getBirthday(), signUpDto.getNationality(),
+                                       null, httpRequest.getLocale() );
+        }
+        catch ( EntityAlreadyExistsException e ) {
             return Response.status( Response.Status.CONFLICT ).build();
         }
-
-        User user = userService.create( signUpDto.getFirstname(), signUpDto.getLastname(), signUpDto.getEmail(),
-                                        signUpDto.getPassword(), signUpDto.getBirthday(), signUpDto.getNationality(),
-                                        null, httpRequest.getLocale() );
-
-
 
         return Response.created( uriInfo.getBaseUriBuilder()
                                         .path( UsersController.class )
@@ -88,15 +88,12 @@ public class AuthenticationController
                            .build();
         }
 
-        Optional<User> maybeUser = userService.findByUsername( passwordRecoveryDto.getEmail() );
-
-        if ( !maybeUser.isPresent() || !maybeUser.get().isVerified() ) {
+        try {
+            userService.initPasswordRecovery( passwordRecoveryDto.getEmail(), httpRequest.getLocale() );
+        }
+        catch ( InvalidUserException e ) {
             return Response.ok().build();
         }
-
-        User user = maybeUser.get();
-
-        PasswordRecoveryToken token = passwordRecoveryTokenService.createOrUpdate( user, httpRequest.getLocale());
 
         return Response.ok().build();
     }
@@ -112,18 +109,12 @@ public class AuthenticationController
                            .build();
         }
 
-        Optional<PasswordRecoveryToken> maybeToken = passwordRecoveryTokenService.findByToken(
-                tokenPasswordDto.getToken() );
-
-        if ( !maybeToken.isPresent() ||
-             maybeToken.get().getExpiresIn().isBefore( LocalDateTime.now( ZoneOffset.UTC ) ) ||
-             maybeToken.get().isUsed() || !maybeToken.get().getUser().isVerified() ) {
+        try {
+            userService.changePassword( tokenPasswordDto.getToken(), tokenPasswordDto.getPassword() );
+        }
+        catch ( InvalidTokenException | UserNotVerifiedException e ) {
             return Response.status( Response.Status.NOT_FOUND ).build();
         }
-
-        User user = maybeToken.get().getUser();
-
-        userService.changePassword( user, maybeToken.get(), tokenPasswordDto.getPassword() );
 
         return Response.ok().build();
     }
