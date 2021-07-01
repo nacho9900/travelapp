@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.PasswordRecoveryTokenService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exception.EntityAlreadyExistsException;
@@ -29,7 +28,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -41,9 +39,6 @@ public class AuthenticationController
 
     @Autowired
     private Validator validator;
-
-    @Autowired
-    private PasswordRecoveryTokenService passwordRecoveryTokenService;
 
     @Context
     private UriInfo uriInfo;
@@ -59,7 +54,7 @@ public class AuthenticationController
             return Response.status( Response.Status.BAD_REQUEST ).build();
         }
 
-        User user = null;
+        User user;
 
         try {
             user = userService.create( signUpDto.getFirstname(), signUpDto.getLastname(), signUpDto.getEmail(),
