@@ -2,9 +2,11 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exception.EntityAlreadyExistsException;
+import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidTokenException;
 import ar.edu.itba.paw.model.exception.InvalidUserException;
 import ar.edu.itba.paw.model.exception.UserNotVerifiedException;
+import ar.edu.itba.paw.model.exception.ValidationException;
 
 import java.time.LocalDate;
 import java.util.Locale;
@@ -28,7 +30,8 @@ public interface UserService
     User changePassword( UUID tokenUUID, String passwordNew )
             throws InvalidTokenException, UserNotVerifiedException;
 
-    User changePassword( User user, String password );
+    User changePassword( String username, String passwordCurrentRaw, String passwordNew )
+            throws EntityNotFoundException, ValidationException;
 
     boolean verifyEmail( UUID verificationToken );
 

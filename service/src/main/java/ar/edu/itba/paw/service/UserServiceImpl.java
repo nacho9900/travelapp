@@ -7,9 +7,11 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.PasswordRecoveryToken;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exception.EntityAlreadyExistsException;
+import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidTokenException;
 import ar.edu.itba.paw.model.exception.InvalidUserException;
 import ar.edu.itba.paw.model.exception.UserNotVerifiedException;
+import ar.edu.itba.paw.model.exception.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -101,7 +103,24 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public User changePassword( User user, String password ) {
+    public User changePassword( String username, String passwordCurrentRaw, String passwordNew )
+            throws EntityNotFoundException, ValidationException {
+        Optional<User> maybeUser = findByUsername( username );
+
+        if ( !maybeUser.isPresent() ) {
+            throw new EntityNotFoundException();
+        }
+
+        User user = maybeUser.get();
+
+        if ( !matchPassword( user.getPassword(), passwordCurrentRaw ) ) {
+            throw new ValidationException( "passwords didn't match" );
+        }
+
+        return changePassword( user, passwordNew );
+    }
+
+    private User changePassword( User user, String password ) {
         user.setPassword( passwordEncoder.encode( password ) );
         return userDao.update( user );
     }
@@ -122,10 +141,10 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public void initPasswordRecovery(String email, Locale locale) throws InvalidUserException {
+    public void initPasswordRecovery( String email, Locale locale ) throws InvalidUserException {
         Optional<User> maybeUser = this.findByUsername( email );
 
-        if(!maybeUser.isPresent() || !maybeUser.get().isVerified()) {
+        if ( !maybeUser.isPresent() || !maybeUser.get().isVerified() ) {
             throw new InvalidUserException();
         }
 

@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
+import ar.edu.itba.paw.model.exception.EntityNotFoundException;
+import ar.edu.itba.paw.model.exception.ValidationException;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
 import ar.edu.itba.paw.webapp.dto.general.FileDto;
@@ -122,7 +124,20 @@ public class UsersController
                            .build();
         }
 
-        User user = userService.changePassword( maybeUser.get(), newPasswordDto.getPasswordNew() );
+        User user = maybeUser.get();
+
+        try {
+            userService.changePassword( user.getEmail(), newPasswordDto.getPasswordCurrent(),
+                                        newPasswordDto.getPasswordNew() );
+        }
+        catch ( EntityNotFoundException e ) {
+            //Do Nothing
+        }
+        catch ( ValidationException e ) {
+            return Response.status( Response.Status.CONFLICT )
+                           .entity( new ErrorDto( "passwords didn't match" ) )
+                           .build();
+        }
 
         return Response.ok().build();
     }
