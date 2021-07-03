@@ -41,7 +41,7 @@ public class TripServiceImpl implements TripService
             throw new InvalidUserException();
         }
 
-        if(startDate.isAfter( endDate )) {
+        if ( startDate.isAfter( endDate ) ) {
             throw new InvalidDateRangeException();
         }
 
@@ -65,16 +65,6 @@ public class TripServiceImpl implements TripService
     }
 
     @Override
-    public boolean isUserOwnerOrAdmin( long tripId, String username ) {
-        return tripDao.isUserOwnerOrAdmin( tripId, username );
-    }
-
-    @Override
-    public boolean isUserMember( long id, String username ) {
-        return tripDao.isUserMember( id, username );
-    }
-
-    @Override
     public Trip update( long id, String name, String description, LocalDate startDate, LocalDate endDate,
                         String editorUsername )
             throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException {
@@ -86,11 +76,11 @@ public class TripServiceImpl implements TripService
 
         Trip trip = maybeTrip.get();
 
-        if ( !isUserOwnerOrAdmin( id, editorUsername ) ) {
+        if ( !tripMemberService.isUserOwnerOrAdmin( id, editorUsername ) ) {
             throw new UserNotOwnerOrAdminException();
         }
 
-        if(startDate.isAfter( endDate )) {
+        if ( startDate.isAfter( endDate ) ) {
             throw new InvalidDateRangeException();
         }
 

@@ -108,7 +108,7 @@ public class TestTripServiceImpl
     @Test( expected = UserNotOwnerOrAdminException.class )
     public void testUpdateWhenUserIsNotOwnerOrAdmin()
             throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException {
-        Mockito.when( tripDaoMock.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
+        Mockito.when( tripMemberService.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
                .thenReturn( false );
 
         Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
@@ -127,7 +127,8 @@ public class TestTripServiceImpl
     @Test( expected = InvalidDateRangeException.class )
     public void testUpdateWhenDatesAreMissMatch()
             throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException {
-        Mockito.when( tripDaoMock.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) ).thenReturn( true );
+        Mockito.when( tripMemberService.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
+               .thenReturn( true );
 
         Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
 
@@ -136,7 +137,8 @@ public class TestTripServiceImpl
 
     @Test
     public void testUpdate() throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException {
-        Mockito.when( tripDaoMock.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) ).thenReturn( true );
+        Mockito.when( tripMemberService.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
+               .thenReturn( true );
 
         Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
 

@@ -40,6 +40,8 @@ public class TestTripMemberHibernateDao
     /* user */
     private final long USER_ID1 = 1;
     private User user;
+    private final String USERNAME_1 = "inegro@itba.edu.ar";
+    private final String USERNAME_2 = "jdoe@itba.edu.ar";
 
     /* create */
     private final TripMemberRole ROLE = TripMemberRole.OWNER;
@@ -50,10 +52,8 @@ public class TestTripMemberHibernateDao
 
     @Before
     public void beforeEach() {
-        trip = tripDao.findById( TRIP_ID1 )
-                      .get();
-        user = userDao.findById( USER_ID1 )
-                      .get();
+        trip = tripDao.findById( TRIP_ID1 ).get();
+        user = userDao.findById( USER_ID1 ).get();
     }
 
     @Test
@@ -94,5 +94,17 @@ public class TestTripMemberHibernateDao
         Assert.assertEquals( trip, admin.getTrip() );
         Assert.assertEquals( TripMemberRole.OWNER, admin.getRole() );
         Assert.assertEquals( ID_FIND, admin.getId() );
+    }
+
+    @Test
+    public void testIsUserMember() {
+        Assert.assertTrue( tripMemberHibernateDao.isUserMember( ID_FIND, USERNAME_1 ) );
+        Assert.assertFalse( tripMemberHibernateDao.isUserMember( ID_FIND, USERNAME_2 ) );
+    }
+
+    @Test
+    public void testIsUserOwnerOrAdmin() {
+        Assert.assertTrue( tripMemberHibernateDao.isUserOwnerOrAdmin( ID_FIND, USERNAME_1 ) );
+        Assert.assertFalse( tripMemberHibernateDao.isUserOwnerOrAdmin( ID_FIND, USERNAME_2 ) );
     }
 }

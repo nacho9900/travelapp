@@ -554,7 +554,7 @@ public class TripController
         Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username );
 
         if ( !maybeTrip.isPresent() || !maybeMember.isPresent() || !maybeLoggedMember.isPresent() ||
-             !tripMemberService.memberBelongsToTheTrip( memberId, id ) ) {
+             !tripMemberService.isUserMember( memberId, id ) ) {
             return Response.status( Response.Status.NO_CONTENT ).build();
         }
 
@@ -582,7 +582,7 @@ public class TripController
         Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username );
 
         if ( !maybeTrip.isPresent() || !maybeMember.isPresent() || !maybeLoggedMember.isPresent() ||
-             !tripMemberService.memberBelongsToTheTrip( memberId, id ) ) {
+             !tripMemberService.isUserMember( memberId, id ) ) {
             return tripNotFound();
         }
 

@@ -21,10 +21,6 @@ public interface TripService
 
     PaginatedResult<Trip> getAllUserTrips( User user, int page, int perPage );
 
-    boolean isUserOwnerOrAdmin( long tripId, String username );
-
-    boolean isUserMember( long tripId, String username );
-
     Trip update( long id, String name, String description, LocalDate startDate, LocalDate endDate,
                  String editorUsername )
             throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException;

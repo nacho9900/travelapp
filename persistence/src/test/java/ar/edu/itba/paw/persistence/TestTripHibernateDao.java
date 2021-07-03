@@ -100,18 +100,6 @@ public class TestTripHibernateDao
     }
 
     @Test
-    public void testIsUserMember() {
-        Assert.assertTrue( tripDao.isUserMember( ID_FIND, USERNAME_1 ) );
-        Assert.assertFalse( tripDao.isUserMember( ID_FIND, USERNAME_2 ) );
-    }
-
-    @Test
-    public void testIsUserOwnerOrAdmin() {
-        Assert.assertTrue( tripDao.isUserOwnerOrAdmin( ID_FIND, USERNAME_1 ) );
-        Assert.assertFalse( tripDao.isUserOwnerOrAdmin( ID_FIND, USERNAME_2 ) );
-    }
-
-    @Test
     public void testSearchWithLocation() {
         final PaginatedResult<Trip> trips = tripDao.search( LAT_FIND, LNG_FIND, null, null, PAGE, PER_PAGE );
         Assert.assertNotNull( trips );

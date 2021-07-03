@@ -44,7 +44,7 @@ public class TripMemberServiceImpl implements TripMemberService
     }
 
     @Override
-    public boolean memberBelongsToTheTrip( long id, long tripId ) {
+    public boolean isUserMember( long id, long tripId ) {
         return tripMemberDao.memberBelongsToTheTrip( id, tripId );
     }
 
@@ -83,5 +83,15 @@ public class TripMemberServiceImpl implements TripMemberService
     @Override
     public List<TripMember> getAllAdmins( long tripId ) {
         return tripMemberDao.getAllAdmins(tripId);
+    }
+
+    @Override
+    public boolean isUserOwnerOrAdmin( long tripId, String username ) {
+        return tripMemberDao.isUserOwnerOrAdmin( tripId, username );
+    }
+
+    @Override
+    public boolean isUserMember( long id, String username ) {
+        return tripMemberDao.isUserMember( id, username );
     }
 }

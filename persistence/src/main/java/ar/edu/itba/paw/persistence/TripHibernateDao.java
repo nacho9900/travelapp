@@ -72,30 +72,6 @@ public class TripHibernateDao implements TripDao
     }
 
     @Override
-    public boolean isUserMember( long tripId, String username ) {
-        final TypedQuery<Trip> query = em.createQuery( "select trip from Trip as trip left join trip.members as m " +
-                                                       "left join m.user as user where trip.id = :tripId and user" +
-                                                       ".email = :username", Trip.class );
-
-        query.setParameter( "tripId", tripId );
-        query.setParameter( "username", username );
-
-        return query.getResultList().size() > 0;
-    }
-
-    @Override
-    public boolean isUserOwnerOrAdmin( long tripId, String username ) {
-        final TypedQuery<Trip> query = em.createQuery(
-                "select trip " + "from Trip as trip left join trip.members as m left join m.user as user " +
-                "where trip.id = :tripId and user.email like :username and m.role in ('ADMIN', 'OWNER')", Trip.class );
-
-        query.setParameter( "tripId", tripId );
-        query.setParameter( "username", username );
-
-        return query.getResultList().size() > 0;
-    }
-
-    @Override
     public Trip update( Trip trip ) {
         return em.merge( trip );
     }

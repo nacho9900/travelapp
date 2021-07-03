@@ -17,10 +17,6 @@ public interface TripDao
 
     void deleteTrip( long tripId );
 
-    boolean isUserMember( long tripId, String username );
-
-    boolean isUserOwnerOrAdmin( long tripId, String username );
-
     Trip update( Trip trip );
 
     PaginatedResult<Trip> search( Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage );

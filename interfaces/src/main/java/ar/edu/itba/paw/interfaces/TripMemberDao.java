@@ -25,4 +25,8 @@ public interface TripMemberDao
     TripMember create( Trip trip, User user, TripMemberRole role, boolean active );
 
     List<TripMember> getAllAdmins( long tripId );
+
+    boolean isUserOwnerOrAdmin( long tripId, String username );
+
+    boolean isUserMember( long tripId, String username );
 }

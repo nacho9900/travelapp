@@ -14,7 +14,7 @@ public interface TripMemberService
 
     List<TripMember> getAllByTripId( long tripId );
 
-    boolean memberBelongsToTheTrip( long id, long tripId );
+    boolean isUserMember( long id, long tripId );
 
     Optional<TripMember> findByTripIdAndUsername( long tripId, String username );
 
@@ -27,4 +27,8 @@ public interface TripMemberService
     TripMember createOwner( Trip trip, User user );
 
     List<TripMember> getAllAdmins( long tripId );
+
+    boolean isUserOwnerOrAdmin( long tripId, String username );
+
+    boolean isUserMember( long id, String username );
 }
