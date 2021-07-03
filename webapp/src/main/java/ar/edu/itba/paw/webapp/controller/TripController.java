@@ -18,6 +18,10 @@ import ar.edu.itba.paw.model.TripMemberRole;
 import ar.edu.itba.paw.model.TripPicture;
 import ar.edu.itba.paw.model.TripRate;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exception.EntityNotFoundException;
+import ar.edu.itba.paw.model.exception.InvalidDateRangeException;
+import ar.edu.itba.paw.model.exception.InvalidUserException;
+import ar.edu.itba.paw.model.exception.UserNotOwnerOrAdminException;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
 import ar.edu.itba.paw.webapp.dto.general.FileDto;
@@ -122,19 +126,24 @@ public class TripController
 
         tripDto.toTrip();
 
-        Optional<User> maybeOwner = userService.findByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName() );
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if ( !maybeOwner.isPresent() ) {
+        try {
+            Trip trip = tripService.create( username, tripDto.getName(), tripDto.getDescription(),
+                                            tripDto.getStartDate(), tripDto.getEndDate() );
+
+            return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( trip.getId() ) ).build() )
+                           .entity( TripDto.fromTrip( trip, uriInfo ) )
+                           .build();
+        }
+        catch ( InvalidUserException e ) {
             return Response.serverError().build();
         }
-
-        Trip trip = tripService.create( maybeOwner.get(), tripDto.getName(), tripDto.getDescription(),
-                                        tripDto.getStartDate(), tripDto.getEndDate() );
-
-        return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( trip.getId() ) ).build() )
-                       .entity( TripDto.fromTrip( trip, uriInfo ) )
-                       .build();
+        catch ( InvalidDateRangeException e ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "Invalid Date Range" ) )
+                           .build();
+        }
     }
 
     @GET
@@ -201,25 +210,24 @@ public class TripController
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username );
 
-        if ( !maybeLoggedMember.isPresent() || maybeLoggedMember.get().getRole() == TripMemberRole.MEMBER ) {
-            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        try {
+            Trip trip = tripService.update( id, tripDto.getName(), tripDto.getDescription(), tripDto.getStartDate(),
+                                            tripDto.getEndDate(), username );
+            return Response.ok().entity( TripDto.fromTrip( trip, uriInfo ) ).build();
+
         }
-
-        Optional<Trip> maybeTrip = tripService.findById( id );
-        Trip tripUpdates = tripDto.toTrip();
-
-        if ( !maybeTrip.isPresent() ) {
+        catch ( EntityNotFoundException e ) {
             return tripNotFound();
         }
-
-        Trip trip = maybeTrip.get();
-
-        trip = tripService.update( trip, tripUpdates.getName(), tripUpdates.getDescription(),
-                                   tripUpdates.getStartDate(), tripUpdates.getEndDate() );
-
-        return Response.ok().entity( TripDto.fromTrip( trip, uriInfo ) ).build();
+        catch ( UserNotOwnerOrAdminException e ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
+        catch ( InvalidDateRangeException e ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "Invalid Date Range" ) )
+                           .build();
+        }
     }
 
     @GET

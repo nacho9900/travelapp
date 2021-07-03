@@ -24,11 +24,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.TimeZone;
 import java.util.UUID;
 
 @RunWith( MockitoJUnitRunner.class )
-public class UserServiceImplTest
+public class TestUserServiceImpl
 {
     private final int ID = 1;
     private final String FIRSTNAME = "Carló";
