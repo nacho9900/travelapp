@@ -7,6 +7,7 @@ import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.exception.ActivityNotPartOfTheTripException;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidDateRangeException;
 import ar.edu.itba.paw.model.exception.UserNotOwnerOrAdminException;
@@ -60,7 +61,7 @@ public class TestActivityServiceImpl
 
     //ACTIVITY
     private final long ID = 1;
-    private final String NAME = "";
+    private final String NAME = "TEST NAME";
     private final LocalDate START_DATE_OK = LocalDate.of( 2021, 6, 1 );
     private final LocalDate END_DATE_OK = LocalDate.of( 2021, 6, 30 );
     private final LocalDate START_DATE_WRONG = LocalDate.of( 2020, 6, 1 );
@@ -89,5 +90,175 @@ public class TestActivityServiceImpl
         Assert.assertNotNull( activity );
         Assert.assertNotNull( activity.getPlace() );
         Assert.assertEquals( TRIP, activity.getTrip() );
+    }
+
+    @Test( expected = InvalidDateRangeException.class )
+    public void testCreateWhenStartDateAreInvalid()
+            throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException {
+        Mockito.when( tripServiceMock.findById( Mockito.eq( TRIP_ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( tripMemberServiceMock.isUserOwnerOrAdmin( Mockito.eq( TRIP_ID ), Mockito.eq( USERNAME ) ) )
+               .thenReturn( true );
+
+        activityService.create( TRIP_ID, NAME, START_DATE_WRONG, END_DATE_OK, PLACE, USERNAME );
+    }
+
+    @Test( expected = InvalidDateRangeException.class )
+    public void testCreateWhenEndDateAreInvalid()
+            throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException {
+        Mockito.when( tripServiceMock.findById( Mockito.eq( TRIP_ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( tripMemberServiceMock.isUserOwnerOrAdmin( Mockito.eq( TRIP_ID ), Mockito.eq( USERNAME ) ) )
+               .thenReturn( true );
+
+        activityService.create( TRIP_ID, NAME, START_DATE_OK, END_DATE_WRONG, PLACE, USERNAME );
+    }
+
+    @Test( expected = UserNotOwnerOrAdminException.class )
+    public void testCreateWhenUserIsNotOwnerOrAdmin()
+            throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException {
+        Mockito.when( tripServiceMock.findById( Mockito.eq( TRIP_ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( tripMemberServiceMock.isUserOwnerOrAdmin( Mockito.eq( TRIP_ID ), Mockito.eq( USERNAME ) ) )
+               .thenReturn( false );
+
+        activityService.create( TRIP_ID, NAME, START_DATE_WRONG, END_DATE_OK, PLACE, USERNAME );
+    }
+
+    @Test( expected = EntityNotFoundException.class )
+    public void testCreateWhenTripNotExists()
+            throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException {
+        Mockito.when( tripServiceMock.findById( Mockito.eq( TRIP_ID ) ) ).thenReturn( Optional.empty() );
+
+        activityService.create( TRIP_ID, NAME, START_DATE_WRONG, END_DATE_OK, PLACE, USERNAME );
+    }
+
+    @Test
+    public void testUpdate()
+            throws ActivityNotPartOfTheTripException, EntityNotFoundException, UserNotOwnerOrAdminException,
+            InvalidDateRangeException {
+        Mockito.when( tripServiceMock.findById( Mockito.eq( TRIP_ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( activityDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( ACTIVITY ) );
+
+        Mockito.when( tripMemberServiceMock.isUserOwnerOrAdmin( Mockito.eq( TRIP_ID ), Mockito.eq( USERNAME ) ) )
+               .thenReturn( true );
+
+        Mockito.when( placeServiceMock.createIfNotExists( Mockito.eq( PLACE_GOOGLE_ID ), Mockito.eq( PLACE_NAME ),
+                                                          Mockito.eq( PLACE_LAT ), Mockito.eq( PLACE_LNG ),
+                                                          Mockito.eq( PLACE_ADDRESS ) ) ).thenReturn( PLACE );
+
+        Mockito.when( activityDaoMock.isActivityPartOfTheTrip( Mockito.eq( TRIP_ID ), Mockito.eq( ID ) ) )
+               .thenReturn( true );
+
+
+        Mockito.when( activityDaoMock.update( Mockito.eq( ACTIVITY ) ) ).thenReturn( ACTIVITY );
+
+        Activity activity = activityService.update( ID, TRIP_ID, NAME, START_DATE_OK, END_DATE_OK, PLACE, USERNAME );
+
+        Assert.assertNotNull( activity );
+    }
+
+    @Test( expected = InvalidDateRangeException.class )
+    public void testUpdateWhenStartDateIsInvalid()
+            throws ActivityNotPartOfTheTripException, EntityNotFoundException, UserNotOwnerOrAdminException,
+            InvalidDateRangeException {
+        Mockito.when( tripServiceMock.findById( Mockito.eq( TRIP_ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( activityDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( ACTIVITY ) );
+
+        Mockito.when( tripMemberServiceMock.isUserOwnerOrAdmin( Mockito.eq( TRIP_ID ), Mockito.eq( USERNAME ) ) )
+               .thenReturn( true );
+
+        Mockito.when( activityDaoMock.isActivityPartOfTheTrip( Mockito.eq( TRIP_ID ), Mockito.eq( ID ) ) )
+               .thenReturn( true );
+
+        activityService.update( ID, TRIP_ID, NAME, START_DATE_WRONG, END_DATE_OK, PLACE, USERNAME );
+    }
+
+    @Test( expected = UserNotOwnerOrAdminException.class )
+    public void testUpdateWhenUserIsNotOwnerOrAdmin()
+            throws ActivityNotPartOfTheTripException, EntityNotFoundException, UserNotOwnerOrAdminException,
+            InvalidDateRangeException {
+        Mockito.when( tripServiceMock.findById( Mockito.eq( TRIP_ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( activityDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( ACTIVITY ) );
+
+        Mockito.when( activityDaoMock.isActivityPartOfTheTrip( Mockito.eq( TRIP_ID ), Mockito.eq( ID ) ) )
+               .thenReturn( true );
+
+        activityService.update( ID, TRIP_ID, NAME, START_DATE_OK, END_DATE_OK, PLACE, USERNAME );
+    }
+
+    @Test( expected = ActivityNotPartOfTheTripException.class )
+    public void testUpdateWhenActivityIsNotPartOfTheTrip()
+            throws ActivityNotPartOfTheTripException, EntityNotFoundException, UserNotOwnerOrAdminException,
+            InvalidDateRangeException {
+        Mockito.when( tripServiceMock.findById( Mockito.eq( TRIP_ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( activityDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( ACTIVITY ) );
+
+        activityService.update( ID, TRIP_ID, NAME, START_DATE_OK, END_DATE_OK, PLACE, USERNAME );
+    }
+
+    @Test( expected = EntityNotFoundException.class )
+    public void testUpdateWhenActivityNotExists()
+            throws ActivityNotPartOfTheTripException, EntityNotFoundException, UserNotOwnerOrAdminException,
+            InvalidDateRangeException {
+        Mockito.when( tripServiceMock.findById( Mockito.eq( TRIP_ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( activityDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.empty() );
+
+        activityService.update( ID, TRIP_ID, NAME, START_DATE_OK, END_DATE_OK, PLACE, USERNAME );
+    }
+
+    @Test( expected = EntityNotFoundException.class )
+    public void testUpdateWhenTripNotExists()
+            throws ActivityNotPartOfTheTripException, EntityNotFoundException, UserNotOwnerOrAdminException,
+            InvalidDateRangeException {
+        Mockito.when( tripServiceMock.findById( Mockito.eq( TRIP_ID ) ) ).thenReturn( Optional.empty() );
+
+        activityService.update( ID, TRIP_ID, NAME, START_DATE_OK, END_DATE_OK, PLACE, USERNAME );
+    }
+
+    @Test
+    public void testDelete()
+            throws ActivityNotPartOfTheTripException, EntityNotFoundException, UserNotOwnerOrAdminException {
+        Mockito.when( activityDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( ACTIVITY ) );
+
+        Mockito.when( tripMemberServiceMock.isUserOwnerOrAdmin( Mockito.eq( TRIP_ID ), Mockito.eq( USERNAME ) ) )
+               .thenReturn( true );
+
+        Mockito.when( activityDaoMock.isActivityPartOfTheTrip( Mockito.eq( TRIP_ID ), Mockito.eq( ID ) ) )
+               .thenReturn( true );
+
+        activityService.delete( ID, TRIP_ID, USERNAME );
+    }
+
+    @Test( expected = UserNotOwnerOrAdminException.class )
+    public void testDeleteWhenUserIsNotOwnerOrAdmin()
+            throws ActivityNotPartOfTheTripException, EntityNotFoundException, UserNotOwnerOrAdminException {
+        Mockito.when( activityDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( ACTIVITY ) );
+
+        Mockito.when( activityDaoMock.isActivityPartOfTheTrip( Mockito.eq( TRIP_ID ), Mockito.eq( ID ) ) )
+               .thenReturn( true );
+
+        activityService.delete( ID, TRIP_ID, USERNAME );
+    }
+
+    @Test( expected = ActivityNotPartOfTheTripException.class )
+    public void testDeleteWhenActivityIsNotPartOfTheTrip()
+            throws ActivityNotPartOfTheTripException, EntityNotFoundException, UserNotOwnerOrAdminException {
+        Mockito.when( activityDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( ACTIVITY ) );
+
+        activityService.delete( ID, TRIP_ID, USERNAME );
+    }
+
+    @Test( expected = EntityNotFoundException.class )
+    public void testDeleteWhenActivityDoestExists()
+            throws ActivityNotPartOfTheTripException, EntityNotFoundException, UserNotOwnerOrAdminException {
+        Mockito.when( activityDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.empty() );
+
+        activityService.delete( ID, TRIP_ID, USERNAME );
     }
 }
