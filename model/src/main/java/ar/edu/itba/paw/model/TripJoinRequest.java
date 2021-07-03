@@ -40,7 +40,7 @@ public class TripJoinRequest
 
     ////////////
 
-    @ManyToOne( fetch = FetchType.LAZY,
+    @ManyToOne( fetch = FetchType.EAGER,
                 optional = false )
     private Trip trip;
 

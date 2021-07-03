@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.interfaces.TripMemberService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.exception.CannotDeleteOwnerException;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidDateRangeException;
 import ar.edu.itba.paw.model.exception.InvalidUserException;
@@ -20,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Optional;
 
 @RunWith( MockitoJUnitRunner.class )
@@ -35,7 +37,7 @@ public class TestTripServiceImpl
     private TripDao tripDaoMock;
 
     @Mock
-    private TripMemberService tripMemberService;
+    private TripMemberService tripMemberServiceMock;
 
     // USER DATA
     private final String USER_EMAIL = "nachonegrocaino@gmail.com";
@@ -50,11 +52,15 @@ public class TestTripServiceImpl
     private final LocalDate START_DATE = LocalDate.of( 2021, 6, 1 );
     private final LocalDate END_DATE = LocalDate.of( 2021, 6, 30 );
 
-    private final Trip TRIP = new Trip( NAME, DESCRIPTION, START_DATE, END_DATE );
+    private final Trip TRIP = new Trip( ID, NAME, DESCRIPTION, START_DATE, END_DATE );
 
     //OWNER
     @Mock
     private TripMember OWNER;
+
+    @Mock
+    private TripMember MEMBER;
+    private final long MEMBER_ID = 2;
 
     @Test
     public void testCreate() throws InvalidUserException, InvalidDateRangeException {
@@ -68,7 +74,7 @@ public class TestTripServiceImpl
         Mockito.when( tripDaoMock.create( Mockito.eq( NAME ), Mockito.eq( DESCRIPTION ), Mockito.eq( START_DATE ),
                                           Mockito.eq( END_DATE ) ) ).thenReturn( TRIP );
 
-        Mockito.when( tripMemberService.createOwner( Mockito.eq( TRIP ), Mockito.eq( USER ) ) ).thenReturn( OWNER );
+        Mockito.when( tripMemberServiceMock.createOwner( Mockito.eq( TRIP ), Mockito.eq( USER ) ) ).thenReturn( OWNER );
 
         Trip trip = tripService.create( USER_EMAIL, NAME, DESCRIPTION, START_DATE, END_DATE );
 
@@ -86,14 +92,14 @@ public class TestTripServiceImpl
 
         Mockito.when( userServiceMock.findByUsername( Mockito.eq( USER_EMAIL ) ) ).thenReturn( Optional.of( USER ) );
 
-        Trip trip = tripService.create( USER_EMAIL, NAME, DESCRIPTION, START_DATE, END_DATE );
+        tripService.create( USER_EMAIL, NAME, DESCRIPTION, START_DATE, END_DATE );
     }
 
     @Test( expected = InvalidUserException.class )
     public void testCreateWhenThereIsNotUser() throws InvalidUserException, InvalidDateRangeException {
         Mockito.when( userServiceMock.findByUsername( Mockito.eq( USER_EMAIL ) ) ).thenReturn( Optional.empty() );
 
-        Trip trip = tripService.create( USER_EMAIL, NAME, DESCRIPTION, START_DATE, END_DATE );
+        tripService.create( USER_EMAIL, NAME, DESCRIPTION, START_DATE, END_DATE );
     }
 
     @Test( expected = InvalidDateRangeException.class )
@@ -102,13 +108,13 @@ public class TestTripServiceImpl
 
         Mockito.when( userServiceMock.findByUsername( Mockito.eq( USER_EMAIL ) ) ).thenReturn( Optional.of( USER ) );
 
-        Trip trip = tripService.create( USER_EMAIL, NAME, DESCRIPTION, END_DATE, START_DATE );
+        tripService.create( USER_EMAIL, NAME, DESCRIPTION, END_DATE, START_DATE );
     }
 
     @Test( expected = UserNotOwnerOrAdminException.class )
     public void testUpdateWhenUserIsNotOwnerOrAdmin()
             throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException {
-        Mockito.when( tripMemberService.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
+        Mockito.when( tripMemberServiceMock.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
                .thenReturn( false );
 
         Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
@@ -127,7 +133,7 @@ public class TestTripServiceImpl
     @Test( expected = InvalidDateRangeException.class )
     public void testUpdateWhenDatesAreMissMatch()
             throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException {
-        Mockito.when( tripMemberService.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
+        Mockito.when( tripMemberServiceMock.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
                .thenReturn( true );
 
         Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
@@ -137,7 +143,7 @@ public class TestTripServiceImpl
 
     @Test
     public void testUpdate() throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException {
-        Mockito.when( tripMemberService.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
+        Mockito.when( tripMemberServiceMock.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
                .thenReturn( true );
 
         Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
@@ -148,5 +154,65 @@ public class TestTripServiceImpl
 
         Assert.assertNotNull( trip );
         Assert.assertEquals( TRIP, trip );
+    }
+
+    @Test
+    public void testDeleteMember()
+            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException {
+        Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( MEMBER.getRole() ).thenReturn( TripMemberRole.MEMBER );
+
+        Mockito.when( tripMemberServiceMock.findById( Mockito.eq( MEMBER_ID ) ) ).thenReturn( Optional.of( MEMBER ) );
+
+        Mockito.when( tripMemberServiceMock.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
+               .thenReturn( true );
+
+        tripService.deleteMember( ID, MEMBER_ID, USER_EMAIL, Locale.US );
+    }
+
+    @Test( expected = UserNotOwnerOrAdminException.class )
+    public void testDeleteMemberWhenUserIsNotOwnerOrAdmin()
+            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException {
+        Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( MEMBER.getRole() ).thenReturn( TripMemberRole.MEMBER );
+
+        Mockito.when( tripMemberServiceMock.findById( Mockito.eq( MEMBER_ID ) ) ).thenReturn( Optional.of( MEMBER ) );
+
+        Mockito.when( tripMemberServiceMock.isUserOwnerOrAdmin( Mockito.eq( ID ), Mockito.eq( USER_EMAIL ) ) )
+               .thenReturn( false );
+
+        tripService.deleteMember( ID, MEMBER_ID, USER_EMAIL, Locale.US );
+    }
+
+    @Test( expected = CannotDeleteOwnerException.class )
+    public void testDeleteMemberWhenMemberIsOwner()
+            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException {
+        Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( MEMBER.getRole() ).thenReturn( TripMemberRole.OWNER );
+
+        Mockito.when( tripMemberServiceMock.findById( Mockito.eq( MEMBER_ID ) ) ).thenReturn( Optional.of( MEMBER ) );
+
+        tripService.deleteMember( ID, MEMBER_ID, USER_EMAIL, Locale.US );
+    }
+
+    @Test( expected = EntityNotFoundException.class )
+    public void testDeleteMemberWhenMemberNotExists()
+            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException {
+        Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
+
+        Mockito.when( tripMemberServiceMock.findById( Mockito.eq( MEMBER_ID ) ) ).thenReturn( Optional.empty() );
+
+        tripService.deleteMember( ID, MEMBER_ID, USER_EMAIL, Locale.US );
+    }
+
+    @Test( expected = EntityNotFoundException.class )
+    public void testDeleteMemberWhenTripNotExists()
+            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException {
+        Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.empty() );
+
+        tripService.deleteMember( ID, MEMBER_ID, USER_EMAIL, Locale.US );
     }
 }

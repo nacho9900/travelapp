@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.interfaces.TripMemberService;
 import ar.edu.itba.paw.interfaces.TripService;
@@ -7,7 +8,9 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.PaginatedResult;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripMember;
+import ar.edu.itba.paw.model.TripMemberRole;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exception.CannotDeleteOwnerException;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidDateRangeException;
 import ar.edu.itba.paw.model.exception.InvalidUserException;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -31,6 +35,9 @@ public class TripServiceImpl implements TripService
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MailingService mailingService;
 
     @Override
     public Trip create( String ownerUserName, String name, String description, LocalDate startDate, LocalDate endDate )
@@ -96,5 +103,33 @@ public class TripServiceImpl implements TripService
     public PaginatedResult<Trip> search( Double latitude, Double longitude, LocalDate from, LocalDate to, int page,
                                          int perPage ) {
         return tripDao.search( latitude, longitude, from, to, page, perPage );
+    }
+
+    @Override
+    public void deleteMember( long id, long memberId, String username, Locale locale )
+            throws EntityNotFoundException, UserNotOwnerOrAdminException, CannotDeleteOwnerException {
+        Optional<Trip> maybeTrip = findById( id );
+        Optional<TripMember> maybeMember = tripMemberService.findById( memberId );
+
+        if ( !maybeTrip.isPresent() || !maybeMember.isPresent() ) {
+            throw new EntityNotFoundException();
+        }
+
+        if ( maybeMember.get().getRole().equals( TripMemberRole.OWNER ) ) {
+            throw new CannotDeleteOwnerException();
+        }
+
+        if ( !tripMemberService.isUserOwnerOrAdmin( id, username ) ) {
+            throw new UserNotOwnerOrAdminException();
+        }
+
+        tripMemberService.delete( memberId );
+
+        Trip trip = maybeTrip.get();
+
+        tripMemberService.getAllByTripId( id ).forEach( member -> {
+            mailingService.exitTripEmail( member.getUser().getFullName(), member.getUser().getFullName(),
+                                          member.getUser().getEmail(), id, trip.getName(), locale );
+        } );
     }
 }

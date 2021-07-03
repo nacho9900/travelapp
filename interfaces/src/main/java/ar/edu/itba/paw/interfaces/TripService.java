@@ -4,12 +4,14 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.model.PaginatedResult;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exception.CannotDeleteOwnerException;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidDateRangeException;
 import ar.edu.itba.paw.model.exception.InvalidUserException;
 import ar.edu.itba.paw.model.exception.UserNotOwnerOrAdminException;
 
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Optional;
 
 public interface TripService
@@ -26,4 +28,7 @@ public interface TripService
             throws EntityNotFoundException, UserNotOwnerOrAdminException, InvalidDateRangeException;
 
     PaginatedResult<Trip> search( Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage );
+
+    void deleteMember( long id, long memberId, String username, Locale locale )
+            throws EntityNotFoundException, UserNotOwnerOrAdminException, CannotDeleteOwnerException;
 }

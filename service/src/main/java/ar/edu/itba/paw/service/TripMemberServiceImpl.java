@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Transactional
@@ -54,15 +53,10 @@ public class TripMemberServiceImpl implements TripMemberService
     }
 
     @Override
-    public void delete( Trip trip, long id, Locale locale ) {
+    public void delete( long id ) {
         tripRateService.deleteByMemberId( id );
         tripCommentsService.deleteAllByMemberId( id );
         tripMemberDao.delete( id );
-
-        this.getAllByTripId( id ).forEach( member -> {
-            mailingService.exitTripEmail( member.getUser().getFullName(), member.getUser().getFullName(),
-                                          member.getUser().getEmail(), id, trip.getName(), locale );
-        } );
     }
 
     @Override

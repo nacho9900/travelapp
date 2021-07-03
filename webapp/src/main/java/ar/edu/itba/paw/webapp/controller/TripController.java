@@ -12,15 +12,18 @@ import ar.edu.itba.paw.model.PaginatedResult;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.TripJoinRequest;
-import ar.edu.itba.paw.model.TripJoinRequestStatus;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripMemberRole;
 import ar.edu.itba.paw.model.TripPicture;
 import ar.edu.itba.paw.model.TripRate;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exception.ActivityNotPartOfTheTripException;
+import ar.edu.itba.paw.model.exception.CannotDeleteOwnerException;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidDateRangeException;
 import ar.edu.itba.paw.model.exception.InvalidUserException;
+import ar.edu.itba.paw.model.exception.UserAlreadyAMemberException;
+import ar.edu.itba.paw.model.exception.UserAlreadyHaveAPendingRequestException;
 import ar.edu.itba.paw.model.exception.UserNotOwnerOrAdminException;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
@@ -37,7 +40,6 @@ import ar.edu.itba.paw.webapp.dto.trips.TripJoinRequestDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripListDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripMemberListDto;
-import ar.edu.itba.paw.webapp.dto.trips.TripMemberUpdateDto;
 import ar.edu.itba.paw.webapp.utils.MyQueryParam;
 import ar.edu.itba.paw.webapp.utils.PaginatedResultResponseHelper;
 import com.google.maps.GeoApiContext;
@@ -416,28 +418,24 @@ public class TripController
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<Trip> maybeTrip = tripService.findById( id );
+        Activity activity;
+        try {
+            activity = activityService.create( id, activityDto.getName(), activityDto.getStartDate(),
+                                               activityDto.getEndDate(), activityDto.getPlace().toPlace(), username );
 
-        if ( !tripService.isUserOwnerOrAdmin( id, username ) || !maybeTrip.isPresent() ) {
-            return tripNotFound();
-        }
-
-        Trip trip = maybeTrip.get();
-
-        if ( activityDto.getStartDate().isAfter( activityDto.getEndDate() ) ||
-             activityDto.getStartDate().isBefore( trip.getStartDate() ) ||
-             activityDto.getEndDate().isAfter( trip.getEndDate() ) ) {
-            return Response.status( Response.Status.BAD_REQUEST )
-                           .entity( new ErrorDto( "invalid date range", "starDate and endDate" ) )
+            return Response.created(
+                    uriInfo.getAbsolutePathBuilder().path( Long.toString( activity.getId() ) ).build() )
+                           .entity( ActivityDto.fromActivity( activity, uriInfo, id ) )
                            .build();
         }
-
-        Activity activity = activityService.create( activityDto.getName(), maybeTrip.get(), activityDto.getStartDate(),
-                                                    activityDto.getEndDate(), activityDto.getPlace().toPlace() );
-
-        return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( activity.getId() ) ).build() )
-                       .entity( ActivityDto.fromActivity( activity, uriInfo, id ) )
-                       .build();
+        catch ( EntityNotFoundException | UserNotOwnerOrAdminException e ) {
+            return tripNotFound();
+        }
+        catch ( InvalidDateRangeException e ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "Invalid Date Range", "startDate endDate" ) )
+                           .build();
+        }
     }
 
     @GET
@@ -479,16 +477,24 @@ public class TripController
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<Trip> maybeTrip = tripService.findById( id );
-
-        if ( !tripService.isUserOwnerOrAdmin( id, username ) || !maybeTrip.isPresent() ||
-             !activityService.isActivityPartOfTheTrip( maybeTrip.get().getId(), activityDto.getId() ) ) {
+        Activity activity = null;
+        try {
+            activity = activityService.update( activityId, id, activityDto.getName(), activityDto.getStartDate(),
+                                               activityDto.getEndDate(), activityDto.getPlace().toPlace(), username );
+        }
+        catch ( EntityNotFoundException | UserNotOwnerOrAdminException e ) {
             return tripNotFound();
         }
-
-        Activity activity = activityDto.toActivity();
-        activity.setTrip( maybeTrip.get() );
-        activity = activityService.update( activity );
+        catch ( InvalidDateRangeException e ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "Invalid Date Range", "startDate endDate" ) )
+                           .build();
+        }
+        catch ( ActivityNotPartOfTheTripException e ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "the activity is not part of the trip" ) )
+                           .build();
+        }
 
         return Response.ok().entity( ActivityDto.fromActivity( activity, uriInfo, id ) ).build();
     }
@@ -498,15 +504,12 @@ public class TripController
     public Response deleteActivity( @PathParam( "id" ) long id, @PathParam( "activityId" ) long activityId ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<Trip> maybeTrip = tripService.findById( id );
-        Optional<Activity> maybeActivity = activityService.findById( activityId );
-
-        if ( !tripService.isUserOwnerOrAdmin( id, username ) || !maybeTrip.isPresent() || !maybeActivity.isPresent() ||
-             !activityService.isActivityPartOfTheTrip( maybeTrip.get().getId(), maybeActivity.get().getId() ) ) {
+        try {
+            activityService.delete( activityId, id, username );
+        }
+        catch ( EntityNotFoundException | ActivityNotPartOfTheTripException | UserNotOwnerOrAdminException e ) {
             return Response.status( Response.Status.NO_CONTENT ).build();
         }
-
-        activityService.delete( activityId );
 
         return Response.ok().build();
     }
@@ -548,66 +551,21 @@ public class TripController
     public Response deleteMember(
             @PathParam( "id" ) long id,
             @PathParam( "memberId" ) long memberId, @Context HttpServletRequest httpRequest ) {
-        Optional<Trip> maybeTrip = tripService.findById( id );
-        Optional<TripMember> maybeMember = tripMemberService.findById( memberId );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username );
 
-        if ( !maybeTrip.isPresent() || !maybeMember.isPresent() || !maybeLoggedMember.isPresent() ||
-             !tripMemberService.isUserMember( memberId, id ) ) {
+        try {
+            tripService.deleteMember( id, memberId, username, httpRequest.getLocale() );
+        }
+        catch ( EntityNotFoundException | UserNotOwnerOrAdminException e ) {
             return Response.status( Response.Status.NO_CONTENT ).build();
         }
-
-        TripMember loggedMember = maybeLoggedMember.get();
-        TripMember member = maybeMember.get();
-
-        if ( member.getRole().equals( TripMemberRole.OWNER ) ||
-             ( !loggedMember.getRole().equals( TripMemberRole.OWNER ) && member.getId() != loggedMember.getId() ) ) {
-            return Response.status( Response.Status.FORBIDDEN ).build();
+        catch ( CannotDeleteOwnerException e ) {
+            return Response.status( Response.Status.FORBIDDEN )
+                           .entity( new ErrorDto( "cannot delete trip owner" ) )
+                           .build();
         }
-
-        tripMemberService.delete( maybeTrip.get(), memberId, httpRequest.getLocale() );
 
         return Response.ok().build();
-    }
-
-    @PUT
-    @Path( "/{id}/member/{memberId}" )
-    public Response updateMember(
-            @PathParam( "id" ) long id,
-            @PathParam( "memberId" ) long memberId, @RequestBody TripMemberUpdateDto tripMemberUpdateDto ) {
-        Optional<Trip> maybeTrip = tripService.findById( id );
-        Optional<TripMember> maybeMember = tripMemberService.findById( memberId );
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username );
-
-        if ( !maybeTrip.isPresent() || !maybeMember.isPresent() || !maybeLoggedMember.isPresent() ||
-             !tripMemberService.isUserMember( memberId, id ) ) {
-            return tripNotFound();
-        }
-
-        Set<ConstraintViolation<TripMemberUpdateDto>> violations = validator.validate( tripMemberUpdateDto );
-
-        if ( !violations.isEmpty() ) {
-            Response.status( Response.Status.BAD_REQUEST )
-                    .entity( ErrorsDto.fromConstraintsViolations( violations ) )
-                    .build();
-        }
-
-        TripMemberRole newRole = TripMemberRole.valueOf( tripMemberUpdateDto.getRole() );
-
-        if ( maybeLoggedMember.get().getRole() == TripMemberRole.MEMBER ||
-             maybeMember.get().getRole() == TripMemberRole.OWNER || newRole == TripMemberRole.OWNER ) {
-            return Response.status( Response.Status.UNAUTHORIZED ).build();
-        }
-
-        TripMember member = maybeMember.get();
-
-        if ( newRole != member.getRole() ) {
-            member = tripMemberService.update( member );
-        }
-
-        return Response.ok().entity( TripMemberDto.fromTripMember( member, uriInfo, id ) ).build();
     }
 
     @PUT
@@ -650,33 +608,21 @@ public class TripController
                            .build();
         }
 
-        Optional<Trip> maybeTrip = tripService.findById( id );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if ( !maybeTrip.isPresent() ) {
+        try {
+            TripJoinRequest request = tripJoinRequestService.create( username, id, joinTripDto.getMessage(),
+                                                                     httpRequest.getLocale() );
+            return Response.ok().entity( TripJoinRequestDto.fromTripJoinRequest( request, uriInfo, id ) ).build();
+        }
+        catch ( EntityNotFoundException e ) {
             return tripNotFound();
         }
-
-        Optional<User> maybeUser = userService.findByUsername( username );
-
-        if ( tripService.isUserMember( id, username ) || !maybeUser.isPresent() ) {
-            return Response.status( Response.Status.CONFLICT ).entity( new ErrorDto( "already member" ) ).build();
-        }
-
-        Optional<TripJoinRequest> maybeRequest = tripJoinRequestService.getLastByTripIdAndUsername( id, username );
-
-        if ( maybeRequest.isPresent() && maybeRequest.get().getStatus().equals( TripJoinRequestStatus.PENDING ) ) {
+        catch ( UserAlreadyAMemberException | UserAlreadyHaveAPendingRequestException e ) {
             return Response.status( Response.Status.CONFLICT )
-                           .entity( new ErrorDto( "already have a pending join request" ) )
+                           .entity( new ErrorDto( "User already a member or have a pending request" ) )
                            .build();
         }
-
-        User user = maybeUser.get();
-
-        TripJoinRequest request = tripJoinRequestService.create( user, maybeTrip.get(), joinTripDto.getMessage(),
-                                                                 httpRequest.getLocale() );
-
-        return Response.ok().entity( TripJoinRequestDto.fromTripJoinRequest( request, uriInfo, id ) ).build();
     }
 
     @GET
@@ -689,7 +635,7 @@ public class TripController
             return tripNotFound();
         }
 
-        if ( !tripService.isUserOwnerOrAdmin( id, username ) && ( email == null || email.isEmpty() ) ) {
+        if ( !tripMemberService.isUserOwnerOrAdmin( id, username ) && ( email == null || email.isEmpty() ) ) {
             return Response.status( Response.Status.UNAUTHORIZED ).build();
         }
 
@@ -714,54 +660,38 @@ public class TripController
     public Response acceptRequest(
             @PathParam( "id" ) long id,
             @PathParam( "requestId" ) long requestId, @Context HttpServletRequest httpRequest ) {
-        Optional<Trip> maybeTrip = tripService.findById( id );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if ( !maybeTrip.isPresent() ) {
-            return tripNotFound();
+        try {
+            TripMember tripMember = tripJoinRequestService.accept( requestId, username, httpRequest.getLocale() );
+            return Response.ok().entity( TripMemberDto.fromTripMember( tripMember, uriInfo, id ) ).build();
         }
-
-        if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
-            return Response.status( Response.Status.UNAUTHORIZED ).build();
-        }
-
-        Optional<TripJoinRequest> maybeJoinRequest = tripJoinRequestService.findById( requestId );
-
-        if ( !maybeJoinRequest.isPresent() ) {
+        catch ( EntityNotFoundException e ) {
             return Response.status( Response.Status.NOT_FOUND )
-                           .entity( new ErrorDto( "Join Request not found" ) )
+                           .entity( new ErrorDto( "join request not found" ) )
                            .build();
         }
-
-        TripMember tripMember = tripJoinRequestService.accept( maybeTrip.get(), maybeJoinRequest.get(),
-                                                               httpRequest.getLocale() );
-
-        return Response.ok().entity( TripMemberDto.fromTripMember( tripMember, uriInfo, id ) ).build();
+        catch ( UserNotOwnerOrAdminException e ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
     }
 
     @POST
     @Path( "/{id}/join/{requestId}/reject" )
     public Response rejectRequest( @PathParam( "id" ) long id, @PathParam( "requestId" ) long requestId ) {
-        Optional<Trip> maybeTrip = tripService.findById( id );
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if ( !maybeTrip.isPresent() ) {
-            return tripNotFound();
+        try {
+            tripJoinRequestService.reject( requestId, username );
         }
-
-        if ( !tripService.isUserOwnerOrAdmin( id, username ) ) {
-            return Response.status( Response.Status.UNAUTHORIZED ).build();
-        }
-
-        Optional<TripJoinRequest> maybeJoinRequest = tripJoinRequestService.findById( requestId );
-
-        if ( !maybeJoinRequest.isPresent() ) {
+        catch ( EntityNotFoundException e ) {
             return Response.status( Response.Status.NOT_FOUND )
-                           .entity( new ErrorDto( "Join Request not found" ) )
+                           .entity( new ErrorDto( "join request not found" ) )
                            .build();
         }
-
-        tripJoinRequestService.reject( maybeJoinRequest.get() );
+        catch ( UserNotOwnerOrAdminException e ) {
+            return Response.status( Response.Status.UNAUTHORIZED ).build();
+        }
 
         return Response.ok().build();
     }
