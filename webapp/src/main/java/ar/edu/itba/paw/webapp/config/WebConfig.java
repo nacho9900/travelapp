@@ -46,6 +46,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -54,7 +55,8 @@ import java.util.TimeZone;
 @ComponentScan( {
                         "ar.edu.itba.paw.webapp.controller",
                         "ar.edu.itba.paw.persistence",
-                        "ar.edu.itba.paw.service", "ar.edu.itba.paw.webapp.filter"
+                        "ar.edu.itba.paw.service",
+                        "ar.edu.itba.paw.webapp.filter"
                 } )
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter

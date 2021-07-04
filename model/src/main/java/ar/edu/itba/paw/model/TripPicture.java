@@ -14,30 +14,41 @@ import java.util.Arrays;
 
 
 @Entity
-@Table(name = "trip_pictures")
-public class TripPicture {
+@Table( name = "trip_pictures" )
+public class TripPicture
+{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_picture_id_seq")
-    @SequenceGenerator(sequenceName = "trip_picture_id_seq", name = "trip_picture_id_seq", allocationSize = 1)
+    @GeneratedValue( strategy = GenerationType.SEQUENCE,
+                     generator = "trip_picture_id_seq" )
+    @SequenceGenerator( sequenceName = "trip_picture_id_seq",
+                        name = "trip_picture_id_seq",
+                        allocationSize = 1 )
     private long id;
 
-    @Column(name = "image")
+    @Column( name = "image" )
     private byte[] picture;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="trip_id")
+    @OneToOne( fetch = FetchType.LAZY,
+               optional = false )
+    @JoinColumn( name = "trip_id" )
     private Trip trip;
 
-    @Column(name = "name", nullable = false)
+    @Column( name = "name",
+             nullable = false )
     private String name;
 
+    public TripPicture( long id, Trip trip, String name, byte[] picture ) {
+        this( trip, name, picture );
+        this.id = id;
+    }
+
     public TripPicture( Trip trip, String name, byte[] picture ) {
-        this(name, picture);
+        this( name, picture );
         this.trip = trip;
     }
 
-    public TripPicture(String name, byte[] picture) {
+    public TripPicture( String name, byte[] picture ) {
         this.picture = picture;
         this.name = name;
     }
@@ -54,7 +65,7 @@ public class TripPicture {
         return picture;
     }
 
-    public void setPicture(byte[] picture) {
+    public void setPicture( byte[] picture ) {
         this.picture = picture;
     }
 
@@ -62,7 +73,7 @@ public class TripPicture {
         return trip;
     }
 
-    public void setTrip(Trip trip) {
+    public void setTrip( Trip trip ) {
         this.trip = trip;
     }
 

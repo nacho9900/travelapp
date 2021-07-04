@@ -24,7 +24,6 @@ public class TripDto
     @NotBlank
     @Length( max = 500 )
     private String description;
-    private String role;
     @NotNull
     @Future
     private LocalDate startDate;
@@ -84,14 +83,6 @@ public class TripDto
 
     public URI getTripPictureUri() {
         return tripPictureUri;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole( String role ) {
-        this.role = role;
     }
 
     public void setId( Long id ) {

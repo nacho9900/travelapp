@@ -13,6 +13,7 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.UserAlreadyAMemberException;
 import ar.edu.itba.paw.model.exception.UserAlreadyHaveAPendingRequestException;
+import ar.edu.itba.paw.model.exception.UserNotMemberException;
 import ar.edu.itba.paw.model.exception.UserNotOwnerOrAdminException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -65,7 +66,6 @@ public class TestTripJoinRequestServiceImpl
     private TripJoinRequest TRIP_JOIN_REQUEST;
     @Mock
     private TripMember MEMBER;
-    private final long MEMBER_ID = 1;
 
     @Test
     public void testCreate()
@@ -139,7 +139,7 @@ public class TestTripJoinRequestServiceImpl
     }
 
     @Test
-    public void testAccept() throws EntityNotFoundException, UserNotOwnerOrAdminException {
+    public void testAccept() throws EntityNotFoundException, UserNotOwnerOrAdminException, UserNotMemberException {
         TRIP_JOIN_REQUEST = new TripJoinRequest( ID, CREATED_ON, MESSAGE, STATUS_PENDING, TRIP, USER );
         TripJoinRequest acceptedRequest = new TripJoinRequest( ID, CREATED_ON, MESSAGE, TripJoinRequestStatus.ACCEPTED,
                                                                TRIP, USER );
@@ -162,7 +162,8 @@ public class TestTripJoinRequestServiceImpl
     }
 
     @Test( expected = UserNotOwnerOrAdminException.class )
-    public void testAcceptWhenUserNotAdminOrOwner() throws EntityNotFoundException, UserNotOwnerOrAdminException {
+    public void testAcceptWhenUserNotAdminOrOwner()
+            throws EntityNotFoundException, UserNotOwnerOrAdminException, UserNotMemberException {
         TRIP_JOIN_REQUEST = new TripJoinRequest( ID, CREATED_ON, MESSAGE, STATUS_PENDING, TRIP, USER );
 
         Mockito.when( tripJoinRequestDaoMock.findById( Mockito.eq( ID ) ) )
@@ -172,7 +173,8 @@ public class TestTripJoinRequestServiceImpl
     }
 
     @Test( expected = EntityNotFoundException.class )
-    public void testAcceptWhenRequestDoestExists() throws EntityNotFoundException, UserNotOwnerOrAdminException {
+    public void testAcceptWhenRequestDoestExists()
+            throws EntityNotFoundException, UserNotOwnerOrAdminException, UserNotMemberException {
         TRIP_JOIN_REQUEST = new TripJoinRequest( ID, CREATED_ON, MESSAGE, STATUS_PENDING, TRIP, USER );
 
         Mockito.when( tripJoinRequestDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.empty() );

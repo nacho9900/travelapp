@@ -11,6 +11,7 @@ import ar.edu.itba.paw.model.exception.CannotDeleteOwnerException;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidDateRangeException;
 import ar.edu.itba.paw.model.exception.InvalidUserException;
+import ar.edu.itba.paw.model.exception.UserNotMemberException;
 import ar.edu.itba.paw.model.exception.UserNotOwnerOrAdminException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -158,7 +159,7 @@ public class TestTripServiceImpl
 
     @Test
     public void testDeleteMember()
-            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException {
+            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException, UserNotMemberException {
         Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
 
         Mockito.when( MEMBER.getRole() ).thenReturn( TripMemberRole.MEMBER );
@@ -173,7 +174,7 @@ public class TestTripServiceImpl
 
     @Test( expected = UserNotOwnerOrAdminException.class )
     public void testDeleteMemberWhenUserIsNotOwnerOrAdmin()
-            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException {
+            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException, UserNotMemberException {
         Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
 
         Mockito.when( MEMBER.getRole() ).thenReturn( TripMemberRole.MEMBER );
@@ -188,7 +189,7 @@ public class TestTripServiceImpl
 
     @Test( expected = CannotDeleteOwnerException.class )
     public void testDeleteMemberWhenMemberIsOwner()
-            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException {
+            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException, UserNotMemberException {
         Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
 
         Mockito.when( MEMBER.getRole() ).thenReturn( TripMemberRole.OWNER );
@@ -200,7 +201,7 @@ public class TestTripServiceImpl
 
     @Test( expected = EntityNotFoundException.class )
     public void testDeleteMemberWhenMemberNotExists()
-            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException {
+            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException, UserNotMemberException {
         Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.of( TRIP ) );
 
         Mockito.when( tripMemberServiceMock.findById( Mockito.eq( MEMBER_ID ) ) ).thenReturn( Optional.empty() );
@@ -210,7 +211,7 @@ public class TestTripServiceImpl
 
     @Test( expected = EntityNotFoundException.class )
     public void testDeleteMemberWhenTripNotExists()
-            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException {
+            throws CannotDeleteOwnerException, EntityNotFoundException, UserNotOwnerOrAdminException, UserNotMemberException {
         Mockito.when( tripDaoMock.findById( Mockito.eq( ID ) ) ).thenReturn( Optional.empty() );
 
         tripService.deleteMember( ID, MEMBER_ID, USER_EMAIL, Locale.US );

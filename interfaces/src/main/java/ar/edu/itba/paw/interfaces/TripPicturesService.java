@@ -1,19 +1,17 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripPicture;
+import ar.edu.itba.paw.model.exception.EntityNotFoundException;
+import ar.edu.itba.paw.model.exception.ImageFormatException;
+import ar.edu.itba.paw.model.exception.ImageMaxSizeException;
+import ar.edu.itba.paw.model.exception.UserNotOwnerOrAdminException;
 
 import java.util.Optional;
 
 public interface TripPicturesService
 {
-    TripPicture create( Trip trip, String name, byte[] image );
-
-    TripPicture create( Trip trip, String name, String imageBase64 );
-
-    TripPicture update( TripPicture tripPicture, Trip trip, String name, String imageBase64 );
-
-    TripPicture update( TripPicture tripPicture, Trip trip, String name, byte[] image );
+    TripPicture createOrUpdate( long tripId, String name, String imageBase64, String username )
+            throws ImageMaxSizeException, UserNotOwnerOrAdminException, EntityNotFoundException, ImageFormatException;
 
     Optional<TripPicture> findByTripId( long tripId );
 

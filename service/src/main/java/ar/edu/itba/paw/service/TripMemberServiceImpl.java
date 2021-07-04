@@ -9,6 +9,7 @@ import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripMemberRole;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exception.UserNotMemberException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,16 +30,17 @@ public class TripMemberServiceImpl implements TripMemberService
     @Autowired
     private TripCommentsService tripCommentsService;
 
-    @Autowired
-    private MailingService mailingService;
-
     @Override
     public Optional<TripMember> findById( long id ) {
         return tripMemberDao.findById( id );
     }
 
     @Override
-    public List<TripMember> getAllByTripId( long tripId ) {
+    public List<TripMember> getAllByTripId( long tripId, String memberUsername ) throws UserNotMemberException {
+        if ( !isUserMember( tripId, memberUsername ) ) {
+            throw new UserNotMemberException();
+        }
+
         return tripMemberDao.getAllByTripId( tripId );
     }
 
@@ -48,7 +50,12 @@ public class TripMemberServiceImpl implements TripMemberService
     }
 
     @Override
-    public Optional<TripMember> findByTripIdAndUsername( long tripId, String username ) {
+    public Optional<TripMember> findByTripIdAndUsername( long tripId, String username, String memberUsername )
+            throws UserNotMemberException {
+        if ( !isUserMember( tripId, memberUsername ) ) {
+            throw new UserNotMemberException();
+        }
+
         return tripMemberDao.findByTripIdAndUsername( username, tripId );
     }
 
@@ -76,7 +83,7 @@ public class TripMemberServiceImpl implements TripMemberService
 
     @Override
     public List<TripMember> getAllAdmins( long tripId ) {
-        return tripMemberDao.getAllAdmins(tripId);
+        return tripMemberDao.getAllAdmins( tripId );
     }
 
     @Override

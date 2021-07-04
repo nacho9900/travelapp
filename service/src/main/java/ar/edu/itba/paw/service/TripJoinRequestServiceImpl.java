@@ -14,6 +14,7 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.UserAlreadyAMemberException;
 import ar.edu.itba.paw.model.exception.UserAlreadyHaveAPendingRequestException;
+import ar.edu.itba.paw.model.exception.UserNotMemberException;
 import ar.edu.itba.paw.model.exception.UserNotOwnerOrAdminException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class TripJoinRequestServiceImpl implements TripJoinRequestService
 
     @Override
     public TripMember accept( long id, String adminUsername, Locale locale )
-            throws EntityNotFoundException, UserNotOwnerOrAdminException {
+            throws EntityNotFoundException, UserNotOwnerOrAdminException, UserNotMemberException {
         TripJoinRequest request = updateStatus( id, adminUsername, TripJoinRequestStatus.ACCEPTED );
 
         Trip trip = request.getTrip();
@@ -56,7 +57,7 @@ public class TripJoinRequestServiceImpl implements TripJoinRequestService
         mailingService.requestAcceptedEmail( user.getFullName(), user.getEmail(), trip.getId(), trip.getName(),
                                              locale );
 
-        tripMemberService.getAllByTripId( trip.getId() ).forEach( x -> {
+        tripMemberService.getAllByTripId( trip.getId(), adminUsername ).forEach( x -> {
             if ( x.getId() != member.getId() ) {
                 mailingService.newMemberEmail( user.getFullName(), x.getUser().getFullName(), x.getUser().getEmail(),
                                                trip.getId(), trip.getName(), locale );

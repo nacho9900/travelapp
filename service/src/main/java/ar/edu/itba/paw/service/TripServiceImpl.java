@@ -14,6 +14,7 @@ import ar.edu.itba.paw.model.exception.CannotDeleteOwnerException;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidDateRangeException;
 import ar.edu.itba.paw.model.exception.InvalidUserException;
+import ar.edu.itba.paw.model.exception.UserNotMemberException;
 import ar.edu.itba.paw.model.exception.UserNotOwnerOrAdminException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,7 +108,8 @@ public class TripServiceImpl implements TripService
 
     @Override
     public void deleteMember( long id, long memberId, String username, Locale locale )
-            throws EntityNotFoundException, UserNotOwnerOrAdminException, CannotDeleteOwnerException {
+            throws EntityNotFoundException, UserNotOwnerOrAdminException, CannotDeleteOwnerException,
+            UserNotMemberException {
         Optional<Trip> maybeTrip = findById( id );
         Optional<TripMember> maybeMember = tripMemberService.findById( memberId );
 
@@ -127,7 +129,7 @@ public class TripServiceImpl implements TripService
 
         Trip trip = maybeTrip.get();
 
-        tripMemberService.getAllByTripId( id ).forEach( member -> {
+        tripMemberService.getAllByTripId( id, username ).forEach( member -> {
             mailingService.exitTripEmail( member.getUser().getFullName(), member.getUser().getFullName(),
                                           member.getUser().getEmail(), id, trip.getName(), locale );
         } );

@@ -8,6 +8,7 @@ import ar.edu.itba.paw.model.exception.CannotDeleteOwnerException;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidDateRangeException;
 import ar.edu.itba.paw.model.exception.InvalidUserException;
+import ar.edu.itba.paw.model.exception.UserNotMemberException;
 import ar.edu.itba.paw.model.exception.UserNotOwnerOrAdminException;
 
 import java.time.LocalDate;
@@ -30,5 +31,5 @@ public interface TripService
     PaginatedResult<Trip> search( Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage );
 
     void deleteMember( long id, long memberId, String username, Locale locale )
-            throws EntityNotFoundException, UserNotOwnerOrAdminException, CannotDeleteOwnerException;
+            throws EntityNotFoundException, UserNotOwnerOrAdminException, CannotDeleteOwnerException, UserNotMemberException;
 }

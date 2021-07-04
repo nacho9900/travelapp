@@ -1,5 +1,5 @@
 package ar.edu.itba.paw.model.exception;
 
-public class UserNotMemberException
+public class UserNotMemberException extends Exception
 {
 }

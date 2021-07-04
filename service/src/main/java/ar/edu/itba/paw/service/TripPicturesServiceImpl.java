@@ -1,9 +1,15 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.TripMemberService;
 import ar.edu.itba.paw.interfaces.TripPicturesDao;
 import ar.edu.itba.paw.interfaces.TripPicturesService;
+import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripPicture;
+import ar.edu.itba.paw.model.exception.EntityNotFoundException;
+import ar.edu.itba.paw.model.exception.ImageFormatException;
+import ar.edu.itba.paw.model.exception.ImageMaxSizeException;
+import ar.edu.itba.paw.model.exception.UserNotOwnerOrAdminException;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,56 +27,61 @@ public class TripPicturesServiceImpl extends ImageAbstractService implements Tri
     @Autowired
     private TripPicturesDao tripPicturesDao;
 
+    @Autowired
+    private TripMemberService tripMemberService;
+
+    @Autowired
+    private TripService tripService;
+
+    private final Base64.Decoder decoder = Base64.getDecoder();
+
     private final int MAX_PICTURE_SIZE = 5000000; //5MB
 
     @Override
-    public TripPicture create( Trip trip, String name, byte[] image ) {
-        if ( image.length > MAX_PICTURE_SIZE ) {
-            return null;
+    public TripPicture createOrUpdate( long tripId, String name, String imageBase64, String username )
+            throws ImageMaxSizeException, UserNotOwnerOrAdminException, EntityNotFoundException, ImageFormatException {
+        Optional<Trip> maybeTrip = tripService.findById( tripId );
+
+        if ( !maybeTrip.isPresent() ) {
+            throw new EntityNotFoundException();
         }
 
+        if ( !tripMemberService.isUserOwnerOrAdmin( tripId, username ) ) {
+            throw new UserNotOwnerOrAdminException();
+        }
+
+        if ( !isContentTypeImage( name ) ) {
+            throw new ImageFormatException();
+        }
+
+        byte[] image;
+
+        try {
+            image = decoder.decode( imageBase64 );
+        }
+        catch ( IllegalArgumentException e ) {
+            throw new ImageFormatException();
+        }
+
+        if ( image.length > MAX_PICTURE_SIZE ) {
+            throw new ImageMaxSizeException();
+        }
+
+        Optional<TripPicture> tripPicture = findByTripId( tripId );
+
+        if ( tripPicture.isPresent() ) {
+            return update( tripPicture.get(), maybeTrip.get(), name, image );
+        }
+        else {
+            return create( maybeTrip.get(), name, image );
+        }
+    }
+
+    protected TripPicture create( Trip trip, String name, byte[] image ) {
         return tripPicturesDao.create( trip, name, image );
     }
 
-    @Override
-    public TripPicture create( Trip trip, String name, String imageBase64 ) {
-        try {
-            byte[] image = Base64.getDecoder().decode( imageBase64 );
-
-            if ( !isContentTypeImage( name ) ) {
-                return null;
-            }
-
-            return create( trip, name, image );
-        }
-        catch ( IllegalArgumentException e ) {
-            return null;
-        }
-    }
-
-
-    @Override
-    public TripPicture update( TripPicture tripPicture, Trip trip, String name, String imageBase64 ) {
-        try {
-            byte[] image = Base64.getDecoder().decode( imageBase64 );
-
-            if ( !isContentTypeImage( name ) ) {
-                return null;
-            }
-
-            return update( tripPicture, trip, name, image );
-        }
-        catch ( IllegalArgumentException e ) {
-            return null;
-        }
-    }
-
-    @Override
-    public TripPicture update( TripPicture tripPicture, Trip trip, String name, byte[] image ) {
-        if(!isContentTypeImage( name ) || image.length > MAX_PICTURE_SIZE) {
-            return null;
-        }
-
+    protected TripPicture update( TripPicture tripPicture, Trip trip, String name, byte[] image ) {
         tripPicture.setName( name );
         tripPicture.setPicture( image );
         tripPicture.setTrip( trip );
@@ -112,6 +123,6 @@ public class TripPicturesServiceImpl extends ImageAbstractService implements Tri
     private boolean isContentTypeImage( String name ) {
         String contentType = URLConnection.guessContentTypeFromName( name );
 
-        return contentType.startsWith( "image/" );
+        return contentType != null && contentType.startsWith( "image/" );
     }
 }
