@@ -6,6 +6,8 @@ import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import ar.edu.itba.paw.webapp.filter.JwtTokenFilter;
 import ar.edu.itba.paw.webapp.filter.LoginFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -55,6 +57,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
     @Autowired
     private UserService userService;
 
+    private final Logger LOGGER = LoggerFactory.getLogger( WebAuthConfig.class );
 
     protected void configure( AuthenticationManagerBuilder auth ) throws Exception {
         auth.userDetailsService( username -> userDetailsService.loadUserByUsername( username ) );
@@ -110,7 +113,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter
             return this.secretKey.getInputStream();
         }
         catch ( IOException e ) {
-            e.printStackTrace();
+            LOGGER.error( "on getting secret key InputStream", e );
             return null;
         }
     }

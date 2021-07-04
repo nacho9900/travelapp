@@ -7,6 +7,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,6 +40,8 @@ public class JwtAuthenticationService
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final Logger LOGGER = LoggerFactory.getLogger( JwtAuthenticationService.class );
+
     private PrivateKey key;
 
     private static final int ONE_MINUTE = 60;
@@ -47,6 +51,9 @@ public class JwtAuthenticationService
 
     public JwtAuthenticationService( InputStream secretKey ) {
         try {
+            if(LOGGER.isDebugEnabled()) {
+                LOGGER.debug( "Generating private key..." );
+            }
             KeyFactory keyFactory = KeyFactory.getInstance( "RSA" );
             byte[] keyArray = new byte[secretKey.available()];
             secretKey.read( keyArray );
@@ -54,7 +61,7 @@ public class JwtAuthenticationService
             key = keyFactory.generatePrivate( spec );
         }
         catch ( InvalidKeySpecException | NoSuchAlgorithmException | IOException ex ) {
-            ex.printStackTrace();
+            LOGGER.error( "Error on reading secret key", ex );
         }
     }
 
