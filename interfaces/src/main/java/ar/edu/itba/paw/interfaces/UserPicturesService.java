@@ -1,19 +1,19 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.model.TripPicture;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
+import ar.edu.itba.paw.model.exception.EntityNotFoundException;
+import ar.edu.itba.paw.model.exception.ImageFormatException;
+import ar.edu.itba.paw.model.exception.ImageMaxSizeException;
+import ar.edu.itba.paw.model.exception.UnauthorizedException;
 
 import java.util.Optional;
 
 public interface UserPicturesService
 {
-    UserPicture create( User user, String name, byte[] image );
-
-    UserPicture create( User user, String name, String imageBase64 );
-
-    UserPicture update( UserPicture userPicture, User user, String name, String imageBase64 );
-
-    UserPicture update( UserPicture userPicture, User user, String name, byte[] image );
+    UserPicture createOrUpdate( String name, String imageBase64, String username, long userId )
+            throws ImageMaxSizeException, ImageFormatException, UnauthorizedException, EntityNotFoundException;
 
     byte[] resize( byte[] image, int width, int height );
 
@@ -22,6 +22,4 @@ public interface UserPicturesService
     byte[] resizeWidth( byte[] image, int width );
 
     Optional<UserPicture> findByUserId( long userId );
-
-    boolean deleteByUserId( long userId );
 }

@@ -33,8 +33,6 @@ public class TripPicturesServiceImpl extends ImageAbstractService implements Tri
     @Autowired
     private TripService tripService;
 
-    private final Base64.Decoder decoder = Base64.getDecoder();
-
     private final int MAX_PICTURE_SIZE = 5000000; //5MB
 
     @Override
@@ -50,22 +48,7 @@ public class TripPicturesServiceImpl extends ImageAbstractService implements Tri
             throw new UserNotOwnerOrAdminException();
         }
 
-        if ( !isContentTypeImage( name ) ) {
-            throw new ImageFormatException();
-        }
-
-        byte[] image;
-
-        try {
-            image = decoder.decode( imageBase64 );
-        }
-        catch ( IllegalArgumentException e ) {
-            throw new ImageFormatException();
-        }
-
-        if ( image.length > MAX_PICTURE_SIZE ) {
-            throw new ImageMaxSizeException();
-        }
+        byte[] image = decode( name, imageBase64 );
 
         Optional<TripPicture> tripPicture = findByTripId( tripId );
 
@@ -118,11 +101,5 @@ public class TripPicturesServiceImpl extends ImageAbstractService implements Tri
         bufferedImage = Scalr.resize( bufferedImage, mode, size );
 
         return imageToByteArray( bufferedImage, "png" );
-    }
-
-    private boolean isContentTypeImage( String name ) {
-        String contentType = URLConnection.guessContentTypeFromName( name );
-
-        return contentType != null && contentType.startsWith( "image/" );
     }
 }

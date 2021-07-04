@@ -5,6 +5,9 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
+import ar.edu.itba.paw.model.exception.ImageFormatException;
+import ar.edu.itba.paw.model.exception.ImageMaxSizeException;
+import ar.edu.itba.paw.model.exception.UnauthorizedException;
 import ar.edu.itba.paw.model.exception.ValidationException;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.errors.ErrorsDto;
@@ -157,23 +160,17 @@ public class UsersController
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<User> maybeLoggedUser = userService.findByUsername( username );
-        Optional<User> maybeRequestedUser = userService.findById( id );
-
-        if ( !maybeLoggedUser.isPresent() || !maybeRequestedUser.isPresent() || !maybeLoggedUser.get().isVerified() ||
-             maybeLoggedUser.get().getId() != maybeRequestedUser.get().getId() ) {
+        try {
+            userPicturesService.createOrUpdate( fileDto.getFilename(), fileDto.getFileBase64(), username, id );
+        }
+        catch ( ImageMaxSizeException | ImageFormatException e ) {
+            return Response.status( Response.Status.BAD_REQUEST )
+                           .entity( new ErrorDto( "invalid image format or size" ) )
+                           .build();
+        }
+        catch ( UnauthorizedException | EntityNotFoundException e ) {
             return Response.status( Response.Status.UNAUTHORIZED ).build();
-        }
 
-        User user = maybeLoggedUser.get();
-
-        Optional<UserPicture> maybeUserPicture = userPicturesService.findByUserId( user.getId() );
-
-        if ( maybeUserPicture.isPresent() ) {
-            userPicturesService.update( maybeUserPicture.get(), user, fileDto.getFilename(), fileDto.getFileBase64() );
-        }
-        else {
-            userPicturesService.create( user, fileDto.getFilename(), fileDto.getFileBase64() );
         }
 
         return Response.created( uriInfo.getAbsolutePathBuilder().build() ).build();

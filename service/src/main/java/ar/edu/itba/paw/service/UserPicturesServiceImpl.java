@@ -2,8 +2,13 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.UserPicturesDao;
 import ar.edu.itba.paw.interfaces.UserPicturesService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
+import ar.edu.itba.paw.model.exception.EntityNotFoundException;
+import ar.edu.itba.paw.model.exception.ImageFormatException;
+import ar.edu.itba.paw.model.exception.ImageMaxSizeException;
+import ar.edu.itba.paw.model.exception.UnauthorizedException;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,55 +26,43 @@ public class UserPicturesServiceImpl extends ImageAbstractService implements Use
     @Autowired
     private UserPicturesDao userPicturesDao;
 
+    @Autowired
+    private UserService userService;
+
     private final int MAX_PICTURE_SIZE = 5000000; //5MB
 
     @Override
-    public UserPicture create( User user, String name, byte[] image ) {
-        if ( image.length > MAX_PICTURE_SIZE ) {
-            return null;
+    public UserPicture createOrUpdate( String name, String imageBase64, String username, long userId )
+            throws ImageMaxSizeException, ImageFormatException, UnauthorizedException, EntityNotFoundException {
+        Optional<User> maybeUser = userService.findById( userId );
+
+        if ( !maybeUser.isPresent() ) {
+            throw new EntityNotFoundException();
         }
 
+        User user = maybeUser.get();
+
+        if ( !user.getEmail().equals( username ) ) {
+            throw new UnauthorizedException();
+        }
+
+        byte[] image = decode( name, imageBase64 );
+
+        Optional<UserPicture> maybePicture = findByUserId( userId );
+
+        if ( maybePicture.isPresent() ) {
+            return update( maybePicture.get(), user, name, image );
+        }
+        else {
+            return create( user, name, image );
+        }
+    }
+
+    public UserPicture create( User user, String name, byte[] image ) {
         return userPicturesDao.create( user, name, image );
     }
 
-    @Override
-    public UserPicture create( User user, String name, String imageBase64 ) {
-        try {
-            byte[] image = Base64.getDecoder().decode( imageBase64 );
-
-            if ( !isContentTypeImage( name ) ) {
-                return null;
-            }
-
-            return create( user, name, image );
-        }
-        catch ( IllegalArgumentException e ) {
-            return null;
-        }
-    }
-
-    @Override
-    public UserPicture update( UserPicture userPicture, User user, String name, String imageBase64 ) {
-        try {
-            byte[] image = Base64.getDecoder().decode( imageBase64 );
-
-            if ( !isContentTypeImage( name ) ) {
-                return null;
-            }
-
-            return update( userPicture, user, name, image );
-        }
-        catch ( IllegalArgumentException e ) {
-            return null;
-        }
-    }
-
-    @Override
     public UserPicture update( UserPicture userPicture, User user, String name, byte[] image ) {
-        if ( !isContentTypeImage( name ) || image.length > MAX_PICTURE_SIZE ) {
-            return null;
-        }
-
         userPicture.setName( name );
         userPicture.setPicture( image );
         userPicture.setUser( user );
@@ -100,22 +93,11 @@ public class UserPicturesServiceImpl extends ImageAbstractService implements Use
         return userPicturesDao.findByUserId( userId );
     }
 
-    @Override
-    public boolean deleteByUserId( long userId ) {
-        return userPicturesDao.deleteByUserId( userId );
-    }
-
     private byte[] resizeOneDimension( byte[] image, int size, Scalr.Mode mode ) {
         BufferedImage bufferedImage = createImageFromBytes( image );
 
         bufferedImage = Scalr.resize( bufferedImage, mode, size );
 
         return imageToByteArray( bufferedImage, "png" );
-    }
-
-    private boolean isContentTypeImage( String name ) {
-        String contentType = URLConnection.guessContentTypeFromName( name );
-
-        return contentType.startsWith( "image/" );
     }
 }
