@@ -74,8 +74,16 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter
                                              FilterChain chain, Authentication authResult )
             throws IOException {
         UserDetails userDetails = userDetailsService.loadUserByUsername( authResult.getName() );
-        Optional<User> user = userService.findByUsername( userDetails.getUsername() );
-        AuthDto authDto = jwtAuthenticationService.createAuthDto( userDetails, user.get().getId() );
+        Optional<User> maybeUser = userService.findByUsername( userDetails.getUsername() );
+
+        if ( !maybeUser.isPresent() || !maybeUser.get().isVerified() ) {
+            setCORS( response );
+            response.setStatus( HttpServletResponse.SC_FORBIDDEN );
+            response.sendError( HttpServletResponse.SC_FORBIDDEN, "User not verified" );
+            return;
+        }
+
+        AuthDto authDto = jwtAuthenticationService.createAuthDto( userDetails, maybeUser.get().getId() );
         response.getWriter().write( objectMapper.writeValueAsString( authDto ) );
         response.setStatus( HttpServletResponse.SC_OK );
         response.setContentType( "application/json" );
