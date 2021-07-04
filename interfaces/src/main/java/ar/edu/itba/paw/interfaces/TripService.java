@@ -3,7 +3,6 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.PaginatedResult;
 import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exception.CannotDeleteOwnerException;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidDateRangeException;
@@ -22,7 +21,7 @@ public interface TripService
 
     Optional<Trip> findById( long id );
 
-    PaginatedResult<Trip> getAllUserTrips( User user, int page, int perPage );
+    PaginatedResult<Trip> getAllUserTrips( String username, int page, int perPage ) throws EntityNotFoundException;
 
     Trip update( long id, String name, String description, LocalDate startDate, LocalDate endDate,
                  String editorUsername )

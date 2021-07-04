@@ -1,18 +1,15 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.TripComment;
-import ar.edu.itba.paw.model.TripMember;
+import ar.edu.itba.paw.model.exception.UserNotMemberException;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TripCommentsService
 {
-    TripComment create( TripMember member, String comment );
+    TripComment create( long tripId, String username, String comment ) throws UserNotMemberException;
 
-    Optional<TripComment> getById( long id );
-
-    List<TripComment> getAllByTripId( long tripId );
+    List<TripComment> getAllByTripId( long tripId, String username ) throws UserNotMemberException;
 
     void deleteAllByMemberId( long memberId );
 }

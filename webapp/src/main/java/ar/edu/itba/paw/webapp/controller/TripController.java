@@ -14,7 +14,6 @@ import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.TripJoinRequest;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripPicture;
-import ar.edu.itba.paw.model.TripRate;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exception.ActivityNotPartOfTheTripException;
 import ar.edu.itba.paw.model.exception.CannotDeleteOwnerException;
@@ -36,7 +35,6 @@ import ar.edu.itba.paw.webapp.dto.trips.CommentDto;
 import ar.edu.itba.paw.webapp.dto.trips.CommentListDto;
 import ar.edu.itba.paw.webapp.dto.trips.JoinTripDto;
 import ar.edu.itba.paw.webapp.dto.trips.PlaceDto;
-import ar.edu.itba.paw.webapp.dto.trips.RateDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripJoinRequestDto;
 import ar.edu.itba.paw.webapp.dto.trips.TripListDto;
@@ -165,7 +163,6 @@ public class TripController
         return Response.ok().entity( tripDto ).build();
     }
 
-    //TODO: move this method to /user/{id}/trips
     @GET
     @Produces( MediaType.APPLICATION_JSON )
     public Response getAllByUserId(
@@ -179,17 +176,16 @@ public class TripController
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<User> maybeUser = userService.findByUsername( username );
+        try {
+            PaginatedResult<Trip> result = tripService.getAllUserTrips( username, page, perPage );
 
-        if ( !maybeUser.isPresent() ) {
+            return PaginatedResultResponseHelper.makeResponseBuilder( result, uriInfo )
+                                                .entity( TripListDto.fromPaginatedResult( result, uriInfo ) )
+                                                .build();
+        }
+        catch ( EntityNotFoundException e ) {
             return Response.status( Response.Status.NOT_FOUND ).build();
         }
-
-        PaginatedResult<Trip> result = tripService.getAllUserTrips( maybeUser.get(), page, perPage );
-
-        return PaginatedResultResponseHelper.makeResponseBuilder( result, uriInfo )
-                                            .entity( TripListDto.fromPaginatedResult( result, uriInfo ) )
-                                            .build();
     }
 
     @PUT
@@ -552,29 +548,6 @@ public class TripController
         return Response.ok().build();
     }
 
-    @PUT
-    @Path( "/{id}/rate/{rate}" )
-    public Response changeRate( @PathParam( "id" ) long id, @PathParam( "rate" ) int rate ) {
-        Optional<Trip> maybeTrip = tripService.findById( id );
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<TripMember> maybeLoggedMember = tripMemberService.findByTripIdAndUsername( id, username, );
-
-        if ( !maybeTrip.isPresent() || !maybeLoggedMember.isPresent() ) {
-            return tripNotFound();
-        }
-
-        if ( rate < 1 || rate > 5 ) {
-            return Response.status( Response.Status.BAD_REQUEST )
-                           .entity( new ErrorDto( "Invalid Rate Value" ) )
-                           .build();
-        }
-
-        TripRate rateEntity = maybeLoggedMember.get().getRate();
-        rateEntity.setRate( rate );
-        rateEntity = tripMemberService.update( maybeLoggedMember.get() ).getRate();
-        return Response.ok().entity( RateDto.fromTripRateWithMember( rateEntity, uriInfo, id ) ).build();
-    }
-
     //endregion
 
     //region joinrequest
@@ -689,19 +662,18 @@ public class TripController
     public Response createComment( @PathParam( "id" ) long id, @RequestBody CommentDto commentDto ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<TripMember> maybeMember = tripMemberService.findByTripIdAndUsername( id, username, );
+        try {
+            TripComment comment = tripCommentsService.create( id, username, commentDto.getComment() );
 
-        if ( !maybeMember.isPresent() ) {
-            return Response.status( Response.Status.NOT_FOUND )
-                           .entity( new ErrorDto( "trip not found or user not member" ) )
+            return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( comment.getId() ) ).build() )
+                           .entity( CommentDto.fromCommentWithMember( comment, uriInfo, id ) )
                            .build();
         }
-
-        TripComment comment = tripCommentsService.create( maybeMember.get(), commentDto.getComment() );
-
-        return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( comment.getId() ) ).build() )
-                       .entity( CommentDto.fromCommentWithMember( comment, uriInfo, id ) )
-                       .build();
+        catch ( UserNotMemberException e ) {
+            return Response.status( Response.Status.NOT_FOUND )
+                           .entity( new ErrorDto( "Member or Trip not found" ) )
+                           .build();
+        }
     }
 
     @GET
@@ -709,15 +681,14 @@ public class TripController
     public Response getAllComments( @PathParam( "id" ) long id ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<TripMember> member = tripMemberService.findByTripIdAndUsername( id, username, );
+        try {
+            List<TripComment> comments = tripCommentsService.getAllByTripId( id, username );
 
-        if ( !member.isPresent() ) {
+            return Response.ok().entity( CommentListDto.fromComments( comments, uriInfo, id ) ).build();
+        }
+        catch ( UserNotMemberException e ) {
             return Response.status( Response.Status.UNAUTHORIZED ).build();
         }
-
-        List<TripComment> comments = tripCommentsService.getAllByTripId( id );
-
-        return Response.ok().entity( CommentListDto.fromComments( comments, uriInfo, id ) ).build();
     }
 
     //endregion
