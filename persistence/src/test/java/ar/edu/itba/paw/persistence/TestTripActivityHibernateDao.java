@@ -65,7 +65,7 @@ public class TestTripActivityHibernateDao
                            .get();
         PLACE_CREATE = placeDao.findById( PLACE_ID_CREATE )
                                .get();
-        TRIP_CREATE = tripDao.findById( TRIP_ID_FIND )
+        TRIP_CREATE = tripDao.findById( TRIP_ID_CREATE )
                              .get();
     }
 

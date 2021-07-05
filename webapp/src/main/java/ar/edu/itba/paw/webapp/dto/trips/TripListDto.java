@@ -20,7 +20,9 @@ public class TripListDto
     }
 
     public static TripListDto fromPaginatedResult( PaginatedResult<Trip> result, UriInfo uriInfo ) {
-        return new TripListDto(
-                result.getResult().stream().map( x -> TripDto.fromTrip( x, uriInfo ) ).collect( Collectors.toList() ) );
+        return new TripListDto( result.getResult()
+                                      .stream()
+                                      .map( x -> TripDto.fromTrip( x, false, uriInfo ) )
+                                      .collect( Collectors.toList() ) );
     }
 }

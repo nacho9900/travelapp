@@ -68,6 +68,11 @@ public class TripServiceImpl implements TripService
     }
 
     @Override
+    public Optional<Trip> findByIdWithActivities( long id ) {
+        return tripDao.findByIdWithActivities( id );
+    }
+
+    @Override
     public PaginatedResult<Trip> getAllUserTrips( String username, int page, int perPage )
             throws EntityNotFoundException {
         Optional<User> maybeUser = userService.findByUsername( username );

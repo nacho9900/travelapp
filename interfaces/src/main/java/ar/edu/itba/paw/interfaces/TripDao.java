@@ -20,4 +20,6 @@ public interface TripDao
     Trip update( Trip trip );
 
     PaginatedResult<Trip> search( Double latitude, Double longitude, LocalDate from, LocalDate to, int page, int perPage );
+
+    Optional<Trip> findByIdWithActivities( long id );
 }

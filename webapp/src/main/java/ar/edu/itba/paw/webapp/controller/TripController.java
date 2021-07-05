@@ -134,7 +134,7 @@ public class TripController
                                             tripDto.getStartDate(), tripDto.getEndDate() );
 
             return Response.created( uriInfo.getAbsolutePathBuilder().path( Long.toString( trip.getId() ) ).build() )
-                           .entity( TripDto.fromTrip( trip, uriInfo ) )
+                           .entity( TripDto.fromTrip( trip, false , uriInfo ) )
                            .build();
         }
         catch ( InvalidUserException e ) {
@@ -151,13 +151,13 @@ public class TripController
     @Path( "/{id}" )
     @Produces( MediaType.APPLICATION_JSON )
     public Response get( @PathParam( "id" ) long id ) {
-        Optional<Trip> maybeTrip = tripService.findById( id );
+        Optional<Trip> maybeTrip = tripService.findByIdWithActivities( id );
 
         if ( !maybeTrip.isPresent() ) {
             return Response.status( Response.Status.NOT_FOUND ).build();
         }
 
-        TripDto tripDto = TripDto.fromTrip( maybeTrip.get(), uriInfo );
+        TripDto tripDto = TripDto.fromTrip( maybeTrip.get(), true , uriInfo );
 
         return Response.ok().entity( tripDto ).build();
     }
@@ -209,7 +209,7 @@ public class TripController
         try {
             Trip trip = tripService.update( id, tripDto.getName(), tripDto.getDescription(), tripDto.getStartDate(),
                                             tripDto.getEndDate(), username );
-            return Response.ok().entity( TripDto.fromTrip( trip, uriInfo ) ).build();
+            return Response.ok().entity( TripDto.fromTrip( trip, false , uriInfo ) ).build();
 
         }
         catch ( EntityNotFoundException e ) {

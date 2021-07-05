@@ -100,6 +100,20 @@ public class TestTripHibernateDao
     }
 
     @Test
+    public void testFindByIdWithActivities() {
+        final Optional<Trip> maybeTrip = tripDao.findById( ID_FIND );
+        Assert.assertNotNull( maybeTrip );
+        Assert.assertTrue( maybeTrip.isPresent() );
+        final Trip trip = maybeTrip.get();
+        Assert.assertEquals( ID_FIND, trip.getId() );
+        Assert.assertEquals( NAME_FIND, trip.getName() );
+        Assert.assertEquals( DESCRIPTION_FIND, trip.getDescription() );
+        Assert.assertEquals( START_DATE_FIND, trip.getStartDate() );
+        Assert.assertEquals( END_DATE_FIND, trip.getEndDate() );
+        Assert.assertNotNull( trip.getActivities() );
+    }
+
+    @Test
     public void testSearchWithLocation() {
         final PaginatedResult<Trip> trips = tripDao.search( LAT_FIND, LNG_FIND, null, null, PAGE, PER_PAGE );
         Assert.assertNotNull( trips );

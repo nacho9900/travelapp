@@ -21,6 +21,8 @@ public interface TripService
 
     Optional<Trip> findById( long id );
 
+    Optional<Trip> findByIdWithActivities( long id );
+
     PaginatedResult<Trip> getAllUserTrips( String username, int page, int perPage ) throws EntityNotFoundException;
 
     Trip update( long id, String name, String description, LocalDate startDate, LocalDate endDate,
