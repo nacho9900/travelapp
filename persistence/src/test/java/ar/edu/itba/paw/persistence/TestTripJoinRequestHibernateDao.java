@@ -2,10 +2,10 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripJoinRequest;
 import ar.edu.itba.paw.model.TripJoinRequestStatus;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.Trip;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.User;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

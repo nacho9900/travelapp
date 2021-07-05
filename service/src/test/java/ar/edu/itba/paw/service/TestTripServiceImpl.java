@@ -1,12 +1,12 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.TripDao;
+import ar.edu.itba.paw.interfaces.TripMemberService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripMemberRole;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.interfaces.TripDao;
-import ar.edu.itba.paw.interfaces.TripMemberService;
-import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.exception.CannotDeleteOwnerException;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.InvalidDateRangeException;

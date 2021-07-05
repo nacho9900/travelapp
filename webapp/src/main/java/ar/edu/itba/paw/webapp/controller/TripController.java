@@ -14,7 +14,6 @@ import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.TripJoinRequest;
 import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.TripPicture;
-import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exception.ActivityNotPartOfTheTripException;
 import ar.edu.itba.paw.model.exception.CannotDeleteOwnerException;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;

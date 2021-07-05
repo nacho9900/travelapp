@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.TripCommentsService;
 import ar.edu.itba.paw.interfaces.TripMemberDao;
 import ar.edu.itba.paw.interfaces.TripMemberService;

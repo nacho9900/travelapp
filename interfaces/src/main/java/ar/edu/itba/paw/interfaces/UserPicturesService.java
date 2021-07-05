@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.model.TripPicture;
-import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
 import ar.edu.itba.paw.model.exception.EntityNotFoundException;
 import ar.edu.itba.paw.model.exception.ImageFormatException;

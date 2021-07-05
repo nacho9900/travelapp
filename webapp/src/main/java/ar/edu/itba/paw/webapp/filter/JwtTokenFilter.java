@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.filter;
 
-import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.webapp.auth.JwtAuthenticationService;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
-import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

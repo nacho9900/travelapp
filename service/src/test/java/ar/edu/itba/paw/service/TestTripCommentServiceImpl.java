@@ -15,8 +15,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith( MockitoJUnitRunner.class )
 public class TestTripCommentServiceImpl
