@@ -30,6 +30,7 @@ public class TripDto
     @NotNull
     @Future
     private LocalDate endDate;
+    private boolean containActivities;
     private URI tripUri;
     private URI tripCommentsUri;
     private URI tripActivitiesUri;
@@ -85,6 +86,14 @@ public class TripDto
         return tripPictureUri;
     }
 
+    public boolean isContainActivities() {
+        return containActivities;
+    }
+
+    public void setContainActivities( boolean containActivities ) {
+        this.containActivities = containActivities;
+    }
+
     public void setId( Long id ) {
         this.id = id;
     }
@@ -129,6 +138,7 @@ public class TripDto
         tripDto.startDate = trip.getStartDate();
         tripDto.endDate = trip.getEndDate();
         tripDto.description = trip.getDescription();
+        tripDto.containActivities = trip.getActivities().size() > 0;
         tripDto.tripUri = uriInfo.getBaseUriBuilder()
                                  .path( TripController.class )
                                  .path( TripController.class, "get" )

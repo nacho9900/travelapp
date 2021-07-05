@@ -70,6 +70,11 @@
 				<v-card-text class="text--primary pt-2" style="height: 100px">
 					<div>{{ trip.description }}</div>
 				</v-card-text>
+				<v-col cols="12" class="py-1" v-if="!trip.containActivities">
+					<v-alert type="warning" text>
+						{{ $t("components.trips.trip_card.activity_warning") }}
+					</v-alert>
+				</v-col>
 				<v-card-text class="text--primary">
 					{{ $t("components.trips.trip_card.from") }}
 					{{ formatDateString(trip.startDate) }}
@@ -103,8 +108,8 @@ export default {
 		trip: Object,
 		member: Object,
 		request: Object,
-		actions: Boolean,
 		to: Object,
+		actions: Boolean,
 		loading: Boolean,
 	},
 	data() {

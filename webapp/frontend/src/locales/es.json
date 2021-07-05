@@ -148,7 +148,8 @@
         "title_edit": "Editar información del viaje",
         "edit": "modificar",
         "name_length_rule": "el nombre debe contener menos de 100 caracteres",
-        "desc_length_rule": "la descripción debe contener menos de 500 caracteres"
+        "desc_length_rule": "la descripción debe contener menos de 500 caracteres",
+        "activity_warning": "Atención: es necesario crear al menos una actividad luego de crear el viaje para que otros viajeros puedan encontrar el viaje a travez de la página principal"
       },
       "trip_new_comment_box": {
         "new_comment": "Ingrese un nuevo comentario"
@@ -185,7 +186,8 @@
         "change_image": "Subir una nueva portada",
         "change_image_error": "Ocurrió un error al cambiar la portada del viaje. Por favor, intente nuevamente más tarde.",
         "from": "Desde el",
-        "to": "hasta el"
+        "to": "hasta el",
+        "activity_warning": "Atención: es necesario crear al menos una actividad para que el viaje pueda ser encontrado por otros viajeros"
       },
       "trip_activities_list": {
         "no_data": "No se econtraron actividades para el viaje. Si eres administrador, intenta crear una nueva con el botón debajo.."

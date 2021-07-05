@@ -54,7 +54,7 @@ public class TripMemberDto
         tripMemberDto.user = UserDto.fromUser( tripMember.getUser(), uriInfo );
         tripMemberDto.memberUri = uriInfo.getBaseUriBuilder()
                                          .path( TripController.class )
-                                         .path( TripController.class, "updateMember" )
+                                         .path( TripController.class, "deleteMember" )
                                          .build( tripId, tripMember.getId() );
 
 

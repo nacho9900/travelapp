@@ -70,6 +70,14 @@
 							>
 							</v-textarea>
 						</v-col>
+						<v-col cols="12" class="py-1" v-if="activity-warning">
+							<v-alert type="warning" text>
+								{{
+									$t(										"components.trips.tripform.activity_warning"
+									)
+								}}
+							</v-alert>
+						</v-col>
 					</v-row>
 				</v-container>
 			</v-card-text>
@@ -104,6 +112,7 @@ export default {
 		endDate: String,
 		loading: Boolean,
 		edit: Boolean,
+		activityWarning: Boolean,
 	},
 	data() {
 		return {
@@ -157,7 +166,7 @@ export default {
 		},
 		today() {
 			return new Date().toISOString();
-		}
+		},
 	},
 	methods: {
 		init() {

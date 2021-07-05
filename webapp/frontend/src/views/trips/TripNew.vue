@@ -24,7 +24,11 @@
 		</v-dialog>
 		<v-row justify="center">
 			<v-col cols="12" lg="6" md="9">
-				<trip-form @submit="create" :loading="loading"></trip-form>
+				<trip-form
+					@submit="create"
+					:loading="loading"
+					:activity-warning="true"
+				></trip-form>
 			</v-col>
 		</v-row>
 	</v-container>

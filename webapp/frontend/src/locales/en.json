@@ -150,7 +150,8 @@
         "title_edit": "Edit trip information",
         "edit": "update",
         "name_length_rule": "the name must be shorter than 100 characters",
-        "desc_length_rule": "the description must be shorter than 500 characters"
+        "desc_length_rule": "the description must be shorter than 500 characters",
+        "activity_warning": "Attention: it is necessary to create at least one activity after creating the trip so that other travelers can find the trip through the home page"
       },
       "trip_new_comment_box": {
         "new_comment": "Enter a new comment"
@@ -187,7 +188,8 @@
         "change_image": "Upload a new portrait",
         "change_image_error": "There was an error uploading the trip portrait. Please try again later.",
         "from": "From",
-        "to": "to"
+        "to": "to",
+        "activity_warning": " Attention: it is necessary to create at least one activity so that other travelers can find the trip through the home page "
       },
       "trip_activities_list": {
         "no_data": "no activities were found for the trip. Try creating a new one."

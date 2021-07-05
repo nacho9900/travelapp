@@ -45,7 +45,7 @@ public class Trip implements Comparable<Trip>
 
     /////////////////
 
-    @OneToMany( fetch = FetchType.LAZY,
+    @OneToMany( fetch = FetchType.EAGER,
                 mappedBy = "trip",
                 cascade = {CascadeType.REMOVE, CascadeType.ALL},
                 orphanRemoval = true )
