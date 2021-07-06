@@ -1,6 +1,6 @@
 {
   "$vuetify": {
-    "noDataText": "No hay datos",
+    "noDataText": "Comience a escribir para buscar...",
     "dataTable": {
       "itemsPerPageText": "Elemetos por página"
     },

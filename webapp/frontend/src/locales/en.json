@@ -1,6 +1,6 @@
 {
   "$vuetify": {
-    "noDataText": "Empty data",
+    "noDataText": "Start typing to search...",
     "dataTable": {
       "itemsPerPageText": "Elements per page"
     },

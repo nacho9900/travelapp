@@ -19,6 +19,7 @@
 							:label="
 								$t('components.trips.trip_search_bar.start')
 							"
+							:min="minDate"
 							hide-details
 							solo
 						></date-picker>
@@ -27,6 +28,7 @@
 						<date-picker
 							v-model="toEntered"
 							:label="$t('components.trips.trip_search_bar.end')"
+							:min="fromEntered || minDate"
 							hide-details
 							solo
 						></date-picker>
@@ -80,6 +82,11 @@ export default {
 
 				this.$emit("submit", data);
 			}
+		},
+	},
+	computed: {
+		minDate() {
+			return new Date().toISOString();
 		},
 	},
 	watch: {
