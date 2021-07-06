@@ -144,7 +144,7 @@ public class TripHibernateDao implements TripDao
     @Override
     public Optional<Trip> findByIdWithActivities( long id ) {
         TypedQuery<Trip> query = em.createQuery(
-                "select t from Trip as t join fetch t.activities as a where t.id = :id", Trip.class );
+                "select t from Trip as t left join fetch t.activities as a where t.id = :id", Trip.class );
         query.setParameter( "id", id );
         return query.getResultList().stream().findFirst();
     }
