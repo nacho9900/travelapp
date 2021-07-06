@@ -19,7 +19,7 @@ import java.util.Locale;
 
 
 @Service
-@Transactional //TODO: Make this package scoped
+@Transactional
 public class MailingServiceImpl implements MailingService
 {
     private static final Integer PORT = 587;
