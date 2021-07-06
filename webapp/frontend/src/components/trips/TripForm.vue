@@ -70,7 +70,7 @@
 							>
 							</v-textarea>
 						</v-col>
-						<v-col cols="12" class="py-1" v-if="activity-warning">
+						<v-col cols="12" class="py-1" v-if="activityWarning">
 							<v-alert type="warning" text>
 								{{
 									$t(										"components.trips.tripform.activity_warning"
