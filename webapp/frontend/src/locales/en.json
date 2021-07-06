@@ -298,6 +298,10 @@
       "success": "Your password has been changed successfully.",
       "not_found_or_expired": "Your password recovery process has expired or you enter a wrong url.",
       "error": "There was an error changing your password. Please, try again later."
+    },
+    "home": {
+      "welcome_title": "Welcome to TravelApp",
+      "welcome_subtitle": "Start finding or planning your trip all over the world, meet new people and connect with other cultures"
     }
   }
 }

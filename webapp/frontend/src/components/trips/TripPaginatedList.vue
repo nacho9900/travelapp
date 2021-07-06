@@ -46,6 +46,7 @@ export default {
 	},
 	props: {
 		searchCriteria: Object,
+		welcome: Boolean,
 	},
 	data() {
 		return {
@@ -54,7 +55,6 @@ export default {
 			searchCriteriaEntered: null,
 			loading: false,
 			hasResults: true,
-			welcome: true,
 			link: null,
 		};
 	},
@@ -71,7 +71,7 @@ export default {
 	},
 	methods: {
 		async search(data) {
-			this.welcome = false;
+			this.$emit("search");
 			this.searchCriteriaEntered = data;
 			this.page = 1;
 

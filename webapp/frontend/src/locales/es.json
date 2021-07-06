@@ -119,11 +119,12 @@
       }
     },
     "user_trips": {
-      "no_trips": "Aun no tienes ningún viaje",
+      "no_trips": "Aun no tienes ningún viaje, podes",
       "or": "o",
       "create_a_new_one": "empieza a planear uno nuevo.",
       "error": "Ocurrió un error buscando sus viajes. Por favor, intente nuevamente más tarde.",
-      "title": "Mis Viajes"
+      "title": "Mis Viajes",
+      "search": "buscar algun viaje"
     },
     "auth": {
       "email_verification": {
@@ -295,6 +296,10 @@
       "success": "Su contraseña fue modificada con éxito.",
       "not_found_or_expired": "Su proceso de recuperación de contraseña a expirado o usted ingreso una url incorrecta.",
       "error": "Ocurrió un error al cambiar su contraseña. Por favor, intente nuevamente más tarde."
+    },
+    "home": {
+      "welcome_title": "Bienvenido a TravelApp",
+      "welcome_subtitle": "Comenza a buscar o planear tu viaje al rededor del mundo, conecta con gente nueva y empeza a conocer nuevas culturas"
     }
   }
 }
