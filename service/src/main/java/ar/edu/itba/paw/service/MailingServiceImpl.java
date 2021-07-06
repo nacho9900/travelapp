@@ -35,8 +35,8 @@ public class MailingServiceImpl implements MailingService
     private static final String MEMBER_NEW_EMAIL = "member-new";
 
     //TODO: CHANGE IN PROD
-    private static final String FRONTEND_URL = "localhost:8080";
-    //    private static final String FRONTEND_URL = "http://pawserver.it.itba.edu.ar/paw-2019a-4";
+    //    private static final String FRONTEND_URL = "localhost:8080";
+    private static final String FRONTEND_URL = "http://pawserver.it.itba.edu.ar/paw-2019a-4";
 
     @Autowired
     private TemplateEngine htmlTemplateEngine;
