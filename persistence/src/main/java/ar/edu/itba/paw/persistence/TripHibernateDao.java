@@ -37,7 +37,7 @@ public class TripHibernateDao implements TripDao
     public PaginatedResult<Trip> findUserTrips( long userId, int page, int perPage ) {
         String queryString = "from Trip as t left join t.members as m left join m.user as u where u.id = :userId ";
 
-        final TypedQuery<Long> idsQuery = em.createQuery( "select t.id " + queryString + "order by t.startDate",
+        final TypedQuery<Long> idsQuery = em.createQuery( "select t.id " + queryString + "group by t.id order by MIN(t.startDate)",
                                                           Long.class );
         final TypedQuery<Trip> tripsQuery = em.createQuery(
                 "select t from Trip as t where t.id in (:ids) order by t.startDate", Trip.class );
@@ -99,7 +99,8 @@ public class TripHibernateDao implements TripDao
             queryString.append( "and t.endDate <= :to " );
         }
 
-        TypedQuery<Long> idsQuery = em.createQuery( "select t.id " + queryString + "order by t.startDate", Long.class );
+        TypedQuery<Long> idsQuery = em.createQuery(
+                "select t.id " + queryString + "group by t.id order by MIN(t.startDate)", Long.class );
 
         TypedQuery<Trip> tripsQuery = em.createQuery(
                 "select distinct t from Trip as t  where t.id in (:ids) order by t.startDate", Trip.class );
