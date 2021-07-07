@@ -56,6 +56,7 @@ export default {
 			loading: false,
 			hasResults: true,
 			link: null,
+			searchOnMounted: false,
 		};
 	},
 	computed: {
@@ -73,7 +74,12 @@ export default {
 		async search(data) {
 			this.$emit("search");
 			this.searchCriteriaEntered = data;
-			this.page = 1;
+
+			if (this.searchOnMounted) {
+				this.searchOnMounted = false;
+			} else {
+				this.page = 1;
+			}
 
 			await this.setCriteriaToPath(data);
 			await this.searchTrips();
@@ -99,24 +105,30 @@ export default {
 				query.query.address = data.location.address;
 			}
 
-			if (Object.keys(query.query).length > 0) {
-				try {
-					await this.$router.push({ ...query });
-				} catch (e) {
-					if (VueRouter.isNavigationFailure(e)) {
-						//do nothing
-					} else {
-						throw e;
-					}
+			if (this.page !== 1) {
+				query.query.page = this.page;
+			}
+
+			// if (Object.keys(query.query).length > 0) {
+			try {
+				await this.$router.push({ ...query });
+			} catch (e) {
+				if (VueRouter.isNavigationFailure(e)) {
+					//do nothing
+				} else {
+					throw e;
 				}
 			}
+			// }
 		},
 		async nextPage() {
 			this.page = parseInt(this.link.next.page);
+			await this.setCriteriaToPath(this.searchCriteriaEntered);
 			await this.searchTrips(this.link.next.url);
 		},
 		async prevPage() {
 			this.page = parseInt(this.link.prev.page);
+			await this.setCriteriaToPath(this.searchCriteriaEntered);
 			await this.searchTrips(this.link.prev.url);
 		},
 		async searchTrips(url) {
@@ -152,6 +164,10 @@ export default {
 		},
 		async setSearchCriteria() {
 			this.searchCriteriaEntered = { ...this.searchCriteria };
+			if (this.searchCriteria.page) {
+				this.page = parseInt(this.searchCriteria.page, 10);
+			}
+			this.searchOnMounted = true;
 		},
 	},
 	async mounted() {

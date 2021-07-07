@@ -25,6 +25,10 @@ const routes = [
         query.to = route.query.to;
       }
 
+      if (route.query.page) {
+        query.page = route.query.page;
+      }
+
       if (route.query.latitude && route.query.longitude) {
         query.location = {
           latitude: route.query.latitude,

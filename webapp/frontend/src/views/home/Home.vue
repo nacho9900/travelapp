@@ -57,6 +57,7 @@ export default {
 		TripPaginatedList,
 	},
 	props: {
+		page: String,
 		from: String,
 		to: String,
 		location: Object,
@@ -80,6 +81,10 @@ export default {
 
 			if (this.location) {
 				query.location = { ...this.location };
+			}
+
+			if (this.page) {
+				query.page = this.page;
 			}
 
 			return query;
