@@ -21,7 +21,17 @@
 					></v-card-title
 				>
 				<v-card-text class="text--primary pt-0" style="height: 100px">
-					<div>{{ description }}</div>
+					<div
+						style="
+							display: -webkit-box;
+							max-width: 100%;
+							-webkit-line-clamp: 4;
+							-webkit-box-orient: vertical;
+							overflow: hidden;
+						"
+					>
+						{{ description }}
+					</div>
 				</v-card-text>
 				<v-card-text class="text--primary">
 					{{ $t("components.trips.trip_card.from") }}
